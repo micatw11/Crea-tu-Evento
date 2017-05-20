@@ -16,7 +16,7 @@ class AuthController extends Controller
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             // Authentication passed...
             $user = Auth::user();
-            return response()->json(['data' =>  $user]);
+            return response()->json(['data' =>  $user, 'csrfToken', csrf_token()]);
         } else {
             return response()->json([
                 'error' => 'Unauthorized',
@@ -49,7 +49,7 @@ class AuthController extends Controller
     public function getAuth(Request $request){
         if(!Auth::guest()){
             $user = Auth::user();
-            return response()->json(['data' =>  $user]);
+            return response()->json(['data' =>  $user, 'csrfToken', csrf_token()]);
         } else {
             return response()->json([
                 'error' => 'Unauthorized',
