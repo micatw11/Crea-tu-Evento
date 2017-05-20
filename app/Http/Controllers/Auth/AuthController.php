@@ -1,0 +1,52 @@
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+
+class AuthController extends Controller
+{
+    public function login(Request $request)
+    {
+        $this->validateLogin($request);
+
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            // Authentication passed...
+            $user = Auth::user();
+            return response()->json(['data' =>  $user]);
+        } else {
+            return response()->json([
+                'error' => 'Unauthorized',
+            ], 401);
+        }
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+    }
+
+
+    protected function validateLogin(Request $request)
+    {
+        return $this->validate($request, 
+            [  'email' => 'required',
+                'password' => 'required'
+            ]);
+    }
+
+    public function getAuth(Request $request){
+        if(!Auth::guest()){
+            $user = Auth::user();
+            return response()->json(['data' =>  $user]);
+        } else {
+            return response()->json([
+                'error' => 'Unauthorized',
+            ], 401);
+        }
+    }
+
+}

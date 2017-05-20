@@ -40,8 +40,7 @@
                     About
                     </a>
                 </router-link>
-            
-             
+
                <router-link tag="li" to="/">
                     <a><i class="fa fa-circle-o"></i>
                     home

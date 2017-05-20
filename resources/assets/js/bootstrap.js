@@ -13,6 +13,12 @@ Vue.use(VueRouter);
 
 
 window.axios = axios;
+require('vue-resource');
+
+Vue.http.interceptors.push((request, next) => {
+    request.headers.set('X-CSRF-TOKEN', Laravel.csrfToken);
+    next();
+});
 
 window.axios.defaults.headers.common = {
 	'X-Requested-With': 'XMLHttpRequest'
