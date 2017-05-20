@@ -26,7 +26,15 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        Auth::logout();
+      if(!Auth::guest()){
+            Auth::logout();
+            return response()->json(['data' => 'OK'], 200);
+        } else {
+            return response()->json([
+                'error' => 'Unauthorized',
+            ], 401);
+        }
+        
     }
 
 

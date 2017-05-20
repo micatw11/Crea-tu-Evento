@@ -54,16 +54,15 @@ export default {
     },
     methods: {
         logout: function() {
-            auth.user.authenticated = false
-            auth.user.profile = null
-
-            router.push({
-                name: 'login'
-            })
             
             this.$http.post(
                 'api/logout'
-            )
+            ).then(response => {
+                auth.user.authenticated = false
+                auth.user.profile = null
+                router.push('/login')
+            })
+
         }
     }
 }

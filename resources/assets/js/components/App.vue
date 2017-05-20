@@ -1,7 +1,7 @@
 <template>
     <div>
         <bar></bar>
-            <div class="content-wrapper">
+            <div v-bind:class="classObject">
                 <barra-lateral v-if="auth.user.authenticated"></barra-lateral>
                 <section class="section">
                     <div class="container">
@@ -24,7 +24,15 @@ export default {
             auth: auth
         }
     },
-    components: {Bar, BarraLateral, Footer }
+    components: {Bar, BarraLateral, Footer },
+    computed: {
+        classObject: function () {
+            return {
+            'content-wrapper': auth.user.authenticated,
+            'container': !auth.user.authenticated,
+            }
+        }
+    }
 
 }
 </script>

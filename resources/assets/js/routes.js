@@ -21,7 +21,8 @@ let routes = [
 		{
 			path: '/login',
 			name: 'login',
-			component: Login
+			component: Login,
+			beforeEnter: guardLogin
 		},
 		{
 			path: '/about',
@@ -42,8 +43,8 @@ let routes = [
  ];
 
 function guardRoute (to, from, next) {
+
   if (!auth.user.authenticated) {
-		
     next({
       path: '/login',
       query: { redirect: to.fullPath }
@@ -53,23 +54,23 @@ function guardRoute (to, from, next) {
   }
 }
 
-function isAuth(to, from, next){
+function guardLogin(to, from, next) {
 	if (!auth.user.authenticated)
 	{
 		Vue.http.get('api/user').then(response => {
-		
-			auth.user.authenticated = true
-			auth.user.profile = response.data.data
-			next({
-				path: '/home',
-				query: { redirect: to.fullPath }
-			})
-		}).then(response => {
-				next()
-		})
-
+				auth.user.authenticated = true
+				auth.user.profile = response.data.data
+				next('/')
+		}, response => {
+				next();
+		});
+	}
+	else
+	{
+    next('/')
 	}
 }
+
 
 export default new VueRouter({
 	routes,

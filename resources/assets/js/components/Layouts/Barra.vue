@@ -34,9 +34,6 @@
                     <li v-else>
                         <router-link :to="{ name: 'login' }"><a>Login</a></router-link>
                     </li>
-                    <li>
-                        <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
-                    </li>
                 </ul>
             </div>
         </nav>
