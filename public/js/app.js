@@ -4292,7 +4292,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         };
     },
 
-    components: { Bar: __WEBPACK_IMPORTED_MODULE_1__Layouts_Barra_vue___default.a, BarraLateral: __WEBPACK_IMPORTED_MODULE_2__Layouts_BarraLateral_vue___default.a, Footer: __WEBPACK_IMPORTED_MODULE_3__Layouts_Footer_vue___default.a },
+    components: { Bar: __WEBPACK_IMPORTED_MODULE_1__Layouts_Barra_vue___default.a, BarraLateral: __WEBPACK_IMPORTED_MODULE_2__Layouts_BarraLateral_vue___default.a, Foo: __WEBPACK_IMPORTED_MODULE_3__Layouts_Footer_vue___default.a },
     computed: {
         classObject: function classObject() {
             return {
@@ -5717,7 +5717,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "section"
   }, [_c('div', {
     staticClass: "container"
-  }, [_c('router-view')], 1)])], 1), _vm._v(" "), _c('footer')], 1)
+  }, [_c('router-view')], 1)])], 1), _vm._v(" "), _c('foo')], 1)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

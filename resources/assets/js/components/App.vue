@@ -9,14 +9,14 @@
                     </div>
                 </section>
             </div>
-        <footer></footer>
+        <foo></foo>
     </div>
 </template>
 <script>
 import auth from '../auth.js'
 import Bar from './Layouts/Barra.vue'
 import BarraLateral from './Layouts/BarraLateral.vue'
-import Footer from './Layouts/Footer.vue'
+import Foo from './Layouts/Footer.vue'
 
 export default {
     data() {
@@ -24,7 +24,7 @@ export default {
             auth: auth
         }
     },
-    components: {Bar, BarraLateral, Footer },
+    components: {Bar, BarraLateral, Foo },
     computed: {
         classObject: function () {
             return {
