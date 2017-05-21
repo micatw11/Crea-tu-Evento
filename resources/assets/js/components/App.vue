@@ -1,14 +1,10 @@
 <template>
     <div>
         <bar></bar>
-            <div v-bind:class="classObject">
-                <barra-lateral v-if="auth.user.authenticated"></barra-lateral>
-                <section class="section">
-                    <div class="container">
-                        <router-view></router-view>
-                    </div>
-                </section>
-            </div>
+        <barra-lateral v-if="auth.user.authenticated"></barra-lateral>
+        <div v-bind:class="classObject">
+            <router-view></router-view>
+        </div>
         <foo></foo>
     </div>
 </template>

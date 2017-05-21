@@ -13,7 +13,7 @@ class AuthController extends Controller
     {
         $this->validateLogin($request);
 
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
             // Authentication passed...
             $user = Auth::user();
             return response()->json(['data' =>  $user, 'csrfToken', csrf_token()]);

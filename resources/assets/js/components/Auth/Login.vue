@@ -1,7 +1,7 @@
 <template>
     <div class="login-box">
         <div class="login-logo">
-            <a href="#"><b>Arma Tu Evento</b></a>
+            <a href="#"><b>Crea tu Evento</b></a>
         </div>
         <!-- /.login-logo -->
         <div class="login-box-body">
@@ -9,23 +9,40 @@
             <div class="help-block" v-if="error">
                 <p>La convinacion de usuario y contraseña no es correcta.</p>
             </div>
-            <!-- form login -->
-            <div class="form-group has-feedback">
-                <input v-model="email" type="email" class="form-control" placeholder="Email" required>
-                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-            </div>
-            <div class="form-group has-feedback">
-                <input v-model="password" type="password" class="form-control" placeholder="Password" required>
-                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-            </div>
-            <div class="row">
-                <!-- /.col -->
-                <div class="col-xs-4">
-                    <button @click="login" class="btn btn-primary btn-block btn-flat">Sign In</button>
+            <form action="#" v-on:submit.prevent autocomplete="on">
+                <div class="form-group has-feedback">
+                    <input v-model="email" type="email" class="form-control" placeholder="Email" required>
+                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                    <div class="help-block" v-if="errors.email">
+                        <div v-for="msj in errors.email">
+                            <p>{{ msj }}.</p>
+                        </div>
+                    </div>
                 </div>
-                <!-- /.col -->
-            </div>
-            <!-- form -->
+                <div class="form-group has-feedback">
+                    <input v-model="password" type="password" class="form-control" placeholder="Password" required>
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                    <div class="help-block" v-if="errors.password">
+                        <div v-for="msj in errors.password">
+                            <p>{{ msj }}.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <!-- /.col -->
+                    <div class="col-xs-8">
+                        <div class="checkbox icheck">
+                            <label>
+                                <input v-model="remember" type="checkbox"> Remember Me
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        <button @click="login" class="btn btn-primary btn-block btn-flat">Sign In</button>
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </form>
 
 
             <a href="#">I forgot my password</a><br>
@@ -46,17 +63,24 @@ export default {
         return {
             email: null,
             password: null,
-            error: false
+            remember: false,
+            error: false,
+            errors: []
         }
     },
     methods: {
+        clearErrors: function(){
+            this.error = false,
+            this.errors = []
+        },
         login: function() {
+            this.clearErrors();
             this.$http.post(
                 'api/login',
                 {
                     email: this.email,
                     password: this.password,
-                    remember: false
+                    remember: this.remember
                 }
             ).then(response => {
   
@@ -67,9 +91,14 @@ export default {
                     name: 'home'
                 })
             }, response => {
-                this.error = true
+                if(response.body.error) {
+                    this.error = true
+                } else {
+                    this.errors = response.body
+                }
             })
         }
     }
+
 }
 </script>

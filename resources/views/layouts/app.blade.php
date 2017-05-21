@@ -4,12 +4,9 @@
     @include('layouts.header')
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
-    <div id="app">
 
-            @include('layouts.panel_config')
-            <div class="control-sidebar-bg"></div>
-    </div>
-    @yield ('scripts')
+        <div id="app"></div>
+
     @include('layouts.scripts')
 </body>
 </html>

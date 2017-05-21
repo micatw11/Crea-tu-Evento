@@ -46,8 +46,7 @@ function guardRoute (to, from, next) {
 
   if (!auth.user.authenticated) {
     next({
-      path: '/login',
-      query: { redirect: to.fullPath }
+      name: 'login'
     })
   } else {
     next()

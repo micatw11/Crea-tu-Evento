@@ -1,16 +1,16 @@
 <template>
     <section class="content-header">
         <h1>
-            {{title}}
+            {{titleContent}}
         </h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i>Home</a></li>
-            <li class="active">{{ title }}</li>
+            <li class="active">{{ titleContent }}</li>
         </ol>
     </section>
 </template>
 <script>
 export default {
-    props:['title']
+    props:['titleContent']
 }   
 </script>
