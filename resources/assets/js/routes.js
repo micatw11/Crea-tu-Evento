@@ -54,19 +54,25 @@ function guardRoute (to, from, next) {
 }
 
 function guardLogin(to, from, next) {
-	if (!auth.user.authenticated)
+	if (!auth.user.authenticated) //control de logueo
 	{
-		Vue.http.get('api/user').then(response => {
-				auth.user.authenticated = true
-				auth.user.profile = response.data.data
-				next('/')
-		}, response => {
-				next();
-		});
+		//se controla que no se venga esde logout
+		if(from.name == null || from.name !== 'home') 
+		{		
+			Vue.http.get('api/user').then(response => {
+					auth.user.authenticated = true
+					auth.user.profile = response.data.data
+					next({ name: 'home'})
+			}, response => {
+					next();
+			})
+		} else {//si se viene desde logout
+			next();
+		}
 	}
 	else
 	{
-    next('/')
+    next({ name: 'home'})
 	}
 }
 

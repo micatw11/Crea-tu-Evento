@@ -17,12 +17,7 @@
 
             <div v-if="auth.user.authenticated" class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                    <!--
-                        @include('layouts.mensaje')
-                        @include('layouts.notificaciones')
-                        @include('layouts.task')
-                        @include('layouts.menu_login_user')
-                    -->
+
                     <mensajes v-if="auth.user.authenticated"></mensajes>
                     <notificaciones v-if="auth.user.authenticated"></notificaciones>
                     <task v-if="auth.user.authenticated"></task>

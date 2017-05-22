@@ -5,7 +5,7 @@
         <div v-bind:class="classObject">
             <router-view></router-view>
         </div>
-        <foo></foo>
+        <foo v-if="auth.user.authenticated"></foo>
     </div>
 </template>
 <script>
