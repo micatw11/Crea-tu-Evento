@@ -18105,6 +18105,7 @@ module.exports = __webpack_require__(13);
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Path_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Path_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Path_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__routes_js__ = __webpack_require__(3);
 //
 //
 //
@@ -18369,16 +18370,33 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            titleContent: 'Perfil'
+            titleContent: 'Perfil',
+            perfil: null
         };
     },
 
-    components: { PathContent: __WEBPACK_IMPORTED_MODULE_0__Path_vue___default.a }
+    components: { PathContent: __WEBPACK_IMPORTED_MODULE_0__Path_vue___default.a },
+    methods: {
+        getUserPerfil: function getUserPerfil() {
+            var _this = this;
+
+            this.$http.get('api/user/' + userId + '/perfil').then(function (response) {
+                _this.perfil = response.data.data;
+            }, function (response) {
+                console.log('error');
+                __WEBPACK_IMPORTED_MODULE_1__routes_js__["a" /* default */].push({
+                    name: 'home'
+                });
+            });
+        }
+    }
 });
 
 /***/ }),

@@ -264,12 +264,27 @@
 </template>
 <script>
 import PathContent from './Path.vue'
+import router from '../../routes.js';
+
 export default {
     data(){
         return {
-            titleContent: 'Perfil'
+            titleContent: 'Perfil',
+            perfil: null
         }
     },
-    components: {PathContent}
+    components: {PathContent},
+    methods:{
+        getUserPerfil: function(){
+            this.$http.get('api/user/'+userId+'/perfil').then(response => {
+                this.perfil = response.data.data
+            }, response => {
+                console.log('error');
+                router.push({
+                    name: 'home'
+                })
+            })
+        }
+    }
 }
 </script>
