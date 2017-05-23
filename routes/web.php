@@ -23,15 +23,13 @@ Route::get('/calendario', function () {
     return view('calendar');
 });
 
-// Rutas del Login
 
-Route::post('api/login', 'Auth\AuthController@login');
-Route::post('api/logout', 'Auth\AuthController@logout');
+Route::group(['prefix' => 'api'], function () {
+    // Rutas del Login
+    Route::post('login', 'Auth\AuthController@login');
+    Route::post('logout', 'Auth\AuthController@logout');
+    // Rutas para el Registro
+    Route::post('register', 'Auth\RegisterController@create'); 
 
-// Rutas para el Registro
-Route::post('api/register', 'Auth\RegisterController@create'); 
-
-Route::get('api/user', 'Auth\AuthController@getAuth');
-//Auth::routes();
-
-Route::get('/home', 'HomeController@index');
+    Route::get('user', 'Auth\AuthController@getAuth');
+});

@@ -25,9 +25,6 @@ import PathContent from './Layouts/Path.vue'
                 titleContent: 'Dashboard'
             }
         },
-        mounted() {
-            console.log('Component mounted.')
-        }, 
         components: {PathContent}
     }
 </script>

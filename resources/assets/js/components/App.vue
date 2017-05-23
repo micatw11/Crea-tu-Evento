@@ -1,6 +1,6 @@
 <template>
     <div>
-        <bar></bar>
+        <bar v-if="auth.user.authenticated"></bar>
         <barra-lateral v-if="auth.user.authenticated"></barra-lateral>
         <div v-bind:class="classObject">
             <router-view></router-view>

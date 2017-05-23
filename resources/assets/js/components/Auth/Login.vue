@@ -11,7 +11,7 @@
             </div>
             <form action="#" v-on:submit.prevent autocomplete="on">
                 <div class="form-group has-feedback">
-                    <input v-model="email" type="email" class="form-control" placeholder="Email" required>
+                    <input v-model="email" type="email" class="form-control" placeholder="Email">
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                     <div class="help-block" v-if="errors.email">
                         <div v-for="msj in errors.email">
@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 <div class="form-group has-feedback">
-                    <input v-model="password" type="password" class="form-control" placeholder="Password" required>
+                    <input v-model="password" type="password" class="form-control" placeholder="Password">
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                     <div class="help-block" v-if="errors.password">
                         <div v-for="msj in errors.password">
@@ -29,8 +29,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <!-- /.col -->
-                    <div class="col-xs-8">
+                    <div class="col-xs-7 col-xs-offset-1">
                         <div class="checkbox icheck">
                             <label>
                                 <input v-model="remember" type="checkbox"> Remember Me

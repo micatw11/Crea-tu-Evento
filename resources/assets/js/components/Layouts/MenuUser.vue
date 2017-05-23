@@ -32,7 +32,9 @@
             <!-- Menu Footer-->
             <li class="user-footer">
                 <div class="pull-left">
-                    <a href="#" class="btn btn-default btn-flat">Profile</a>
+                    <router-link :to="pathUser">
+                        <a class="btn btn-default btn-flat">Perfil</a>
+                    </router-link>
                 </div>
                 <div class="pull-right">
                     <a  @click="logout" class="btn btn-default btn-flat">
@@ -49,7 +51,8 @@ import router from '../../routes.js';
 export default {
     data() {
         return {
-            auth: auth
+            auth: auth,
+            pathUser: 'user/'+auth.user.profile.id +'/perfil'
         }
     },
     methods: {

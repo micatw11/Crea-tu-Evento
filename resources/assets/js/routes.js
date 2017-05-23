@@ -4,18 +4,16 @@ import auth from './auth.js';
 
 var Header = require('./components/Header');
 var Login = require('./components/Auth/Login');
-/*
-import Barra from './components/Layouts/Barra.vue';
-import BarraLateral from './components/Layouts/BarraLateral.vue';
-import Footer from'./components/Layouts/Footer.vue';
-
-*/
+var Home = require('./components/Home');
+var About = require('./components/About');
+var Calendar = require('./components/Calendario');
+var Perfil = require('./components/Layouts/Perfil');
 
 let routes = [ 
 		{
 			path: '/',
 			name: 'home',
-			component: require('./components/Home'),
+			component: Home,
 			beforeEnter: guardRoute
 		},
 		{
@@ -26,12 +24,12 @@ let routes = [
 		},
 		{
 			path: '/about',
-			component: require('./components/About'),
+			component: About,
 			beforeEnter: guardRoute
 		},
 		{
 			path: '/calendario',
-			component: require('./components/Calendario'),
+			component: Calendar,
 			beforeEnter: guardRoute
 
 		},
@@ -39,42 +37,51 @@ let routes = [
 			path: '/header',
 			component: Header,
 			beforeEnter: guardRoute
+		},
+		{
+			path: '/user/:userId/perfil',
+			name: 'user',
+			component: Perfil,
+			beforeEnter: guardRoute
+
 		}
  ];
 
-function guardRoute (to, from, next) {
 
-  if (!auth.user.authenticated) {
-    next({
-      name: 'login'
-    })
-  } else {
-    next()
-  }
-}
+function guardRoute (to, from, next) 
+{
+ 	if (!auth.user.authenticated) {
+		Vue.http.get('api/user').then(response => {
+			auth.user.authenticated = true
+			auth.user.profile = response.data.data
+			next()
+		}, response => {
+			next('/login')
+		})
 
-function guardLogin(to, from, next) {
-	if (!auth.user.authenticated) //control de logueo
-	{
-		//se controla que no se venga esde logout
-		if(from.name == null || from.name !== 'home') 
-		{		
-			Vue.http.get('api/user').then(response => {
-					auth.user.authenticated = true
-					auth.user.profile = response.data.data
-					next({ name: 'home'})
-			}, response => {
-					next();
-			})
-		} else {//si se viene desde logout
-			next();
-		}
-	}
-	else
-	{
-    next({ name: 'home'})
+  	} else {
+		next()
 	}
 }
+
+function guardLogin(to, from, next) 
+{
+	if(from.name == null)
+	{
+		Vue.http.get('api/user').then(response => {
+			auth.user.authenticated = true
+			auth.user.profile = response.data.data
+			next({ path:'/' })//sigue a home
+		}, response => {
+			next()//sigue a login
+		})
+	} else {
+		next()//sigue a login
+	}
+
+}
+
+
 
 
 export default new VueRouter({
