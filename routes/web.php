@@ -32,4 +32,6 @@ Route::group(['prefix' => 'api'], function () {
     Route::post('register', 'Auth\RegisterController@register'); 
 
     Route::get('user', 'Auth\AuthController@getAuth');
+
+    //Route::resource('usuario', 'UsuarioController');
 });
