@@ -33,5 +33,5 @@ Route::group(['prefix' => 'api'], function () {
 
     Route::get('user', 'Auth\AuthController@getAuth');
 
-    //Route::resource('usuario', 'UsuarioController');
+    Route::resource('usuario', 'UsuarioController');
 });
