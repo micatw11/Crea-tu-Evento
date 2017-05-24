@@ -4432,6 +4432,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 
 
@@ -9680,8 +9682,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('p', {
     staticClass: "login-box-msg"
   }, [_vm._v("Iniciar su sesión")]), _vm._v(" "), (_vm.error) ? _c('div', {
-    staticClass: "help-block"
-  }, [_c('p', [_vm._v("Estas credenciales no coinciden con nuestros registros.")])]) : _vm._e(), _vm._v(" "), _c('form', {
+    staticClass: "text-center"
+  }, [_c('p', {
+    staticClass: "text-red"
+  }, [_vm._v("Estas credenciales no coinciden con nuestros registros.")])]) : _vm._e(), _vm._v(" "), _c('form', {
     on: {
       "submit": function($event) {
         $event.preventDefault();
@@ -9689,7 +9693,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   }, [_c('div', {
-    staticClass: "form-group has-feedback"
+    class: {
+      'form-group has-feedback': true, 'form-group has-error': _vm.errors.has('email')
+    }
   }, [_c('input', {
     directives: [{
       name: "model",
@@ -9733,7 +9739,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, _vm._l((_vm.errorsApi.email), function(msj) {
     return _c('div', [_c('p', [_vm._v(_vm._s(msj) + ".")])])
   })) : _vm._e()]), _vm._v(" "), _c('div', {
-    staticClass: "form-group has-feedback"
+    class: {
+      'form-group has-feedback': true, 'form-group has-error': _vm.errors.has('password')
+    }
   }, [_c('input', {
     directives: [{
       name: "model",
