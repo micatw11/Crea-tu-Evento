@@ -44,8 +44,10 @@
             </form>
 
 
-            <a href="#">I forgot my password</a><br>
-            <a href="register.html" class="text-center">Register a new membership</a>
+            <router-link tag="a" to="/registrar">¿Se olvido la contraseña?</router-link><br>
+            <router-link tag="a" to="/registrar" class="text-center">
+                    Registrar una nueva cuenta</a>
+              </router-link>
 
         </div>
         <!-- /.login-box-body -->
