@@ -81,7 +81,7 @@ export default {
             ).then(response => {
   
                 auth.user.authenticated = true
-                auth.user.profile = response.data
+                auth.user.profile = response.body.data
 
                 router.push({
                     name: 'home'

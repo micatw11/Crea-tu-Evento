@@ -29,7 +29,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::post('login', 'Auth\AuthController@login');
     Route::post('logout', 'Auth\AuthController@logout');
     // Rutas para el Registro
-    Route::post('register', 'Auth\RegisterController@register'); 
+    Route::post('register', 'Auth\RegisterUserController@register'); 
 
     Route::get('user', 'Auth\AuthController@getAuth');
 
