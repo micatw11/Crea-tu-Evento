@@ -8,6 +8,7 @@ var Home = require('./components/Home');
 var About = require('./components/About');
 var Calendar = require('./components/Calendario');
 var Perfil = require('./components/Layouts/Perfil');
+var Registrar = require('./components/Auth/Register');
 
 let routes = [ 
 		{
@@ -20,6 +21,12 @@ let routes = [
 			path: '/login',
 			name: 'login',
 			component: Login,
+			beforeEnter: guardLogin
+		},
+		{
+			path: '/registrar',
+			name: 'registrar',
+			component: Registrar,
 			beforeEnter: guardLogin
 		},
 		{

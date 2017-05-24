@@ -63,7 +63,11 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
+<<<<<<< HEAD
 /******/ 	return __webpack_require__(__webpack_require__.s = 79);
+=======
+/******/ 	return __webpack_require__(__webpack_require__.s = 81);
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -451,12 +455,22 @@ module.exports = {
 
 
 
+<<<<<<< HEAD
 var Header = __webpack_require__(50);
 var Login = __webpack_require__(48);
 var Home = __webpack_require__(51);
 var About = __webpack_require__(46);
 var Calendar = __webpack_require__(49);
 var Perfil = __webpack_require__(58);
+=======
+var Header = __webpack_require__(51);
+var Login = __webpack_require__(48);
+var Home = __webpack_require__(52);
+var About = __webpack_require__(46);
+var Calendar = __webpack_require__(50);
+var Perfil = __webpack_require__(59);
+var Registrar = __webpack_require__(49);
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 
 var routes = [{
 	path: '/',
@@ -467,6 +481,11 @@ var routes = [{
 	path: '/login',
 	name: 'login',
 	component: Login,
+	beforeEnter: guardLogin
+}, {
+	path: '/registrar',
+	name: 'registrar',
+	component: Registrar,
 	beforeEnter: guardLogin
 }, {
 	path: '/about',
@@ -528,15 +547,25 @@ function guardLogin(to, from, next) {
 
 var Component = __webpack_require__(0)(
   /* script */
+<<<<<<< HEAD
   __webpack_require__(41),
   /* template */
   __webpack_require__(72),
+=======
+  __webpack_require__(42),
+  /* template */
+  __webpack_require__(73),
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
   /* scopeId */
   null,
   /* cssModules */
   null
 )
+<<<<<<< HEAD
 Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Layouts\\Path.vue"
+=======
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Layouts/Path.vue"
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Path.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -655,7 +684,11 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = defaults;
 
+<<<<<<< HEAD
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(44)))
+=======
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(45)))
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 
 /***/ }),
 /* 6 */
@@ -3398,7 +3431,11 @@ if (inBrowser && window.Vue) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+<<<<<<< HEAD
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__bootstrap__ = __webpack_require__(43);
+=======
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__bootstrap__ = __webpack_require__(44);
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__routes__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_App_vue__ = __webpack_require__(47);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_App_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_App_vue__);
@@ -4325,11 +4362,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__auth_js__ = __webpack_require__(2);
+<<<<<<< HEAD
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Layouts_Barra_vue__ = __webpack_require__(52);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Layouts_Barra_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__Layouts_Barra_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Layouts_BarraLateral_vue__ = __webpack_require__(53);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Layouts_BarraLateral_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__Layouts_BarraLateral_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Layouts_Footer_vue__ = __webpack_require__(54);
+=======
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Layouts_Barra_vue__ = __webpack_require__(53);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Layouts_Barra_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__Layouts_Barra_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Layouts_BarraLateral_vue__ = __webpack_require__(54);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Layouts_BarraLateral_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__Layouts_BarraLateral_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Layouts_Footer_vue__ = __webpack_require__(55);
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Layouts_Footer_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__Layouts_Footer_vue__);
 //
 //
@@ -4431,9 +4476,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+<<<<<<< HEAD
 //
 //
 //
+=======
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 
 
 
@@ -4495,6 +4543,106 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 /* 35 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__auth_js__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__routes_js__ = __webpack_require__(3);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            name: null,
+            email: null,
+            password: null,
+            password_confirmation: null,
+            error: false
+        };
+    },
+
+    methods: {
+        registrar: function registrar() {
+            var _this = this;
+
+            this.$http.post('api/register', {
+                name: this.name,
+                email: this.email,
+                password: this.password,
+                password_confirmation: this.password_confirmation,
+                remember: false
+            }).then(function (response) {
+
+                __WEBPACK_IMPORTED_MODULE_0__auth_js__["a" /* default */].user.authenticated = true;
+                __WEBPACK_IMPORTED_MODULE_0__auth_js__["a" /* default */].user.profile = response.data;
+
+                __WEBPACK_IMPORTED_MODULE_1__routes_js__["a" /* default */].push({
+                    name: 'home'
+                });
+            }, function (response) {
+                _this.error = true;
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 36 */
 /***/ (function(module, exports) {
 
 //
@@ -4727,7 +4875,7 @@ $(function () {
 });
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4769,7 +4917,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4808,13 +4956,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__auth_js__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__routes_js__ = __webpack_require__(3);
+<<<<<<< HEAD
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Mensajes_vue__ = __webpack_require__(55);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Mensajes_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__Mensajes_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__MenuUser_vue__ = __webpack_require__(56);
@@ -4822,6 +4971,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Notificaciones_vue__ = __webpack_require__(57);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Notificaciones_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__Notificaciones_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__Task_vue__ = __webpack_require__(59);
+=======
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Mensajes_vue__ = __webpack_require__(56);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Mensajes_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__Mensajes_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__MenuUser_vue__ = __webpack_require__(57);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__MenuUser_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__MenuUser_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Notificaciones_vue__ = __webpack_require__(58);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Notificaciones_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__Notificaciones_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__Task_vue__ = __webpack_require__(60);
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__Task_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__Task_vue__);
 //
 //
@@ -4878,7 +5036,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4979,7 +5137,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5057,7 +5215,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5079,7 +5237,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
+<<<<<<< HEAD
 /* 42 */
+=======
+/* 43 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5381,11 +5543,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
+<<<<<<< HEAD
 /* 43 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(76);
+=======
+/* 44 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(78);
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_axios__ = __webpack_require__(14);
@@ -5402,7 +5572,11 @@ window.Vue = __WEBPACK_IMPORTED_MODULE_0_vue___default.a;
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]);
 
 window.axios = __WEBPACK_IMPORTED_MODULE_2_axios___default.a;
+<<<<<<< HEAD
 __webpack_require__(75);
+=======
+__webpack_require__(77);
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.http.interceptors.push(function (request, next) {
     request.headers.set('X-CSRF-TOKEN', Laravel.csrfToken);
@@ -5414,7 +5588,11 @@ window.axios.defaults.headers.common = {
 };
 
 /***/ }),
+<<<<<<< HEAD
 /* 44 */
+=======
+/* 45 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -5471,6 +5649,7 @@ function runTimeout(fun) {
         try {
             // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
             return cachedSetTimeout.call(null, fun, 0);
+<<<<<<< HEAD
         } catch(e){
             // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
             return cachedSetTimeout.call(this, fun, 0);
@@ -9007,6 +9186,138 @@ var index = {
 return index;
 
 })));
+=======
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 
 
 /***/ }),
@@ -9017,13 +9328,21 @@ var Component = __webpack_require__(0)(
   /* script */
   __webpack_require__(32),
   /* template */
+<<<<<<< HEAD
   __webpack_require__(66),
+=======
+  __webpack_require__(67),
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
   /* scopeId */
   null,
   /* cssModules */
   null
 )
+<<<<<<< HEAD
 Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\About.vue"
+=======
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/About.vue"
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] About.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -9051,13 +9370,21 @@ var Component = __webpack_require__(0)(
   /* script */
   __webpack_require__(33),
   /* template */
+<<<<<<< HEAD
   __webpack_require__(62),
+=======
+  __webpack_require__(63),
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
   /* scopeId */
   null,
   /* cssModules */
   null
 )
+<<<<<<< HEAD
 Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\App.vue"
+=======
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/App.vue"
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] App.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -9085,13 +9412,21 @@ var Component = __webpack_require__(0)(
   /* script */
   __webpack_require__(34),
   /* template */
+<<<<<<< HEAD
   __webpack_require__(64),
+=======
+  __webpack_require__(65),
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
   /* scopeId */
   null,
   /* cssModules */
   null
 )
+<<<<<<< HEAD
 Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Auth\\Login.vue"
+=======
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Auth/Login.vue"
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Login.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -9119,13 +9454,55 @@ var Component = __webpack_require__(0)(
   /* script */
   __webpack_require__(35),
   /* template */
+<<<<<<< HEAD
   __webpack_require__(74),
+=======
+  __webpack_require__(76),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Auth/Register.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] Register.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-bca1da32", Component.options)
+  } else {
+    hotAPI.reload("data-v-bca1da32", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 50 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(0)(
+  /* script */
+  __webpack_require__(36),
+  /* template */
+  __webpack_require__(75),
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+<<<<<<< HEAD
 Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Calendario.vue"
+=======
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Calendario.vue"
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Calendario.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -9146,20 +9523,34 @@ module.exports = Component.exports
 
 
 /***/ }),
+<<<<<<< HEAD
 /* 50 */
+=======
+/* 51 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
+<<<<<<< HEAD
   __webpack_require__(36),
   /* template */
   __webpack_require__(60),
+=======
+  __webpack_require__(37),
+  /* template */
+  __webpack_require__(61),
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
   /* scopeId */
   null,
   /* cssModules */
   null
 )
+<<<<<<< HEAD
 Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Header.vue"
+=======
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Header.vue"
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Header.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -9180,20 +9571,34 @@ module.exports = Component.exports
 
 
 /***/ }),
+<<<<<<< HEAD
 /* 51 */
+=======
+/* 52 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
+<<<<<<< HEAD
   __webpack_require__(37),
   /* template */
   __webpack_require__(73),
+=======
+  __webpack_require__(38),
+  /* template */
+  __webpack_require__(74),
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
   /* scopeId */
   null,
   /* cssModules */
   null
 )
+<<<<<<< HEAD
 Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Home.vue"
+=======
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Home.vue"
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Home.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -9214,20 +9619,34 @@ module.exports = Component.exports
 
 
 /***/ }),
+<<<<<<< HEAD
 /* 52 */
+=======
+/* 53 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
+<<<<<<< HEAD
   __webpack_require__(38),
   /* template */
   __webpack_require__(63),
+=======
+  __webpack_require__(39),
+  /* template */
+  __webpack_require__(64),
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
   /* scopeId */
   null,
   /* cssModules */
   null
 )
+<<<<<<< HEAD
 Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Layouts\\Barra.vue"
+=======
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Layouts/Barra.vue"
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Barra.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -9248,20 +9667,34 @@ module.exports = Component.exports
 
 
 /***/ }),
+<<<<<<< HEAD
 /* 53 */
+=======
+/* 54 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
+<<<<<<< HEAD
   __webpack_require__(39),
   /* template */
   __webpack_require__(71),
+=======
+  __webpack_require__(40),
+  /* template */
+  __webpack_require__(72),
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
   /* scopeId */
   null,
   /* cssModules */
   null
 )
+<<<<<<< HEAD
 Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Layouts\\BarraLateral.vue"
+=======
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Layouts/BarraLateral.vue"
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] BarraLateral.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -9282,20 +9715,32 @@ module.exports = Component.exports
 
 
 /***/ }),
+<<<<<<< HEAD
 /* 54 */
+=======
+/* 55 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
   null,
   /* template */
+<<<<<<< HEAD
   __webpack_require__(65),
+=======
+  __webpack_require__(66),
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
   /* scopeId */
   null,
   /* cssModules */
   null
 )
+<<<<<<< HEAD
 Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Layouts\\Footer.vue"
+=======
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Layouts/Footer.vue"
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Footer.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -9316,20 +9761,32 @@ module.exports = Component.exports
 
 
 /***/ }),
+<<<<<<< HEAD
 /* 55 */
+=======
+/* 56 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
   null,
   /* template */
+<<<<<<< HEAD
   __webpack_require__(69),
+=======
+  __webpack_require__(70),
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
   /* scopeId */
   null,
   /* cssModules */
   null
 )
+<<<<<<< HEAD
 Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Layouts\\Mensajes.vue"
+=======
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Layouts/Mensajes.vue"
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Mensajes.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -9350,20 +9807,34 @@ module.exports = Component.exports
 
 
 /***/ }),
+<<<<<<< HEAD
 /* 56 */
+=======
+/* 57 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
+<<<<<<< HEAD
   __webpack_require__(40),
   /* template */
   __webpack_require__(61),
+=======
+  __webpack_require__(41),
+  /* template */
+  __webpack_require__(62),
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
   /* scopeId */
   null,
   /* cssModules */
   null
 )
+<<<<<<< HEAD
 Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Layouts\\MenuUser.vue"
+=======
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Layouts/MenuUser.vue"
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] MenuUser.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -9384,20 +9855,32 @@ module.exports = Component.exports
 
 
 /***/ }),
+<<<<<<< HEAD
 /* 57 */
+=======
+/* 58 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
   null,
   /* template */
+<<<<<<< HEAD
   __webpack_require__(67),
+=======
+  __webpack_require__(68),
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
   /* scopeId */
   null,
   /* cssModules */
   null
 )
+<<<<<<< HEAD
 Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Layouts\\Notificaciones.vue"
+=======
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Layouts/Notificaciones.vue"
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Notificaciones.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -9418,20 +9901,34 @@ module.exports = Component.exports
 
 
 /***/ }),
+<<<<<<< HEAD
 /* 58 */
+=======
+/* 59 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
+<<<<<<< HEAD
   __webpack_require__(42),
   /* template */
   __webpack_require__(68),
+=======
+  __webpack_require__(43),
+  /* template */
+  __webpack_require__(69),
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
   /* scopeId */
   null,
   /* cssModules */
   null
 )
+<<<<<<< HEAD
 Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Layouts\\Perfil.vue"
+=======
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Layouts/Perfil.vue"
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Perfil.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -9452,20 +9949,32 @@ module.exports = Component.exports
 
 
 /***/ }),
+<<<<<<< HEAD
 /* 59 */
+=======
+/* 60 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
   null,
   /* template */
+<<<<<<< HEAD
   __webpack_require__(70),
+=======
+  __webpack_require__(71),
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
   /* scopeId */
   null,
   /* cssModules */
   null
 )
+<<<<<<< HEAD
 Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Layouts\\Task.vue"
+=======
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Layouts/Task.vue"
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Task.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -9486,7 +9995,11 @@ module.exports = Component.exports
 
 
 /***/ }),
+<<<<<<< HEAD
 /* 60 */
+=======
+/* 61 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -9519,7 +10032,11 @@ if (false) {
 }
 
 /***/ }),
+<<<<<<< HEAD
 /* 61 */
+=======
+/* 62 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -9601,7 +10118,11 @@ if (false) {
 }
 
 /***/ }),
+<<<<<<< HEAD
 /* 62 */
+=======
+/* 63 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -9618,7 +10139,11 @@ if (false) {
 }
 
 /***/ }),
+<<<<<<< HEAD
 /* 63 */
+=======
+/* 64 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -9671,7 +10196,11 @@ if (false) {
 }
 
 /***/ }),
+<<<<<<< HEAD
 /* 64 */
+=======
+/* 65 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -9682,6 +10211,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('p', {
     staticClass: "login-box-msg"
   }, [_vm._v("Iniciar su sesión")]), _vm._v(" "), (_vm.error) ? _c('div', {
+<<<<<<< HEAD
     staticClass: "text-center"
   }, [_c('p', {
     staticClass: "text-red"
@@ -9696,12 +10226,28 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     class: {
       'form-group has-feedback': true, 'form-group has-error': _vm.errors.has('email')
     }
+=======
+    staticClass: "help-block"
+  }, [_c('p', [_vm._v("La convinacion de usuario y contraseña no es correcta.")])]) : _vm._e(), _vm._v(" "), _c('form', {
+    attrs: {
+      "action": "#",
+      "autocomplete": "on"
+    },
+    on: {
+      "submit": function($event) {
+        $event.preventDefault();
+      }
+    }
+  }, [_c('div', {
+    staticClass: "form-group has-feedback"
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
   }, [_c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
       value: (_vm.email),
       expression: "email"
+<<<<<<< HEAD
     }, {
       name: "validate",
       rawName: "v-validate:email",
@@ -9712,6 +10258,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "form-control",
     attrs: {
       "name": "email",
+=======
+    }],
+    staticClass: "form-control",
+    attrs: {
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
       "type": "email",
       "placeholder": "Email"
     },
@@ -9726,6 +10277,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }), _vm._v(" "), _c('span', {
     staticClass: "glyphicon glyphicon-envelope form-control-feedback"
+<<<<<<< HEAD
   }), _vm._v(" "), _c('span', {
     directives: [{
       name: "show",
@@ -9742,12 +10294,21 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     class: {
       'form-group has-feedback': true, 'form-group has-error': _vm.errors.has('password')
     }
+=======
+  }), _vm._v(" "), (_vm.errors.email) ? _c('div', {
+    staticClass: "help-block"
+  }, _vm._l((_vm.errors.email), function(msj) {
+    return _c('div', [_c('p', [_vm._v(_vm._s(msj) + ".")])])
+  })) : _vm._e()]), _vm._v(" "), _c('div', {
+    staticClass: "form-group has-feedback"
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
   }, [_c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
       value: (_vm.password),
       expression: "password"
+<<<<<<< HEAD
     }, {
       name: "validate",
       rawName: "v-validate:password",
@@ -9758,6 +10319,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "form-control",
     attrs: {
       "name": "password",
+=======
+    }],
+    staticClass: "form-control",
+    attrs: {
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
       "type": "password",
       "placeholder": "Password"
     },
@@ -9772,6 +10338,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }), _vm._v(" "), _c('span', {
     staticClass: "glyphicon glyphicon-lock form-control-feedback"
+<<<<<<< HEAD
   }), _vm._v(" "), _c('span', {
     directives: [{
       name: "show",
@@ -9783,6 +10350,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_vm._v(_vm._s(_vm.errors.first('password')))]), _vm._v(" "), (_vm.errorsApi.password) ? _c('div', {
     staticClass: "help-block"
   }, _vm._l((_vm.errorsApi.password), function(msj) {
+=======
+  }), _vm._v(" "), (_vm.errors.password) ? _c('div', {
+    staticClass: "help-block"
+  }, _vm._l((_vm.errors.password), function(msj) {
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
     return _c('div', [_c('p', [_vm._v(_vm._s(msj) + ".")])])
   })) : _vm._e()]), _vm._v(" "), _c('div', {
     staticClass: "row"
@@ -9821,6 +10393,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         }
       }
     }
+<<<<<<< HEAD
   }), _vm._v(" Remember Me\n                        ")])])]), _vm._v(" "), _vm._m(1)])]), _vm._v(" "), _c('a', {
     attrs: {
       "href": "#"
@@ -9831,6 +10404,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "href": "register.html"
     }
   }, [_vm._v("Register a new membership")])])])
+=======
+  }), _vm._v(" Remember Me\n                        ")])])]), _vm._v(" "), _c('div', {
+    staticClass: "col-xs-4"
+  }, [_c('button', {
+    staticClass: "btn btn-primary btn-block btn-flat",
+    on: {
+      "click": _vm.login
+    }
+  }, [_vm._v("Sign In")])])])]), _vm._v(" "), _c('router-link', {
+    attrs: {
+      "tag": "a",
+      "to": "/registrar"
+    }
+  }, [_vm._v("¿Se olvido la contraseña?")]), _c('br'), _vm._v(" "), _c('router-link', {
+    staticClass: "text-center",
+    attrs: {
+      "tag": "a",
+      "to": "/registrar"
+    }
+  }, [_vm._v("\n                Registrar una nueva cuenta")])], 1)])
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "login-logo"
@@ -9839,6 +10433,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "href": "#"
     }
   }, [_c('b', [_vm._v("Crea tu Evento")])])])
+<<<<<<< HEAD
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "col-xs-4"
@@ -9848,6 +10443,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "type": "submit"
     }
   }, [_vm._v("Sign In")])])
+=======
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 }]}
 module.exports.render._withStripped = true
 if (false) {
@@ -9858,7 +10455,11 @@ if (false) {
 }
 
 /***/ }),
+<<<<<<< HEAD
 /* 65 */
+=======
+/* 66 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -9883,7 +10484,11 @@ if (false) {
 }
 
 /***/ }),
+<<<<<<< HEAD
 /* 66 */
+=======
+/* 67 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -9916,7 +10521,11 @@ if (false) {
 }
 
 /***/ }),
+<<<<<<< HEAD
 /* 67 */
+=======
+/* 68 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -9987,7 +10596,11 @@ if (false) {
 }
 
 /***/ }),
+<<<<<<< HEAD
 /* 68 */
+=======
+/* 69 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -10364,7 +10977,11 @@ if (false) {
 }
 
 /***/ }),
+<<<<<<< HEAD
 /* 69 */
+=======
+/* 70 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -10475,7 +11092,11 @@ if (false) {
 }
 
 /***/ }),
+<<<<<<< HEAD
 /* 70 */
+=======
+/* 71 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -10600,7 +11221,11 @@ if (false) {
 }
 
 /***/ }),
+<<<<<<< HEAD
 /* 71 */
+=======
+/* 72 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -10734,7 +11359,11 @@ if (false) {
 }
 
 /***/ }),
+<<<<<<< HEAD
 /* 72 */
+=======
+/* 73 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -10763,7 +11392,11 @@ if (false) {
 }
 
 /***/ }),
+<<<<<<< HEAD
 /* 73 */
+=======
+/* 74 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -10796,7 +11429,11 @@ if (false) {
 }
 
 /***/ }),
+<<<<<<< HEAD
 /* 74 */
+=======
+/* 75 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -10989,7 +11626,173 @@ if (false) {
 }
 
 /***/ }),
+<<<<<<< HEAD
 /* 75 */
+=======
+/* 76 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "register-box container row"
+  }, [_c('div', {
+    staticClass: "register-box-body"
+  }, [_c('h3', {
+    staticClass: "login-box-msg"
+  }, [_vm._v("Registrar una nueva cuenta")]), _c('br'), _vm._v(" "), (_vm.error) ? _c('div', {
+    staticClass: "help-block"
+  }, [_c('p', [_vm._v("Error al registrar")])]) : _vm._e(), _vm._v(" "), _c('div', {
+    staticClass: "form-group has-feedback"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.name),
+      expression: "name"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "type": "text",
+      "placeholder": "Ingresar nombre de usuario"
+    },
+    domProps: {
+      "value": (_vm.name)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.name = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _c('span', {
+    staticClass: "glyphicon glyphicon-user form-control-feedback"
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "form-group has-feedback"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.email),
+      expression: "email"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "type": "email",
+      "placeholder": "Ingresar Email"
+    },
+    domProps: {
+      "value": (_vm.email)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.email = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _c('span', {
+    staticClass: "glyphicon glyphicon-envelope form-control-feedback"
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "form-group has-feedback"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.password),
+      expression: "password"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "type": "password",
+      "placeholder": "Ingresar Contraseña"
+    },
+    domProps: {
+      "value": (_vm.password)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.password = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _c('span', {
+    staticClass: "glyphicon glyphicon-lock form-control-feedback"
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "form-group has-feedback"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.password_confirmation),
+      expression: "password_confirmation"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "type": "password",
+      "placeholder": "Confirmar contraseña"
+    },
+    domProps: {
+      "value": (_vm.password_confirmation)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.password_confirmation = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _c('span', {
+    staticClass: "glyphicon glyphicon-log-in form-control-feedback"
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "form-group has-feedback text-center row"
+  }, [_vm._m(0), _vm._v(" "), _c('br'), _vm._v(" "), _c('div', {
+    staticClass: "col-xs-12"
+  }, [_c('button', {
+    staticClass: "btn btn-primary btn-flat",
+    on: {
+      "click": _vm.registrar
+    }
+  }, [_vm._v("Crear cuenta")])])]), _vm._v(" "), _vm._m(1), _vm._v("\n\n    ¿Ya tienes una cuenta?"), _c('router-link', {
+    staticClass: "text-center",
+    attrs: {
+      "tag": "a",
+      "to": "/login"
+    }
+  }, [_vm._v(" Iniciar sesión")])], 1)])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('p', [_vm._v("\n              Al crear una cuenta acepta el "), _c('a', {
+    attrs: {
+      "href": "#"
+    }
+  }, [_vm._v("Contrato de servicios de Eventos.")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "social-auth-links text-center"
+  }, [_c('p', [_vm._v("- O -")]), _vm._v(" "), _c('a', {
+    staticClass: "btn btn-block btn-social btn-facebook btn-flat",
+    attrs: {
+      "href": "#"
+    }
+  }, [_c('i', {
+    staticClass: "fa fa-facebook"
+  }), _vm._v(" Iniciar sesión con Facebook\n        Facebook")]), _vm._v(" "), _c('a', {
+    staticClass: "btn btn-block btn-social btn-google btn-flat",
+    attrs: {
+      "href": "#"
+    }
+  }, [_c('i', {
+    staticClass: "fa fa-google-plus"
+  }), _vm._v(" Iniciar sesión con\n        Google+")])])
+}]}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-bca1da32", module.exports)
+  }
+}
+
+/***/ }),
+/* 77 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10998,7 +11801,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Http", function() { return Http; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Resource", function() { return Resource; });
 /*!
+<<<<<<< HEAD
  * vue-resource v1.3.1
+=======
+ * vue-resource v1.3.3
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
  * https://github.com/pagekit/vue-resource
  * Released under the MIT License.
  */
@@ -11297,6 +12104,22 @@ function trim(str) {
     return str ? str.replace(/^\s*|\s*$/g, '') : '';
 }
 
+<<<<<<< HEAD
+=======
+function trimEnd(str, chars) {
+
+    if (str && chars === undefined) {
+        return str.replace(/\s+$/, '');
+    }
+
+    if (!str || !chars) {
+        return str;
+    }
+
+    return str.replace(new RegExp(("[" + chars + "]+$")), '');
+}
+
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 function toLower(str) {
     return str ? str.toLowerCase() : '';
 }
@@ -11439,8 +12262,13 @@ var root = function (options$$1, next) {
 
     var url = next(options$$1);
 
+<<<<<<< HEAD
     if (isString(options$$1.root) && !url.match(/^(https?:)?\//)) {
         url = options$$1.root + '/' + url;
+=======
+    if (isString(options$$1.root) && !/^(https?:)?\//.test(url)) {
+        url = trimEnd(options$$1.root, '/') + '/' + url;
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
     }
 
     return url;
@@ -11833,15 +12661,23 @@ var cors = function (request, next) {
 };
 
 /**
+<<<<<<< HEAD
  * Body Interceptor.
  */
 
 var body = function (request, next) {
+=======
+ * Form data Interceptor.
+ */
+
+var form = function (request, next) {
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 
     if (isFormData(request.body)) {
 
         request.headers.delete('Content-Type');
 
+<<<<<<< HEAD
     } else if (isObject(request.body) || isArray(request.body)) {
 
         if (request.emulateJSON) {
@@ -11869,6 +12705,34 @@ var body = function (request, next) {
         return response.bodyText ? when(response.text(), function (text) {
 
             var type = response.headers.get('Content-Type') || '';
+=======
+    } else if (isObject(request.body) && request.emulateJSON) {
+
+        request.body = Url.params(request.body);
+        request.headers.set('Content-Type', 'application/x-www-form-urlencoded');
+    }
+
+    next();
+};
+
+/**
+ * JSON Interceptor.
+ */
+
+var json = function (request, next) {
+
+    var type = request.headers.get('Content-Type') || '';
+
+    if (isObject(request.body) && type.indexOf('application/json') === 0) {
+        request.body = JSON.stringify(request.body);
+    }
+
+    next(function (response) {
+
+        return response.bodyText ? when(response.text(), function (text) {
+
+            type = response.headers.get('Content-Type') || '';
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 
             if (type.indexOf('application/json') === 0 || isJson(text)) {
 
@@ -12079,7 +12943,11 @@ var xhrClient = function (request) {
 
 var nodeClient = function (request) {
 
+<<<<<<< HEAD
     var client = __webpack_require__(78);
+=======
+    var client = __webpack_require__(80);
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 
     return new PromiseObj(function (resolve) {
 
@@ -12296,6 +13164,21 @@ Response.prototype.json = function json () {
     return when(this.text(), function (text) { return JSON.parse(text); });
 };
 
+<<<<<<< HEAD
+=======
+Object.defineProperty(Response.prototype, 'data', {
+
+    get: function get() {
+        return this.body;
+    },
+
+    set: function set(body) {
+        this.body = body;
+    }
+
+});
+
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 function blobText(body) {
     return new PromiseObj(function (resolve) {
 
@@ -12393,8 +13276,13 @@ Http.headers = {
     custom: {}
 };
 
+<<<<<<< HEAD
 Http.interceptor = {before: before, method: method, body: body, jsonp: jsonp, header: header, cors: cors};
 Http.interceptors = ['before', 'method', 'body', 'jsonp', 'header', 'cors'];
+=======
+Http.interceptor = {before: before, method: method, jsonp: jsonp, json: json, form: form, header: header, cors: cors};
+Http.interceptors = ['before', 'method', 'jsonp', 'json', 'form', 'header', 'cors'];
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 
 ['get', 'delete', 'head', 'jsonp'].forEach(function (method$$1) {
 
@@ -12406,8 +13294,13 @@ Http.interceptors = ['before', 'method', 'body', 'jsonp', 'header', 'cors'];
 
 ['post', 'put', 'patch'].forEach(function (method$$1) {
 
+<<<<<<< HEAD
     Http[method$$1] = function (url, body$$1, options$$1) {
         return this(assign(options$$1 || {}, {url: url, method: method$$1, body: body$$1}));
+=======
+    Http[method$$1] = function (url, body, options$$1) {
+        return this(assign(options$$1 || {}, {url: url, method: method$$1, body: body}));
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
     };
 
 });
@@ -12543,7 +13436,11 @@ if (typeof window !== 'undefined' && window.Vue) {
 
 
 /***/ }),
+<<<<<<< HEAD
 /* 76 */
+=======
+/* 78 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21140,6 +22037,7 @@ function optimize (root, options) {
   // second pass: mark static roots.
   markStaticRoots(root, false);
 }
+<<<<<<< HEAD
 
 function genStaticKeys$1 (keys) {
   return makeMap(
@@ -21615,6 +22513,483 @@ function genDirectives (el) {
       res += "{name:\"" + (dir.name) + "\",rawName:\"" + (dir.rawName) + "\"" + (dir.value ? (",value:(" + (dir.value) + "),expression:" + (JSON.stringify(dir.value))) : '') + (dir.arg ? (",arg:\"" + (dir.arg) + "\"") : '') + (dir.modifiers ? (",modifiers:" + (JSON.stringify(dir.modifiers))) : '') + "},";
     }
   }
+=======
+
+function genStaticKeys$1 (keys) {
+  return makeMap(
+    'type,tag,attrsList,attrsMap,plain,parent,children,attrs' +
+    (keys ? ',' + keys : '')
+  )
+}
+
+function markStatic$1 (node) {
+  node.static = isStatic(node);
+  if (node.type === 1) {
+    // do not make component slot content static. this avoids
+    // 1. components not able to mutate slot nodes
+    // 2. static slot content fails for hot-reloading
+    if (
+      !isPlatformReservedTag(node.tag) &&
+      node.tag !== 'slot' &&
+      node.attrsMap['inline-template'] == null
+    ) {
+      return
+    }
+    for (var i = 0, l = node.children.length; i < l; i++) {
+      var child = node.children[i];
+      markStatic$1(child);
+      if (!child.static) {
+        node.static = false;
+      }
+    }
+  }
+}
+
+function markStaticRoots (node, isInFor) {
+  if (node.type === 1) {
+    if (node.static || node.once) {
+      node.staticInFor = isInFor;
+    }
+    // For a node to qualify as a static root, it should have children that
+    // are not just static text. Otherwise the cost of hoisting out will
+    // outweigh the benefits and it's better off to just always render it fresh.
+    if (node.static && node.children.length && !(
+      node.children.length === 1 &&
+      node.children[0].type === 3
+    )) {
+      node.staticRoot = true;
+      return
+    } else {
+      node.staticRoot = false;
+    }
+    if (node.children) {
+      for (var i = 0, l = node.children.length; i < l; i++) {
+        markStaticRoots(node.children[i], isInFor || !!node.for);
+      }
+    }
+    if (node.ifConditions) {
+      walkThroughConditionsBlocks(node.ifConditions, isInFor);
+    }
+  }
+}
+
+function walkThroughConditionsBlocks (conditionBlocks, isInFor) {
+  for (var i = 1, len = conditionBlocks.length; i < len; i++) {
+    markStaticRoots(conditionBlocks[i].block, isInFor);
+  }
+}
+
+function isStatic (node) {
+  if (node.type === 2) { // expression
+    return false
+  }
+  if (node.type === 3) { // text
+    return true
+  }
+  return !!(node.pre || (
+    !node.hasBindings && // no dynamic bindings
+    !node.if && !node.for && // not v-if or v-for or v-else
+    !isBuiltInTag(node.tag) && // not a built-in
+    isPlatformReservedTag(node.tag) && // not a component
+    !isDirectChildOfTemplateFor(node) &&
+    Object.keys(node).every(isStaticKey)
+  ))
+}
+
+function isDirectChildOfTemplateFor (node) {
+  while (node.parent) {
+    node = node.parent;
+    if (node.tag !== 'template') {
+      return false
+    }
+    if (node.for) {
+      return true
+    }
+  }
+  return false
+}
+
+/*  */
+
+var fnExpRE = /^\s*([\w$_]+|\([^)]*?\))\s*=>|^function\s*\(/;
+var simplePathRE = /^\s*[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*|\['.*?']|\[".*?"]|\[\d+]|\[[A-Za-z_$][\w$]*])*\s*$/;
+
+// keyCode aliases
+var keyCodes = {
+  esc: 27,
+  tab: 9,
+  enter: 13,
+  space: 32,
+  up: 38,
+  left: 37,
+  right: 39,
+  down: 40,
+  'delete': [8, 46]
+};
+
+// #4868: modifiers that prevent the execution of the listener
+// need to explicitly return null so that we can determine whether to remove
+// the listener for .once
+var genGuard = function (condition) { return ("if(" + condition + ")return null;"); };
+
+var modifierCode = {
+  stop: '$event.stopPropagation();',
+  prevent: '$event.preventDefault();',
+  self: genGuard("$event.target !== $event.currentTarget"),
+  ctrl: genGuard("!$event.ctrlKey"),
+  shift: genGuard("!$event.shiftKey"),
+  alt: genGuard("!$event.altKey"),
+  meta: genGuard("!$event.metaKey"),
+  left: genGuard("'button' in $event && $event.button !== 0"),
+  middle: genGuard("'button' in $event && $event.button !== 1"),
+  right: genGuard("'button' in $event && $event.button !== 2")
+};
+
+function genHandlers (
+  events,
+  isNative,
+  warn
+) {
+  var res = isNative ? 'nativeOn:{' : 'on:{';
+  for (var name in events) {
+    var handler = events[name];
+    // #5330: warn click.right, since right clicks do not actually fire click events.
+    if ("development" !== 'production' &&
+      name === 'click' &&
+      handler && handler.modifiers && handler.modifiers.right
+    ) {
+      warn(
+        "Use \"contextmenu\" instead of \"click.right\" since right clicks " +
+        "do not actually fire \"click\" events."
+      );
+    }
+    res += "\"" + name + "\":" + (genHandler(name, handler)) + ",";
+  }
+  return res.slice(0, -1) + '}'
+}
+
+function genHandler (
+  name,
+  handler
+) {
+  if (!handler) {
+    return 'function(){}'
+  }
+
+  if (Array.isArray(handler)) {
+    return ("[" + (handler.map(function (handler) { return genHandler(name, handler); }).join(',')) + "]")
+  }
+
+  var isMethodPath = simplePathRE.test(handler.value);
+  var isFunctionExpression = fnExpRE.test(handler.value);
+
+  if (!handler.modifiers) {
+    return isMethodPath || isFunctionExpression
+      ? handler.value
+      : ("function($event){" + (handler.value) + "}") // inline statement
+  } else {
+    var code = '';
+    var genModifierCode = '';
+    var keys = [];
+    for (var key in handler.modifiers) {
+      if (modifierCode[key]) {
+        genModifierCode += modifierCode[key];
+        // left/right
+        if (keyCodes[key]) {
+          keys.push(key);
+        }
+      } else {
+        keys.push(key);
+      }
+    }
+    if (keys.length) {
+      code += genKeyFilter(keys);
+    }
+    // Make sure modifiers like prevent and stop get executed after key filtering
+    if (genModifierCode) {
+      code += genModifierCode;
+    }
+    var handlerCode = isMethodPath
+      ? handler.value + '($event)'
+      : isFunctionExpression
+        ? ("(" + (handler.value) + ")($event)")
+        : handler.value;
+    return ("function($event){" + code + handlerCode + "}")
+  }
+}
+
+function genKeyFilter (keys) {
+  return ("if(!('button' in $event)&&" + (keys.map(genFilterCode).join('&&')) + ")return null;")
+}
+
+function genFilterCode (key) {
+  var keyVal = parseInt(key, 10);
+  if (keyVal) {
+    return ("$event.keyCode!==" + keyVal)
+  }
+  var alias = keyCodes[key];
+  return ("_k($event.keyCode," + (JSON.stringify(key)) + (alias ? ',' + JSON.stringify(alias) : '') + ")")
+}
+
+/*  */
+
+function bind$1 (el, dir) {
+  el.wrapData = function (code) {
+    return ("_b(" + code + ",'" + (el.tag) + "'," + (dir.value) + (dir.modifiers && dir.modifiers.prop ? ',true' : '') + ")")
+  };
+}
+
+/*  */
+
+var baseDirectives = {
+  bind: bind$1,
+  cloak: noop
+};
+
+/*  */
+
+// configurable state
+var warn$3;
+var transforms$1;
+var dataGenFns;
+var platformDirectives$1;
+var isPlatformReservedTag$1;
+var staticRenderFns;
+var onceCount;
+var currentOptions;
+
+function generate (
+  ast,
+  options
+) {
+  // save previous staticRenderFns so generate calls can be nested
+  var prevStaticRenderFns = staticRenderFns;
+  var currentStaticRenderFns = staticRenderFns = [];
+  var prevOnceCount = onceCount;
+  onceCount = 0;
+  currentOptions = options;
+  warn$3 = options.warn || baseWarn;
+  transforms$1 = pluckModuleFunction(options.modules, 'transformCode');
+  dataGenFns = pluckModuleFunction(options.modules, 'genData');
+  platformDirectives$1 = options.directives || {};
+  isPlatformReservedTag$1 = options.isReservedTag || no;
+  var code = ast ? genElement(ast) : '_c("div")';
+  staticRenderFns = prevStaticRenderFns;
+  onceCount = prevOnceCount;
+  return {
+    render: ("with(this){return " + code + "}"),
+    staticRenderFns: currentStaticRenderFns
+  }
+}
+
+function genElement (el) {
+  if (el.staticRoot && !el.staticProcessed) {
+    return genStatic(el)
+  } else if (el.once && !el.onceProcessed) {
+    return genOnce(el)
+  } else if (el.for && !el.forProcessed) {
+    return genFor(el)
+  } else if (el.if && !el.ifProcessed) {
+    return genIf(el)
+  } else if (el.tag === 'template' && !el.slotTarget) {
+    return genChildren(el) || 'void 0'
+  } else if (el.tag === 'slot') {
+    return genSlot(el)
+  } else {
+    // component or element
+    var code;
+    if (el.component) {
+      code = genComponent(el.component, el);
+    } else {
+      var data = el.plain ? undefined : genData(el);
+
+      var children = el.inlineTemplate ? null : genChildren(el, true);
+      code = "_c('" + (el.tag) + "'" + (data ? ("," + data) : '') + (children ? ("," + children) : '') + ")";
+    }
+    // module transforms
+    for (var i = 0; i < transforms$1.length; i++) {
+      code = transforms$1[i](el, code);
+    }
+    return code
+  }
+}
+
+// hoist static sub-trees out
+function genStatic (el) {
+  el.staticProcessed = true;
+  staticRenderFns.push(("with(this){return " + (genElement(el)) + "}"));
+  return ("_m(" + (staticRenderFns.length - 1) + (el.staticInFor ? ',true' : '') + ")")
+}
+
+// v-once
+function genOnce (el) {
+  el.onceProcessed = true;
+  if (el.if && !el.ifProcessed) {
+    return genIf(el)
+  } else if (el.staticInFor) {
+    var key = '';
+    var parent = el.parent;
+    while (parent) {
+      if (parent.for) {
+        key = parent.key;
+        break
+      }
+      parent = parent.parent;
+    }
+    if (!key) {
+      "development" !== 'production' && warn$3(
+        "v-once can only be used inside v-for that is keyed. "
+      );
+      return genElement(el)
+    }
+    return ("_o(" + (genElement(el)) + "," + (onceCount++) + (key ? ("," + key) : "") + ")")
+  } else {
+    return genStatic(el)
+  }
+}
+
+function genIf (el) {
+  el.ifProcessed = true; // avoid recursion
+  return genIfConditions(el.ifConditions.slice())
+}
+
+function genIfConditions (conditions) {
+  if (!conditions.length) {
+    return '_e()'
+  }
+
+  var condition = conditions.shift();
+  if (condition.exp) {
+    return ("(" + (condition.exp) + ")?" + (genTernaryExp(condition.block)) + ":" + (genIfConditions(conditions)))
+  } else {
+    return ("" + (genTernaryExp(condition.block)))
+  }
+
+  // v-if with v-once should generate code like (a)?_m(0):_m(1)
+  function genTernaryExp (el) {
+    return el.once ? genOnce(el) : genElement(el)
+  }
+}
+
+function genFor (el) {
+  var exp = el.for;
+  var alias = el.alias;
+  var iterator1 = el.iterator1 ? ("," + (el.iterator1)) : '';
+  var iterator2 = el.iterator2 ? ("," + (el.iterator2)) : '';
+
+  if (
+    "development" !== 'production' &&
+    maybeComponent(el) && el.tag !== 'slot' && el.tag !== 'template' && !el.key
+  ) {
+    warn$3(
+      "<" + (el.tag) + " v-for=\"" + alias + " in " + exp + "\">: component lists rendered with " +
+      "v-for should have explicit keys. " +
+      "See https://vuejs.org/guide/list.html#key for more info.",
+      true /* tip */
+    );
+  }
+
+  el.forProcessed = true; // avoid recursion
+  return "_l((" + exp + ")," +
+    "function(" + alias + iterator1 + iterator2 + "){" +
+      "return " + (genElement(el)) +
+    '})'
+}
+
+function genData (el) {
+  var data = '{';
+
+  // directives first.
+  // directives may mutate the el's other properties before they are generated.
+  var dirs = genDirectives(el);
+  if (dirs) { data += dirs + ','; }
+
+  // key
+  if (el.key) {
+    data += "key:" + (el.key) + ",";
+  }
+  // ref
+  if (el.ref) {
+    data += "ref:" + (el.ref) + ",";
+  }
+  if (el.refInFor) {
+    data += "refInFor:true,";
+  }
+  // pre
+  if (el.pre) {
+    data += "pre:true,";
+  }
+  // record original tag name for components using "is" attribute
+  if (el.component) {
+    data += "tag:\"" + (el.tag) + "\",";
+  }
+  // module data generation functions
+  for (var i = 0; i < dataGenFns.length; i++) {
+    data += dataGenFns[i](el);
+  }
+  // attributes
+  if (el.attrs) {
+    data += "attrs:{" + (genProps(el.attrs)) + "},";
+  }
+  // DOM props
+  if (el.props) {
+    data += "domProps:{" + (genProps(el.props)) + "},";
+  }
+  // event handlers
+  if (el.events) {
+    data += (genHandlers(el.events, false, warn$3)) + ",";
+  }
+  if (el.nativeEvents) {
+    data += (genHandlers(el.nativeEvents, true, warn$3)) + ",";
+  }
+  // slot target
+  if (el.slotTarget) {
+    data += "slot:" + (el.slotTarget) + ",";
+  }
+  // scoped slots
+  if (el.scopedSlots) {
+    data += (genScopedSlots(el.scopedSlots)) + ",";
+  }
+  // component v-model
+  if (el.model) {
+    data += "model:{value:" + (el.model.value) + ",callback:" + (el.model.callback) + ",expression:" + (el.model.expression) + "},";
+  }
+  // inline-template
+  if (el.inlineTemplate) {
+    var inlineTemplate = genInlineTemplate(el);
+    if (inlineTemplate) {
+      data += inlineTemplate + ",";
+    }
+  }
+  data = data.replace(/,$/, '') + '}';
+  // v-bind data wrap
+  if (el.wrapData) {
+    data = el.wrapData(data);
+  }
+  return data
+}
+
+function genDirectives (el) {
+  var dirs = el.directives;
+  if (!dirs) { return }
+  var res = 'directives:[';
+  var hasRuntime = false;
+  var i, l, dir, needRuntime;
+  for (i = 0, l = dirs.length; i < l; i++) {
+    dir = dirs[i];
+    needRuntime = true;
+    var gen = platformDirectives$1[dir.name] || baseDirectives[dir.name];
+    if (gen) {
+      // compile-time directive that manipulates AST.
+      // returns true if it also needs a runtime counterpart.
+      needRuntime = !!gen(el, dir, warn$3);
+    }
+    if (needRuntime) {
+      hasRuntime = true;
+      res += "{name:\"" + (dir.name) + "\",rawName:\"" + (dir.rawName) + "\"" + (dir.value ? (",value:(" + (dir.value) + "),expression:" + (JSON.stringify(dir.value))) : '') + (dir.arg ? (",arg:\"" + (dir.arg) + "\"") : '') + (dir.modifiers ? (",modifiers:" + (JSON.stringify(dir.modifiers))) : '') + "},";
+    }
+  }
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
   if (hasRuntime) {
     return res.slice(0, -1) + ']'
   }
@@ -22238,10 +23613,17 @@ Vue$3.compile = compileToFunctions;
 
 module.exports = Vue$3;
 
+<<<<<<< HEAD
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(77)))
 
 /***/ }),
 /* 77 */
+=======
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(79)))
+
+/***/ }),
+/* 79 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports) {
 
 var g;
@@ -22268,19 +23650,28 @@ module.exports = g;
 
 
 /***/ }),
+<<<<<<< HEAD
 /* 78 */
+=======
+/* 80 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports) {
 
 /* (ignored) */
 
 /***/ }),
+<<<<<<< HEAD
 /* 79 */
+=======
+/* 81 */
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(12);
 module.exports = __webpack_require__(13);
 
 
+<<<<<<< HEAD
 /***/ }),
 /* 80 */,
 /* 81 */,
@@ -22290,5 +23681,7 @@ module.exports = __webpack_require__(13);
 
 !function(e,n){ true?module.exports=n():"function"==typeof define&&define.amd?define(n):(e.__locale__es=e.__locale__es||{},e.__locale__es.js=n())}(this,function(){"use strict";var e={after:function(e,n){return"El campo "+e+" debe ser posterior a "+n[0]+"."},alpha_dash:function(e){return"El campo "+e+" solo debe contener letras, números y guiones."},alpha_num:function(e){return"El campo "+e+" solo debe contener letras y números."},alpha_spaces:function(e){return"El campo "+e+" solo debe contener letras y espacios."},alpha:function(e){return"El campo "+e+" solo debe contener letras."},before:function(e,n){return"El campo "+e+" debe ser anterior a "+n[0]+"."},between:function(e,n){return"El campo "+e+" debe estar entre "+n[0]+" y "+n[1]+"."},confirmed:function(e,n){return"El campo "+e+" no coincide con "+n[0]+"."},credit_card:function(e,n){n[0];return"El campo "+e+" es inválido."},date_between:function(e,n){return"El campo "+e+" debe estar entre "+n[0]+" y "+n[1]+"."},date_format:function(e,n){return"El campo "+e+" debe tener formato formato "+n[0]+"."},decimal:function(e,n){void 0===n&&(n=["*"]);var o=n[0];return"El campo "+e+" debe ser númerico y contener "+("*"===o?"":o)+" puntos decimales."},digits:function(e,n){return"El campo "+e+" debe ser númerico y contener exactamente "+n[0]+" dígitos."},dimensions:function(e,n){return"El campo "+e+" debe ser de "+n[0]+" pixeles por "+n[1]+" pixeles."},email:function(e){return"El campo "+e+" debe ser un correo electrónico válido."},ext:function(e){return"El campo "+e+" debe ser un archivo válido."},image:function(e){return"El campo "+e+" debe ser una imagen."},in:function(e){return"El campo "+e+" debe ser un valor válido."},ip:function(e){return"El campo "+e+" debe ser una dirección ip válida."},max:function(e,n){return"El campo "+e+" no debe ser mayor a "+n[0]+" caracteres."},max_value:function(e,n){return"El campo "+e+" debe de ser "+n[0]+" o menor."},mimes:function(e){return"El campo "+e+" debe ser un tipo de archivo válido."},min:function(e,n){return"El campo "+e+" debe tener al menos "+n[0]+" caracteres."},min_value:function(e,n){return"El campo "+e+" debe ser "+n[0]+" o superior."},not_in:function(e){return"El campo "+e+" debe ser un valor válido."},numeric:function(e){return"El campo "+e+" debe contener solo caracteres númericos."},regex:function(e){return"El formato del campo "+e+" no es válido."},required:function(e){return"El campo "+e+" es obligatorio."},size:function(e,n){return"El campo "+e+" debe ser menor a "+n[0]+" KB."},url:function(e){return"El campo "+e+" no es una URL válida."}},n={name:"es",messages:e,attributes:{}};return"undefined"!=typeof VeeValidate&&VeeValidate&&(VeeValidate.Validator,!0)&&VeeValidate.Validator.addLocale(n),n});
 
+=======
+>>>>>>> 955c832d1c39e9ed33edded6a82df7209733d67f
 /***/ })
 /******/ ]);
