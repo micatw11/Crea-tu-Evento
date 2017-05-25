@@ -13,7 +13,7 @@ class LocalidadesTableSeeder extends Seeder
      */
     public function run()
     {
-        Provincia::create([
+       DB::table('provincias')->insert([
             [ 'id' => 1, 'nombre' => 'Buenos Aires'],
             [ 'id' => 2, 'nombre' => 'Buenos Aires-GBA'],
             [ 'id' => 3, 'nombre' => 'Capital Federal'],
@@ -41,7 +41,7 @@ class LocalidadesTableSeeder extends Seeder
             [ 'id' => 25, 'nombre' => 'Tucumán']
         ]);
 
-       Localidad::create([
+      DB::table('localidades')->insert([
             [ 'id' => 1, 'provincia_id' => 1, 'nombre' => '25 de Mayo'],
             [ 'id' => 2, 'provincia_id' => 1, 'nombre' => '3 de febrero'],
             [ 'id' => 3, 'provincia_id' => 1, 'nombre' => 'A. Alsina'],

@@ -15,7 +15,7 @@ class CreateLocalidadesTable extends Migration
     {
         Schema::create('localidades', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_privincia');
+            $table->integer('provincia_id');
             $table->string('nombre', 70);
             $table->timestamps();
         });

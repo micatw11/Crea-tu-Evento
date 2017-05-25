@@ -8,7 +8,8 @@ class Localidad extends Model
 {
     protected $table = 'localidades';
     
-    protected $fillable = [ 'provincia_id', 
+    protected $fillable = [ 
+                            'provincia_id', 
     						'nombre'
     					  ];
 
