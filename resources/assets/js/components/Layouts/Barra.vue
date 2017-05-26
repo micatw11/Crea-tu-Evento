@@ -18,9 +18,8 @@
             <div v-if="auth.user.authenticated" class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
 
-                    <mensajes v-if="auth.user.authenticated"></mensajes>
                     <notificaciones v-if="auth.user.authenticated"></notificaciones>
-                    <task v-if="auth.user.authenticated"></task>
+
                     <!-- Control Sidebar Toggle Button -->
                     
  
@@ -37,10 +36,9 @@
 <script>
 import auth from '../../auth.js';
 import router from '../../routes.js';
-import Mensajes from './Mensajes.vue';
 import MenuUser from './MenuUser.vue';
 import Notificaciones from './Notificaciones.vue';
-import Task from './Task.vue';
+
 
 export default {
     data() {
@@ -48,6 +46,6 @@ export default {
             auth: auth
         }
     },
-    components:{Mensajes, MenuUser, Notificaciones, Task}
+    components:{ MenuUser, Notificaciones}
 }
 </script>

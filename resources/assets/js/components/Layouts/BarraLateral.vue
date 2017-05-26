@@ -49,20 +49,6 @@
                             home
                         </a>
                     </router-link>
-                    
-                        
-                    <router-link tag="li" to="/header">
-                        <a><i class="fa fa-circle-o"></i>
-                            Header
-                        </a>
-                    </router-link>
-                    
-                        
-                    <router-link tag="li" to="/calendario">
-                        <a><i class="fa fa-circle-o"></i>
-                            Calendario
-                        </a>
-                    </router-link>
         
                 </ul>
             </li>
