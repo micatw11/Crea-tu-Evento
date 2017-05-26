@@ -9,6 +9,7 @@ var About = require('./components/About');
 var Calendar = require('./components/Calendario');
 var Perfil = require('./components/Layouts/Perfil');
 var Registrar = require('./components/Auth/Register');
+var UsCreate = require('./components/Usuarios/Create');
 
 let routes = [ 
 		{
@@ -43,6 +44,11 @@ let routes = [
 		{
 			path: '/header',
 			component: Header,
+			beforeEnter: guardRoute
+		},
+		{
+			path: 'usuario/create',
+			component: UsCreate,
 			beforeEnter: guardRoute
 		},
 		{

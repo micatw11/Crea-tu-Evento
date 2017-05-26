@@ -19,7 +19,7 @@ class CreateUsuariosTable extends Migration
             $table->string('nombre', 50);
             $table->string('apellido', 50);
             $table->date('fecha_nac');
-            $table->integer('edad');
+            $table->enum('sexo', ['F', 'M']);
             $table->integer('user_id');
             $table->integer('localidad_id');
             $table->timestamps();

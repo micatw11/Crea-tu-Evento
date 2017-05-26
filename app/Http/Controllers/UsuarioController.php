@@ -32,9 +32,17 @@ class UsuarioController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UsuarioRequest $request)
     {
-        //
+        $usuario = new Usuario();
+
+        $usuario->nombre = $request->nombre;
+        $usuario->apellido = $request->apellido;
+        $usuario->fecha_nac = $request->fecha_nac;
+        $usuario->sexo = $request->sexo;
+        $usuario->save();
+
+        return response(null, Response::HTTP_CREATED);
     }
 
     /**
