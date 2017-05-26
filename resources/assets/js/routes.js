@@ -2,7 +2,7 @@ import VueRouter from 'vue-router';
 import auth from './auth.js';
 
 
-var Header = require('./components/Header');
+
 var Login = require('./components/Auth/Login');
 var Home = require('./components/Home');
 var About = require('./components/About');
@@ -39,11 +39,6 @@ let routes = [
 			component: Calendar,
 			beforeEnter: guardRoute
 
-		},
-		{
-			path: '/header',
-			component: Header,
-			beforeEnter: guardRoute
 		},
 		{
 			path: '/user/:userId/perfil',
