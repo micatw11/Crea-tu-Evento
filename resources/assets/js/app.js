@@ -16,7 +16,7 @@ Validator.addLocale(messages);
 
 Vue.use(VeeValidate, config);
 
-new Vue({
+var app = new Vue({
     el: '#app',
     render: h => h(App),
     router

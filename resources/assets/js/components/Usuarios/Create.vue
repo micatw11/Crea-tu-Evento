@@ -2,7 +2,7 @@
     <div class="panel panel-default" v-cloak>
         <div class="panel-body">
             <legend>{{ titleContent }} formulario</legend>
-            <formulario :usuario="usuario"></formulario>
+            <formulario v-on:submitted="valida(usuario)" :usuario="usuario"></formulario>
         </div>
     </div>
 </template>
@@ -15,23 +15,17 @@ export default {
         return {
             titleContent: 'Completar ',
             usuario: {
-                        nombre: '',
-                        apellido: '',
-                        //fecha_nac: null,
-                        sexo: ''
+                nombre: '',
+                apellido: '',
+                    //fecha_nac: null,
+                sexo: ''
             }
             
         }
     },
-     events: {
-            submitted (usuario) {
-                console.log('evento')
-                this.create(usuario);
-            },
-        },
     components: {Formulario},
     methods: {
-        create(formData){
+        sendForm(formData){
             this.$http.post(
                 'api/usuario', formData)
                     .then(response => {
@@ -40,6 +34,9 @@ export default {
             }, response => {
                 this.error = true
             })
+        },
+        valida(usuario) {
+                this.sendForm(usuario);
         }
     }
 }
