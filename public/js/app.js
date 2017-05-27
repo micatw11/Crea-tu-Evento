@@ -5499,7 +5499,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     events: {
-        submitted: function submitted(usuario) {
+        'submitted': function submitted(usuario) {
             console.log('evento');
             this.create(usuario);
         }
@@ -5509,6 +5509,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         create: function create(formData) {
             var _this = this;
 
+            console.log('create....');
             this.$http.post('api/usuario', formData).then(function (response) {
                 usuario = response.body.data;
             }, function (response) {
@@ -5592,13 +5593,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         create: function create() {
             var formData = new FormData();
-
             formData.set('nombre', this.usuario.nombre);
             formData.set('apellido', this.usuario.apellido);
             //formData.set('fecha_nac', this.fecha_nac);
             formData.set('sexo', this.usuario.sexo);
             console.log('creatte 1');
-            this.$emit('submitted', formData);
+            this.$emit('usuario', formData);
         }
     }
 });
@@ -9910,10 +9910,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('div', {
     staticClass: "col-sm-offset-2 col-sm-10"
   }, [_c('button', {
-    staticClass: "btn btn-danger",
-    attrs: {
-      "type": "submit"
-    }
+    staticClass: "btn btn-danger"
   }, [_vm._v("Guargar")])])])
 }]}
 module.exports.render._withStripped = true
@@ -10587,6 +10584,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('legend', [_vm._v(_vm._s(_vm.titleContent) + " formulario")]), _vm._v(" "), _c('formulario', {
     attrs: {
       "usuario": _vm.usuario
+    },
+    on: {
+      "usuario": _vm.create
     }
   })], 1)])
 },staticRenderFns: []}

@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UsuarioRequest;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use App\Usuario;
+
 
 class UsuarioController extends Controller
 {
@@ -38,7 +42,7 @@ class UsuarioController extends Controller
 
         $usuario->nombre = $request->nombre;
         $usuario->apellido = $request->apellido;
-        $usuario->fecha_nac = $request->fecha_nac;
+        //$usuario->fecha_nac = $request->fecha_nac;
         $usuario->sexo = $request->sexo;
         $usuario->save();
 

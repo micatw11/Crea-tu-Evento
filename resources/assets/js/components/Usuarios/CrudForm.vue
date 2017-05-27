@@ -41,7 +41,7 @@
        
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" class="btn btn-danger">Guargar</button>
+            <button class="btn btn-danger">Guargar</button>
             </div>
         </div>
     </form>
@@ -65,13 +65,13 @@ export default {
     methods: {
         create() {
                 let formData = new FormData();
-
                 formData.set('nombre', this.usuario.nombre);
                 formData.set('apellido', this.usuario.apellido);
                 //formData.set('fecha_nac', this.fecha_nac);
                 formData.set('sexo', this.usuario.sexo);
-                console.log('creatte 1')
-                this.$emit('submitted', formData);
+                console.log('creatte 1');
+                this.$emit('usuario', formData);
+
             }     
     }
 }

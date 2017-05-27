@@ -2,7 +2,7 @@
     <div class="panel panel-default" v-cloak>
         <div class="panel-body">
             <legend>{{ titleContent }} formulario</legend>
-            <formulario :usuario="usuario"></formulario>
+            <formulario @usuario="create" :usuario= "usuario"></formulario>
         </div>
     </div>
 </template>
@@ -24,7 +24,7 @@ export default {
         }
     },
      events: {
-            submitted (usuario) {
+            'submitted': function(usuario) {
                 console.log('evento')
                 this.create(usuario);
             },
@@ -32,6 +32,7 @@ export default {
     components: {Formulario},
     methods: {
         create(formData){
+            console.log('create....')
             this.$http.post(
                 'api/usuario', formData)
                     .then(response => {
