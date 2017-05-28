@@ -2,13 +2,14 @@
     <div class="panel panel-default" v-cloak>
         <div class="panel-body">
             <legend>{{ titleContent }} formulario</legend>
-            <formulario v-on:submitted="valida(usuario)" :usuario="usuario"></formulario>
+            <formulario @usuario="create" :usuario= "usuario"></formulario>
         </div>
     </div>
 </template>
 
 <script>
-import Formulario from './CrudForm.vue'
+import Formulario from './CrudForm.vue';
+import router from '../../routes.js';
 
 export default {
     data() {
@@ -18,21 +19,28 @@ export default {
                 nombre: '',
                 apellido: '',
                     //fecha_nac: null,
-                sexo: ''
+                sexo: '',
+                user_id: ''
             }
             
         }
     },
     components: {Formulario},
     methods: {
-        sendForm(formData){
+        create(formData){
             this.$http.post(
                 'api/usuario', formData)
                     .then(response => {
-                usuario = response.body.data
-
+                    this.usuario = response.body.data, 
+                    console.log(this.usuario),
+                    router.push({
+                    name: 'home'
+                })
             }, response => {
-                this.error = true
+                    console.log(response);
+                    this.error = true  
+                    this.errorsApi = response.body//lista de errores
+
             })
         },
         valida(usuario) {

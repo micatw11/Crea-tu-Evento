@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UsuarioRequest;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use App\Usuario;
+
 
 class UsuarioController extends Controller
 {
@@ -38,11 +42,16 @@ class UsuarioController extends Controller
 
         $usuario->nombre = $request->nombre;
         $usuario->apellido = $request->apellido;
-        $usuario->fecha_nac = $request->fecha_nac;
+        //$usuario->fecha_nac = $request->fecha_nac;
         $usuario->sexo = $request->sexo;
-        $usuario->save();
-
-        return response(null, Response::HTTP_CREATED);
+        $usuario->user_id = $request->user_id;;
+        if ($usuario->save()){
+        return response()->json(['data' =>  $usuario]);
+        } else {
+            return response()->json([
+                'error' => 'Unauthorized',
+            ], 401);
+        }
     }
 
     /**

@@ -12,8 +12,7 @@ class Usuario extends Model
     protected $fillable = [ 'avatar', 
     						'nombre', 
     						'apellido', 
-    						'fecha_nac'
-    						'edad',
+    						//'fecha_nac',
     						'user_id',
     						'localidad_id'
     					  ];

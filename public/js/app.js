@@ -643,7 +643,7 @@ var Component = __webpack_require__(0)(
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Layouts\\Path.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Layouts/Path.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Path.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -941,7 +941,7 @@ var Component = __webpack_require__(0)(
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Usuarios\\Create.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Usuarios/Create.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Create.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -5470,6 +5470,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__CrudForm_vue__ = __webpack_require__(84);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__CrudForm_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__CrudForm_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__routes_js__ = __webpack_require__(3);
 //
 //
 //
@@ -5479,6 +5480,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
 
 
 
@@ -5490,7 +5492,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 nombre: '',
                 apellido: '',
                 //fecha_nac: null,
-                sexo: ''
+                sexo: '',
+                user_id: ''
             }
 
         };
@@ -5498,13 +5501,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     components: { Formulario: __WEBPACK_IMPORTED_MODULE_0__CrudForm_vue___default.a },
     methods: {
-        sendForm: function sendForm(formData) {
+        create: function create(formData) {
             var _this = this;
 
             this.$http.post('api/usuario', formData).then(function (response) {
-                usuario = response.body.data;
+                _this.usuario = response.body.data, console.log(_this.usuario), __WEBPACK_IMPORTED_MODULE_1__routes_js__["a" /* default */].push({
+                    name: 'home'
+                });
             }, function (response) {
+                console.log(response);
                 _this.error = true;
+                _this.errorsApi = response.body; //lista de errores
             });
         },
         valida: function valida(usuario) {
@@ -9162,7 +9169,7 @@ var Component = __webpack_require__(0)(
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\About.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/About.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] About.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -9196,7 +9203,7 @@ var Component = __webpack_require__(0)(
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\App.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/App.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] App.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -9230,7 +9237,7 @@ var Component = __webpack_require__(0)(
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Auth\\Login.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Auth/Login.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Login.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -9264,7 +9271,7 @@ var Component = __webpack_require__(0)(
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Auth\\Register.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Auth/Register.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Register.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -9298,7 +9305,7 @@ var Component = __webpack_require__(0)(
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Calendario.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Calendario.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Calendario.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -9332,7 +9339,7 @@ var Component = __webpack_require__(0)(
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Home.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Home.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Home.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -9366,7 +9373,7 @@ var Component = __webpack_require__(0)(
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Layouts\\Barra.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Layouts/Barra.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Barra.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -9400,7 +9407,7 @@ var Component = __webpack_require__(0)(
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Layouts\\BarraLateral.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Layouts/BarraLateral.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] BarraLateral.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -9434,7 +9441,7 @@ var Component = __webpack_require__(0)(
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Layouts\\Footer.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Layouts/Footer.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Footer.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -9468,7 +9475,7 @@ var Component = __webpack_require__(0)(
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Layouts\\MenuUser.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Layouts/MenuUser.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] MenuUser.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -9502,7 +9509,7 @@ var Component = __webpack_require__(0)(
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Layouts\\Notificaciones.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Layouts/Notificaciones.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Notificaciones.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -9536,7 +9543,7 @@ var Component = __webpack_require__(0)(
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Layouts\\Perfil.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Layouts/Perfil.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Perfil.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -10319,9 +10326,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "usuario": _vm.usuario
     },
     on: {
-      "submitted": function($event) {
-        _vm.valida(_vm.usuario)
-      }
+      "usuario": _vm.create
     }
   })], 1)])
 },staticRenderFns: []}
@@ -10973,7 +10978,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Http", function() { return Http; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Resource", function() { return Resource; });
 /*!
- * vue-resource v1.3.1
+ * vue-resource v1.3.3
  * https://github.com/pagekit/vue-resource
  * Released under the MIT License.
  */
@@ -11272,6 +11277,19 @@ function trim(str) {
     return str ? str.replace(/^\s*|\s*$/g, '') : '';
 }
 
+function trimEnd(str, chars) {
+
+    if (str && chars === undefined) {
+        return str.replace(/\s+$/, '');
+    }
+
+    if (!str || !chars) {
+        return str;
+    }
+
+    return str.replace(new RegExp(("[" + chars + "]+$")), '');
+}
+
 function toLower(str) {
     return str ? str.toLowerCase() : '';
 }
@@ -11414,8 +11432,8 @@ var root = function (options$$1, next) {
 
     var url = next(options$$1);
 
-    if (isString(options$$1.root) && !url.match(/^(https?:)?\//)) {
-        url = options$$1.root + '/' + url;
+    if (isString(options$$1.root) && !/^(https?:)?\//.test(url)) {
+        url = trimEnd(options$$1.root, '/') + '/' + url;
     }
 
     return url;
@@ -11808,42 +11826,41 @@ var cors = function (request, next) {
 };
 
 /**
- * Body Interceptor.
+ * Form data Interceptor.
  */
 
-var body = function (request, next) {
+var form = function (request, next) {
 
     if (isFormData(request.body)) {
 
         request.headers.delete('Content-Type');
 
-    } else if (isObject(request.body) || isArray(request.body)) {
+    } else if (isObject(request.body) && request.emulateJSON) {
 
-        if (request.emulateJSON) {
-            request.body = Url.params(request.body);
-            request.headers.set('Content-Type', 'application/x-www-form-urlencoded');
-        } else {
-            request.body = JSON.stringify(request.body);
-        }
+        request.body = Url.params(request.body);
+        request.headers.set('Content-Type', 'application/x-www-form-urlencoded');
+    }
+
+    next();
+};
+
+/**
+ * JSON Interceptor.
+ */
+
+var json = function (request, next) {
+
+    var type = request.headers.get('Content-Type') || '';
+
+    if (isObject(request.body) && type.indexOf('application/json') === 0) {
+        request.body = JSON.stringify(request.body);
     }
 
     next(function (response) {
 
-        Object.defineProperty(response, 'data', {
-
-            get: function get() {
-                return this.body;
-            },
-
-            set: function set(body) {
-                this.body = body;
-            }
-
-        });
-
         return response.bodyText ? when(response.text(), function (text) {
 
-            var type = response.headers.get('Content-Type') || '';
+            type = response.headers.get('Content-Type') || '';
 
             if (type.indexOf('application/json') === 0 || isJson(text)) {
 
@@ -12271,6 +12288,18 @@ Response.prototype.json = function json () {
     return when(this.text(), function (text) { return JSON.parse(text); });
 };
 
+Object.defineProperty(Response.prototype, 'data', {
+
+    get: function get() {
+        return this.body;
+    },
+
+    set: function set(body) {
+        this.body = body;
+    }
+
+});
+
 function blobText(body) {
     return new PromiseObj(function (resolve) {
 
@@ -12368,8 +12397,8 @@ Http.headers = {
     custom: {}
 };
 
-Http.interceptor = {before: before, method: method, body: body, jsonp: jsonp, header: header, cors: cors};
-Http.interceptors = ['before', 'method', 'body', 'jsonp', 'header', 'cors'];
+Http.interceptor = {before: before, method: method, jsonp: jsonp, json: json, form: form, header: header, cors: cors};
+Http.interceptors = ['before', 'method', 'jsonp', 'json', 'form', 'header', 'cors'];
 
 ['get', 'delete', 'head', 'jsonp'].forEach(function (method$$1) {
 
@@ -12381,8 +12410,8 @@ Http.interceptors = ['before', 'method', 'body', 'jsonp', 'header', 'cors'];
 
 ['post', 'put', 'patch'].forEach(function (method$$1) {
 
-    Http[method$$1] = function (url, body$$1, options$$1) {
-        return this(assign(options$$1 || {}, {url: url, method: method$$1, body: body$$1}));
+    Http[method$$1] = function (url, body, options$$1) {
+        return this(assign(options$$1 || {}, {url: url, method: method$$1, body: body}));
     };
 
 });
@@ -22265,6 +22294,7 @@ module.exports = __webpack_require__(14);
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__auth_js__ = __webpack_require__(2);
 //
 //
 //
@@ -22318,7 +22348,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+
     props: {
+        auth: __WEBPACK_IMPORTED_MODULE_0__auth_js__["a" /* default */],
         usuario: {
             type: Object
         }
@@ -22333,13 +22365,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         create: function create() {
             var formData = new FormData();
-
             formData.set('nombre', this.usuario.nombre);
             formData.set('apellido', this.usuario.apellido);
             //formData.set('fecha_nac', this.fecha_nac);
             formData.set('sexo', this.usuario.sexo);
-            console.log('creatte 1');
-            this.$emit('submitted', formData);
+            formData.set('user_id', __WEBPACK_IMPORTED_MODULE_0__auth_js__["a" /* default */].user.profile.id);
+            this.$emit('usuario', formData);
         }
     }
 });
@@ -22358,7 +22389,7 @@ var Component = __webpack_require__(0)(
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Usuarios\\CrudForm.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Usuarios/CrudForm.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] CrudForm.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -22505,10 +22536,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('div', {
     staticClass: "col-sm-offset-2 col-sm-10"
   }, [_c('button', {
-    staticClass: "btn btn-danger",
-    attrs: {
-      "type": "submit"
-    }
+    staticClass: "btn btn-danger"
   }, [_vm._v("Guargar")])])])
 }]}
 module.exports.render._withStripped = true
