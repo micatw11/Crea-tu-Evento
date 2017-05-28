@@ -44,9 +44,14 @@ class UsuarioController extends Controller
         $usuario->apellido = $request->apellido;
         //$usuario->fecha_nac = $request->fecha_nac;
         $usuario->sexo = $request->sexo;
-        $usuario->save();
-
-        return response(null, Response::HTTP_CREATED);
+        $usuario->user_id = $request->user_id;;
+        if ($usuario->save()){
+        return response()->json(['data' =>  $usuario]);
+        } else {
+            return response()->json([
+                'error' => 'Unauthorized',
+            ], 401);
+        }
     }
 
     /**

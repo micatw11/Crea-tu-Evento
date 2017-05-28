@@ -8,39 +8,43 @@
 </template>
 
 <script>
-import Formulario from './CrudForm.vue'
+import Formulario from './CrudForm.vue';
+import router from '../../routes.js';
 
 export default {
     data() {
         return {
             titleContent: 'Completar ',
             usuario: {
-                        nombre: '',
-                        apellido: '',
-                        //fecha_nac: null,
-                        sexo: ''
+                nombre: '',
+                apellido: '',
+                    //fecha_nac: null,
+                sexo: '',
+                user_id: ''
             }
             
         }
     },
-     events: {
-            'submitted': function(usuario) {
-                console.log('evento')
-                this.create(usuario);
-            },
-        },
     components: {Formulario},
     methods: {
         create(formData){
-            console.log('create....')
             this.$http.post(
                 'api/usuario', formData)
                     .then(response => {
-                usuario = response.body.data
-
+                    this.usuario = response.body.data, 
+                    console.log(this.usuario),
+                    router.push({
+                    name: 'home'
+                })
             }, response => {
-                this.error = true
+                    console.log(response);
+                    this.error = true  
+                    this.errorsApi = response.body//lista de errores
+
             })
+        },
+        valida(usuario) {
+                this.sendForm(usuario);
         }
     }
 }

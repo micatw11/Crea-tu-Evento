@@ -49,9 +49,11 @@
 
 
 <script>
-
+import auth from '../../auth.js';
 export default {
+
      props: {
+            auth: auth,
             usuario: {
                 type: Object
             }
@@ -69,7 +71,7 @@ export default {
                 formData.set('apellido', this.usuario.apellido);
                 //formData.set('fecha_nac', this.fecha_nac);
                 formData.set('sexo', this.usuario.sexo);
-                console.log('creatte 1');
+                formData.set('user_id', auth.user.profile.id);
                 this.$emit('usuario', formData);
 
             }     
