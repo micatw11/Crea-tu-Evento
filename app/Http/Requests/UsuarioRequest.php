@@ -26,9 +26,8 @@ class UsuarioRequest extends FormRequest
         return [
             'nombre' => 'required',
             'apellido' => 'required',
-            'sexo' => 'required'
-
-            //'fecha_nac' => 'required|date',
+            'sexo' => 'required',
+            'fecha_nac' => 'required|date'
         ];
     }
 }

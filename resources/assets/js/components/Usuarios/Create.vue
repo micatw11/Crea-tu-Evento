@@ -1,7 +1,8 @@
 <template>
     <div>
-        <legend>{{ titleContent }} formulario</legend>
-        <formulario @usuario="create" :usuario= "usuario"></formulario>
+
+            <!--<formulario @usuario="create" :usuario= "usuario"></formulario>-->
+
     </div>
 </template>
 
@@ -12,11 +13,11 @@ import router from '../../routes.js';
 export default {
     data() {
         return {
-            titleContent: 'Completar ',
             usuario: {
+                avatar: '',
                 nombre: '',
                 apellido: '',
-                    //fecha_nac: null,
+                fecha_nac: '',
                 sexo: '',
                 user_id: ''
             }
@@ -32,6 +33,7 @@ export default {
                 .then(response => {
                     this.usuario = response.body.data,
                     router.push({
+
                         name: 'perfil'
                     })
                 }, response => {

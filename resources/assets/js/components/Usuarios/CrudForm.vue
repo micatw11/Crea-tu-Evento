@@ -1,16 +1,7 @@
 <template>
+
     <form @submit.prevent="validateBeforeSubmit" class="form-horizontal">
-        <!--<div class="form-group">
-            <label for="inputName" class="col-sm-2 control-label">Imagen</label>
 
-            <div class="col-sm-10">
-                <image-input :image-src="imageSrc"></image-input>
-
-                <div class="mrg-top-1em text-danger" v-for="error of errors['avatar']">
-                    @{{ error }}
-                </div>
-            </div>
-        </div>-->
         <div class="form-group">
             <label for="inputApellido" class="col-sm-2 control-label">Apellido</label>
             <div class="col-sm-10">
@@ -27,13 +18,6 @@
                 <span v-show="errors.has('nombre')" class="help-block">{{ errors.first('nombre') }}</span>
             </div>
         </div>
-        <!--<div class="form-group">
-            <label for="inputFech_nac" class="col-sm-2 control-label">Fecha Nacimiento</label>
-
-            <div class="col-sm-10">
-            <input type="date" class="form-control" v-model="fech_nac" placeholder="Fecha Nacimiento">
-            </div>
-        </div>-->
         <div class="form-group">
             <label class="col-sm-2 control-label">Localidad</label>
             <div class="col-sm-10">
@@ -82,7 +66,7 @@
 import auth from '../../auth.js';
 import vSelect from "vue-select";
 import Datepicker from 'vuejs-datepicker';
-
+//import ImageInput from './ImageInput.vue';
 export default {
 
     data() {
@@ -99,6 +83,7 @@ export default {
         }
     },
     mounted: function(){
+        console.log(this.usuario)
        this.localidadDeafult = {
            'value':this.usuario.localidad_id,
            'label':this.usuario.localidad.nombre+' ('+this.usuario.localidad.provincia.nombre+')'

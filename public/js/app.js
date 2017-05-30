@@ -484,7 +484,7 @@ var routes = [{
 	beforeEnter: guardRoute
 
 }, {
-	path: 'usuario/create',
+	path: '/usuario/create',
 	component: UsCreate,
 	beforeEnter: guardRoute
 }, {
@@ -4627,6 +4627,31 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -4639,10 +4664,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             password: null,
             password_confirmation: null,
             error: false,
-            errorsApi: []
+            errorsApi: [],
+            usuario: {
+                avatar: null,
+                nombre: null,
+                apellido: null,
+                sexo: null,
+                fecha_nac: null
+            }
         };
     },
 
+    //components: {Create},
     methods: {
         //clear errorsApi
         clearErrors: function clearErrors() {
@@ -4653,11 +4686,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this = this;
 
             this.$http.post('api/register', {
-                name: this.name,
+                avatar: this.usuario.nombre,
+                name: this.usuario.nombre,
                 email: this.email,
                 password: this.password,
                 password_confirmation: this.password_confirmation,
-                remember: false
+                remember: false,
+                sexo: this.usuario.sexo,
+                nombre: this.usuario.nombre,
+                apellido: this.usuario.apellido,
+                fecha_nac: this.usuario.fecha_nac
             }).then(function (response) {
 
                 __WEBPACK_IMPORTED_MODULE_0__auth_js__["a" /* default */].user.authenticated = true;
@@ -4672,12 +4710,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.errorsApi = response.body; //lista de errores
             });
         },
+
         validateBeforeSubmit: function validateBeforeSubmit(e) {
             var _this2 = this;
 
             this.clearErrors();
             this.$validator.validateAll().then(function () {
                 _this2.register();
+                _this2.usuarioCreate();
             }).catch(function () {
                 // failed
             });
@@ -5354,6 +5394,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -5361,11 +5402,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            titleContent: 'Completar ',
             usuario: {
+                avatar: '',
                 nombre: '',
                 apellido: '',
-                //fecha_nac: null,
+                fecha_nac: '',
                 sexo: '',
                 user_id: ''
             }
@@ -5381,6 +5422,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             formData.set('user_id', auth.user.profile.id);
             this.$http.post('api/usuario', formData).then(function (response) {
                 _this.usuario = response.body.data, __WEBPACK_IMPORTED_MODULE_1__routes_js__["a" /* default */].push({
+
                     name: 'perfil'
                 });
             }, function (response) {
@@ -5467,27 +5509,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
 
-
+//import ImageInput from './ImageInput.vue';
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
@@ -5504,6 +5530,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     mounted: function mounted() {
+        console.log(this.usuario);
         this.localidadDeafult = {
             'value': this.usuario.localidad_id,
             'label': this.usuario.localidad.nombre + ' (' + this.usuario.localidad.provincia.nombre + ')'
@@ -10714,14 +10741,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [_c('legend', [_vm._v(_vm._s(_vm.titleContent) + " formulario")]), _vm._v(" "), _c('formulario', {
-    attrs: {
-      "usuario": _vm.usuario
-    },
-    on: {
-      "usuario": _vm.create
-    }
-  })], 1)
+  return _c('div')
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -11211,34 +11231,34 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('div', {
     class: {
-      'form-group has-feedback': true, 'form-group has-error': _vm.errors.has('name')
+      'form-group has-feedback': true, 'form-group has-error': _vm.errors.has('apellido')
     }
   }, [_c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.name),
-      expression: "name"
+      value: (_vm.usuario.apellido),
+      expression: "usuario.apellido"
     }, {
       name: "validate",
-      rawName: "v-validate:name",
+      rawName: "v-validate:apelido",
       value: ('required|min:4|max:55'),
       expression: "'required|min:4|max:55'",
-      arg: "name"
+      arg: "apelido"
     }],
     staticClass: "form-control",
     attrs: {
-      "name": "name",
+      "name": "apellido",
       "type": "text",
-      "placeholder": "Ingresar nombre de usuario"
+      "placeholder": "Ingresar apellido"
     },
     domProps: {
-      "value": (_vm.name)
+      "value": (_vm.usuario.apellido)
     },
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.name = $event.target.value
+        _vm.usuario.apellido = $event.target.value
       }
     }
   }), _vm._v(" "), _c('span', {
@@ -11247,15 +11267,57 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     directives: [{
       name: "show",
       rawName: "v-show",
-      value: (_vm.errors.has('name')),
-      expression: "errors.has('name')"
+      value: (_vm.errors.has('apellido')),
+      expression: "errors.has('apellido')"
     }],
     staticClass: "help-block"
-  }, [_vm._v(_vm._s(_vm.errors.first('name')))]), _vm._v(" "), (_vm.errorsApi.name) ? _c('div', {
+  }, [_vm._v(_vm._s(_vm.errors.first('apellido')))])]), _vm._v(" "), _c('div', {
+    class: {
+      'form-group has-feedback': true, 'form-group has-error': _vm.errors.has('nombre')
+    }
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.usuario.nombre),
+      expression: "usuario.nombre"
+    }, {
+      name: "validate",
+      rawName: "v-validate:nombre",
+      value: ('required|min:4|max:55'),
+      expression: "'required|min:4|max:55'",
+      arg: "nombre"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "name": "nombre",
+      "type": "text",
+      "placeholder": "Ingresar nombre"
+    },
+    domProps: {
+      "value": (_vm.usuario.nombre)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.usuario.nombre = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _c('span', {
+    staticClass: "glyphicon glyphicon-user form-control-feedback"
+  }), _vm._v(" "), _c('span', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.errors.has('nombre')),
+      expression: "errors.has('nombre')"
+    }],
+    staticClass: "help-block"
+  }, [_vm._v(_vm._s(_vm.errors.first('nombre')))])]), _vm._v(" "), (_vm.errorsApi.name) ? _c('div', {
     staticClass: "help-block"
   }, _vm._l((_vm.errorsApi.name), function(msj) {
     return _c('div', [_c('p', [_vm._v(_vm._s(msj) + ".")])])
-  })) : _vm._e()]), _vm._v(" "), _c('div', {
+  })) : _vm._e(), _vm._v(" "), _c('div', {
     class: {
       'form-group has-feedback': true, 'form-group has-error': _vm.errors.has('email')
     }
@@ -11393,7 +11455,92 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "help-block"
   }, _vm._l((_vm.errorsApi.password_confirmation), function(msj) {
     return _c('div', [_c('p', [_vm._v(_vm._s(msj) + ".")])])
-  })) : _vm._e()]), _vm._v(" "), _vm._m(0)]), _vm._v(" "), _vm._m(1), _vm._v("\n        ¿Ya tienes una cuenta?"), _c('router-link', {
+  })) : _vm._e()]), _vm._v(" "), _c('div', {
+    class: {
+      'form-group has-feedback': true, 'form-group has-error': _vm.errors.has('fecha_nac')
+    }
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.usuario.fecha_nac),
+      expression: "usuario.fecha_nac"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "name": "fecha_nac",
+      "type": "date",
+      "placeholder": "Ingresar fecha de nacimiento"
+    },
+    domProps: {
+      "value": (_vm.usuario.fecha_nac)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.usuario.fecha_nac = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _c('span', {
+    staticClass: "glyphicon glyphicon-calendar form-control-feedback"
+  }), _vm._v(" "), _c('span', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.errors.has('fecha_nac')),
+      expression: "errors.has('fecha_nac')"
+    }],
+    staticClass: "help-block"
+  }, [_vm._v(_vm._s(_vm.errors.first('fecha_nac')))])]), _vm._v(" "), _c('div', {
+    class: {
+      'form-group has-feedback': true, 'form-group has-error': _vm.errors.has('sexo')
+    }
+  }, [_c('label', {
+    staticClass: "col-sm-2 control-label",
+    attrs: {
+      "for": "inputSexo"
+    }
+  }, [_vm._v("Sexo")]), _vm._v(" "), _c('div', {
+    staticClass: "col-sm-10"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.usuario.sexo),
+      expression: "usuario.sexo"
+    }],
+    attrs: {
+      "type": "radio",
+      "value": "M"
+    },
+    domProps: {
+      "checked": _vm._q(_vm.usuario.sexo, "M")
+    },
+    on: {
+      "__c": function($event) {
+        _vm.usuario.sexo = "M"
+      }
+    }
+  }), _vm._v("Masculino"), _c('br'), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.usuario.sexo),
+      expression: "usuario.sexo"
+    }],
+    attrs: {
+      "type": "radio",
+      "value": "F"
+    },
+    domProps: {
+      "checked": _vm._q(_vm.usuario.sexo, "F")
+    },
+    on: {
+      "__c": function($event) {
+        _vm.usuario.sexo = "F"
+      }
+    }
+  }), _vm._v("Femenino")])]), _vm._v(" "), _c('br'), _vm._v(" "), _c('br'), _vm._v(" "), _c('br'), _vm._v(" "), _vm._m(0)]), _vm._v(" "), _vm._m(1), _vm._v("\n        ¿Ya tienes una cuenta?"), _c('router-link', {
     staticClass: "text-center",
     attrs: {
       "tag": "a",

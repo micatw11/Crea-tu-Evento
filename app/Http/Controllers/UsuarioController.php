@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UsuarioRequest;
-use Illuminate\Http\Request;
+
 use Illuminate\Http\Response;
 use App\Usuario;
+use Request;
 
 
 class UsuarioController extends Controller
@@ -38,20 +39,7 @@ class UsuarioController extends Controller
      */
     public function store(UsuarioRequest $request)
     {
-        $usuario = new Usuario();
 
-        $usuario->nombre = $request->nombre;
-        $usuario->apellido = $request->apellido;
-        //$usuario->fecha_nac = $request->fecha_nac;
-        $usuario->sexo = $request->sexo;
-        $usuario->user_id = $request->user_id;;
-        if ($usuario->save()){
-            return response()->json(['data' =>  $usuario]);
-        } else {
-            return response()->json([
-                'error' => 'Internal Server Error',
-            ], 500);
-        }
     }
 
     /**
