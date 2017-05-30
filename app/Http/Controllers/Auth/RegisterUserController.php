@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\Usuario;
+use App\Http\Requests\UsuarioRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\Registered;
+use App\Http\Controllers\UsuarioController;
 
 class RegisterUserController extends Controller
 {
@@ -50,6 +53,8 @@ class RegisterUserController extends Controller
 
         $this->guard()->login($user);
 
+        $this->createUsuario($request);
+        $user->usuario;
         return response()->json(['data' =>  $user, 'csrfToken', csrf_token()]);
     }
 
@@ -61,5 +66,16 @@ class RegisterUserController extends Controller
     protected function guard()
     {
         return Auth::guard();
+    }
+
+    public function createUsuario(Request $request)
+    {
+        return Usuario::create([
+            'nombre' => $request->nombre,
+            'apellido' => $request->apellido,
+            'sexo' => $request->sexo,
+            'fecha_nac' => $request->fecha_nac,
+            'user_id' => Auth::user()->id,
+            'avatar' => $request->avatar]);        
     }
 }

@@ -42,7 +42,7 @@ let routes = [
 
 		},
 		{
-			path: 'usuario/create',
+			path: '/usuario/create',
 			component: UsCreate,
 			beforeEnter: guardRoute
 		},

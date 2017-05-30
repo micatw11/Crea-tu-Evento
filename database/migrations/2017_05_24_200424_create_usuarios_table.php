@@ -19,9 +19,12 @@ class CreateUsuariosTable extends Migration
             $table->string('nombre', 50);
             $table->string('apellido', 50);
             $table->date('fecha_nac');
-            $table->enum('sexo', ['F', 'M']);
-            $table->integer('user_id');
-            $table->integer('localidad_id');
+            $table->enum('sexo', ['F', 'M'])->nullable();
+            $table->integer('user_id')->unsigned();
+            $table->integer('localidad_id')->unsigned()->nullable();
+
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('localidad_id')->references('id')->on('localidades');
             $table->timestamps();
         });
     }

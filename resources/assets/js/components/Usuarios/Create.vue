@@ -1,9 +1,6 @@
 <template>
-    <div class="panel panel-default" v-cloak>
-        <div class="panel-body">
-            <legend>{{ titleContent }} formulario</legend>
-            <formulario @usuario="create" :usuario= "usuario"></formulario>
-        </div>
+    <div>
+            <!--<formulario @usuario="create" :usuario= "usuario"></formulario>-->
     </div>
 </template>
 
@@ -14,11 +11,11 @@ import router from '../../routes.js';
 export default {
     data() {
         return {
-            titleContent: 'Completar ',
             usuario: {
+                avatar: '',
                 nombre: '',
                 apellido: '',
-                    //fecha_nac: null,
+                fecha_nac: '',
                 sexo: '',
                 user_id: ''
             }
@@ -39,10 +36,12 @@ export default {
             }, response => {
                     console.log(response);
                     this.error = true  
-                    this.errorsApi = response.body//lista de errores
+                    //this.errorsApi = response.body//lista de errores
 
             })
         },
+       
+
         valida(usuario) {
                 this.sendForm(usuario);
         }
