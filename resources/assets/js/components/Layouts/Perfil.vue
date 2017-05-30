@@ -7,18 +7,11 @@
                     <!-- Profile Image -->
                     <div class="box box-primary">
                         <div class="box-body box-profile">
-                            <img class="profile-user-img img-responsive img-circle" src="dist/img/user4-128x128.jpg" alt="User profile picture">
+                            <img class="profile-user-img img-responsive img-circle" src="dist/img/user2-160x160.jpg" alt="User profile picture">
 
-                            <h3 class="profile-username text-center">Nina Mcintire</h3>
+                            <h3 v-if="perfil !== null" class="profile-username text-center">{{perfil.apellido}}, {{perfil.nombre}}</h3>
 
-                            <p class="text-muted text-center">Software Engineer</p>
-
-                            <ul class="list-group list-group-unbordered">
-                                <li class="list-group-item">
-                                    <b>Followers</b> <a class="pull-right">1,322</a>
-                                </li>
-                            </ul>
-                            <a href="#" class="btn btn-primary btn-block"><b>Follow</b></a>
+                            <a v-if="perfil !== null && perfil.user_id == auth.user.profile.id" href="#" class="btn btn-primary btn-block"><b>Cambiar foto</b></a>
                         </div>
                         <!-- /.box-body -->
                     </div>
@@ -31,17 +24,10 @@
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <strong><i class="fa fa-book margin-r-5"></i> Education</strong>
-
-                            <p class="text-muted">
-                                B.S. in Computer Science from the University of Tennessee at Knoxville
-                            </p>
-
-                            <hr>
 
                             <strong><i class="fa fa-map-marker margin-r-5"></i> Location</strong>
 
-                            <p class="text-muted">Malibu, California</p>
+                            <p v-if="perfil !== null" class="text-muted">{{ perfil.localidad.nombre}}, {{perfil.localidad.provincia.nombre}}</p>
 
                             <hr>
 
@@ -60,147 +46,20 @@
                         <ul class="nav nav-tabs">
                             <li class="active"><a href="#activity" data-toggle="tab">Activity</a></li>
                             <li><a href="#timeline" data-toggle="tab">Timeline</a></li>
-                            <li><a href="#settings" data-toggle="tab">Settings</a></li>
+                            <li v-if="perfil !== null && perfil.user_id == auth.user.profile.id"><a href="#settings" data-toggle="tab">Settings</a></li>
                         </ul>
                         <div class="tab-content">
+                            
                             <div class="active tab-pane" id="activity">
-                                <!-- Post -->
-                                <div class="post">
-                                    <div class="user-block">
-                                        <img class="img-circle img-bordered-sm" src="dist/img/user1-128x128.jpg" alt="user image">
-                                            <span class="username">
-                                            <a href="#">Jonathan Burke Jr.</a>
-                                            <a href="#" class="pull-right btn-box-tool"><i class="fa fa-times"></i></a>
-                                            </span>
-                                        <span class="description">Shared publicly - 7:30 PM today</span>
-                                    </div>
-                                    <!-- /.user-block -->
-                                    <p>
-                                        Lorem ipsum represents a long-held tradition for designers,
-                                        typographers and the like. Some people hate it and argue for
-                                        its demise, but others ignore the hate as they create awesome
-                                        tools to help create filler text for everyone from bacon lovers
-                                        to Charlie Sheen fans.
-                                    </p>
-                                    <ul class="list-inline">
-                                        <li><a href="#" class="link-black text-sm"><i class="fa fa-share margin-r-5"></i> Share</a></li>
-                                        <li><a href="#" class="link-black text-sm"><i class="fa fa-thumbs-o-up margin-r-5"></i> Like</a>
-                                        </li>
-                                        <li class="pull-right">
-                                        <a href="#" class="link-black text-sm"><i class="fa fa-comments-o margin-r-5"></i> Comments
-                                            (5)</a></li>
-                                    </ul>
-
-                                    <input class="form-control input-sm" type="text" placeholder="Type a comment">
-                                </div>
-                                <!-- /.post -->
-
-                                <!-- Post -->
-                                <div class="post clearfix">
-                                    <div class="user-block">
-                                        <img class="img-circle img-bordered-sm" src="dist/img/user7-128x128.jpg" alt="User Image">
-                                        <span class="username">
-                                            <a href="#">Sarah Ross</a>
-                                            <a href="#" class="pull-right btn-box-tool"><i class="fa fa-times"></i></a>
-                                        </span>
-                                        <span class="description">Sent you a message - 3 days ago</span>
-                                    </div>
-                                    <!-- /.user-block -->
-                                    <p>
-                                        Lorem ipsum represents a long-held tradition for designers,
-                                        typographers and the like. Some people hate it and argue for
-                                        its demise, but others ignore the hate as they create awesome
-                                        tools to help create filler text for everyone from bacon lovers
-                                        to Charlie Sheen fans.
-                                    </p>
-
-                                    <form class="form-horizontal">
-                                        <div class="form-group margin-bottom-none">
-                                            <div class="col-sm-9">
-                                                <input class="form-control input-sm" placeholder="Response">
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <button type="submit" class="btn btn-danger pull-right btn-block btn-sm">Send</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                <!-- /.post -->
+                                <activity></activity>
                             </div>
-                            <!-- /.tab-pane -->
+
                             <div class="tab-pane" id="timeline">
-                                <!-- The timeline -->
-                                <ul class="timeline timeline-inverse">
-                                    <!-- timeline time label -->
-                                    <li class="time-label">
-                                            <span class="bg-red">
-                                            10 Feb. 2014
-                                            </span>
-                                    </li>
-                                    <!-- /.timeline-label -->
-                                    <!-- timeline item -->
-                                    <li>
-                                        <i class="fa fa-envelope bg-blue"></i>
-
-                                        <div class="timeline-item">
-                                            <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
-
-                                            <h3 class="timeline-header"><a href="#">Support Team</a> sent you an email</h3>
-
-                                            <div class="timeline-body">
-                                                Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles,
-                                                weebly ning heekya handango imeem plugg dopplr jibjab, movity
-                                                jajah plickers sifteo edmodo ifttt zimbra. Babblely odeo kaboodle
-                                                quora plaxo ideeli hulu weebly balihoo...
-                                            </div>
-                                            <div class="timeline-footer">
-                                                <a class="btn btn-primary btn-xs">Read more</a>
-                                                <a class="btn btn-danger btn-xs">Delete</a>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <!-- END timeline item -->
-                                    <!-- timeline item -->
-                                    <li>
-                                        <i class="fa fa-user bg-aqua"></i>
-
-                                        <div class="timeline-item">
-                                            <span class="time"><i class="fa fa-clock-o"></i> 5 mins ago</span>
-
-                                            <h3 class="timeline-header no-border"><a href="#">Sarah Young</a> accepted your friend request</h3>
-                                        </div>
-                                    </li>
-                                    <!-- END timeline item -->
-                                    <!-- timeline item -->
-                                    <li>
-                                        <i class="fa fa-comments bg-yellow"></i>
-
-                                        <div class="timeline-item">
-                                            <span class="time"><i class="fa fa-clock-o"></i> 27 mins ago</span>
-
-                                            <h3 class="timeline-header"><a href="#">Jay White</a> commented on your post</h3>
-
-                                            <div class="timeline-body">
-                                                Take me to your leader!
-                                                Switzerland is small and neutral!
-                                                We are more like Germany, ambitious and misunderstood!
-                                            </div>
-                                            <div class="timeline-footer">
-                                                <a class="btn btn-warning btn-flat btn-xs">View comment</a>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <!-- END timeline item -->
-
-                                    <li>
-                                        <i class="fa fa-clock-o bg-gray"></i>
-                                    </li>
-                                </ul>
+                                <time-line></time-line>
                             </div>
-                            <!-- /.tab-pane -->
-
-                            <div class="tab-pane" id="settings">
-                                <form-perfil></form-perfil>
+                             
+                            <div class="tab-pane" id="settings" v-if="perfil !== null && perfil.user_id == auth.user.profile.id">
+                                <form-perfil @reload="reload()"></form-perfil>
                             </div>
                             <!-- /.tab-pane -->
                         </div>
@@ -214,27 +73,40 @@
 </template>
 <script>
 import PathContent from './Path.vue';
-import FormPerfil from '../Usuarios/Create.vue';
+import FormPerfil from '../Usuarios/CrudForm.vue';
+import Activity from '../Usuarios/Activity.vue';
+import TimeLine from '../Usuarios/TimeLine.vue';
 import router from '../../routes.js';
-
+import auth from '../../auth.js';
 export default {
     data(){
         return {
             titleContent: 'Perfil',
-            perfil: null
+            perfil: null,
+            auth: auth,
+            form: null
         }
     },
-    components: {PathContent,FormPerfil},
+    beforeMount: function() {
+        this.getUserPerfil();
+    },
+    components: {
+        PathContent,
+        FormPerfil, 
+        Activity, 
+        TimeLine
+    },
     methods:{
         getUserPerfil: function(){
-            this.$http.get('api/user/'+userId+'/perfil').then(response => {
-                this.perfil = response.data.data
-            }, response => {
-                console.log('error');
-                router.push({
-                    name: 'home'
+            this.$http.get('api/usuario/'+ this.$route.params.userId )
+                .then(response => {
+                    this.perfil = response.data.data
+                }, response => {
+                    console.log('error')
                 })
-            })
+        },
+        reload: function(){
+            this.getUserPerfil();
         }
     }
 }

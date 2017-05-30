@@ -1,9 +1,7 @@
 <template>
-    <div class="panel panel-default" v-cloak>
-        <div class="panel-body">
-            <legend>{{ titleContent }} formulario</legend>
-            <formulario @usuario="create" :usuario= "usuario"></formulario>
-        </div>
+    <div>
+        <legend>{{ titleContent }} formulario</legend>
+        <formulario @usuario="create" :usuario= "usuario"></formulario>
     </div>
 </template>
 
@@ -28,23 +26,20 @@ export default {
     components: {Formulario},
     methods: {
         create(formData){
+            formData.set('user_id', auth.user.profile.id);
             this.$http.post(
                 'api/usuario', formData)
-                    .then(response => {
-                    this.usuario = response.body.data, 
-                    console.log(this.usuario),
+                .then(response => {
+                    this.usuario = response.body.data,
                     router.push({
-                    name: 'home'
-                })
-            }, response => {
-                    console.log(response);
-                    this.error = true  
-                    this.errorsApi = response.body//lista de errores
+                        name: 'perfil'
+                    })
+                }, response => {
+                        console.log(response);
+                        this.error = true  
+                        this.errorsApi = response.body//lista de errores
 
-            })
-        },
-        valida(usuario) {
-                this.sendForm(usuario);
+                })
         }
     }
 }

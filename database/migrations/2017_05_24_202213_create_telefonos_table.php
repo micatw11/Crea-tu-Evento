@@ -17,7 +17,9 @@ class CreateTelefonosTable extends Migration
             $table->increments('id');
             $table->integer('cod_area');
             $table->integer('numero');
-            $table->integer('usuario_id');
+            $table->integer('usuario_id')->unsigned();
+
+            $table->foreign('usuario_id')->references('id')->on('usuarios');
             $table->timestamps();
         });
     }

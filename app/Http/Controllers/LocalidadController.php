@@ -2,22 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UsuarioRequest;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use App\Usuario;
+use App\Localidad;
 
-
-class UsuarioController extends Controller
+class LocalidadController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $localidades = DB::table('localidades')
+            ->join('provincias', 'localidades.provincia_id', '=', 'provincias.id')
+            ->select('localidades.id as value', DB::raw('CONCAT(localidades.nombre, " (",provincias.nombre, ")") as label'))
+                ->where('localidades.nombre','like' ,'%'.$request->q.'%')
+                ->orderBy('localidades.nombre', 'asc')
+                ->get();
+
+        return response()->json(['data' =>  $localidades->toArray()]);
     }
 
     /**
@@ -36,22 +41,9 @@ class UsuarioController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(UsuarioRequest $request)
+    public function store(Request $request)
     {
-        $usuario = new Usuario();
-
-        $usuario->nombre = $request->nombre;
-        $usuario->apellido = $request->apellido;
-        //$usuario->fecha_nac = $request->fecha_nac;
-        $usuario->sexo = $request->sexo;
-        $usuario->user_id = $request->user_id;;
-        if ($usuario->save()){
-            return response()->json(['data' =>  $usuario]);
-        } else {
-            return response()->json([
-                'error' => 'Internal Server Error',
-            ], 500);
-        }
+        //
     }
 
     /**
@@ -62,8 +54,7 @@ class UsuarioController extends Controller
      */
     public function show($id)
     {
-        $usuario = Usuario::where('user_id', $id)->with('localidad.provincia')->firstOrFail();
-        return response()->json(['data' =>  $usuario]);
+        //
     }
 
     /**
@@ -84,15 +75,9 @@ class UsuarioController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UsuarioRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        $usuario = Usuario::where('user_id', $id)->firstOrFail();
-        $usuario->update($request->all());
-        if($usuario->save()){
-            return response()->json(['data' =>  'OK'], 200);
-        } else {
-            return response()-json(['error' => 'Internal Server Error'], 500 );
-        }
+        //
     }
 
     /**
