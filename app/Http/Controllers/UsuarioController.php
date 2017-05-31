@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\UsuarioRequest;
 
 use Illuminate\Http\Response;
@@ -92,5 +93,17 @@ class UsuarioController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function updateAvatar(Request $request, $id){
+        $usuario = Usuario::where('user_id', $id)->firstOrFail();
+        $file = $request->file('avatar');
+
+        $path = Storage::put('avatars/'.$id.'/', $file);
+        $usuario->avatar = $path;
+
+        $usuario->save();
+        
+        return response()->json(['data' =>  'OK'], 200);
     }
 }

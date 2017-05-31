@@ -9,7 +9,6 @@ var About = require('./components/About');
 var Calendar = require('./components/Calendario');
 var Perfil = require('./components/Layouts/Perfil');
 var Registrar = require('./components/Auth/Register');
-var UsCreate = require('./components/Usuarios/Create');
 
 let routes = [ 
 		{
@@ -42,11 +41,6 @@ let routes = [
 
 		},
 		{
-			path: '/usuario/create',
-			component: UsCreate,
-			beforeEnter: guardRoute
-		},
-		{
 			path: '/user/:userId/perfil',
 			name: 'user',
 			component: Perfil,
@@ -66,7 +60,6 @@ function guardRoute (to, from, next)
 		}, response => {
 			next('/login')
 		})
-
   	} else {
 		next()
 	}
@@ -74,7 +67,7 @@ function guardRoute (to, from, next)
 
 function guardLogin(to, from, next) 
 {
-	if(from.name == null)
+	if(from.name == null)//si se recarga
 	{
 		Vue.http.get('api/user').then(response => {
 			auth.user.authenticated = true
@@ -83,6 +76,8 @@ function guardLogin(to, from, next)
 		}, response => {
 			next()//sigue a login
 		})
+	} else if(auth.user.authenticated){//si se intenta aceder desde la url
+		next(from.path)//sigue a login
 	} else {
 		next()//sigue a login
 	}

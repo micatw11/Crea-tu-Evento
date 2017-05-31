@@ -72,7 +72,6 @@ export default {
     data() {
         return {
             usuario: auth.user.profile.usuario,
-            form: [],
             error: false,
             disabled: {
                 to: new Date(1920, 1, 1),
@@ -85,8 +84,8 @@ export default {
     mounted: function(){
         console.log(this.usuario)
        this.localidadDeafult = {
-           'value':this.usuario.localidad_id,
-           'label':this.usuario.localidad.nombre+' ('+this.usuario.localidad.provincia.nombre+')'
+           'value':auth.user.profile.usuario.localidad_id,
+           'label':auth.user.profile.usuario.localidad.nombre+' ('+auth.user.profile.usuario.localidad.provincia.nombre+')'
         }
     },
     components: {
@@ -97,20 +96,15 @@ export default {
 
         sendForm: function() {
                 
-            this.form.nombre = this.usuario.nombre
-            this.form.apellido=this.usuario.apellido
-            this.form.fecha_nac=this.usuario.fecha_nac
-            this.form.localidad_id=this.localidadDeafult.value
-            this.form.sexo=this.usuario.sexo
             this.$http.post(
                 'api/usuario/'+this.$route.params.userId,
                 {
                     _method: 'PATCH',
-                    nombre:  this.form.nombre,
-                    apellido:  this.form.apellido,
-                    fecha_nac:  this.form.fecha_nac,
-                    localidad_id:  this.form.localidad,
-                    sexo:  this.form.sexo
+                    nombre:  this.usuario.nombre,
+                    apellido:  this.usuario.apellido,
+                    fecha_nac:  this.usuario.fecha_nac,
+                    localidad_id:  this.usuario.localidad_id,
+                    sexo:  this.usuario.sexo
                 })
                 .then(response => {
                     this.$emit('reload')

@@ -54,9 +54,10 @@ class RegisterUserController extends Controller
         $this->guard()->login($user);
 
         $this->createUsuario($request);
-        $user->usuario;
+        $user->usuario->localidad->provincia;
         return response()->json(['data' =>  $user, 'csrfToken', csrf_token()]);
     }
+
 
     /**
      * Get the guard to be used during registration.
@@ -74,8 +75,9 @@ class RegisterUserController extends Controller
             'nombre' => $request->nombre,
             'apellido' => $request->apellido,
             'sexo' => $request->sexo,
+            'localidad_id' => $request->localidad_id,
             'fecha_nac' => $request->fecha_nac,
             'user_id' => Auth::user()->id,
-            'avatar' => $request->avatar]);        
+            'avatar' => 'storage/avatars/default.png']);        
     }
 }

@@ -7,7 +7,7 @@
                     <!-- Profile Image -->
                     <div class="box box-primary">
                         <div class="box-body box-profile">
-                            <img class="profile-user-img img-responsive img-circle" src="dist/img/user2-160x160.jpg" alt="User profile picture">
+                            <img class="profile-user-img img-responsive img-circle" :src="avatar" alt="User profile picture">
 
                             <h3 v-if="perfil !== null" class="profile-username text-center">{{perfil.apellido}}, {{perfil.nombre}}</h3>
 
@@ -78,17 +78,20 @@ import Activity from '../Usuarios/Activity.vue';
 import TimeLine from '../Usuarios/TimeLine.vue';
 import router from '../../routes.js';
 import auth from '../../auth.js';
+
 export default {
     data(){
         return {
             titleContent: 'Perfil',
             perfil: null,
             auth: auth,
-            form: null
+            form: null,
+            avatar: null
         }
     },
-    beforeMount: function() {
+    mounted: function() {
         this.getUserPerfil();
+        this.avatar = auth.user.profile.usuario.avatar
     },
     components: {
         PathContent,
