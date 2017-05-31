@@ -8368,8 +8368,8 @@ data2blob = function data2blob(data, mime) {
                 ki = this.ki,
                 createImgUrl = this.createImgUrl,
                 fmData = new FormData();
-
-            fmData.append(field, data2blob(createImgUrl, mime, field + '.' + imgFormat)); //, field + '.' + imgFormat
+            //fmData.append(field, data2blob(createImgUrl, mime, field + '.' + imgFormat));//, field + '.' + imgFormat
+            fmData.append(field, createImgUrl);
 
             // 添加其他参数
             if ((typeof params === 'undefined' ? 'undefined' : _typeof(params)) == 'object' && params) {
@@ -9491,13 +9491,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             perfil: null,
             auth: __WEBPACK_IMPORTED_MODULE_6__auth_js__["a" /* default */],
             form: null,
-            avatar: null
+            avatar: null,
+            srcUrl: ''
         };
     },
 
     mounted: function mounted() {
         this.getUserPerfil();
-        this.avatar = __WEBPACK_IMPORTED_MODULE_6__auth_js__["a" /* default */].user.profile.usuario.avatar;
+        this.srcUrl = '/storage/avatars/' + this.auth.user.profile.usuario.avatar;
     },
     components: {
         PathContent: __WEBPACK_IMPORTED_MODULE_0__Path_vue___default.a,
@@ -9515,6 +9516,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }, function (response) {
                 console.log('error');
             });
+        },
+        updateAvatar: function updateAvatar() {
+            this.srcUrl = '/storage/avatars/' + this.auth.user.profile.usuario.avatar;
         },
         reload: function reload() {
             this.getUserPerfil();
@@ -9681,7 +9685,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_polyfill___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_polyfill__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_image_crop_upload_upload_2_vue__ = __webpack_require__(351);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_image_crop_upload_upload_2_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_image_crop_upload_upload_2_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lang_js__ = __webpack_require__(162);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__auth_js__ = __webpack_require__(26);
+//
 //
 //
 //
@@ -9744,6 +9749,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         toggleShow: function toggleShow() {
             this.show = !this.show;
+        },
+
+        /**
+         * upload success
+         *
+         * [param] jsonData   server api return data, already json encode
+         * [param] field
+         */
+        cropUploadSuccess: function cropUploadSuccess(jsonData, field) {
+            console.log('-------- upload success --------');
+            console.log(jsonData);
+            __WEBPACK_IMPORTED_MODULE_2__auth_js__["a" /* default */].user.profile.usuario.avatar = jsonData.data;
+            this.$emit('avatarUpdate');
         }
     }
 });
@@ -9782,33 +9800,7 @@ window.axios.defaults.headers.common = {
 };
 
 /***/ }),
-/* 162 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony default export */ var _unused_webpack_default_export = ({
-    es: {
-        hint: "Haga clic en o arrastre el archivo aquí",
-        loading: "Cargando...",
-        noSupported: "El navegador no admite, utilice IE10 + u otros navegadores",
-        success: "Subida exitosa",
-        fail: "Subida fallida",
-        preview: "Vista previa",
-        btn: {
-            off: "Cancelar",
-            close: "Cerrar",
-            back: "Atras",
-            save: "Guardar"
-        },
-        error: {
-            onlyImg: "Sólo imagen",
-            outOfSize: "La imagen supera el límite de tamaño:",
-            lowestPx: "El píxel más bajo de la imagen:"
-        }
-    }
-});
-
-/***/ }),
+/* 162 */,
 /* 163 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19735,6 +19727,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "langExt": _vm.es,
       "headers": _vm.headers
     },
+    on: {
+      "crop-upload-success": _vm.cropUploadSuccess
+    },
     model: {
       value: (_vm.show),
       callback: function($$v) {
@@ -20170,12 +20165,18 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('img', {
     staticClass: "profile-user-img img-responsive img-circle",
     attrs: {
-      "src": _vm.avatar,
+      "src": _vm.srcUrl,
       "alt": "User profile picture"
     }
   }), _vm._v(" "), (_vm.perfil !== null) ? _c('h3', {
     staticClass: "profile-username text-center"
-  }, [_vm._v(_vm._s(_vm.perfil.apellido) + ", " + _vm._s(_vm.perfil.nombre))]) : _vm._e(), _vm._v(" "), (_vm.perfil !== null && _vm.perfil.user_id == _vm.auth.user.profile.id) ? _c('image-input') : _vm._e()], 1)]), _vm._v(" "), _c('div', {
+  }, [_vm._v(_vm._s(_vm.perfil.apellido) + ", " + _vm._s(_vm.perfil.nombre))]) : _vm._e(), _vm._v(" "), (_vm.perfil !== null && _vm.perfil.user_id == _vm.auth.user.profile.id) ? _c('image-input', {
+    on: {
+      "avatarUpdate": function($event) {
+        _vm.updateAvatar()
+      }
+    }
+  }) : _vm._e()], 1)]), _vm._v(" "), _c('div', {
     staticClass: "box box-primary"
   }, [_vm._m(0), _vm._v(" "), _c('div', {
     staticClass: "box-body"

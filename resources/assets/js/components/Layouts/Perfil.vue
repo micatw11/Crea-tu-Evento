@@ -7,11 +7,11 @@
                     <!-- Profile Image -->
                     <div class="box box-primary">
                         <div class="box-body box-profile">
-                            <img class="profile-user-img img-responsive img-circle" :src="avatar" alt="User profile picture">
+                            <img class="profile-user-img img-responsive img-circle" :src="srcUrl" alt="User profile picture">
 
                             <h3 v-if="perfil !== null" class="profile-username text-center">{{perfil.apellido}}, {{perfil.nombre}}</h3>
 
-                            <image-input v-if="perfil !== null && perfil.user_id == auth.user.profile.id" ></image-input>
+                            <image-input @avatarUpdate="updateAvatar()" v-if="perfil !== null && perfil.user_id == auth.user.profile.id" ></image-input>
                         </div>
                         <!-- /.box-body -->
                     </div>
@@ -89,12 +89,13 @@ export default {
             perfil: null,
             auth: auth,
             form: null,
-            avatar: null
+            avatar: null,
+            srcUrl: ''
         }
     },
     mounted: function() {
         this.getUserPerfil();
-        this.avatar = auth.user.profile.usuario.avatar
+        this.srcUrl = '/storage/avatars/'+this.auth.user.profile.usuario.avatar
     },
     components: {
         PathContent,
@@ -111,6 +112,9 @@ export default {
                 }, response => {
                     console.log('error')
                 })
+        },
+        updateAvatar: function(){
+            this.srcUrl = '/storage/avatars/'+this.auth.user.profile.usuario.avatar;
         },
         reload: function(){
             this.getUserPerfil();
