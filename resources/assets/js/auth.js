@@ -1,6 +1,6 @@
 export default {
     user: {
         authenticated: false,
-        profile: null
+        profile: null,
     }
 }

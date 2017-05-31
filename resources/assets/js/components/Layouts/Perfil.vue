@@ -11,7 +11,7 @@
 
                             <h3 v-if="perfil !== null" class="profile-username text-center">{{perfil.apellido}}, {{perfil.nombre}}</h3>
 
-                            <a v-if="perfil !== null && perfil.user_id == auth.user.profile.id" href="#" class="btn btn-primary btn-block"><b>Cambiar foto</b></a>
+                            <image-input v-if="perfil !== null && perfil.user_id == auth.user.profile.id" ></image-input>
                         </div>
                         <!-- /.box-body -->
                     </div>
@@ -70,10 +70,13 @@
             </div>
         </section>
     </div>
+
+ 
 </template>
 <script>
 import PathContent from './Path.vue';
 import FormPerfil from '../Usuarios/CrudForm.vue';
+import ImageInput from '../Usuarios/ImageInput.vue';
 import Activity from '../Usuarios/Activity.vue';
 import TimeLine from '../Usuarios/TimeLine.vue';
 import router from '../../routes.js';
@@ -97,7 +100,8 @@ export default {
         PathContent,
         FormPerfil, 
         Activity, 
-        TimeLine
+        TimeLine,
+        ImageInput
     },
     methods:{
         getUserPerfil: function(){
