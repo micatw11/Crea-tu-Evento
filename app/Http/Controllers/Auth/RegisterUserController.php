@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\User;
 use App\Usuario;
+use App\Rol;
 use App\Http\Requests\UsuarioRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -36,7 +37,7 @@ class RegisterUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-        ]);
+            'roles_id' => Rol::usuario()]);
     }
 
     /**
@@ -55,6 +56,7 @@ class RegisterUserController extends Controller
 
         $this->createUsuario($request);
         $user->usuario->localidad->provincia;
+        $user->rol;
         return response()->json(['data' =>  $user, 'csrfToken', csrf_token()]);
     }
 
