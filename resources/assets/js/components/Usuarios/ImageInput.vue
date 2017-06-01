@@ -4,6 +4,7 @@
         <my-upload
             field="avatar"
             v-model="show"
+            @crop-upload-success="cropUploadSuccess"
             :width="300"
             :url="url"
             :params="params"
@@ -18,7 +19,7 @@
 <script>
 import 'babel-polyfill';
 import myUpload from 'vue-image-crop-upload/upload-2.vue';
-import lang from './lang.js';
+import auth from './../../auth.js'
 
 export default {
         data() {
@@ -59,6 +60,19 @@ export default {
         methods: {
             toggleShow() {
                 this.show = !this.show;
+            },
+            /**
+             * upload success
+             *
+             * [param] jsonData   server api return data, already json encode
+             * [param] field
+             */
+            cropUploadSuccess(jsonData, field){
+                console.log('-------- upload success --------');
+                console.log(jsonData);
+                auth.user.profile.usuario.avatar = jsonData.data;
+                this.$emit('avatarUpdate');
+
             }
         }
     }

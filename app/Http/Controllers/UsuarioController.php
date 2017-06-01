@@ -97,13 +97,14 @@ class UsuarioController extends Controller
 
     public function updateAvatar(Request $request, $id){
         $usuario = Usuario::where('user_id', $id)->firstOrFail();
+
         $img = $request->avatar;
+        $img = str_replace('data:image/png;base64,', '', $img);
         $file = base64_decode($img);
-        $filename  = time() . '.' . $file->getClientOriginalExtension();
-        $path = 'avatars/'.$id.'/'.$filename;
-        $path = Storage::put($path, $file);
-        //$usuario->avatar = $path;
-        $string = '<img src="'.$path.'"/>';
-        return response()->json(['data' => $string ]);
+        $filename  = str_random(30) . '.'.'jpg';
+        Storage::put('public/avatars/'.$filename, $file);
+        $usuario->avatar = $filename;
+        $usuario->save();
+        return response()->json(['data' => $filename ]);
     }
 }
