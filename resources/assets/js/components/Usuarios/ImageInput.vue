@@ -1,64 +1,65 @@
 <template>
-  <div>
-    <div class="row">
-        <div class="col-md-12">
-            <img
-                class="img-thumbnail img-reponsive image-preview class="profile-user-img img-responsive img-circle""
-                :src="imageSrc"
-                :alt="imageName"
-                :title="imageName">
-        </div>
+    <div>
+        <a class="btn btn-primary btn-block" @click="toggleShow">Cambiar Foto</a>
+        <my-upload
+            field="avatar"
+            v-model="show"
+            :width="300"
+            :url="url"
+            :params="params"
+            :height="300"
+            :langExt="es"
+            :headers="headers">
+        </my-upload>
     </div>
 
-    <div class="row mrg-top-1em">
-        <div class="col-md-12">
-            <div class="image-input btn btn-default">
-                <span>
-                    <i class="glyphicon glyphicon-camera"></i>
-                    Change
-                </span>
-
-                <input @change="preview($event)" name="image" type="file" accept="image/*">
-            </div>
-        </div>
-    </div>
-   </div>
 </template>
 
 <script>
-    export default {
-        props: {
-            imageSrc: {
-                type: String,
-                default: '/storage/avatars/default.png'
-            },
-        },
+import 'babel-polyfill';
+import myUpload from 'vue-image-crop-upload/upload-2.vue';
+import lang from './lang.js';
+
+export default {
         data() {
             return {
-                imageName: null
+                url: 'api/user/'+this.$route.params.userId+'/perfil/avatar/',
+                show: false,
+                headers: {
+                    smail: '*_~',
+                    'X-CSRF-TOKEN': Laravel.csrfToken
+                },
+                params: {
+                    name: 'avatar'
+                },
+                es: {
+                        hint: "Haga clic en o arrastre el archivo",
+                        loading: "Cargando...",
+                        noSupported: "El navegador no admite, utilice IE10 + u otros navegadores",
+                        success: "Subida exitosa",
+                        fail: "Subida fallida",
+                        preview: "Vista previa",
+                        btn: {
+                            off: "Cancelar",
+                            close: "Cerrar",
+                            back: "Atras",
+                            save: "Guardar"
+                        },
+                        error: {
+                            onlyImg: "Sólo imagen",
+                            outOfSize: "La imagen supera el límite de tamaño: ",
+                            lowestPx: "El tamaño minimo requerido es de: "
+                        }
+                }
             }
         },
+        components: {
+            'my-upload': myUpload
+        },
         methods: {
-            preview(event) {
-                let input = event.target;
-                let files = input.files;
-
-                if (files && files[0]) {
-                    if(files[0].type.match('image.*')) {
-                        let reader = new FileReader();
-
-                        reader.onload = (e) => {
-                            this.imageSrc = e.target.result;
-                            this.imageName = files[0].name;
-                        };
-
-                        reader.readAsDataURL(files[0]);
-
-                        this.$emit('avatar', files[0]);
-                    }
-                }
+            toggleShow() {
+                this.show = !this.show;
             }
         }
     }
-</script>
-s
+</script> 

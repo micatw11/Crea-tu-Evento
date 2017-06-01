@@ -36,4 +36,6 @@ Route::group(['prefix' => 'api'], function () {
     Route::resource('usuario', 'UsuarioController');
 
     Route::get('localidades', 'LocalidadController@index');
+
+    Route::post('user/{id}/perfil/avatar', 'UsuarioController@updateAvatar');
 });

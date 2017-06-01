@@ -94,6 +94,7 @@ export default {
                 auth.user.authenticated = true
                 auth.user.profile = response.data.data
 
+
                 router.push({
                     name: 'home'
                 })
