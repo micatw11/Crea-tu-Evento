@@ -1653,6 +1653,7 @@ module.exports = function(key){
 
 
 
+<<<<<<< HEAD
 var Login = __webpack_require__(352);
 var Home = __webpack_require__(355);
 var About = __webpack_require__(350);
@@ -1660,6 +1661,14 @@ var Calendar = __webpack_require__(354);
 var Perfil = __webpack_require__(361);
 var Registrar = __webpack_require__(353);
 var PageNotFound = __webpack_require__(396);
+=======
+var Login = __webpack_require__(353);
+var Home = __webpack_require__(356);
+var About = __webpack_require__(351);
+var Calendar = __webpack_require__(355);
+var Perfil = __webpack_require__(362);
+var Registrar = __webpack_require__(354);
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 
 var routes = [{
 	path: '/',
@@ -3123,13 +3132,17 @@ var Component = __webpack_require__(8)(
   /* script */
   __webpack_require__(156),
   /* template */
+<<<<<<< HEAD
   __webpack_require__(378),
+=======
+  __webpack_require__(379),
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Layouts\\Path.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Layouts/Path.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Path.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -6666,7 +6679,11 @@ r(t=e)}else o()}}function l(t,e,n,r){var o=n?"":r.css;if(t.styleSheet)t.styleShe
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__bootstrap__ = __webpack_require__(161);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__routes__ = __webpack_require__(43);
+<<<<<<< HEAD
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_App_vue__ = __webpack_require__(351);
+=======
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_App_vue__ = __webpack_require__(352);
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_App_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_App_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vee_validate_dist_locale_es__ = __webpack_require__(348);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vee_validate_dist_locale_es___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_vee_validate_dist_locale_es__);
@@ -8197,8 +8214,214 @@ $(function () {
     event.html(val);
     $('#external-events').prepend(event);
 
+<<<<<<< HEAD
     //Add draggable funtionality
     ini_events(event);
+=======
+            simd.mX = et.screenX;
+            simd.mY = et.screenY;
+            simd.x = scale.x;
+            simd.y = scale.y;
+            simd.on = true;
+        },
+
+        // 鼠标按下状态下移动，图片移动
+        imgMove: function imgMove(e) {
+            e.preventDefault();
+            // 支持触摸事件，则鼠标事件无效
+            if (this.isSupportTouch && !e.targetTouches) {
+                return false;
+            }
+            var et = e.targetTouches ? e.targetTouches[0] : e,
+                _sourceImgMouseDown = this.sourceImgMouseDown,
+                on = _sourceImgMouseDown.on,
+                mX = _sourceImgMouseDown.mX,
+                mY = _sourceImgMouseDown.mY,
+                x = _sourceImgMouseDown.x,
+                y = _sourceImgMouseDown.y,
+                scale = this.scale,
+                sourceImgMasking = this.sourceImgMasking,
+                sim = sourceImgMasking,
+                nX = et.screenX,
+                nY = et.screenY,
+                dX = nX - mX,
+                dY = nY - mY,
+                rX = x + dX,
+                rY = y + dY;
+
+            if (!on) return;
+            if (rX > 0) {
+                rX = 0;
+            }
+            if (rY > 0) {
+                rY = 0;
+            }
+            if (rX < sim.width - scale.width) {
+                rX = sim.width - scale.width;
+            }
+            if (rY < sim.height - scale.height) {
+                rY = sim.height - scale.height;
+            }
+            scale.x = rX;
+            scale.y = rY;
+        },
+
+        // 按钮按下开始放大
+        startZoomAdd: function startZoomAdd(e) {
+            var that = this,
+                scale = that.scale;
+
+            scale.zoomAddOn = true;
+
+            function zoom() {
+                if (scale.zoomAddOn) {
+                    var range = scale.range >= 100 ? 100 : ++scale.range;
+                    that.zoomImg(range);
+                    setTimeout(function () {
+                        zoom();
+                    }, 60);
+                }
+            }
+            zoom();
+        },
+
+        // 按钮松开或移开取消放大
+        endZoomAdd: function endZoomAdd(e) {
+            this.scale.zoomAddOn = false;
+        },
+
+        // 按钮按下开始缩小
+        startZoomSub: function startZoomSub(e) {
+            var that = this,
+                scale = that.scale;
+
+            scale.zoomSubOn = true;
+
+            function zoom() {
+                if (scale.zoomSubOn) {
+                    var range = scale.range <= 0 ? 0 : --scale.range;
+                    that.zoomImg(range);
+                    setTimeout(function () {
+                        zoom();
+                    }, 60);
+                }
+            }
+            zoom();
+        },
+
+        // 按钮松开或移开取消缩小
+        endZoomSub: function endZoomSub(e) {
+            var scale = this.scale;
+
+            scale.zoomSubOn = false;
+        },
+        zoomChange: function zoomChange(e) {
+            this.zoomImg(e.target.value);
+        },
+
+        // 缩放原图
+        zoomImg: function zoomImg(newRange) {
+            var that = this,
+                sourceImgMasking = this.sourceImgMasking,
+                sourceImgMouseDown = this.sourceImgMouseDown,
+                scale = this.scale,
+                maxWidth = scale.maxWidth,
+                maxHeight = scale.maxHeight,
+                minWidth = scale.minWidth,
+                minHeight = scale.minHeight,
+                width = scale.width,
+                height = scale.height,
+                x = scale.x,
+                y = scale.y,
+                range = scale.range,
+                sim = sourceImgMasking,
+                sWidth = sim.width,
+                sHeight = sim.height,
+                nWidth = minWidth + (maxWidth - minWidth) * newRange / 100,
+                nHeight = minHeight + (maxHeight - minHeight) * newRange / 100,
+                nX = sWidth / 2 - nWidth / width * (sWidth / 2 - x),
+                nY = sHeight / 2 - nHeight / height * (sHeight / 2 - y);
+
+            // 判断新坐标是否超过蒙版限制
+            if (nX > 0) {
+                nX = 0;
+            }
+            if (nY > 0) {
+                nY = 0;
+            }
+            if (nX < sWidth - nWidth) {
+                nX = sWidth - nWidth;
+            }
+            if (nY < sHeight - nHeight) {
+                nY = sHeight - nHeight;
+            }
+
+            // 赋值处理
+            scale.x = nX;
+            scale.y = nY;
+            scale.width = nWidth;
+            scale.height = nHeight;
+            scale.range = newRange;
+            setTimeout(function () {
+                if (scale.range == newRange) {
+                    that.createImg();
+                }
+            }, 300);
+        },
+
+        // 生成需求图片
+        createImg: function createImg(e) {
+            var that = this,
+                mime = that.mime,
+                sourceImg = that.sourceImg,
+                _that$scale = that.scale,
+                x = _that$scale.x,
+                y = _that$scale.y,
+                width = _that$scale.width,
+                height = _that$scale.height,
+                scale = that.sourceImgMasking.scale,
+                canvas = that.$refs.canvas,
+                ctx = canvas.getContext('2d');
+
+            if (e) {
+                // 取消鼠标按下移动状态
+                that.sourceImgMouseDown.on = false;
+            }
+            ctx.clearRect(0, 0, that.width, that.height);
+            ctx.drawImage(sourceImg, x / scale, y / scale, width / scale, height / scale);
+            that.createImgUrl = canvas.toDataURL(mime);
+        },
+
+        // 上传图片
+        upload: function upload() {
+            var that = this,
+                lang = this.lang,
+                imgFormat = this.imgFormat,
+                mime = this.mime,
+                url = this.url,
+                params = this.params,
+                headers = this.headers,
+                field = this.field,
+                ki = this.ki,
+                createImgUrl = this.createImgUrl,
+                fmData = new FormData();
+
+            fmData.append(field, data2blob(createImgUrl, mime), field + '.' + imgFormat);
+
+            // 添加其他参数
+            if ((typeof params === 'undefined' ? 'undefined' : _typeof(params)) == 'object' && params) {
+                Object.keys(params).forEach(function (k) {
+                    fmData.append(k, params[k]);
+                });
+            }
+
+            // 监听进度回调
+            var uploadProgress = function uploadProgress(event) {
+                if (event.lengthComputable) {
+                    that.progress = 100 * Math.round(event.loaded) / event.total;
+                }
+            };
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 
     //Remove event from text input
     $("#new-event").val("");
@@ -8251,6 +8474,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__auth_js__ = __webpack_require__(23);
+<<<<<<< HEAD
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__routes_js__ = __webpack_require__(43);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MenuUser_vue__ = __webpack_require__(359);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MenuUser_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__MenuUser_vue__);
@@ -8281,6 +8505,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+=======
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Layouts_Barra_vue__ = __webpack_require__(357);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Layouts_Barra_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__Layouts_Barra_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Layouts_BarraLateral_vue__ = __webpack_require__(358);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Layouts_BarraLateral_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__Layouts_BarraLateral_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Layouts_Footer_vue__ = __webpack_require__(359);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Layouts_Footer_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__Layouts_Footer_vue__);
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 //
 //
 //
@@ -8314,6 +8546,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__auth_js__ = __webpack_require__(23);
+<<<<<<< HEAD
 //
 //
 //
@@ -8321,6 +8554,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+=======
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__routes_js__ = __webpack_require__(43);
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 //
 //
 //
@@ -9014,6 +9250,7 @@ data2blob = function data2blob(data, mime) {
             };
         },
 
+<<<<<<< HEAD
         // 原图样式
         sourceImgStyle: function sourceImgStyle() {
             var scale = this.scale,
@@ -9061,6 +9298,51 @@ data2blob = function data2blob(data, mime) {
                 height: h
             };
         },
+=======
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__auth_js__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__routes_js__ = __webpack_require__(43);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MenuUser_vue__ = __webpack_require__(360);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MenuUser_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__MenuUser_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Notificaciones_vue__ = __webpack_require__(361);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Notificaciones_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__Notificaciones_vue__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 
         // 原图遮罩样式
         sourceImgShadeStyle: function sourceImgShadeStyle() {
@@ -9160,6 +9442,7 @@ data2blob = function data2blob(data, mime) {
 
         /* ---------------------------------------------------------------*/
 
+<<<<<<< HEAD
         // 检测选择的文件是否合适
         checkFile: function checkFile(file) {
             var that = this,
@@ -9171,6 +9454,80 @@ data2blob = function data2blob(data, mime) {
                 that.errorMsg = lang.error.onlyImg;
                 return false;
             }
+=======
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__auth_js__ = __webpack_require__(23);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 
             // 超出大小
             if (file.size / 1024 > maxSize) {
@@ -9214,6 +9571,7 @@ data2blob = function data2blob(data, mime) {
                 sim = sourceImgMasking,
                 img = new Image();
 
+<<<<<<< HEAD
             img.src = sourceImgUrl;
             img.onload = function () {
                 var nWidth = img.naturalWidth,
@@ -9253,6 +9611,59 @@ data2blob = function data2blob(data, mime) {
                 that.setStep(2);
             };
         },
+=======
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__auth_js__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__routes_js__ = __webpack_require__(43);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 
         // 鼠标按下图片准备移动
         imgStartMove: function imgStartMove(e) {
@@ -9343,6 +9754,7 @@ data2blob = function data2blob(data, mime) {
             var that = this,
                 scale = that.scale;
 
+<<<<<<< HEAD
             scale.zoomSubOn = true;
 
             function zoom() {
@@ -9356,6 +9768,97 @@ data2blob = function data2blob(data, mime) {
             }
             zoom();
         },
+=======
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Path_vue__ = __webpack_require__(90);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Path_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Path_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Usuarios_CrudForm_vue__ = __webpack_require__(364);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Usuarios_CrudForm_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__Usuarios_CrudForm_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Usuarios_ImageInput_vue__ = __webpack_require__(365);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Usuarios_ImageInput_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__Usuarios_ImageInput_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Usuarios_Activity_vue__ = __webpack_require__(363);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Usuarios_Activity_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__Usuarios_Activity_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Usuarios_TimeLine_vue__ = __webpack_require__(366);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Usuarios_TimeLine_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__Usuarios_TimeLine_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__routes_js__ = __webpack_require__(43);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__auth_js__ = __webpack_require__(23);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 
         // 按钮松开或移开取消缩小
         endZoomSub: function endZoomSub(e) {
@@ -9526,11 +10029,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__auth_js__ = __webpack_require__(23);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_select__ = __webpack_require__(126);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_select___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_select__);
+<<<<<<< HEAD
 //
 //
 //
 //
 //
+=======
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuejs_datepicker__ = __webpack_require__(390);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuejs_datepicker___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vuejs_datepicker__);
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 //
 //
 //
@@ -9682,9 +10190,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_polyfill__ = __webpack_require__(162);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_polyfill___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_polyfill__);
+<<<<<<< HEAD
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Plugins_vue_image_crop_upload_upload_2_vue__ = __webpack_require__(362);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Plugins_vue_image_crop_upload_upload_2_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__Plugins_vue_image_crop_upload_upload_2_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__auth_js__ = __webpack_require__(23);
+=======
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_image_crop_upload_upload_2_vue__ = __webpack_require__(350);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_image_crop_upload_upload_2_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_image_crop_upload_upload_2_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__auth_js__ = __webpack_require__(23);
+//
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 //
 //
 //
@@ -18492,17 +19007,61 @@ return index;
 /* 350 */
 /***/ (function(module, exports, __webpack_require__) {
 
+<<<<<<< HEAD
+=======
+
+/* styles */
+__webpack_require__(386)
+
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 var Component = __webpack_require__(8)(
   /* script */
   __webpack_require__(147),
   /* template */
+<<<<<<< HEAD
+=======
+  __webpack_require__(376),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/node_modules/vue-image-crop-upload/upload-2.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] upload-2.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-40c3cc53", Component.options)
+  } else {
+    hotAPI.reload("data-v-40c3cc53", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 351 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(8)(
+  /* script */
+  __webpack_require__(148),
+  /* template */
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
   __webpack_require__(374),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\About.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/About.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] About.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -18523,7 +19082,11 @@ module.exports = Component.exports
 
 
 /***/ }),
+<<<<<<< HEAD
 /* 351 */
+=======
+/* 352 */
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(8)(
@@ -18536,7 +19099,7 @@ var Component = __webpack_require__(8)(
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\App.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/App.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] App.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -18557,7 +19120,11 @@ module.exports = Component.exports
 
 
 /***/ }),
+<<<<<<< HEAD
 /* 352 */
+=======
+/* 353 */
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(8)(
@@ -18570,7 +19137,7 @@ var Component = __webpack_require__(8)(
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Auth\\Login.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Auth/Login.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Login.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -18591,7 +19158,11 @@ module.exports = Component.exports
 
 
 /***/ }),
+<<<<<<< HEAD
 /* 353 */
+=======
+/* 354 */
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(8)(
@@ -18604,7 +19175,7 @@ var Component = __webpack_require__(8)(
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Auth\\Register.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Auth/Register.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Register.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -18625,20 +19196,28 @@ module.exports = Component.exports
 
 
 /***/ }),
+<<<<<<< HEAD
 /* 354 */
+=======
+/* 355 */
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(8)(
   /* script */
   __webpack_require__(151),
   /* template */
+<<<<<<< HEAD
   __webpack_require__(381),
+=======
+  __webpack_require__(382),
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Calendario.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Calendario.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Calendario.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -18659,20 +19238,28 @@ module.exports = Component.exports
 
 
 /***/ }),
+<<<<<<< HEAD
 /* 355 */
+=======
+/* 356 */
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(8)(
   /* script */
   __webpack_require__(152),
   /* template */
+<<<<<<< HEAD
   __webpack_require__(380),
+=======
+  __webpack_require__(381),
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Home.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Home.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Home.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -18693,7 +19280,11 @@ module.exports = Component.exports
 
 
 /***/ }),
+<<<<<<< HEAD
 /* 356 */
+=======
+/* 357 */
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(8)(
@@ -18706,7 +19297,7 @@ var Component = __webpack_require__(8)(
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Layouts\\Barra.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Layouts/Barra.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Barra.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -18727,20 +19318,28 @@ module.exports = Component.exports
 
 
 /***/ }),
+<<<<<<< HEAD
 /* 357 */
+=======
+/* 358 */
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(8)(
   /* script */
   __webpack_require__(154),
   /* template */
+<<<<<<< HEAD
   __webpack_require__(377),
+=======
+  __webpack_require__(378),
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Layouts\\BarraLateral.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Layouts/BarraLateral.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] BarraLateral.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -18761,7 +19360,11 @@ module.exports = Component.exports
 
 
 /***/ }),
+<<<<<<< HEAD
 /* 358 */
+=======
+/* 359 */
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(8)(
@@ -18774,7 +19377,7 @@ var Component = __webpack_require__(8)(
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Layouts\\Footer.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Layouts/Footer.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Footer.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -18795,7 +19398,11 @@ module.exports = Component.exports
 
 
 /***/ }),
+<<<<<<< HEAD
 /* 359 */
+=======
+/* 360 */
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(8)(
@@ -18808,7 +19415,7 @@ var Component = __webpack_require__(8)(
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Layouts\\MenuUser.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Layouts/MenuUser.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] MenuUser.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -18829,7 +19436,11 @@ module.exports = Component.exports
 
 
 /***/ }),
+<<<<<<< HEAD
 /* 360 */
+=======
+/* 361 */
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(8)(
@@ -18842,7 +19453,7 @@ var Component = __webpack_require__(8)(
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Layouts\\Notificaciones.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Layouts/Notificaciones.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Notificaciones.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -18863,20 +19474,28 @@ module.exports = Component.exports
 
 
 /***/ }),
+<<<<<<< HEAD
 /* 361 */
+=======
+/* 362 */
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(8)(
   /* script */
   __webpack_require__(157),
   /* template */
+<<<<<<< HEAD
   __webpack_require__(376),
+=======
+  __webpack_require__(377),
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Layouts\\Perfil.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Layouts/Perfil.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Perfil.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -18897,6 +19516,7 @@ module.exports = Component.exports
 
 
 /***/ }),
+<<<<<<< HEAD
 /* 362 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18935,6 +19555,8 @@ module.exports = Component.exports
 
 
 /***/ }),
+=======
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 /* 363 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18948,7 +19570,7 @@ var Component = __webpack_require__(8)(
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Usuarios\\Activity.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Usuarios/Activity.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Activity.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -18982,7 +19604,7 @@ var Component = __webpack_require__(8)(
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Usuarios\\CrudForm.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Usuarios/CrudForm.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] CrudForm.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -19016,7 +19638,7 @@ var Component = __webpack_require__(8)(
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Usuarios\\ImageInput.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Usuarios/ImageInput.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ImageInput.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -19044,13 +19666,17 @@ var Component = __webpack_require__(8)(
   /* script */
   null,
   /* template */
+<<<<<<< HEAD
   __webpack_require__(379),
+=======
+  __webpack_require__(380),
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Usuarios\\TimeLine.vue"
+Component.options.__file = "/home/mica/Proyectos/2/Crea-tu-Evento/resources/assets/js/components/Usuarios/TimeLine.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] TimeLine.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -19072,6 +19698,108 @@ module.exports = Component.exports
 
 /***/ }),
 /* 367 */
+<<<<<<< HEAD
+=======
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', {
+    staticClass: "dropdown user user-menu"
+  }, [_c('a', {
+    staticClass: "dropdown-toggle",
+    attrs: {
+      "href": "#",
+      "data-toggle": "dropdown"
+    }
+  }, [_c('img', {
+    staticClass: "user-image",
+    attrs: {
+      "src": "/dist/img/user2-160x160.jpg",
+      "alt": "User Image"
+    }
+  }), _vm._v(" "), (_vm.auth.user.authenticated) ? _c('span', {
+    staticClass: "hidden-xs"
+  }, [_vm._v(_vm._s(_vm.auth.user.profile.name))]) : _vm._e()]), _vm._v(" "), _c('ul', {
+    staticClass: "dropdown-menu"
+  }, [(_vm.auth.user.authenticated) ? _c('li', {
+    staticClass: "user-header"
+  }, [_c('img', {
+    staticClass: "img-circle",
+    attrs: {
+      "src": "/dist/img/user2-160x160.jpg",
+      "alt": "User Image"
+    }
+  }), _vm._v(" "), _c('p', [_vm._v("\n                " + _vm._s(_vm.auth.user.profile.name) + " - Web Developer\n                "), _c('small', [_vm._v("Member since Nov. 2012")])])]) : _vm._e(), _vm._v(" "), _vm._m(0), _vm._v(" "), _c('li', {
+    staticClass: "user-footer"
+  }, [_c('div', {
+    staticClass: "pull-left"
+  }, [_c('router-link', {
+    attrs: {
+      "to": _vm.pathUser
+    }
+  }, [_c('a', {
+    staticClass: "btn btn-default btn-flat"
+  }, [_vm._v("Perfil")])])], 1), _vm._v(" "), _c('div', {
+    staticClass: "pull-right"
+  }, [_c('a', {
+    staticClass: "btn btn-default btn-flat",
+    on: {
+      "click": _vm.logout
+    }
+  }, [_vm._v("\n                    Logout\n                ")])])])])])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', {
+    staticClass: "user-body"
+  }, [_c('div', {
+    staticClass: "row"
+  }, [_c('div', {
+    staticClass: "col-xs-4 text-center"
+  }, [_c('a', {
+    attrs: {
+      "href": "#"
+    }
+  }, [_vm._v("Followers")])]), _vm._v(" "), _c('div', {
+    staticClass: "col-xs-4 text-center"
+  }, [_c('a', {
+    attrs: {
+      "href": "#"
+    }
+  }, [_vm._v("Sales")])]), _vm._v(" "), _c('div', {
+    staticClass: "col-xs-4 text-center"
+  }, [_c('a', {
+    attrs: {
+      "href": "#"
+    }
+  }, [_vm._v("Friends")])])])])
+}]}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-07deddba", module.exports)
+  }
+}
+
+/***/ }),
+/* 368 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', [(_vm.auth.user.authenticated) ? _c('bar') : _vm._e(), _vm._v(" "), (_vm.auth.user.authenticated) ? _c('barra-lateral') : _vm._e(), _vm._v(" "), _c('div', {
+    class: _vm.classObject
+  }, [_c('router-view')], 1), _vm._v(" "), (_vm.auth.user.authenticated) ? _c('foo') : _vm._e()], 1)
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-117c287e", module.exports)
+  }
+}
+
+/***/ }),
+/* 369 */
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -19129,7 +19857,11 @@ if (false) {
 }
 
 /***/ }),
+<<<<<<< HEAD
 /* 368 */
+=======
+/* 370 */
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -19146,12 +19878,30 @@ if (false) {
 }
 
 /***/ }),
+<<<<<<< HEAD
 /* 369 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('form', {
     staticClass: "form-horizontal",
+=======
+/* 371 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "login-box"
+  }, [_vm._m(0), _vm._v(" "), _c('div', {
+    staticClass: "login-box-body"
+  }, [_c('p', {
+    staticClass: "login-box-msg"
+  }, [_vm._v("Iniciar su sesión")]), _vm._v(" "), (_vm.error) ? _c('div', {
+    staticClass: "text-center"
+  }, [_c('p', {
+    staticClass: "text-red"
+  }, [_vm._v("Estas credenciales no coinciden con nuestros registros.")])]) : _vm._e(), _vm._v(" "), _c('form', {
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
     on: {
       "submit": function($event) {
         $event.preventDefault();
@@ -19322,8 +20072,99 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "__c": function($event) {
+<<<<<<< HEAD
         _vm.usuario.sexo = "M"
       }
+=======
+        var $$a = _vm.remember,
+          $$el = $event.target,
+          $$c = $$el.checked ? (true) : (false);
+        if (Array.isArray($$a)) {
+          var $$v = null,
+            $$i = _vm._i($$a, $$v);
+          if ($$c) {
+            $$i < 0 && (_vm.remember = $$a.concat($$v))
+          } else {
+            $$i > -1 && (_vm.remember = $$a.slice(0, $$i).concat($$a.slice($$i + 1)))
+          }
+        } else {
+          _vm.remember = $$c
+        }
+      }
+    }
+  }), _vm._v(" Remember Me\n                        ")])])]), _vm._v(" "), _vm._m(1)])]), _vm._v(" "), _c('router-link', {
+    attrs: {
+      "tag": "a",
+      "to": "/registrar"
+    }
+  }, [_vm._v("¿Se olvido la contraseña?")]), _c('br'), _vm._v(" "), _c('router-link', {
+    staticClass: "text-center",
+    attrs: {
+      "tag": "a",
+      "to": "/registrar"
+    }
+  }, [_vm._v("\n                Registrar una nueva cuenta\n          ")])], 1)])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "login-logo"
+  }, [_c('a', {
+    attrs: {
+      "href": "#"
+    }
+  }, [_c('b', [_vm._v("Crea tu Evento")])])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "col-xs-4"
+  }, [_c('button', {
+    staticClass: "btn btn-primary btn-block btn-flat",
+    attrs: {
+      "type": "submit"
+    }
+  }, [_vm._v("Sign In")])])
+}]}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-21278c56", module.exports)
+  }
+}
+
+/***/ }),
+/* 372 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _vm._m(0)
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('footer', {
+    staticClass: "main-footer"
+  }, [_c('div', {
+    staticClass: "pull-right hidden-xs"
+  }, [_c('b', [_vm._v("Version")]), _vm._v(" 2.3.8\n    ")]), _vm._v(" "), _c('strong', [_vm._v("Copyright © 2014-2016 "), _c('a', {
+    attrs: {
+      "href": "http://almsaeedstudio.com"
+    }
+  }, [_vm._v("Almsaeed Studio")]), _vm._v(".")]), _vm._v(" All rights\n  reserved.\n")])
+}]}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-2831c4b4", module.exports)
+  }
+}
+
+/***/ }),
+/* 373 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', [_c('a', {
+    staticClass: "btn btn-primary btn-block",
+    on: {
+      "click": _vm.toggleShow
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
     }
   }), _vm._v("Masculino"), _c('br'), _vm._v(" "), _c('input', {
     directives: [{
@@ -19349,6 +20190,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.usuario.sexo = "F"
       }
     }
+<<<<<<< HEAD
   }), _vm._v("Femenino"), _vm._v(" "), _c('span', {
     directives: [{
       name: "show",
@@ -19361,6 +20203,24 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "form-group"
   }, [_c('label', {
     staticClass: "col-sm-2 control-label",
+=======
+  })], 1)
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-2ed97cf6", module.exports)
+  }
+}
+
+/***/ }),
+/* 374 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', [_c('path-content', {
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
     attrs: {
       "for": "inputNombre"
     }
@@ -19419,7 +20279,11 @@ if (false) {
 }
 
 /***/ }),
+<<<<<<< HEAD
 /* 370 */
+=======
+/* 375 */
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -19472,7 +20336,11 @@ if (false) {
 }
 
 /***/ }),
+<<<<<<< HEAD
 /* 371 */
+=======
+/* 376 */
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -19829,7 +20697,11 @@ if (false) {
 }
 
 /***/ }),
+<<<<<<< HEAD
 /* 376 */
+=======
+/* 377 */
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -19942,7 +20814,11 @@ if (false) {
 }
 
 /***/ }),
+<<<<<<< HEAD
 /* 377 */
+=======
+/* 378 */
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -20060,7 +20936,11 @@ if (false) {
 }
 
 /***/ }),
+<<<<<<< HEAD
 /* 378 */
+=======
+/* 379 */
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -20089,7 +20969,11 @@ if (false) {
 }
 
 /***/ }),
+<<<<<<< HEAD
 /* 379 */
+=======
+/* 380 */
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -20170,7 +21054,11 @@ if (false) {
 }
 
 /***/ }),
+<<<<<<< HEAD
 /* 380 */
+=======
+/* 381 */
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -20203,7 +21091,11 @@ if (false) {
 }
 
 /***/ }),
+<<<<<<< HEAD
 /* 381 */
+=======
+/* 382 */
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -22712,7 +23604,11 @@ var content = __webpack_require__(344);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
+<<<<<<< HEAD
 var update = __webpack_require__(387)("5220962d", content, false);
+=======
+var update = __webpack_require__(387)("12342054", content, false);
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -32680,15 +33576,24 @@ module.exports = Vue$3;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(91)))
 
 /***/ }),
+<<<<<<< HEAD
 /* 390 */,
 /* 391 */
+=======
+/* 390 */
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 /***/ (function(module, exports) {
 
 /* (ignored) */
 
 /***/ }),
+<<<<<<< HEAD
 /* 392 */
 /***/ (function(module, exports, __webpack_require__) {
+=======
+/* 391 */
+/***/ (function(module, exports) {
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 
 __webpack_require__(127);
 module.exports = __webpack_require__(128);
@@ -32744,7 +33649,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
+<<<<<<< HEAD
 /* 396 */
+=======
+/* 392 */
+>>>>>>> 62179511abffec4887d2622bb87ab0658099ee12
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(8)(
