@@ -6,7 +6,7 @@
             <!-- Sidebar user panel -->
             <div class="user-panel">
                 <div class="pull-left image">
-                    <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                    <img :src="srcUrl" class="img-circle" alt="User Image">
                 </div>
                 <div class="pull-left info">
                     <p v-if="auth.user.authenticated" >{{ auth.user.profile.name}}</p>
@@ -73,8 +73,12 @@ import auth from '../../auth.js'
 export default {
     data() {
         return {
-            auth: auth
+            auth: auth,
+            srcUrl: ''
         }
+    },
+    mounted: function(){
+        this.srcUrl = '/storage/avatars/'+ this.auth.user.profile.usuario.avatar
     }
 }
 </script>

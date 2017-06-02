@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\UsuarioRequest;
 use Illuminate\Http\Request;
-
+use Carbon\Carbon;
 use Illuminate\Http\Response;
 use App\Usuario;
 
@@ -96,15 +96,45 @@ class UsuarioController extends Controller
     }
 
     public function updateAvatar(Request $request, $id){
+
         $usuario = Usuario::where('user_id', $id)->firstOrFail();
+
+        //Se guarda el avatar en el almacenamiento 
+        $filename = $this->saveAvatar($request);
+
+        //Se elimina el anterior avatar del almacenamiento 
+        $this->deleteAvatar($usuario);
+
+        $usuario->avatar = $filename;
+
+        if($usuario->save()){
+            return response()->json(['data' => $filename ], 200);
+        } else {
+            return response()->json(['error' => 'Internal Server Error'], 500);
+        }
+    }
+
+
+    protected function deleteAvatar(Usuario $usuario){
+        $currentAvatar = $usuario->avatar;
+
+        if($currentAvatar) {
+            $file = "public/avatars/{$currentAvatar}";
+
+            if(Storage::exists($file)) {
+                Storage::delete($file);
+            }
+        }
+    }
+
+    protected function saveAvatar($request){
 
         $img = $request->avatar;
         $img = str_replace('data:image/png;base64,', '', $img);
         $file = base64_decode($img);
         $filename  = str_random(30) . '.'.'jpg';
         Storage::put('public/avatars/'.$filename, $file);
-        $usuario->avatar = $filename;
-        $usuario->save();
-        return response()->json(['data' => $filename ]);
+
+        return $filename;
     }
 }

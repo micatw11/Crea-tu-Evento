@@ -24,11 +24,10 @@ export default {
     computed: {
         classObject: function () {
             return {
-            'content-wrapper': auth.user.authenticated,
-            'container': !auth.user.authenticated,
+                'content-wrapper': auth.user.authenticated,
+                'container': !auth.user.authenticated,
             }
         }
     }
-
 }
 </script>

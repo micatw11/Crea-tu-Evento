@@ -93,7 +93,7 @@ export default {
             srcUrl: ''
         }
     },
-    mounted: function() {
+    beforeMount: function() {
         this.getUserPerfil();
         this.srcUrl = '/storage/avatars/'+this.auth.user.profile.usuario.avatar
     },
@@ -110,7 +110,10 @@ export default {
                 .then(response => {
                     this.perfil = response.data.data
                 }, response => {
-                    console.log('error')
+
+                    if(response.status === 404){
+                        router.push('/404');
+                    }
                 })
         },
         updateAvatar: function(){

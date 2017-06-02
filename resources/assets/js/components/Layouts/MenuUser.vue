@@ -1,33 +1,18 @@
 <template>
     <!-- User Account: style can be found in dropdown.less -->
-    <li class="dropdown user user-menu">
+    <li v-if="auth.user.authenticated" class="dropdown user user-menu">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            <img src="/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-            <span v-if="auth.user.authenticated" class="hidden-xs">{{ auth.user.profile.name }}</span>
+            <img :src="srcUrl" class="user-image" alt="User Image">
+            <span class="hidden-xs">{{ auth.user.profile.name }}</span>
         </a>
         <ul class="dropdown-menu">
             <!-- User image -->
             <li class="user-header" v-if="auth.user.authenticated">
-                <img src="/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                <img :src="srcUrl" class="img-circle" alt="User Image">
                 <p>
                     {{ auth.user.profile.name }} - Web Developer
                     <small>Member since Nov. 2012</small>
                 </p>
-            </li>
-            <!-- Menu Body -->
-            <li class="user-body">
-                <div class="row">
-                    <div class="col-xs-4 text-center">
-                        <a href="#">Followers</a>
-                    </div>
-                    <div class="col-xs-4 text-center">
-                        <a href="#">Sales</a>
-                    </div>
-                    <div class="col-xs-4 text-center">
-                        <a href="#">Friends</a>
-                    </div>
-                </div>
-                <!-- /.row -->
             </li>
             <!-- Menu Footer-->
             <li class="user-footer">
@@ -52,8 +37,13 @@ export default {
     data() {
         return {
             auth: auth,
-            pathUser: 'user/'+auth.user.profile.id +'/perfil'
+            pathUser: 'user/'+auth.user.profile.id +'/perfil',
+            srcUrl: ''
         }
+    },
+
+    mounted: function(){
+        this.avatarUpdate();
     },
     methods: {
         logout: function() {
@@ -66,6 +56,9 @@ export default {
                 router.push('/login')
             })
 
+        },
+        avatarUpdate: function(){
+            this.srcUrl = '/storage/avatars/'+ auth.user.profile.usuario.avatar
         }
     }
 }

@@ -9,6 +9,7 @@ var About = require('./components/About');
 var Calendar = require('./components/Calendario');
 var Perfil = require('./components/Layouts/Perfil');
 var Registrar = require('./components/Auth/Register');
+var PageNotFound = require('./components/Errors/404');
 
 let routes = [ 
 		{
@@ -44,6 +45,15 @@ let routes = [
 			path: '/user/:userId/perfil',
 			name: 'user',
 			component: Perfil,
+			beforeEnter: guardRoute
+
+		},
+
+		//errors
+		{
+			path: '/404',
+			name: 'pageNotFound',
+			component: PageNotFound,
 			beforeEnter: guardRoute
 
 		}

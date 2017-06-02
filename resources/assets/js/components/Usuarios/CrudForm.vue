@@ -21,7 +21,7 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">Localidad</label>
             <div class="col-sm-10">
-                <v-select
+                <v-select 
                     :debounce="250" 
                     :on-change="changeSelect"
                     :on-search="getOptions" 
@@ -29,13 +29,15 @@
                     :options="localidades"
                     placeholder="Seleccione una localidad">
                 </v-select>
+                <!-- validacion vee-validation -->
+                <span v-show="usuario.localidad_id == null" class="help-block">El campo localidad es requerido.</span>
             </div>
         </div>
 
         <div class="form-group">
             <label for="inputSexo" class="col-sm-2 control-label">Sexo</label>
             <div class="col-sm-10">
-                <input name="sexo"  v-validate:usuario.sexo="'required'"type="radio" v-model="usuario.sexo" value="M" :checked="{'false': true, 'true': usuario.sexo == 'M'}" >Masculino</input><br>
+                <input name="sexo"  v-validate:usuario.sexo="'required'" type="radio" v-model="usuario.sexo" value="M" :checked="{'false': true, 'true': usuario.sexo == 'M'}" >Masculino</input><br>
                 <input name="sexo" type="radio" v-model="usuario.sexo" value="F" :checked="{'false': true, 'true': usuario.sexo == 'F'}">Femenino</input>
                 <!-- validacion vee-validation -->
                 <span v-show="errors.has('sexo')" class="help-block">{{ errors.first('sexo') }}</span>
@@ -45,12 +47,15 @@
         <div class="form-group">
             <label for="inputNombre" class="col-sm-2 control-label">Fecha de Nacimiento</label>
             <div class="col-sm-10"><br/>
-                <datepicker 
-                    language="es"
-                    v-model="usuario.fecha_nac"
-                    format="dd MM yyyy"
-                    placeholder="Seleccione una fecha">
-                </datepicker>
+
+                <input 
+                    v-model="usuario.fecha_nac" 
+                    type="date" 
+                    name="facha de nacimiento"
+                    v-validate:usuario.fecha_nac="'required'"
+                    :min="disabled.to"
+                    :max="disabled.from"
+                    >
             </div>
         </div>
 
@@ -65,35 +70,39 @@
 <script>
 import auth from '../../auth.js';
 import vSelect from "vue-select";
-import Datepicker from 'vuejs-datepicker';
-//import ImageInput from './ImageInput.vue';
-export default {
 
+export default {
     data() {
         return {
             usuario: auth.user.profile.usuario,
             error: false,
+            fecha: null,
             disabled: {
-                to: new Date(1920, 1, 1),
-                from: new Date()
+                to: '1920-01-01',
+                from: ''
             },
             localidades: [],
             localidadDeafult: []
         }
     },
-    mounted: function(){
-        console.log(this.usuario)
+    beforeMount: function(){
+        //selected data
        this.localidadDeafult = {
            'value':auth.user.profile.usuario.localidad_id,
            'label':auth.user.profile.usuario.localidad.nombre+' ('+auth.user.profile.usuario.localidad.provincia.nombre+')'
         }
     },
+    mounted: function(){
+        //rangos maximos de fechas
+        this.fecha = new Date();
+        this.disabled.from = this.fecha.getFullYear()+'-'+this.fecha.getMonth()+'-'+this.fecha.getDate();
+
+    },
     components: {
-        vSelect, 
-        Datepicker
+        vSelect
     },
     methods: {
-
+        //envio de formulario de modificación de informacion de usuario
         sendForm: function() {
                 
             this.$http.post(
@@ -122,6 +131,7 @@ export default {
                     // failed
                 });
         },
+        //obtiene lista de localidades segun correponda
         getOptions: function(search, loading) {
             loading(true)
             this.$http.get('api/localidades/?q='+ search
