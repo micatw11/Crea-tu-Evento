@@ -18,8 +18,9 @@
                     <span class="glyphicon glyphicon-user form-control-feedback"></span>
                     <!-- validacion vee-validation -->
                     <span v-show="errors.has('nombre')" class="help-block">{{ errors.first('nombre') }}</span>
-                    <div class="help-block" v-if="errorsApi.name">
-                        <div v-for="msj in errorsApi.name">
+                    
+                    <div class="help-block" v-if="errorsApi.nombre">
+                        <div v-for="msj in errorsApi.nombre">
                             <p>{{ msj }}.</p>
                         </div>
                     </div>
@@ -31,6 +32,7 @@
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                     <!-- validacion vee-validation -->
                     <span v-show="errors.has('email')" class="help-block">{{ errors.first('email') }}</span>
+                    
                     <!-- validacion api-->
                     <div class="help-block" v-if="errorsApi.email">
                         <div v-for="msj in errorsApi.email">
@@ -44,6 +46,7 @@
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                     <!-- validacion vee-validation -->
                     <span v-show="errors.has('password')" class="help-block">{{ errors.first('password') }}</span>
+                    
                     <!-- validacion api-->
                     <div class="help-block" v-if="errorsApi.password">
                         <div v-for="msj in errorsApi.password">
@@ -57,6 +60,7 @@
                     <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
                     <!-- validacion vee-validation -->
                     <span v-show="errors.has('confirmation')" class="help-block">{{ errors.first('confirmation') }}</span>
+                    
                     <!-- validacion api-->
                     <div class="help-block" v-if="errorsApi.password_confirmation">
                         <div v-for="msj in errorsApi.password_confirmation">
@@ -66,27 +70,56 @@
                 </div>
 
                 
-                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('fecha_nac')}">
-                    <input name="fecha_nac" v-model="usuario.fecha_nac" type="date" class="form-control" placeholder="Ingresar fecha de nacimiento">
+                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('fecha')}">
+                    <input name="fecha" v-model="usuario.fecha_nac" type="date" v-validate="'required'" class="form-control" placeholder="Ingresar fecha de nacimiento">
                     <span class="glyphicon glyphicon-calendar form-control-feedback"></span>
                     <!-- validacion vee-validation -->
-                    <span v-show="errors.has('fecha_nac')" class="help-block">{{ errors.first('fecha_nac') }}</span>
+                    <span v-show="errors.has('fecha')" class="help-block">{{ errors.first('fecha') }}</span>
+                    <!-- validacion api-->
+                    <div class="text-red" v-if="errorsApi.fecha_nac">
+                        <div v-for="msj in errorsApi.fecha_nac">
+                            <p>{{ msj }}</p>
+                        </div>
+                    </div>
+                 
                  </div>
 
-                <v-select
-                    :debounce="250" 
-                    :on-change="changeSelect"
-                    :on-search="getOptions" 
-                    :options="localidades"
-                    placeholder="Seleccione una localidad">
-                </v-select>
+                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('localidad')}">
+                    <v-select
+                        :debounce="250" 
+                        :on-search="getOptions" 
+                        :options="localidades"
+                        data-vv-name="localidad"
+                        v-model="usuario.localidad_id" 
+                        v-validate="'required'" 
+                        placeholder="Seleccione una localidad">
+                    </v-select>
+                    <!-- vee-validate-->
+                    <span v-show="errors.has('localidad')" class="help-block">{{ errors.first('localidad') }}</span>
+                    <!-- validacion api-->
+                    <div class="text-red" v-if="errorsApi.localidad_id">
+                        <div v-for="msj in errorsApi.localidad_id">
+                            <p>{{ msj }}</p>
+                        </div>
+                    </div>
+                </div>
 
-                  <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('sexo')}">
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('sexo')}">
                     <label for="inputSexo" class="col-sm-2 control-label">Sexo</label>
                     <div class="col-sm-10">
-                        <input type="radio" v-model="usuario.sexo" value="M">Masculino</input><br>
-                        <input type="radio" v-model="usuario.sexo" value="F">Femenino</input>
+                        <input name="sexo" v-validate="'required'" type="radio" v-model="usuario.sexo" value="M">Masculino</input><br>
+                        <input name="sexo" type="radio" v-model="usuario.sexo" value="F">Femenino</input>
                     </div>
+                    <!-- validacion vee-validation -->
+                    <span v-show="errors.has('sexo')" class="help-block">{{ errors.first('sexo') }}</span>
+
+                    <!-- validacion api-->
+                    <div class="text-red" v-if="errorsApi.sexo">
+                        <div v-for="msj in errorsApi.sexo">
+                            <p>{{ msj }}</p>
+                        </div>
+                    </div>
+
                 </div>
                 <br>
                 <br>
@@ -118,6 +151,7 @@
 import auth from '../../auth.js';
 import router from '../../routes.js';
 import vSelect from "vue-select";
+import { Validator } from 'vee-validate';
 
 export default {
     
@@ -160,7 +194,7 @@ export default {
                     apellido: this.usuario.apellido,
                     sexo: this.usuario.sexo,
                     fecha_nac: this.usuario.fecha_nac,
-                    localidad_id: this.usuario.localidad_id
+                    localidad_id: this.usuario.localidad_id.value
                 }
             ).then(response => {
   
@@ -180,7 +214,6 @@ export default {
             this.clearErrors();
             this.$validator.validateAll().then(() => {
                 this.register();
-                this.usuarioCreate();
             }).catch(() => {
                 // failed
             });
@@ -193,9 +226,6 @@ export default {
                     this.localidades = response.data.data
                     loading(false)
                 })
-        },
-        changeSelect: function(val){
-            this.usuario.localidad_id = val.value
         }
     }
 };

@@ -28,14 +28,24 @@ Route::group(['prefix' => 'api'], function () {
     // Rutas del Login
     Route::post('login', 'Auth\AuthController@login');
     Route::post('logout', 'Auth\AuthController@logout');
+
+
+
     // Rutas para el Registro
     Route::post('register', 'Auth\RegisterUserController@register'); 
 
     Route::get('user', 'Auth\AuthController@getAuth');
 
-    Route::resource('usuario', 'UsuarioController');
+    Route::resource('usuario', 'UsuarioController', 
+    [ 
+        'except' => ['destroy']
+	]);
+
 
     Route::get('localidades', 'LocalidadController@index');
-
+    Route::get('localidades/{id}', 'LocalidadController@show');
+    
     Route::post('user/{id}/perfil/avatar', 'UsuarioController@updateAvatar');
+    Route::patch('user/{id}/password', 'UsuarioController@changePassword');
+    Route::delete('user/{id}/account', 'UsuarioController@destroy');
 });

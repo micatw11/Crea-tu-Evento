@@ -2,26 +2,38 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
-use App\Usuario;
-use App\Rol;
-use App\Http\Requests\UsuarioRequest;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Auth\Events\Registered;
 use App\Http\Controllers\UsuarioController;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Auth\Events\Registered;
+use App\Http\Requests\UsuarioRequest;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use App\Usuario;
+use App\User;
+use App\Rol;
 
 class RegisterUserController extends Controller
 {
-    protected function validator(Request $request)
+    protected function validatorUsers(Request $request)
     {
       return $this->validate($request, 
         [
             'name' => 'required|min:4|max:55',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6|confirmed'
+        ]);
+    }
+
+    protected function validatorUsuario(Request $request)
+    {
+      return $this->validate($request, 
+        [
+            'nombre' => 'required|min:4|max:55',
+            'apellido' => 'required|min:4|max:55',
+            'sexo' => 'required|in:F,M',
+            'localidad_id' => 'required|exists:localidades,id',
+            'fecha_nac' => 'required|date'
         ]);
     }
 
@@ -48,13 +60,14 @@ class RegisterUserController extends Controller
      */
     public function register(Request $request)
     {
-        $this->validator($request);
+        $this->validatorUsers($request);
+        $this->validatorUsuario($request);
 
         event(new Registered($user = $this->create($request)));
 
         $this->guard()->login($user);
 
-        $this->createUsuario($request);
+        $this->createUsuario($request, $user->id);
         $user->usuario->localidad->provincia;
         $user->rol;
         return response()->json(['data' =>  $user, 'csrfToken', csrf_token()]);
@@ -71,15 +84,17 @@ class RegisterUserController extends Controller
         return Auth::guard();
     }
 
-    public function createUsuario(Request $request)
+    public function createUsuario(Request $request, $user_id)
     {
+
         return Usuario::create([
             'nombre' => $request->nombre,
             'apellido' => $request->apellido,
             'sexo' => $request->sexo,
             'localidad_id' => $request->localidad_id,
             'fecha_nac' => $request->fecha_nac,
-            'user_id' => Auth::user()->id,
-            'avatar' => 'storage/avatars/default.png']);        
+            'user_id' => $user_id,
+            'avatar' => $request->sexo == 'M' ? 'default.png' : 'default1.png'
+            ]);        
     }
 }

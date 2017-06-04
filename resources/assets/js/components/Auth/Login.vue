@@ -11,24 +11,24 @@
             </div>
             <form @submit.prevent="validateBeforeSubmit">
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('email')}">
-                    <input name="email" v-model="email" type="email" v-validate:email="'required|email'" class="form-control" placeholder="Email">
+                    <input name="email" v-model="email" type="email" v-validate="'required|email'" class="form-control" placeholder="Email">
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                     <!-- validacion vee-validation -->
                     <span v-show="errors.has('email')" class="help-block">{{ errors.first('email') }}</span>
                     <!-- validacion api-->
-                    <div class="help-block" v-if="errorsApi.email">
+                    <div class="text-red" v-if="errorsApi.email">
                         <div v-for="msj in errorsApi.email">
                             <p>{{ msj }}.</p>
                         </div>
                     </div>
                 </div>
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('password')}">
-                    <input name="password" v-model="password" v-validate:password="'required|min:4'" type="password" class="form-control" placeholder="Password">
+                    <input name="password" v-model="password" v-validate="'required|min:4'" type="password" class="form-control" placeholder="Password">
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                     <!-- validacion vee-validation -->
                     <span v-show="errors.has('password')" class="help-block">{{ errors.first('password') }}</span>
                     <!-- validacion api-->
-                    <div class="help-block" v-if="errorsApi.password">
+                    <div class="text-red" v-if="errorsApi.password">
                         <div v-for="msj in errorsApi.password">
                             <p>{{ msj }}.</p>
                         </div>

@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'roles_id'
+        'name', 'email', 'password', 'roles_id', 'estado'
     ];
 
     /**
@@ -24,7 +24,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token'
     ];
 
     public function usuario()
@@ -32,9 +32,26 @@ class User extends Authenticatable
         return $this->HasOne('App\Usuario');
     }
 
-     public function rol()
+    public function rol()
     {     
         return $this->belongsTo('App\Rol');    
     }
 
+    public function scopePassword($query, $password){
+        return $query->where('password', $password);
+    }
+
+    public function scopeActivo($query){
+        return $query->where('estado', true);
+    }
+
+    public function scopeBaja(){
+        $this->estado = false;
+        return $this->save();
+    }
+
+    public function scopeAlta(){
+        $this->estado = true;
+        return $this->save();
+    }
 }

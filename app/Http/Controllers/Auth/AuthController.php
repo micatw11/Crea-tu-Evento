@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use App\User;
 
 class AuthController extends Controller
 {
@@ -16,6 +17,7 @@ class AuthController extends Controller
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
             // Authentication passed...
             $user = Auth::user();
+            if(!$user->estado) $user->alta();
             $user->usuario->localidad->provincia;
             return response()->json(['data' =>  $user, 'csrfToken', csrf_token()]);
         } else {

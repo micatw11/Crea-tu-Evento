@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\UsuarioRequest;
-use Illuminate\Http\Request;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
+use Illuminate\Http\Request;
 use App\Usuario;
-
+use App\User;
 
 class UsuarioController extends Controller
 {
@@ -90,9 +93,19 @@ class UsuarioController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        $user = User::where('id', $id)->firstOrFail();
+
+        if($user->baja()){
+            if($request->logout){
+                 Auth::logout();
+            }
+            return response()->json(['data' =>  'OK'], 200);
+        } else {
+            return response()->json(['error' =>  'Internal Server Error'], 500);
+        }
+
     }
 
     public function updateAvatar(Request $request, $id){
@@ -111,6 +124,25 @@ class UsuarioController extends Controller
             return response()->json(['data' => $filename ], 200);
         } else {
             return response()->json(['error' => 'Internal Server Error'], 500);
+        }
+    }
+
+    public function changePassword(Request $request, $id){
+
+        $this->validator($request);
+
+        $user = User::where('id', $id)->firstOrFail();
+
+        $validCredentials = Hash::check($request->oldPassword, $user->getAuthPassword());
+        
+        if($validCredentials){
+            $user->password =  Hash::make($request->password);
+            $user->save();
+            return response()->json(['data' =>  'OK'], 200);
+        } else {
+            $error = array(
+                'oldPassword' => 'La contraseña ingresada no coincide con nuestros registros.');
+            return response()->json(['error' =>  'Unauthorized', 'oldPassword'=> $error], 401);
         }
     }
 
@@ -136,5 +168,14 @@ class UsuarioController extends Controller
         Storage::put('public/avatars/'.$filename, $file);
 
         return $filename;
+    }
+
+    protected function validator(Request $request)
+    {
+      return $this->validate($request, 
+        [
+            'oldPassword' => 'required|min:6',
+            'password' => 'required|min:6|confirmed'
+        ]);
     }
 }

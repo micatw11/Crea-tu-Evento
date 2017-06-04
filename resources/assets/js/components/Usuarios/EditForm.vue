@@ -2,60 +2,96 @@
 
     <form @submit.prevent="validateBeforeSubmit" class="form-horizontal">
 
-        <div class="form-group">
+        <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('apellido')}">
             <label for="inputApellido" class="col-sm-2 control-label">Apellido</label>
             <div class="col-sm-10">
-                <input name="apellido"  v-validate:usuario.apellido="'min:2'" type="text" class="form-control" v-model="usuario.apellido" placeholder="Apellido">
+                <input name="apellido"  v-validate:usuario.apellido="'required|min:4'" type="text" class="form-control" v-model="usuario.apellido" placeholder="Apellido">
                 <!-- validacion vee-validation -->
                 <span v-show="errors.has('apellido')" class="help-block">{{ errors.first('apellido') }}</span>
+                <!-- validacion api-->
+                <div class="text-red" v-if="errorsApi.apellido">
+                    <div v-for="msj in errorsApi.apellido">
+                        <p>{{ msj }}</p>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="form-group">
+
+        <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('nombre')}">
             <label for="inputNombre" class="col-sm-2 control-label">Nombre</label>
             <div class="col-sm-10">
-                <input name="nombre"  v-validate:usuario.nombre="'min:2'" type="text" class="form-control" v-model="usuario.nombre" placeholder="Nombre">
+                <input name="nombre"  v-validate:usuario.nombre="'required|min:4'" type="text" class="form-control" v-model="usuario.nombre" placeholder="Nombre">
                 <!-- validacion vee-validation -->
                 <span v-show="errors.has('nombre')" class="help-block">{{ errors.first('nombre') }}</span>
+                <!-- validacion api-->
+                <div class="text-red" v-if="errorsApi.nombre">
+                    <div v-for="msj in errorsApi.nombre">
+                        <p>{{ msj }}</p>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="form-group">
+
+        <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('localidad')}">
             <label class="col-sm-2 control-label">Localidad</label>
             <div class="col-sm-10">
                 <v-select 
-                    :debounce="250" 
-                    :on-change="changeSelect"
+                    :debounce="250"
+                    v-validate="'required'" 
+                    data-vv-name="localidad"
+                    v-model="localidadSelect"
                     :on-search="getOptions" 
-                    v-model="localidadDeafult" 
                     :options="localidades"
                     placeholder="Seleccione una localidad">
                 </v-select>
                 <!-- validacion vee-validation -->
-                <span v-show="usuario.localidad_id == null" class="help-block">El campo localidad es requerido.</span>
+                <span v-show="errors.has('localidad')" class="help-block">{{ errors.first('localidad') }}</span>
+                <!-- validacion api-->
+                <div class="text-red" v-if="errorsApi.localidad_id">
+                    <div v-for="msj in errorsApi.localidad_id">
+                        <p>{{ msj }}</p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="form-group">
+        <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('sexo')}">
             <label for="inputSexo" class="col-sm-2 control-label">Sexo</label>
             <div class="col-sm-10">
                 <input name="sexo"  v-validate:usuario.sexo="'required'" type="radio" v-model="usuario.sexo" value="M" :checked="{'false': true, 'true': usuario.sexo == 'M'}" >Masculino</input><br>
                 <input name="sexo" type="radio" v-model="usuario.sexo" value="F" :checked="{'false': true, 'true': usuario.sexo == 'F'}">Femenino</input>
                 <!-- validacion vee-validation -->
                 <span v-show="errors.has('sexo')" class="help-block">{{ errors.first('sexo') }}</span>
+                <!-- validacion api-->
+                <div class="text-red" v-if="errorsApi.sexo">
+                    <div v-for="msj in errorsApi.sexo">
+                        <p>{{ msj }}</p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="form-group">
+        <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('facha')}">
             <label for="inputNombre" class="col-sm-2 control-label">Fecha de Nacimiento</label>
             <div class="col-sm-10"><br/>
 
                 <input 
                     v-model="usuario.fecha_nac" 
                     type="date" 
-                    name="facha de nacimiento"
+                    v-validate="'required'"
+                    name="facha"
                     v-validate:usuario.fecha_nac="'required'"
                     :min="disabled.to"
                     :max="disabled.from"
                     >
+                <!-- validacion vee-validation -->
+                <span v-show="errors.has('facha')" class="help-block">{{ errors.first('facha') }}</span>
+                <!-- validacion api-->
+                <div class="text-red" v-if="errorsApi.fecha_nac">
+                    <div v-for="msj in errorsApi.fecha_nac">
+                        <p>{{ msj }}</p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -79,15 +115,21 @@ export default {
             fecha: null,
             disabled: {
                 to: '1920-01-01',
-                from: ''
+                from: null
             },
             localidades: [],
-            localidadDeafult: []
+            localidadSelect: [],
+            errorsApi: []
         }
     },
     beforeMount: function(){
         //selected data
-       this.localidadDeafult = {
+        this.getLocalidadDefault();
+
+    },
+    beforeMount: function(){
+        //selected data
+       this.localidadSelect = {
            'value':auth.user.profile.usuario.localidad_id,
            'label':auth.user.profile.usuario.localidad.nombre+' ('+auth.user.profile.usuario.localidad.provincia.nombre+')'
         }
@@ -112,13 +154,26 @@ export default {
                     nombre:  this.usuario.nombre,
                     apellido:  this.usuario.apellido,
                     fecha_nac:  this.usuario.fecha_nac,
-                    localidad_id:  this.usuario.localidad_id,
+                    localidad_id:  this.localidadSelect.value,
                     sexo:  this.usuario.sexo
                 })
                 .then(response => {
+                    //recarga de informacion de perfil
                     this.$emit('reload')
+                    this.$toast.success({
+                        title:'¡Cambios realizados!',
+                        message:'Se han realizado correctamente los cambios. :D'
+                    });
                 }, response => {
-                    console.log(response);
+                    this.$toast.error({
+                        title:'¡Error!',
+                        message:'No se han podido guardar los cambios. :('
+                    });
+                    if(response.status === 401)
+                    {
+                        this.errorsApi = response.body;
+                    }
+
                 })
 
         },
@@ -126,7 +181,7 @@ export default {
         //form validation
         validateBeforeSubmit: function(e) {
             this.$validator.validateAll().then(() => {
-                this.sendForm();
+                    this.sendForm();
                 }).catch(() => {
                     // failed
                 });
@@ -139,9 +194,6 @@ export default {
                     this.localidades = response.data.data
                     loading(false)
                 })
-        },
-        changeSelect: function(val){
-            this.usuario.localidad_id = val.value
         }
     }
 }
