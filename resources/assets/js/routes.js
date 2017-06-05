@@ -10,6 +10,9 @@ var Calendar = require('./components/Calendario');
 var Perfil = require('./components/Layouts/Perfil');
 var Registrar = require('./components/Auth/Register');
 var PageNotFound = require('./components/Errors/404');
+var FormPasswordReset = require('./components/Auth/Password/Email');
+var PasswordReset = require('./components/Auth/Password/Reset');
+
 
 let routes = [ 
 		{
@@ -28,6 +31,18 @@ let routes = [
 			path: '/registrar',
 			name: 'registrar',
 			component: Registrar,
+			beforeEnter: guardLogin
+		},
+		{
+			path: '/password-reset',
+			name: 'passwordResetForm',
+			component: FormPasswordReset,
+			beforeEnter: guardLogin
+		},
+		{
+			path: '/password/reset/:token',
+			name: 'passwordReset',
+			component: PasswordReset,
 			beforeEnter: guardLogin
 		},
 		{

@@ -1,6 +1,7 @@
 <style src="cxlt-vue2-toastr/dist/css/cxlt-vue2-toastr.css"></style>
-<template>
 
+
+<template>
     <form @submit.prevent="validateBeforeSubmit" class="form-horizontal">
 
         <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('contraseña')}">
@@ -59,7 +60,7 @@
 
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-danger">Guardar cambios</button>
+                <button type="submit" class="btn btn-primary">Guardar cambios</button>
             </div>
         </div>
         <hr>
@@ -69,7 +70,7 @@
                 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal">Desactivar</button>
             </div>
             <!-- Modal Disable-->
-            <div id="myModal" class="modal fade" role="dialog">
+            <div id="myModal" class="modal fade modal-primary" role="dialog">
                 <div class="modal-dialog">
 
                     <!-- Modal content-->
@@ -86,8 +87,8 @@
                             </p>
                         </div>
                         <div class="modal-footer">
-                            <button @click="disableAccount()" type="button" class="btn btn-danger" data-dismiss="modal">Dasactivar</button>
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                            <button @click="disableAccount()" type="button" class="btn btn-outline" data-dismiss="modal">Dasactivar</button>
+                            <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Cancelar</button>
                         </div>
                     </div>
 
