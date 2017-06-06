@@ -46,10 +46,14 @@
 
                     <router-link tag="li" to="/">
                         <a><i class="fa fa-circle-o"></i>
-                            home
+                            Home
                         </a>
                     </router-link>
-        
+                    <router-link tag="li" to="/index-usuario">
+                        <a><i class="fa fa-circle-o"></i>
+                            Usuarios
+                        </a>
+                    </router-link>
                 </ul>
             </li>
             <li class="treeview">

@@ -22,7 +22,12 @@ class UsuarioController extends Controller
      */
     public function index()
     {
-        //
+        
+            $user = User::activo()->with('usuario.localidad.provincia')->get();
+           
+            return response()->json(['data' =>  $user]);
+        
+    
     }
 
     /**

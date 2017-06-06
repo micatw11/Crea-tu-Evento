@@ -12,6 +12,7 @@ var Registrar = require('./components/Auth/Register');
 var PageNotFound = require('./components/Errors/404');
 var FormPasswordReset = require('./components/Auth/Password/Email');
 var PasswordReset = require('./components/Auth/Password/Reset');
+var IndexUsuarios = require('./components/Usuarios/Index');
 
 
 let routes = [ 
@@ -44,6 +45,11 @@ let routes = [
 			name: 'passwordReset',
 			component: PasswordReset,
 			beforeEnter: guardLogin
+		},
+		{
+			path: '/index-usuario',
+			component: IndexUsuarios,
+			beforeEnter: guardRoute			
 		},
 		{
 			path: '/about',
