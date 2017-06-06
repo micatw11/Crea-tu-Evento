@@ -17,6 +17,7 @@
     "webpack": "^2.6.1"
   },
   "dependencies": {
-    "babel-polyfill": "^6.23.0"
+    "babel-polyfill": "^6.23.0",
+    "cxlt-vue2-toastr": "^1.0.8"
   }
 }

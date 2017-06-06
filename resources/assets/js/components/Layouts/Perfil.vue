@@ -44,23 +44,36 @@
                 <div class="col-md-9">
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
-                            <li class="active"><a href="#activity" data-toggle="tab">Activity</a></li>
-                            <li><a href="#timeline" data-toggle="tab">Timeline</a></li>
-                            <li v-if="perfil !== null && perfil.user_id == auth.user.profile.id"><a href="#settings" data-toggle="tab">Settings</a></li>
+                            <!--<li class="active"><a href="#activity" data-toggle="tab">Activity</a></li>-->
+                            <!--<li><a href="#timeline" data-toggle="tab">Timeline</a></li>-->
+                            <li class="active" v-if="perfil !== null && perfil.user_id == auth.user.profile.id">
+                                <a href="#info" data-toggle="tab">Informaci&oacute;n</a>
+                            </li>
+                            <li v-if="perfil !== null && perfil.user_id == auth.user.profile.id">
+                                <a href="#account" data-toggle="tab">Cuenta</a>
+                            </li>
                         </ul>
                         <div class="tab-content">
                             
-                            <div class="active tab-pane" id="activity">
+                            <!--<div class="active tab-pane" id="activity">
                                 <activity></activity>
+                            </div>-->
+
+                            <!--<div class="tab-pane" id="timeline">
+                                <time-line></time-line>
+                            </div>-->
+
+                            <div v-if="perfil !== null && perfil.user_id == auth.user.profile.id" 
+                                class="active tab-pane" id="info">
+                                <form-perfil 
+                                    @reload="reload()">
+                                </form-perfil>
                             </div>
 
-                            <div class="tab-pane" id="timeline">
-                                <time-line></time-line>
-                            </div>
-                             
-                            <div class="tab-pane" id="settings" v-if="perfil !== null && perfil.user_id == auth.user.profile.id">
-                                <form-perfil @reload="reload()"></form-perfil>
-                            </div>
+                             <div v-if="perfil !== null && perfil.user_id == auth.user.profile.id" 
+                                class="tab-pane" id="account">
+                                <account></account>
+                             </div>
                             <!-- /.tab-pane -->
                         </div>
                         <!-- /.tab-content -->
@@ -75,10 +88,10 @@
 </template>
 <script>
 import PathContent from './Path.vue';
-import FormPerfil from '../Usuarios/CrudForm.vue';
+import FormPerfil from '../Usuarios/EditForm.vue';
 import ImageInput from '../Usuarios/ImageInput.vue';
 import Activity from '../Usuarios/Activity.vue';
-import TimeLine from '../Usuarios/TimeLine.vue';
+import Account from '../Usuarios/Account.vue';
 import router from '../../routes.js';
 import auth from '../../auth.js';
 
@@ -101,7 +114,7 @@ export default {
         PathContent,
         FormPerfil, 
         Activity, 
-        TimeLine,
+        Account,
         ImageInput
     },
     methods:{
@@ -114,10 +127,12 @@ export default {
                     if(response.status === 404){
                         router.push('/404');
                     }
+
                 })
         },
         updateAvatar: function(){
             this.srcUrl = '/storage/avatars/'+this.auth.user.profile.usuario.avatar;
+            this.$emit('reloadComponents');
         },
         reload: function(){
             this.getUserPerfil();

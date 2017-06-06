@@ -10,8 +10,8 @@
             <li class="user-header" v-if="auth.user.authenticated">
                 <img :src="srcUrl" class="img-circle" alt="User Image">
                 <p>
-                    {{ auth.user.profile.name }} - Web Developer
-                    <small>Member since Nov. 2012</small>
+                    {{ auth.user.profile.name }}
+                    <small>Usuario desde: {{auth.user.profile.created_at}}</small>
                 </p>
             </li>
             <!-- Menu Footer-->

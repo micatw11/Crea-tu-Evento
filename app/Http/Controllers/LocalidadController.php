@@ -54,7 +54,12 @@ class LocalidadController extends Controller
      */
     public function show($id)
     {
-        //
+        $localidades = DB::table('localidades')
+            ->join('provincias', 'localidades.provincia_id', '=', 'provincias.id')
+            ->select('localidades.id as value', DB::raw('CONCAT(localidades.nombre, " (",provincias.nombre, ")") as label'))
+                ->where('localidades.id', $id)
+                ->get();
+        return response()->json(['data' =>  $localidades->toArray()]);
     }
 
     /**

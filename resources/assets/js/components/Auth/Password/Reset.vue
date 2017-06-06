@@ -5,11 +5,13 @@
         </div>
         <!-- /.login-logo -->
         <div class="login-box-body">
-            <p class="login-box-msg">Iniciar su sesión</p>
+            <p class="login-box-msg">Restablecer Contraseña</p>
             <div class="text-center" v-if="error">
                 <p class="text-red">Estas credenciales no coinciden con nuestros registros.</p>
             </div>
-            <form @submit.prevent="validateBeforeSubmit">
+
+            <form  @submit.prevent="validateBeforeSubmit">
+
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('email')}">
                     <input name="email" v-model="email" type="email" v-validate="'required|email'" class="form-control" placeholder="Email">
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
@@ -17,61 +19,63 @@
                     <span v-show="errors.has('email')" class="help-block">{{ errors.first('email') }}</span>
                     <!-- validacion api-->
                     <div class="text-red" v-if="errorsApi.email">
-                        <div v-for="msj in errorsApi.email">
-                            <p>{{ msj }}.</p>
-                        </div>
+                        <p>{{ errorsApi.email }}</p>
                     </div>
                 </div>
+
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('password')}">
-                    <input name="password" v-model="password" v-validate="'required|min:4'" type="password" class="form-control" placeholder="Password">
+                    <input name="password" v-model="password" type="password" v-validate:password="'required|min:6'" class="form-control" placeholder="Ingresar Contraseña">
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                     <!-- validacion vee-validation -->
                     <span v-show="errors.has('password')" class="help-block">{{ errors.first('password') }}</span>
+                    
                     <!-- validacion api-->
-                    <div class="text-red" v-if="errorsApi.password">
+                    <div class="help-block" v-if="errorsApi.password">
                         <div v-for="msj in errorsApi.password">
                             <p>{{ msj }}.</p>
                         </div>
                     </div>
-
                 </div>
-                <div class="row">
-                    <div class="col-xs-7 col-xs-offset-1">
-                        <div class="checkbox icheck">
-                            <label>
-                                <input v-model="remember" type="checkbox"> Remember Me
-                            </label>
+
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('confirmation')}">
+                    <input name="confirmation" v-model="password_confirmation" type="password" v-validate:confirmation="'required|confirmed:password'" class="form-control" placeholder="Confirmar contraseña">
+                    <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
+                    <!-- validacion vee-validation -->
+                    <span v-show="errors.has('confirmation')" class="help-block">{{ errors.first('confirmation') }}</span>
+                    
+                    <!-- validacion api-->
+                    <div class="help-block" v-if="errorsApi.password_confirmation">
+                        <div v-for="msj in errorsApi.password_confirmation">
+                            <p>{{ msj }}.</p>
                         </div>
                     </div>
-                    <div class="col-xs-4">
-                        <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
-                    </div>
-                    <!-- /.col -->
                 </div>
-            </form>
-            <router-link tag="a" to="/password-reset">¿Se olvido la contraseña?</router-link><br>
-            <router-link tag="a" to="/registrar" class="text-center">
-                    Registrar una nueva cuenta
-              </router-link>
 
+                <div class="form-group has-feedback text-center row">
+                    <button type="submit" class="btn btn-primary btn-flat">
+                        Restablecer Contraseña
+                    </button>
+                </div>
+                
+            </form>
         </div>
-        <!-- /.login-box-body -->
     </div>
-    <!-- /.login-box -->
 </template>
 
 <script>
-import auth from '../../auth.js';
-import router from '../../routes.js';
+import auth from '../../../auth.js';
+import router from '../../../routes.js';
 
 export default {
     data() {
         return {
             email: null,
+            token: null,
             password: null,
-            remember: false,
-            error: false,
-            errorsApi: []
+            password_confirmation: null,
+            error: null,
+            errorsApi: [],
+            auth: auth
         }
     },
     methods: {
@@ -83,14 +87,15 @@ export default {
         //send form
         sendForm: function(){
             this.$http.post(
-                'api/login',
+                'api/password/reset',
                 {
                     email: this.email,
                     password: this.password,
-                    remember: this.remember
+                    password_confirmation: this.password_confirmation,
+                    token: this.$route.params.token
+
                 }
             ).then(response => {
-    
                 auth.user.authenticated = true
                 auth.user.profile = response.data.data
 
@@ -98,9 +103,8 @@ export default {
                 router.push({
                     name: 'home'
                 })
-                
             }, response => {
-                if(response.body.error) {
+                if(response.status === 404) {
                     this.error = true
                 } else {
                     this.errorsApi = response.body
@@ -118,6 +122,5 @@ export default {
 
         }
     }
-
-}
+}    
 </script>
