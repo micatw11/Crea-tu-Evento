@@ -23,9 +23,9 @@ class UsuarioController extends Controller
     public function index()
     {
         
-            $user = User::activo()->with('usuario.localidad.provincia')->get();
+            $user = User::activo()->with('usuario.localidad.provincia')->paginate(10);
            
-            return response()->json(['data' =>  $user]);
+            return response()->json($user);
         
     
     }

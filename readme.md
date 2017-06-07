@@ -27,6 +27,7 @@
 5. **migraciones** : 
     - php artisan migrate
     - php artisan db:seed
-6. node_modules/.bin/webpack --hide-modules --progress 
-7. php artisan serve
+6. **storage**: php artisan storage:link
+7. node_modules/.bin/webpack --hide-modules --progress 
+8. php artisan serve
 
