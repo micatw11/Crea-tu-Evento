@@ -15215,6 +15215,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuetable_2_src_components_VuetablePaginationInfo__ = __webpack_require__(367);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuetable_2_src_components_VuetablePaginationInfo___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vuetable_2_src_components_VuetablePaginationInfo__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Layouts_Style_css_js__ = __webpack_require__(175);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__DetailRowUsuario__ = __webpack_require__(427);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__DetailRowUsuario___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__DetailRowUsuario__);
+//
+//
 //
 //
 //
@@ -15286,13 +15290,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
+
+
+
+Vue.component('my-detail-row', __WEBPACK_IMPORTED_MODULE_4__DetailRowUsuario___default.a);
 
 //https://github.com/ratiw/vuetable-2-tutorial/wiki/lesson-12
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
             css: __WEBPACK_IMPORTED_MODULE_3__Layouts_Style_css_js__["a" /* default */],
-            info: 'Viendo de {from} a {to} de {total} usuarios',
+            info: 'Mirando de {from} a {to} de {total} usuarios',
             noData: 'No hay usuario',
             columns: [{
                 name: '__sequence', // <----
@@ -15357,6 +15365,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         onAction: function onAction(action, data, index) {
             console.log('slot) action: ' + action, data.name, index);
+        },
+        onCellClicked: function onCellClicked(data, field, event) {
+            console.log('cellClicked: ', field.name);
+            this.$refs.vuetable.toggleDetailRow(data.id);
         }
     }
 });
@@ -21484,7 +21496,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.reloadComponents()
       }
     }
-  })], 1), _vm._v(" "), (_vm.auth.user.authenticated) ? _c('foo') : _vm._e()], 1)
+  })], 1)], 1)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -21880,10 +21892,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "css": _vm.css,
       "api-url": "/api/usuario",
       "pagination-path": "",
+      "detail-row-component": "my-detail-row",
       "fields": _vm.columns
     },
     on: {
-      "vuetable:pagination-data": _vm.onPaginationData
+      "vuetable:pagination-data": _vm.onPaginationData,
+      "vuetable:cell-clicked": _vm.onCellClicked
     },
     scopedSlots: _vm._u([{
       key: "actions",
@@ -35874,6 +35888,120 @@ module.exports = Vue$3;
 __webpack_require__(131);
 module.exports = __webpack_require__(132);
 
+
+/***/ }),
+/* 424 */,
+/* 425 */,
+/* 426 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    rowData: {
+      type: Object,
+      required: true
+    },
+    rowIndex: {
+      type: Number
+    }
+  },
+  methods: {
+    onClick: function onClick(event) {
+      console.log('my-detail-row: on-click', event.target);
+    }
+  }
+});
+
+/***/ }),
+/* 427 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(4)(
+  /* script */
+  __webpack_require__(426),
+  /* template */
+  __webpack_require__(428),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Usuarios\\DetailRowUsuario.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] DetailRowUsuario.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-76ccc2a8", Component.options)
+  } else {
+    hotAPI.reload("data-v-76ccc2a8", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 428 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    on: {
+      "click": _vm.onClick
+    }
+  }, [_c('p', {
+    staticClass: "inline-block"
+  }, [_c('label', [_vm._v("Nombre: ")]), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.rowData.usuario.apellido) + ", " + _vm._s(_vm.rowData.usuario.nombre))])]), _vm._v(" "), _c('p', {
+    staticClass: "inline-block"
+  }, [_c('label', [_vm._v("Email: ")]), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.rowData.email))])]), _vm._v(" "), _c('p', {
+    staticClass: "inline-block"
+  }, [_c('label', [_vm._v("Nombre de Usuario: ")]), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.rowData.name))])]), _vm._v(" "), _c('p', {
+    staticClass: "inline-block"
+  }, [_c('label', [_vm._v("Cumpleaños ")]), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.rowData.usuario.fecha_nac))])]), _vm._v(" "), _c('p', {
+    staticClass: "inline-block"
+  }, [_c('label', [_vm._v("Genero: ")]), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.rowData.usuario.sexo == 'F' ? 'Femenino' : 'Masculino'))])])])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-76ccc2a8", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

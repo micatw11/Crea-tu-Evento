@@ -5,7 +5,7 @@
         <div v-bind:class="classObject">
             <router-view @reloadComponents="reloadComponents()"></router-view>
         </div>
-        <foo v-if="auth.user.authenticated"></foo>
+        <!--<foo v-if="auth.user.authenticated"></foo>-->
     </div>
 </template>
 <script>

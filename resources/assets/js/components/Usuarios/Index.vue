@@ -23,6 +23,8 @@
                             api-url="/api/usuario"
                             pagination-path=""
                             @vuetable:pagination-data="onPaginationData"
+                            detail-row-component="my-detail-row"
+                            @vuetable:cell-clicked="onCellClicked"
                             :fields="columns">
                                 <template slot="actions" scope="props">
                                     <div class="custom-actions">
@@ -70,13 +72,17 @@
     import VuetablePagination from 'vuetable-2/src/components/VuetablePagination';
     import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo';
     import Style from './../Layouts/Style-css.js';
+    import DetailRow from './DetailRowUsuario'
+
+    Vue.component('my-detail-row', DetailRow);
+
     //https://github.com/ratiw/vuetable-2-tutorial/wiki/lesson-12
     export default {
 
         data() {
             return {
                 css: Style,
-                info: 'Viendo de {from} a {to} de {total} usuarios',
+                info: 'Mirando de {from} a {to} de {total} usuarios',
                 noData:'No hay usuario', 
                 columns: [
                     {
@@ -150,6 +156,10 @@
             },
             onAction (action, data, index) {
                 console.log('slot) action: ' + action, data.name, index)
+            },
+            onCellClicked (data, field, event) {
+                console.log('cellClicked: ', field.name)
+                this.$refs.vuetable.toggleDetailRow(data.id)
             }
         }
     }
