@@ -17,7 +17,7 @@ class AuthController extends Controller
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
             // Authentication passed...
             $user = Auth::user();
-            if (!$user->estado==2){
+            if ($user->estado!=2){
                 if(!$user->estado) 
                     $user->alta();
                 $user->usuario->localidad->provincia;
