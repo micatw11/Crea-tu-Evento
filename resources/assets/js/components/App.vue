@@ -2,10 +2,9 @@
     <div>
         <bar v-if="auth.user.authenticated && showComponent"></bar>
         <barra-lateral v-if="auth.user.authenticated & showComponent"></barra-lateral>
-        <div v-bind:class="classObject">
+
             <router-view @reloadComponents="reloadComponents()"></router-view>
-        </div>
-        <!--<foo v-if="auth.user.authenticated"></foo>-->
+
     </div>
 </template>
 <script>
@@ -22,14 +21,7 @@ export default {
         }
     },
     components: {Bar, BarraLateral, Foo },
-    computed: {
-        classObject: function () {
-            return {
-                'content-wrapper': auth.user.authenticated,
-                'container': !auth.user.authenticated,
-            }
-        }
-    },
+
     methods: {
         reloadComponents(){
             this.showComponent = false;

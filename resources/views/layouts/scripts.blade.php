@@ -14,10 +14,12 @@
 <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
 <!-- Slimscroll -->
 <script src="/plugins/slimScroll/jquery.slimscroll.min.js"></script>
-<!-- fullCalendar 2.2.5 -->
+<!-- fullCalendar 2.2.5 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
-<script src="../plugins/fullcalendar/fullcalendar.min.js"></script>
-<!-- iCheck -->
-<script src="/plugins/iCheck/icheck.min.js"></script>
 
+<script src="../plugins/fullcalendar/fullcalendar.min.js"></script>
+-->
+<!-- iCheck 
+<script src="/plugins/iCheck/icheck.min.js"></script>
+-->
 <script src="/js/app.js"></script>

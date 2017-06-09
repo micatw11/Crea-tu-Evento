@@ -20,12 +20,19 @@ class UsuarioController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        
-            $user = User::activo()->with('usuario.localidad.provincia')->paginate(10);
-           
-            return response()->json($user);
+
+        if($request->has('filter')){
+            $users = DB::table('users')
+                ->where('estado', 1)
+                ->where('email', '%'.$request->input('filter').'%')
+                    ->paginate(10);
+        }
+        else
+            $users = User::activo()->with('usuario.localidad.provincia', 'rol')->paginate(10);
+
+            return response()->json($users);
         
     
     }

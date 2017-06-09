@@ -15,7 +15,11 @@ var PasswordReset = require('./components/Auth/Password/Reset');
 var IndexUsuarios = require('./components/Usuarios/Index');
 
 
-let routes = [ 
+let routes = [
+		{
+			path: "*", 
+			component: PageNotFound
+		},
 		{
 			path: '/',
 			name: 'home',

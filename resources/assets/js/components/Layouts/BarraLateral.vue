@@ -1,3 +1,9 @@
+<style type="text/css">
+    .main-sidebar{
+        height: 100%;
+    }
+</style>
+
 <template>
     <!-- Left side column. conta ins the logo and sidebar -->
     <aside class="main-sidebar" >
@@ -28,7 +34,7 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu">
             <li class="header">MENU</li>
-            <li class="treeview">
+            <li class="active treeview">
                 <a href="#">
                     <i class="fa fa-dashboard"></i>
                     <span>Ejemplo componenete</span>
@@ -64,6 +70,43 @@
                     <small class="label pull-right bg-blue">17</small>
                     </span>
                 </a>
+            </li>
+
+            <li class="treeview">
+                <a href="/calendario">
+                    <i class="fa fa-calendar"></i> <span>Calendar</span>
+                    <span class="pull-right-container">
+                    <small class="label pull-right bg-red">3</small>
+                    <small class="label pull-right bg-blue">17</small>
+                    </span>
+                </a>
+            </li>
+            <li class="treeview">
+                <a href="/calendario">
+                    <i class="fa fa-calendar"></i> <span>Calendar</span>
+                    <span class="pull-right-container">
+                    <small class="label pull-right bg-red">3</small>
+                    <small class="label pull-right bg-blue">17</small>
+                    </span>
+                </a>
+            </li>
+            <li class="treeview">
+                <a href="/calendario">
+                    <i class="fa fa-calendar"></i> <span>Calendar</span>
+                    <span class="pull-right-container">
+                    <small class="label pull-right bg-red">3</small>
+                    <small class="label pull-right bg-blue">17</small>
+                    </span>
+                </a>
+            </li>
+            <li class="treeview">
+                <a href="/calendario">
+                    <i class="fa fa-calendar"></i> <span>Calendar</span>
+                    <span class="pull-right-container">
+                    <small class="label pull-right bg-red">3</small>
+                    <small class="label pull-right bg-blue">17</small>
+                    </span>
+                </a> 
             </li>
         </ul>
         </section>

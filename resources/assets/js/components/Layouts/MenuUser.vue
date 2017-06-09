@@ -11,7 +11,7 @@
                 <img :src="srcUrl" class="img-circle" alt="User Image">
                 <p>
                     {{ auth.user.profile.name }}
-                    <small>Usuario desde: {{auth.user.profile.created_at}}</small>
+                    <small>Usuario desde: {{formatData(auth.user.profile.created_at)}}</small>
                 </p>
             </li>
             <!-- Menu Footer-->
@@ -31,35 +31,41 @@
     </li>
 </template>
 <script>
-import auth from '../../auth.js';
-import router from '../../routes.js';
-export default {
-    data() {
-        return {
-            auth: auth,
-            pathUser: 'user/'+auth.user.profile.id +'/perfil',
-            srcUrl: ''
-        }
-    },
-
-    mounted: function(){
-        this.avatarUpdate();
-    },
-    methods: {
-        logout: function() {
-            
-            this.$http.post(
-                'api/logout'
-            ).then(response => {
-                auth.user.authenticated = false
-                auth.user.profile = null
-                router.push('/login')
-            })
-
+    import auth from '../../auth.js';
+    import router from '../../routes.js';
+    import moment from 'moment';
+    export default {
+        data() {
+            return {
+                auth: auth,
+                pathUser: 'user/'+auth.user.profile.id +'/perfil',
+                srcUrl: ''
+            }
         },
-        avatarUpdate: function(){
-            this.srcUrl = '/storage/avatars/'+ auth.user.profile.usuario.avatar
+        mounted: function(){
+            this.avatarUpdate();
+        },
+        methods: {
+            logout: function() {
+                
+                this.$http.post(
+                    'api/logout'
+                ).then(response => {
+                    auth.user.authenticated = false
+                    auth.user.profile = null
+                    router.push('/login')
+                })
+
+            },
+            avatarUpdate: function(){
+                this.srcUrl = '/storage/avatars/'+ auth.user.profile.usuario.avatar
+            },
+            formatData: function(value){
+                moment.locale('es');
+                return (value == null)
+                    ? ''
+                    : moment(value, 'YYYY-MM-DD').fromNow();
+            }
         }
     }
-}
 </script>

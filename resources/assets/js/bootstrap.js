@@ -14,6 +14,7 @@ Vue.use(VueRouter);
 
 window.axios = axios;
 require('vue-resource');
+require('vue-events');
 
 Vue.http.interceptors.push((request, next) => {
     request.headers.set('X-CSRF-TOKEN', Laravel.csrfToken);

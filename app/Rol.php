@@ -16,7 +16,7 @@ class Rol extends Model
     ///RELACIONES//
     public function user()
     {
-        return $this->hashOne('App\User');
+        return $this->hasMany('App\User');
     }
 
 

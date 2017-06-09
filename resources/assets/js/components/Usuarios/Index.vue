@@ -1,70 +1,62 @@
 <template>
-<div class="content"> 
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="box">
-                <div class="box-header">
-                    <h3 class="box-title">Usuarios</h3>
-                        <div class="box-tools">
-                            <div class="input-group input-group-sm" style="width: 150px;">
-                                <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
-                                <div class="input-group-btn">
-                                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
-                                </div>
-                            </div>
+    <div class="content-wrapper">
+        <div class="content"> 
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <filter-bar></filter-bar>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body table-responsive no-padding">
+                            <vuetable
+                                tableClass="table table-bordered"
+                                :css="css"
+                                ref="vuetable"
+                                :append-params="moreParams"
+                                api-url="/api/usuario"
+                                pagination-path=""
+                                @vuetable:pagination-data="onPaginationData"
+                                detail-row-component="my-detail-row"
+                                @vuetable:cell-clicked="onCellClicked"
+                                :fields="columns">
+                                    <template slot="actions" scope="props">
+                                            <div class="custom-actions">
+                                                <button class="btn-xs btn-default"
+                                                    @click="onAction('view-item', props.rowData, props.rowIndex)">
+                                                    <i class="glyphicon glyphicon-search"></i>
+                                                </button>
+                                                <button class="btn-xs btn-default"
+                                                    @click="onAction('edit-item', props.rowData, props.rowIndex)">
+                                                    <i class="glyphicon glyphicon-pencil"></i>
+                                                </button>
+                                                <button class="btn-xs btn-default"
+                                                    @click="onAction('delete-item', props.rowData, props.rowIndex)">
+                                                    <i class="glyphicon glyphicon-trash"></i>
+                                                </button>
+                                            </div>
+                                    </template>
+                            </vuetable>
+                        </div>
+
+                        <div class="box-footer clearfix">
+                                <vuetable-pagination-info 
+                                    ref="paginationInfo"
+                                    :info-template='info'
+                                    :no-data-template='noData'>
+                                </vuetable-pagination-info>
+
+                                <vuetable-pagination 
+                                    ref="pagination"
+                                    :css="css.pagination"
+                                    @vuetable-pagination:change-page="onChangePage">
+                                </vuetable-pagination>
                         </div>
                     </div>
-                    <!-- /.box-header -->
-                    <div class="box-body table-responsive no-padding">
-                        <vuetable
-                            tableClass="table table-bordered"
-                            :css="css"
-                            ref="vuetable"
-                            api-url="/api/usuario"
-                            pagination-path=""
-                            @vuetable:pagination-data="onPaginationData"
-                            detail-row-component="my-detail-row"
-                            @vuetable:cell-clicked="onCellClicked"
-                            :fields="columns">
-                                <template slot="actions" scope="props">
-                                    <div class="custom-actions">
-                                        <button class="btn-xs btn-default"
-                                            @click="onAction('view-item', props.rowData, props.rowIndex)">
-                                            <i class="glyphicon glyphicon-search"></i>
-                                        </button>
-                                        <button class="btn-xs btn-default"
-                                            @click="onAction('edit-item', props.rowData, props.rowIndex)">
-                                            <i class="glyphicon glyphicon-pencil"></i>
-                                        </button>
-                                        <button class="btn-xs btn-default"
-                                            @click="onAction('delete-item', props.rowData, props.rowIndex)">
-                                            <i class="glyphicon glyphicon-trash"></i>
-                                        </button>
-                                    </div>
-                                </template>
-                        </vuetable>
-                    </div>
-
-                    <div class="box-footer clearfix">
-
-                            <vuetable-pagination-info 
-                                ref="paginationInfo"
-                                :info-template='info'
-                                :no-data-template='noData'>
-                            </vuetable-pagination-info>
-
-                            <vuetable-pagination ref="pagination"
-                                :css="css.pagination"
-                                @vuetable-pagination:change-page="onChangePage">
-                            </vuetable-pagination>
-
-                    </div>
-
                 </div>
             </div>
         </div>
     </div>
-</div>
 </template>
 
 <script>
@@ -72,18 +64,22 @@
     import VuetablePagination from 'vuetable-2/src/components/VuetablePagination';
     import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo';
     import Style from './../Layouts/Style-css.js';
-    import DetailRow from './DetailRowUsuario'
-
+    import DetailRow from './DetailRowUsuario';
+    import FilterBar from './FilterBarUsuario';
+    import moment from 'moment';
+    
+    Vue.component('filter-bar', FilterBar)
     Vue.component('my-detail-row', DetailRow);
 
-    //https://github.com/ratiw/vuetable-2-tutorial/wiki/lesson-12
+    //https://github.com/ratiw/vuetable-2-tutorial/wiki/lesson-13
     export default {
 
         data() {
             return {
                 css: Style,
                 info: 'Mirando de {from} a {to} de {total} usuarios',
-                noData:'No hay usuario', 
+                noData:'No hay usuario',
+                moreParams: {},
                 columns: [
                     {
                     name: '__sequence',   // <----
@@ -136,6 +132,10 @@
         components: {
             Vuetable, VuetablePagination, VuetablePaginationInfo
         },
+        mounted() {
+            this.$events.$on('filter-set', eventData => this.onFilterSet(eventData))
+            this.$events.$on('filter-reset', e => this.onFilterReset())
+        },
         methods: {
             genderLabel (value) {
                 return value == 'M'
@@ -160,6 +160,17 @@
             onCellClicked (data, field, event) {
                 console.log('cellClicked: ', field.name)
                 this.$refs.vuetable.toggleDetailRow(data.id)
+            },
+            //filtros de busqueda
+            onFilterSet (filterText) {
+                this.moreParams = {
+                    'filter': filterText
+                }
+                Vue.nextTick( () => this.$refs.vuetable.refresh())
+            },
+            onFilterReset () {
+                this.moreParams = {}
+                Vue.nextTick( () => this.$refs.vuetable.refresh())
             }
         }
     }

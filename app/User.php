@@ -34,7 +34,7 @@ class User extends Authenticatable
 
     public function rol()
     {     
-        return $this->belongsTo('App\Rol');    
+        return $this->belongsTo('App\Rol', 'roles_id', 'id');    
     }
 
     public function scopePassword($query, $password){

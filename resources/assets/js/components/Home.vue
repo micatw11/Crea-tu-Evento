@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="content-wrapper">
         <path-content :titleContent="titleContent"></path-content>
         <section class="content">
             <div class="row">

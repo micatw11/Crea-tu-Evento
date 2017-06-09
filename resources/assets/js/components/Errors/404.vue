@@ -3,7 +3,7 @@
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
     <!-- Content Header (Page header) -->
-        <path-content :titleContent="titleContent"></path-content>
+        <path-content v-if="auth.user.authenticated" :titleContent="titleContent"></path-content>
 
         <!-- Main content -->
         <section class="content">
@@ -15,7 +15,12 @@
 
                     <p>
                         No pudimos encontrar la página que buscabas.
-                        <a href="#">regresar a dashboard</a>
+                        <router-link  v-if="auth.user.authenticated" tag="a" to="/home">
+                            regresar a home
+                        </router-link>
+                        <router-link v-else tag="a" to="/login">
+                            regresar a iniciar sesión
+                        </router-link>
                     </p>
                 </div>
                 <!-- /.error-content -->
@@ -27,9 +32,12 @@
 </template>
 <script>
 import PathContent from './../Layouts/Path.vue';
+import auth from '../../auth.js';
+
 export default {
     data(){
         return {
+            auth: auth,
             titleContent: 'Page not found'
         }
     },
