@@ -16,10 +16,8 @@ class Rol extends Model
     ///RELACIONES//
     public function user()
     {
-        return $this->hasMany('App\User');
+      return $this->hasMany('App\User');
     }
-
-
     //Asignacion de Roles
     public function scopeAdministrador($query)
     {

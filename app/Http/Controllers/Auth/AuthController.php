@@ -17,9 +17,16 @@ class AuthController extends Controller
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
             // Authentication passed...
             $user = Auth::user();
-            if(!$user->estado) $user->alta();
-            $user->usuario->localidad->provincia;
-            return response()->json(['data' =>  $user, 'csrfToken', csrf_token()]);
+            if ($user->estado!=2){
+                if(!$user->estado) 
+                    $user->alta();
+                $user->usuario->localidad->provincia;
+                return response()->json(['data' =>  $user, 'csrfToken', csrf_token()]);
+             }  else {
+                    return response()->json([
+                        'error' => 'Unauthorized', 'message' => 'Bloqueado',
+                    ], 401);
+                }
         } else {
             return response()->json([
                 'error' => 'Unauthorized',

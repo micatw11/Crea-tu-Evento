@@ -7,50 +7,64 @@
                         <div class="box-header">
                             <filter-bar></filter-bar>
                         </div>
+
                         <!-- /.box-header -->
                         <div class="box-body table-responsive no-padding">
                             <vuetable
                                 tableClass="table table-bordered"
                                 :css="css"
-                                ref="vuetable"
                                 :append-params="moreParams"
+                                ref="vuetable"
                                 api-url="/api/usuario"
                                 pagination-path=""
                                 @vuetable:pagination-data="onPaginationData"
                                 detail-row-component="my-detail-row"
                                 @vuetable:cell-clicked="onCellClicked"
                                 :fields="columns">
+
                                     <template slot="actions" scope="props">
-                                            <div class="custom-actions">
-                                                <button class="btn-xs btn-default"
-                                                    @click="onAction('view-item', props.rowData, props.rowIndex)">
-                                                    <i class="glyphicon glyphicon-search"></i>
-                                                </button>
-                                                <button class="btn-xs btn-default"
-                                                    @click="onAction('edit-item', props.rowData, props.rowIndex)">
-                                                    <i class="glyphicon glyphicon-pencil"></i>
-                                                </button>
-                                                <button class="btn-xs btn-default"
-                                                    @click="onAction('delete-item', props.rowData, props.rowIndex)">
-                                                    <i class="glyphicon glyphicon-trash"></i>
-                                                </button>
-                                            </div>
+                                        <div class="custom-actions">
+                                           
+                                           <!-- <button class="btn-xs btn-default"
+                                                @click="onActionEdit('edit-item', props.rowData, props.rowIndex)">
+                                                <i class="glyphicon glyphicon-pencil"></i>
+                                            </button>-->
+                                           
+                                             <select v-model="props.rowData.roles_id" @change="changeItemRol($event, props.rowData, props.rowIndex)">
+                                                <option v-for="option in options" v-bind:value="option.value" selected>
+                                                    {{ option.text }}
+                                                </option>
+                                            </select>
+
+                                            <button class="btn-xs btn-default"
+                                                @click="onAction('view-item', props.rowData, props.rowIndex)">
+                                                <i class="glyphicon glyphicon-search"></i>
+                                            </button>
+                                             <button class="btn-xs btn-default"
+                                                @click="onActionDelete('delete-item', props.rowData, props.rowIndex)">
+                                                <i class="glyphicon glyphicon-trash"></i>
+                                            </button>
+                                           
+                                        </div>
                                     </template>
+
                             </vuetable>
                         </div>
 
                         <div class="box-footer clearfix">
-                                <vuetable-pagination-info 
-                                    ref="paginationInfo"
-                                    :info-template='info'
-                                    :no-data-template='noData'>
-                                </vuetable-pagination-info>
 
-                                <vuetable-pagination 
-                                    ref="pagination"
-                                    :css="css.pagination"
-                                    @vuetable-pagination:change-page="onChangePage">
-                                </vuetable-pagination>
+                            <vuetable-pagination-info 
+                                ref="paginationInfo"
+                                :info-template='info'
+                                :no-data-template='noData'>
+                            </vuetable-pagination-info>
+
+                            <vuetable-pagination 
+                                ref="pagination"
+                                :css="css.pagination"
+                                @vuetable-pagination:change-page="onChangePage">
+                            </vuetable-pagination>
+                            
                         </div>
                     </div>
                 </div>
@@ -69,6 +83,10 @@
     import moment from 'moment';
     
     Vue.component('filter-bar', FilterBar)
+
+
+    import route from '../../routes.js';
+
     Vue.component('my-detail-row', DetailRow);
 
     //https://github.com/ratiw/vuetable-2-tutorial/wiki/lesson-13
@@ -76,6 +94,12 @@
 
         data() {
             return {
+                options: [
+                      { text: 'Administrador', value: '1' },
+                      { text: 'Operador', value: '2' },
+                      { text: 'Supervisor', value: '3' },
+                      { text: 'Usuario', value: '5' }
+                      ],
                 css: Style,
                 info: 'Mirando de {from} a {to} de {total} usuarios',
                 noData:'No hay usuario',
@@ -155,7 +179,29 @@
                 this.$refs.vuetable.changePage(page)
             },
             onAction (action, data, index) {
+                route.push("/user/"+data.id+"/perfil")
                 console.log('slot) action: ' + action, data.name, index)
+            },
+            onActionDelete(action, data, index) {
+                console.log('slot) action: ' + action, data.name, index),
+                    this.$http.post('api/user/'+ data.id+'/block',
+                    {
+                        _method: 'PATCH',
+                        logout: true,
+
+                    })
+                    .then(response => {
+                        this.$toast.success({
+                            title:'¡Acción realizada!',
+                            message:'El usuario se a bloqueado. :('
+                        });
+                    }, response => {
+                        this.$toast.error({
+                            title:'¡Error!',
+                            message:'No se han podido realizar los cambios. :('
+                        });
+
+                    })
             },
             onCellClicked (data, field, event) {
                 console.log('cellClicked: ', field.name)
@@ -171,7 +217,34 @@
             onFilterReset () {
                 this.moreParams = {}
                 Vue.nextTick( () => this.$refs.vuetable.refresh())
+            },
+            changeItemRol(action, data, index) {
+                this.selected = `${event.target.value}`
+               this.$http.post('api/user/'+ data.id+'/rol',
+                {
+                    _method: 'PATCH',
+                    roles_id: this.selected
+                })
+                .then(response => {
+                    this.$toast.success({
+                        title:'¡Cambios realizados!',
+                        message:'Se ha cambiado correctamente el rol.'
+                    });
+                }, response => {
+                    this.$toast.error({
+                        title:'¡Error!',
+                        message:'No se han podido guardar los cambios.'
+                    });
+                    if(response.status === 401)
+                    {
+                        //setea errores en validaciones de api
+                        this.errorsApi = response.body;
+                    }
+                })
+               
             }
         }
     }
+
 </script>
+

@@ -29,7 +29,7 @@ class User extends Authenticatable
 
     public function usuario()
     {
-        return $this->HasOne('App\Usuario');
+        return $this->hasOne('App\Usuario');
     }
 
     public function rol()
@@ -42,16 +42,21 @@ class User extends Authenticatable
     }
 
     public function scopeActivo($query){
-        return $query->where('estado', true);
+        return $query->where('estado', 1);
     }
 
     public function scopeBaja(){
-        $this->estado = false;
+        $this->estado = 0;
+        return $this->save();
+    }
+
+     public function scopeBloqueo(){
+        $this->estado = 2;
         return $this->save();
     }
 
     public function scopeAlta(){
-        $this->estado = true;
+        $this->estado = 1;
         return $this->save();
     }
 }
