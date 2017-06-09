@@ -213,7 +213,6 @@
                     roles_id: this.selected
                 })
                 .then(response => {
-                    this.clearErrors();
                     this.$toast.success({
                         title:'¡Cambios realizados!',
                         message:'Se ha cambiado correctamente el rol.'
@@ -229,7 +228,7 @@
                         this.errorsApi = response.body;
                     }
                 })
-               console.log('slot) action: ' + event, this.selected)
+               
             }
     }
 }
