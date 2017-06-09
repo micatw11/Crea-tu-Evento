@@ -23,18 +23,22 @@ class UsuarioController extends Controller
      */
     public function index(Request $request)
     {
+        $query = User::with('usuario');
 
+        if($request->filter){
+            $like = '%'.$request->filter.'%';
+            $usuario = Usuario::where('nombre', 'like', $like)
+                            ->orWhere('apellido', 'like', $like)->get()->pluck('user_id');
+                
+            $query=$query->where('email', 'like', $like);
 
-        if($request->has('filter')){
-            $users = DB::table('users')
-                ->where('estado', 1)
-                ->where('email', '%'.$request->input('filter').'%')
-                    ->paginate(10);
+            if (!$usuario->isEmpty())
+                $query=$query->orWhere('id',$usuario);
         }
-        else
-            $users = User::activo()->with('usuario.localidad.provincia', 'rol')->paginate(10);
 
-            return response()->json([$users, 'filter' => ]);
+        $users = $query->paginate(10);
+
+        return response()->json($users);
     }
 
     /**
