@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Usuario;
 use App\User;
 
+
 class UsuarioController extends Controller
 {
     /**
@@ -24,10 +25,7 @@ class UsuarioController extends Controller
     {
         
             $user = User::activo()->with('usuario.localidad.provincia')->paginate(10);
-           
             return response()->json($user);
-        
-    
     }
 
     /**
@@ -113,6 +111,18 @@ class UsuarioController extends Controller
 
     }
 
+     public function bloquear(Request $request, $id)
+    {
+        $user = User::where('id', $id)->firstOrFail();
+
+        if($user->bloqueo()){
+            return response()->json(['data' =>  'OK'], 200);
+        } else {
+            return response()->json(['error' =>  'Internal Server Error'], 500);
+        }
+
+    }
+
     public function updateAvatar(Request $request, $id){
 
         $usuario = Usuario::where('user_id', $id)->firstOrFail();
@@ -148,6 +158,19 @@ class UsuarioController extends Controller
             $error = array(
                 'oldPassword' => 'La contraseña ingresada no coincide con nuestros registros.');
             return response()->json(['error' =>  'Unauthorized', 'oldPassword'=> $error], 401);
+        }
+    }
+
+    public function cambiarRol(Request $request, $id){
+
+        $user = User::where('id', $id)->firstOrFail();
+
+        $user->roles_id = $request->roles_id;
+
+        if($user->save()){
+            return response()->json(['data' =>  'OK' ], 200);
+        } else {
+            return response()->json(['error' => 'Internal Server Error'], 500);
         }
     }
 

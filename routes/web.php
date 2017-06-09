@@ -46,8 +46,10 @@ Route::group(['prefix' => 'api'], function () {
     Route::post('user/{id}/perfil/avatar', 'UsuarioController@updateAvatar');
     Route::patch('user/{id}/password', 'UsuarioController@changePassword');
     Route::delete('user/{id}/account', 'UsuarioController@destroy');
+    Route::patch('user/{id}/block', 'UsuarioController@bloquear');
+    Route::patch('user/{id}/rol', 'UsuarioController@cambiarRol');
 
     Route::get('localidades', 'LocalidadController@index');
     Route::get('localidades/{id}', 'LocalidadController@show');
-    
+    Route::get('roles', 'UsuarioController@roles');
 });

@@ -107,8 +107,8 @@ export default {
         }
     },
     beforeMount: function() {
-        this.getUserPerfil();
-        this.srcUrl = '/storage/avatars/'+this.auth.user.profile.usuario.avatar
+        this.getUserPerfil()
+
     },
     components: {
         PathContent,
@@ -121,7 +121,8 @@ export default {
         getUserPerfil: function(){
             this.$http.get('api/usuario/'+ this.$route.params.userId )
                 .then(response => {
-                    this.perfil = response.data.data
+                    this.perfil = response.data.data,
+                    this.srcUrl = '/storage/avatars/'+this.perfil.avatar
                 }, response => {
 
                     if(response.status === 404){
@@ -131,7 +132,7 @@ export default {
                 })
         },
         updateAvatar: function(){
-            this.srcUrl = '/storage/avatars/'+this.auth.user.profile.usuario.avatar;
+            this.srcUrl = '/storage/avatars/'+this.perfil.avatar;
             this.$emit('reloadComponents');
         },
         reload: function(){
