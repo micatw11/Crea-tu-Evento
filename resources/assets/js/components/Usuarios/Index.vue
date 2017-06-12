@@ -99,8 +99,8 @@
                 titleContent: 'Usuarios',
                 options: [
                           { text: 'Administrador', value: '1' },
-                          { text: 'Operador', value: '2' },
-                          { text: 'Supervisor', value: '3' },
+                          { text: 'Operador', value: '3' },
+                          { text: 'Supervisor', value: '2' },
                           { text: 'Usuario', value: '5' }
                       ],
                 css: Style,

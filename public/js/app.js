@@ -30852,7 +30852,7 @@ Vue.component('filter-bar', __WEBPACK_IMPORTED_MODULE_5__FilterBarUsuario___defa
     data: function data() {
         return {
             titleContent: 'Usuarios',
-            options: [{ text: 'Administrador', value: '1' }, { text: 'Operador', value: '2' }, { text: 'Supervisor', value: '3' }, { text: 'Usuario', value: '5' }],
+            options: [{ text: 'Administrador', value: '1' }, { text: 'Operador', value: '3' }, { text: 'Supervisor', value: '2' }, { text: 'Usuario', value: '5' }],
             css: __WEBPACK_IMPORTED_MODULE_3__Layouts_Style_css_js__["a" /* default */],
             noDataTemplate: 'No hay datos para visualizar',
             info: 'Mirando de {from} a {to} de {total} usuarios',
