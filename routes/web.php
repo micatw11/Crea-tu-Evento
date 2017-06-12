@@ -41,7 +41,7 @@ Route::group(['prefix' => 'api'], function () {
 
     Route::resource('usuario', 'UsuarioController', 
     [ 
-        'except' => ['destroy']
+        'except' => ['destroy', 'edit', 'create', 'store']
 	]);
     Route::post('user/{id}/perfil/avatar', 'UsuarioController@updateAvatar');
     Route::patch('user/{id}/password', 'UsuarioController@changePassword');

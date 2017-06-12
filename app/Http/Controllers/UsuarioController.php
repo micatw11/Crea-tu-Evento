@@ -124,7 +124,7 @@ class UsuarioController extends Controller
 
     }
 
-     public function bloquear(Request $request, $id)
+    public function bloquear(Request $request, $id)
     {
         $user = User::where('id', $id)->firstOrFail();
 

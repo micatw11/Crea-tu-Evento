@@ -84,6 +84,8 @@
                             tu nombre y tu foto de la mayor parte del contenido que compartiste. 
                             Algunas personas podrán seguir viendo determinada información, como 
                             tu nombre en los mensajes que les enviaste.
+                            Podras volver a activarla cuando desees introduciendo tu correo y contraseña 
+                            desde la pagina de inicio de sesión.
                             </p>
                         </div>
                         <div class="modal-footer">
@@ -162,7 +164,7 @@ export default {
                     auth.user.authenticated = false
                     auth.user.profile = null
                     router.push({
-                        name: 'login'
+                        path: '/login', query: { deactivated: true }
                     })
                 }, response => {
                     this.$toast.error({

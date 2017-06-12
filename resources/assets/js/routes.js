@@ -13,7 +13,7 @@ var PageNotFound = require('./components/Errors/404');
 var FormPasswordReset = require('./components/Auth/Password/Email');
 var PasswordReset = require('./components/Auth/Password/Reset');
 var IndexUsuarios = require('./components/Usuarios/Index');
-
+var InternalServerError = require('./components/Errors/500');
 
 let routes = [
 		{
@@ -79,6 +79,13 @@ let routes = [
 			path: '/404',
 			name: 'pageNotFound',
 			component: PageNotFound,
+			beforeEnter: guardRoute
+
+		},
+		{
+			path: '/500',
+			name: 'internalServerError',
+			component: InternalServerError,
 			beforeEnter: guardRoute
 
 		}
