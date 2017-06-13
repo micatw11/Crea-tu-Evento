@@ -41,13 +41,13 @@ Route::group(['prefix' => 'api'], function () {
 
     Route::resource('usuario', 'UsuarioController', 
     [ 
-        'except' => ['destroy']
+        'except' => ['destroy', 'edit', 'create', 'store']
 	]);
     Route::post('user/{id}/perfil/avatar', 'UsuarioController@updateAvatar');
     Route::patch('user/{id}/password', 'UsuarioController@changePassword');
     Route::delete('user/{id}/account', 'UsuarioController@destroy');
     Route::patch('user/{id}/block', 'UsuarioController@bloquear');
-    Route::patch('user/{id}/rol', 'UsuarioController@cambiarRol');
+    Route::patch('user/{id}/rol', 'UsuarioController@cambiarRol')->middleware('role:administrador,supervisor');
 
     Route::get('localidades', 'LocalidadController@index');
     Route::get('localidades/{id}', 'LocalidadController@show');

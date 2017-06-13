@@ -23,7 +23,7 @@ class UsuarioController extends Controller
      */
     public function index(Request $request)
     {
-        $query = User::with('usuario');
+        $query = User::where('id', '!=', Auth::user()->id)->with('usuario');
 
         if($request->filter){
             $like = '%'.$request->filter.'%';
@@ -33,7 +33,7 @@ class UsuarioController extends Controller
             $query=$query->where('email', 'like', $like);
 
             if (!$usuario->isEmpty())
-                $query=$query->orWhere('id',$usuario);
+                $query=$query->orWhereIn('id',$usuario);
         }
 
         $users = $query->paginate(10);
@@ -124,7 +124,7 @@ class UsuarioController extends Controller
 
     }
 
-     public function bloquear(Request $request, $id)
+    public function bloquear(Request $request, $id)
     {
         $user = User::where('id', $id)->firstOrFail();
 

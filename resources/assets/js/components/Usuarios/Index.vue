@@ -1,5 +1,7 @@
 <template>
+
     <div class="content-wrapper">
+        <path-content :titleContent="titleContent"></path-content>
         <div class="content"> 
             <div class="row">
                 <div class="col-xs-12">
@@ -11,7 +13,9 @@
                         <!-- /.box-header -->
                         <div class="box-body table-responsive no-padding">
                             <vuetable
+                                :fields="colums"
                                 tableClass="table table-bordered"
+                                :noDataTemplate="noDataTemplate"
                                 :css="css"
                                 :append-params="moreParams"
                                 ref="vuetable"
@@ -19,8 +23,7 @@
                                 pagination-path=""
                                 @vuetable:pagination-data="onPaginationData"
                                 detail-row-component="my-detail-row"
-                                @vuetable:cell-clicked="onCellClicked"
-                                :fields="columns">
+                                @vuetable:cell-clicked="onCellClicked">
 
                                     <template slot="actions" scope="props">
                                         <div class="custom-actions">
@@ -80,81 +83,36 @@
     import Style from './../Layouts/Style-css.js';
     import DetailRow from './DetailRowUsuario';
     import FilterBar from './FilterBarUsuario';
+
     import moment from 'moment';
-    
-    Vue.component('filter-bar', FilterBar)
-
-
+    import colums from './colums.js';
     import route from '../../routes.js';
+    import PathContent from '../Layouts/Path';
 
     Vue.component('my-detail-row', DetailRow);
-
+    Vue.component('filter-bar', FilterBar)
     //https://github.com/ratiw/vuetable-2-tutorial/wiki/lesson-13
     export default {
 
         data() {
             return {
+                titleContent: 'Usuarios',
                 options: [
-                      { text: 'Administrador', value: '1' },
-                      { text: 'Operador', value: '2' },
-                      { text: 'Supervisor', value: '3' },
-                      { text: 'Usuario', value: '5' }
+                          { text: 'Administrador', value: '1' },
+                          { text: 'Operador', value: '3' },
+                          { text: 'Supervisor', value: '2' },
+                          { text: 'Usuario', value: '5' }
                       ],
                 css: Style,
+                noDataTemplate: 'No hay datos para visualizar',
                 info: 'Mirando de {from} a {to} de {total} usuarios',
-                noData:'No hay usuario',
+                noData:'No hay datos',
                 moreParams: {},
-                columns: [
-                    {
-                    name: '__sequence',   // <----
-                    title: '#',
-                    titleClass: 'center aligned',
-                    dataClass: 'right aligned'
-                    },
-                    {
-                        name: 'usuario.nombre',
-                        title: 'Nombre',
-                        titleClass: 'text-center',
-                        dataClass: 'text-center'           
-                    },
-                    {
-                        name: 'usuario.apellido',
-                        title: 'Apellido',
-                        titleClass: 'text-center',
-                        dataClass: 'text-center'
-                    },
-                    {
-                        name: 'usuario.sexo',
-                        title: 'Genero',
-                        titleClass: 'text-center',
-                        dataClass: 'text-center',
-                        callback: 'genderLabel'
-                    },
-                    {
-                        name: 'email',
-                        title: 'Email',
-                        //sortField: 'email',
-                        titleClass: 'text-center',
-                        dataClass: 'text-center'
-                    },
-                    {
-                        name: 'created_at',
-                        title: 'Fecha de registro',
-                        titleClass: 'text-center',
-                        dataClass: 'text-center',
-                        callback: 'formatDate|DD-MM-YYYY'
-                    },
-                    {
-                    name: '__slot:actions',   // <----
-                    title: 'Actions',
-                    titleClass: 'center aligned',
-                    dataClass: 'center aligned'
-                    }
-                ]
+                colums: colums
             }
         },
         components: {
-            Vuetable, VuetablePagination, VuetablePaginationInfo
+            Vuetable, VuetablePagination, VuetablePaginationInfo, PathContent
         },
         mounted() {
             this.$events.$on('filter-set', eventData => this.onFilterSet(eventData))
@@ -214,10 +172,7 @@
                 }
                 Vue.nextTick( () => this.$refs.vuetable.refresh())
             },
-            onFilterReset () {
-                this.moreParams = {}
-                Vue.nextTick( () => this.$refs.vuetable.refresh())
-            },
+            //cambiar rol
             changeItemRol(action, data, index) {
                 this.selected = `${event.target.value}`
                this.$http.post('api/user/'+ data.id+'/rol',
@@ -247,4 +202,3 @@
     }
 
 </script>
-

@@ -39,4 +39,7 @@ class Rol extends Model
     {
       return $query->where('nombre','LIKE','%Usuario%')->get()->pluck('id')->first();
     }
+    public function scopeRoleId($query, $role){
+      return $query->where('nombre','LIKE','%'.$role.'%')->get()->pluck('id')->first();
+    }
 }

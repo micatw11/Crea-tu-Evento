@@ -5340,6 +5340,7 @@ var PageNotFound = __webpack_require__(497);
 var FormPasswordReset = __webpack_require__(493);
 var PasswordReset = __webpack_require__(494);
 var IndexUsuarios = __webpack_require__(512);
+var InternalServerError = __webpack_require__(554);
 
 var routes = [{
 	path: "*",
@@ -5395,6 +5396,12 @@ var routes = [{
 	path: '/404',
 	name: 'pageNotFound',
 	component: PageNotFound,
+	beforeEnter: guardRoute
+
+}, {
+	path: '/500',
+	name: 'internalServerError',
+	component: InternalServerError,
 	beforeEnter: guardRoute
 
 }];
@@ -28146,6 +28153,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -28157,8 +28169,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             password: null,
             remember: false,
             error: false,
-            errorsApi: []
+            errorsApi: [],
+            deactivated: false
         };
+    },
+    beforeMount: function beforeMount() {
+        this.deactivated = this.$route.query.deactivated;
     },
 
     methods: {
@@ -28195,6 +28211,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this2 = this;
 
             this.clearErrors();
+            this.deactivated = false;
             this.$validator.validateAll().then(function () {
                 _this2.sendForm();
             }).catch(function () {
@@ -30216,6 +30233,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 
 
@@ -30280,7 +30299,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 __WEBPACK_IMPORTED_MODULE_0__auth_js__["a" /* default */].user.authenticated = false;
                 __WEBPACK_IMPORTED_MODULE_0__auth_js__["a" /* default */].user.profile = null;
                 __WEBPACK_IMPORTED_MODULE_1__routes_js__["a" /* default */].push({
-                    name: 'login'
+                    path: '/login', query: { deactivated: true }
                 });
             }, function (response) {
                 _this3.$toast.error({
@@ -30574,6 +30593,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -30585,11 +30606,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   methods: {
     doFilter: function doFilter() {
       this.$events.fire('filter-set', this.filterText);
-    },
-    resetFilter: function resetFilter() {
-      this.filterText = ''; // clear the text in text input
-      this.$events.fire('filter-reset');
-    }
+    } /*,
+      resetFilter () {
+       this.filterText = ''  // clear the text in text input
+       this.$events.fire('filter-reset')
+      }*/
+
   }
 });
 
@@ -30681,7 +30703,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__FilterBarUsuario___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__FilterBarUsuario__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_moment__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_moment__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__routes_js__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__colums_js__ = __webpack_require__(553);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__routes_js__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__Layouts_Path__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__Layouts_Path___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9__Layouts_Path__);
+//
+//
+//
 //
 //
 //
@@ -30766,65 +30794,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-Vue.component('filter-bar', __WEBPACK_IMPORTED_MODULE_5__FilterBarUsuario___default.a);
+
 
 
 
 Vue.component('my-detail-row', __WEBPACK_IMPORTED_MODULE_4__DetailRowUsuario___default.a);
-
+Vue.component('filter-bar', __WEBPACK_IMPORTED_MODULE_5__FilterBarUsuario___default.a
 //https://github.com/ratiw/vuetable-2-tutorial/wiki/lesson-13
-/* harmony default export */ __webpack_exports__["default"] = ({
+);/* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            options: [{ text: 'Administrador', value: '1' }, { text: 'Operador', value: '2' }, { text: 'Supervisor', value: '3' }, { text: 'Usuario', value: '5' }],
+            titleContent: 'Usuarios',
+            options: [{ text: 'Administrador', value: '1' }, { text: 'Operador', value: '3' }, { text: 'Supervisor', value: '2' }, { text: 'Usuario', value: '5' }],
             css: __WEBPACK_IMPORTED_MODULE_3__Layouts_Style_css_js__["a" /* default */],
+            noDataTemplate: 'No hay datos para visualizar',
             info: 'Mirando de {from} a {to} de {total} usuarios',
-            noData: 'No hay usuario',
+            noData: 'No hay datos',
             moreParams: {},
-            columns: [{
-                name: '__sequence', // <----
-                title: '#',
-                titleClass: 'center aligned',
-                dataClass: 'right aligned'
-            }, {
-                name: 'usuario.nombre',
-                title: 'Nombre',
-                titleClass: 'text-center',
-                dataClass: 'text-center'
-            }, {
-                name: 'usuario.apellido',
-                title: 'Apellido',
-                titleClass: 'text-center',
-                dataClass: 'text-center'
-            }, {
-                name: 'usuario.sexo',
-                title: 'Genero',
-                titleClass: 'text-center',
-                dataClass: 'text-center',
-                callback: 'genderLabel'
-            }, {
-                name: 'email',
-                title: 'Email',
-                //sortField: 'email',
-                titleClass: 'text-center',
-                dataClass: 'text-center'
-            }, {
-                name: 'created_at',
-                title: 'Fecha de registro',
-                titleClass: 'text-center',
-                dataClass: 'text-center',
-                callback: 'formatDate|DD-MM-YYYY'
-            }, {
-                name: '__slot:actions', // <----
-                title: 'Actions',
-                titleClass: 'center aligned',
-                dataClass: 'center aligned'
-            }]
+            colums: __WEBPACK_IMPORTED_MODULE_7__colums_js__["a" /* default */]
         };
     },
 
     components: {
-        Vuetable: __WEBPACK_IMPORTED_MODULE_0_vuetable_2_src_components_Vuetable___default.a, VuetablePagination: __WEBPACK_IMPORTED_MODULE_1_vuetable_2_src_components_VuetablePagination___default.a, VuetablePaginationInfo: __WEBPACK_IMPORTED_MODULE_2_vuetable_2_src_components_VuetablePaginationInfo___default.a
+        Vuetable: __WEBPACK_IMPORTED_MODULE_0_vuetable_2_src_components_Vuetable___default.a, VuetablePagination: __WEBPACK_IMPORTED_MODULE_1_vuetable_2_src_components_VuetablePagination___default.a, VuetablePaginationInfo: __WEBPACK_IMPORTED_MODULE_2_vuetable_2_src_components_VuetablePaginationInfo___default.a, PathContent: __WEBPACK_IMPORTED_MODULE_9__Layouts_Path___default.a
     },
     mounted: function mounted() {
         var _this = this;
@@ -30854,7 +30846,7 @@ Vue.component('my-detail-row', __WEBPACK_IMPORTED_MODULE_4__DetailRowUsuario___d
             this.$refs.vuetable.changePage(page);
         },
         onAction: function onAction(action, data, index) {
-            __WEBPACK_IMPORTED_MODULE_7__routes_js__["a" /* default */].push("/user/" + data.id + "/perfil");
+            __WEBPACK_IMPORTED_MODULE_8__routes_js__["a" /* default */].push("/user/" + data.id + "/perfil");
             console.log('slot) action: ' + action, data.name, index);
         },
         onActionDelete: function onActionDelete(action, data, index) {
@@ -30892,34 +30884,28 @@ Vue.component('my-detail-row', __WEBPACK_IMPORTED_MODULE_4__DetailRowUsuario___d
                 return _this3.$refs.vuetable.refresh();
             });
         },
-        onFilterReset: function onFilterReset() {
-            var _this4 = this;
 
-            this.moreParams = {};
-            Vue.nextTick(function () {
-                return _this4.$refs.vuetable.refresh();
-            });
-        },
+        //cambiar rol
         changeItemRol: function changeItemRol(action, data, index) {
-            var _this5 = this;
+            var _this4 = this;
 
             this.selected = '' + event.target.value;
             this.$http.post('api/user/' + data.id + '/rol', {
                 _method: 'PATCH',
                 roles_id: this.selected
             }).then(function (response) {
-                _this5.$toast.success({
+                _this4.$toast.success({
                     title: '¡Cambios realizados!',
                     message: 'Se ha cambiado correctamente el rol.'
                 });
             }, function (response) {
-                _this5.$toast.error({
+                _this4.$toast.error({
                     title: '¡Error!',
                     message: 'No se han podido guardar los cambios.'
                 });
                 if (response.status === 401) {
                     //setea errores en validaciones de api
-                    _this5.errorsApi = response.body;
+                    _this4.errorsApi = response.body;
                 }
             });
         }
@@ -37694,7 +37680,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "login-box-body"
   }, [_c('p', {
     staticClass: "login-box-msg"
-  }, [_vm._v("Iniciar su sesión")]), _vm._v(" "), (_vm.error) ? _c('div', {
+  }, [_vm._v("Iniciar su sesión")]), _vm._v(" "), (_vm.deactivated) ? _c('div', {
+    staticClass: "callout callout-danger"
+  }, [_c('h4', [_vm._v("Cuenta desactivada! :(")]), _vm._v(" "), _c('p', [_vm._v("Podras volver a activarla cuando desees introduciendo tu correo\n             y contraseña.")])]) : _vm._e(), _vm._v(" "), (_vm.error) ? _c('div', {
     staticClass: "text-center"
   }, [_c('p', {
     staticClass: "text-red"
@@ -37902,7 +37890,11 @@ if (false) {
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "content-wrapper"
-  }, [_c('div', {
+  }, [_c('path-content', {
+    attrs: {
+      "titleContent": _vm.titleContent
+    }
+  }), _vm._v(" "), _c('div', {
     staticClass: "content"
   }, [_c('div', {
     staticClass: "row"
@@ -37917,13 +37909,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('vuetable', {
     ref: "vuetable",
     attrs: {
+      "fields": _vm.colums,
       "tableClass": "table table-bordered",
+      "noDataTemplate": _vm.noDataTemplate,
       "css": _vm.css,
       "append-params": _vm.moreParams,
       "api-url": "/api/usuario",
       "pagination-path": "",
-      "detail-row-component": "my-detail-row",
-      "fields": _vm.columns
+      "detail-row-component": "my-detail-row"
     },
     on: {
       "vuetable:pagination-data": _vm.onPaginationData,
@@ -38000,7 +37993,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "vuetable-pagination:change-page": _vm.onChangePage
     }
-  })], 1)])])])])])
+  })], 1)])])])])], 1)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -38261,35 +38254,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "value": (_vm.filterText)
     },
     on: {
-      "keyup": function($event) {
-        if (!('button' in $event) && _vm._k($event.keyCode, "enter", 13)) { return null; }
-        _vm.doFilter($event)
-      },
+      "change": _vm.doFilter,
       "input": function($event) {
         if ($event.target.composing) { return; }
         _vm.filterText = $event.target.value
       }
     }
-  }), _vm._v(" "), _c('div', {
-    staticClass: "input-group-btn"
-  }, [_c('button', {
-    staticClass: "btn btn-default",
-    attrs: {
-      "type": "submit"
-    },
-    on: {
-      "click": _vm.doFilter
-    }
-  }, [_c('i', {
-    staticClass: "fa fa-search"
-  })]), _vm._v(" "), _c('button', {
-    staticClass: "btn btn-default",
-    on: {
-      "click": _vm.resetFilter
-    }
-  }, [_c('i', {
-    staticClass: "fa fa-trash"
-  })])])])])
+  })])])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -38738,7 +38709,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('h3', [_c('i', {
     staticClass: "fa fa-warning text-yellow"
-  }), _vm._v(" Oops! Page not found.")])
+  }), _vm._v(" ¡Vaya! Página no encontrada.")])
 }]}
 module.exports.render._withStripped = true
 if (false) {
@@ -39865,7 +39836,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "modal-body"
-  }, [_c('p', [_vm._v("Al desactivar tu cuenta, se desactivará tu perfil y se borrará \n                        tu nombre y tu foto de la mayor parte del contenido que compartiste. \n                        Algunas personas podrán seguir viendo determinada información, como \n                        tu nombre en los mensajes que les enviaste.\n                        ")])])
+  }, [_c('p', [_vm._v("Al desactivar tu cuenta, se desactivará tu perfil y se borrará \n                        tu nombre y tu foto de la mayor parte del contenido que compartiste. \n                        Algunas personas podrán seguir viendo determinada información, como \n                        tu nombre en los mensajes que les enviaste.\n                        Podras volver a activarla cuando desees introduciendo tu correo y contraseña \n                        desde la pagina de inicio de sesión.\n                        ")])])
 }]}
 module.exports.render._withStripped = true
 if (false) {
@@ -52134,6 +52105,176 @@ module.exports = function(module) {
 __webpack_require__(247);
 module.exports = __webpack_require__(248);
 
+
+/***/ }),
+/* 550 */,
+/* 551 */,
+/* 552 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Layouts_Path_vue__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Layouts_Path_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Layouts_Path_vue__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+
+            titleContent: 'Internal Server Error'
+        };
+    },
+
+    components: { PathContent: __WEBPACK_IMPORTED_MODULE_0__Layouts_Path_vue___default.a }
+});
+
+/***/ }),
+/* 553 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ __webpack_exports__["a"] = ([{
+    name: '__sequence', // <----
+    title: '#',
+    titleClass: 'center aligned',
+    dataClass: 'right aligned'
+}, {
+    name: 'usuario.nombre',
+    title: 'Nombre',
+    titleClass: 'text-center',
+    dataClass: 'text-center'
+}, {
+    name: 'usuario.apellido',
+    title: 'Apellido',
+    titleClass: 'text-center',
+    dataClass: 'text-center'
+}, {
+    name: 'usuario.sexo',
+    title: 'Genero',
+    titleClass: 'text-center',
+    dataClass: 'text-center',
+    callback: 'genderLabel'
+}, {
+    name: 'email',
+    title: 'Email',
+    //sortField: 'email',
+    titleClass: 'text-center',
+    dataClass: 'text-center'
+}, {
+    name: 'created_at',
+    title: 'Fecha de registro',
+    titleClass: 'text-center',
+    dataClass: 'text-center',
+    callback: 'formatDate|DD-MM-YYYY'
+}, {
+    name: '__slot:actions', // <----
+    title: 'Actions',
+    titleClass: 'center aligned',
+    dataClass: 'center aligned'
+}]);
+
+/***/ }),
+/* 554 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(5)(
+  /* script */
+  __webpack_require__(552),
+  /* template */
+  __webpack_require__(555),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/home/mica/Proyectos/Crea-tu-Evento/resources/assets/js/components/Errors/500.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] 500.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-fc269af8", Component.options)
+  } else {
+    hotAPI.reload("data-v-fc269af8", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 555 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "content-wrapper"
+  }, [_c('path-content', {
+    attrs: {
+      "titleContent": _vm.titleContent
+    }
+  }), _vm._v(" "), _c('section', {
+    staticClass: "content"
+  }, [_c('div', {
+    staticClass: "error-page"
+  }, [_c('h2', {
+    staticClass: "headline text-red"
+  }, [_vm._v("500")]), _vm._v(" "), _c('div', {
+    staticClass: "error-content"
+  }, [_vm._m(0), _vm._v(" "), _c('p', [_vm._v("\n\t\t\t\t\t\tVamos a trabajar en la reparación del problema de inmediato. \n\t\t\t\t\t\tMientras tanto, usted puede\n                        "), _c('router-link', {
+    attrs: {
+      "tag": "a",
+      "to": "/home"
+    }
+  }, [_vm._v("\n                            regresar a home\n                        ")])], 1)])])])], 1)
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('h3', [_c('i', {
+    staticClass: "fa fa-warning text-red"
+  }), _vm._v("¡Vaya! Algo salió mal.")])
+}]}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-fc269af8", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

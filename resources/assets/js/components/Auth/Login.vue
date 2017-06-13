@@ -6,6 +6,11 @@
         <!-- /.login-logo -->
         <div class="login-box-body">
             <p class="login-box-msg">Iniciar su sesión</p>
+            <div v-if="deactivated" class="callout callout-danger">
+                <h4>Cuenta desactivada! :(</h4>
+                <p>Podras volver a activarla cuando desees introduciendo tu correo
+                 y contraseña.</p>
+            </div>
             <div class="text-center" v-if="error">
                 <p class="text-red">Estas credenciales no coinciden con nuestros registros.</p>
             </div>
@@ -65,14 +70,19 @@ import auth from '../../auth.js';
 import router from '../../routes.js';
 
 export default {
+
     data() {
         return {
             email: null,
             password: null,
             remember: false,
             error: false,
-            errorsApi: []
+            errorsApi: [],
+            deactivated: false
         }
+    },
+    beforeMount() {
+        this.deactivated = this.$route.query.deactivated
     },
     methods: {
         //clear errorsApi
@@ -110,6 +120,7 @@ export default {
         //form validation
         validateBeforeSubmit: function(e) {
             this.clearErrors();
+            this.deactivated = false;
             this.$validator.validateAll().then(() => {
                 this.sendForm();
             }).catch(() => {
