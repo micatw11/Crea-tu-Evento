@@ -15,7 +15,7 @@ use App\User;
 
 
 class UsuarioController extends Controller
-{
+{   $table_name= "usuarios";
     /**
      * Display a listing of the resource.
      *
@@ -99,7 +99,7 @@ class UsuarioController extends Controller
         if($usuario->save()){
             return response()->json(['data' =>  'OK'], 200);
         } else {
-            return response()-json(['error' => 'Internal Server Error'], 500 );
+            return response()->json(['error' => 'Internal Server Error'], 500 );
         }
     }
 
@@ -130,6 +130,13 @@ class UsuarioController extends Controller
 
         if($user->bloqueo()){
             return response()->json(['data' =>  'OK'], 200);
+            $log = new Log;
+
+            $log->user_id = $request->user_id;
+            $log->roles_id = $request->roles_id;
+            $log->table = $table_name;
+            $log->registro_id = $request->id;
+            $log->save();
         } else {
             return response()->json(['error' =>  'Internal Server Error'], 500);
         }
