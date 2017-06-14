@@ -1,8 +1,9 @@
+// componentes requeridos para rutas
 import VueRouter from 'vue-router';
 import auth from './auth.js';
+import role from './config.js';
 
-
-
+//templates
 var Login = require('./components/Auth/Login');
 var Home = require('./components/Home');
 var About = require('./components/About');
@@ -53,7 +54,8 @@ let routes = [
 		{
 			path: '/index-usuario',
 			component: IndexUsuarios,
-			beforeEnter: guardRoute			
+			beforeEnter: guardRoute,
+			meta: { Role: [role.ADMINISTRADOR] }		
 		},
 		{
 			path: '/about',
@@ -91,43 +93,119 @@ let routes = [
 		}
  ];
 
-
+/** guardRoute 
+ *
+ * Esta función chequea si el usuario esta 
+ * en condiciones de acceder a las rutas
+ *
+ * Parametros
+ * to: objeto de ruta a la que se desea acceder.
+ * from: objeto de ruta de la que se proviene.
+ * next: funcion utilizada para direccionar.
+ *
+ * Retorna 
+ *	void
+ */
 function guardRoute (to, from, next) 
 {
  	if (!auth.user.authenticated) {
-		Vue.http.get('api/user').then(response => {
-			auth.user.authenticated = true
-			auth.user.profile = response.data.data
-			next()
-		}, response => {
-			next('/login')
-		})
-  	} else {
-		next()
+ 		if(!checkAuth()){
+ 			//se redirecciona al usuario al login si no esta autenticado
+			next('/login');
+		} else{
+			//se chequea si el usuario posee acceso a la ruta
+			checkRole(to, from, next);
+		}
+  	}
+  	else 
+  	{
+  		//se chequea si el usuario posee acceso a la ruta
+		checkRole(to, from, next);
+
 	}
 }
 
+/** guardLogin 
+ *
+ * Esta función chequea si el usuario esta 
+ * en condiciones de acceder al login
+ *
+ * Parametros
+ * to: objeto de ruta a la que se desea acceder.
+ * from: objeto de ruta de la que se proviene.
+ * next: funcion utilizada para direccionar.
+ *
+ * Retorna 
+ *	void
+ */
 function guardLogin(to, from, next) 
 {
-	if(from.name == null)//si se recarga
+	if(from.name == null)//si se intenta acceder por url recargando
 	{
 		Vue.http.get('api/user').then(response => {
-			auth.user.authenticated = true
-			auth.user.profile = response.data.data
-			next({ path:'/' })//sigue a home
+			auth.user.authenticated = true;
+			auth.user.profile = response.data.data;
+			next('/');//se redirecciona a home
 		}, response => {
-			next()//sigue a login
+			next();//se autoriza a acceder a login
 		})
-	} else if(auth.user.authenticated){//si se intenta aceder desde la url
-		next(from.path)//sigue a login
+
+	} else if(auth.user.authenticated){//si se intenta aceder desde alguna url
+		next(from.path);//se redirecciona a la ruta de donde se proviene 
 	} else {
-		next()//sigue a login
+		next();// se autoriza a acceder a login
 	}
 
 }
 
+/** checkRole 
+ *
+ * Esta función chequea los roles necesarios que debe de tener 
+ * un usuario para acceder a una ruta determinada.
+ *
+ * Parametros
+ * to: objeto de ruta a la que se desea acceder.
+ * from: objeto de ruta de la que se proviene.
+ * next: funcion utilizada para direccionar.
+ *
+ * Retorna 
+ *	void
+ */
+function checkRole(to, from, next){
+	//Se chequea si la ruta a la que se desea acceder posee restricciones por roles
+	if (to.matched.some(record => record.meta.Role)) {
+		let match = false;
+		for (let rol of to.meta.Role){
+			//Se compara el rol del usuario con el los reoles requeridos para acceder
+			if(rol == auth.user.profile.roles_id){
+				match= true;
+				break;
+			}
+		}
 
+		if(match) next();
+		else next(from.path);
+	} else
+		next();	
+}
 
+/** checkAuth 
+ *
+ * Esta función chequea si el usuario posee una sesión activa 
+ *
+ * Retorna (Boolean)
+ *	true: indicando que el usuario tiene una sesión iniciada
+ *  false: indicando que el usuario no tiene una sesión iniciada
+ */
+function checkAuth(){
+	Vue.http.get('api/user').then(response => {
+		auth.user.authenticated = true;
+		auth.user.profile = response.data.data;
+		return true;
+	}, response => {
+		return false;
+	})
+}
 
 export default new VueRouter({
 	routes,

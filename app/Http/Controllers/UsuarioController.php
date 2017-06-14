@@ -194,7 +194,7 @@ class UsuarioController extends Controller
         if($currentAvatar) {
             $file = "public/avatars/{$currentAvatar}";
 
-            if(Storage::exists($file)) {
+            if(Storage::exists($file) && $file !== 'default.png' && $file !== 'default1.png') {
                 Storage::delete($file);
             }
         }

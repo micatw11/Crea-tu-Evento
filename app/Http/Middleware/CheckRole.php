@@ -26,7 +26,7 @@ class CheckRole
             if($bool) return $next($request);
         }
 
-        return response()->json(['error' => 'Forbidden', 'rol_id' => $idRole, 'user_role' => $request->user()->roles_id], 403);
+        return response()->json(['error' => 'Forbidden'], 403);
 
     }
 }

@@ -33,8 +33,13 @@
                                                 <i class="glyphicon glyphicon-pencil"></i>
                                             </button>-->
                                            
-                                             <select v-model="props.rowData.roles_id" @change="changeItemRol($event, props.rowData, props.rowIndex)">
-                                                <option v-for="option in options" v-bind:value="option.value" selected>
+                                            <select 
+                                                v-model="props.rowData.roles_id" 
+                                                @change="changeItemRol($event, props.rowData, props.rowIndex)">
+                                                <option 
+                                                    v-for="option in options" 
+                                                    v-bind:value="option.value" 
+                                                    selected>
                                                     {{ option.text }}
                                                 </option>
                                             </select>
@@ -91,7 +96,7 @@
 
     Vue.component('my-detail-row', DetailRow);
     Vue.component('filter-bar', FilterBar)
-    //https://github.com/ratiw/vuetable-2-tutorial/wiki/lesson-13
+  
     export default {
 
         data() {

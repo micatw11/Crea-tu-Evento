@@ -19,9 +19,10 @@ Validator.addLocale(messages);
 Vue.use(VeeValidate, config);
 /* fin validacion componente */
 
+
+const USUARIO = 5;
 /* notification conponent */
 //https://github.com/chengxulvtu/cxlt-vue2-toastr
-//Demo: https://chengxulvtu.github.io/toastr/index.html
 import CxltToastr from 'cxlt-vue2-toastr'
 var toastrConfigs = {
     position: 'top right',

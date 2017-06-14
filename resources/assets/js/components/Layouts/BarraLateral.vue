@@ -55,7 +55,7 @@
                             Home
                         </a>
                     </router-link>
-                    <router-link tag="li" to="/index-usuario">
+                    <router-link v-if="auth.user.profile.roles_id == role.ADMINISTRADOR" tag="li" to="/index-usuario">
                         <a><i class="fa fa-circle-o"></i>
                             Usuarios
                         </a>
@@ -115,13 +115,15 @@
 
 </template>
 <script>
-import auth from '../../auth.js'
+import auth from '../../auth.js';
+import Role from '../../config.js';
 
 export default {
     data() {
         return {
             auth: auth,
-            srcUrl: ''
+            srcUrl: '',
+            role: Role
         }
     },
     mounted: function(){

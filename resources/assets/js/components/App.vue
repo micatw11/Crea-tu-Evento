@@ -2,9 +2,7 @@
     <div>
         <bar v-if="auth.user.authenticated && showComponent"></bar>
         <barra-lateral v-if="auth.user.authenticated & showComponent"></barra-lateral>
-
-            <router-view @reloadComponents="reloadComponents()"></router-view>
-
+        <router-view @reloadComponents="reloadComponents()"></router-view>
     </div>
 </template>
 <script>
