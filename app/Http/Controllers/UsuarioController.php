@@ -191,10 +191,10 @@ class UsuarioController extends Controller
     protected function deleteAvatar(Usuario $usuario){
         $currentAvatar = $usuario->avatar;
 
-        if($currentAvatar) {
+        if($currentAvatar && $currentAvatar !== 'default.png' && $currentAvatar !== 'default1.png' ) {
             $file = "public/avatars/{$currentAvatar}";
 
-            if(Storage::exists($file) && $file !== 'default.png' && $file !== 'default1.png') {
+            if(Storage::exists($file)) {
                 Storage::delete($file);
             }
         }
