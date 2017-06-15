@@ -118,7 +118,7 @@ export default {
             })
         },
         //form validation
-        validateBeforeSubmit: function(e) {
+        validateBeforeSubmit: function() {
             this.clearErrors();
             this.deactivated = false;
             this.$validator.validateAll().then(() => {

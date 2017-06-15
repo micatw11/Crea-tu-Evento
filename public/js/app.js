@@ -28324,7 +28324,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         //form validation
-        validateBeforeSubmit: function validateBeforeSubmit(e) {
+        validateBeforeSubmit: function validateBeforeSubmit() {
             var _this2 = this;
 
             this.clearErrors();
