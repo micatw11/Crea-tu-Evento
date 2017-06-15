@@ -35,7 +35,7 @@
         <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('nombre')&&validar}">
             <label for="inputNombre" class="col-sm-2 control-label">Nombre</label>
             <div class="col-sm-10">
-                <input name="nombre"  v-validate:usuario.nombre="'required|min:4'" type="text" class="form-control" v-model="usuario.nombre" placeholder="Nombre" disabled="true">
+                <input name="nombre"  v-validate:usuario.nombre="'required|min:4'" type="text" class="form-control" v-model="usuario.nombre" placeholder="Nombre">
                 <!-- validacion vee-validation -->
                 <span v-show="errors.has('nombre')&&validar" class="help-block">{{ errors.first('nombre') }}</span>
                 <!-- validacion api-->
