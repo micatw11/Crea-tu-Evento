@@ -100,7 +100,7 @@ import FormPerfil from '../Usuarios/EditForm.vue';
 import Show from '../Usuarios/Show.vue';
 import ImageInput from '../Usuarios/ImageInput.vue';
 import Activity from '../Usuarios/Activity.vue';
-import TimeLine from '../Usuarios/TimeLine.vue';
+import TimeLine from './TimeLine.vue';
 import Account from '../Usuarios/Account.vue';
 import router from '../../routes.js';
 import auth from '../../auth.js';

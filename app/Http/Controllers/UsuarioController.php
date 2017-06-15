@@ -234,4 +234,18 @@ class UsuarioController extends Controller
             'password' => 'required|min:6|confirmed'
         ]);
     }
+
+
+    public function activity(Request $request, $id){
+
+        $actividades = Log::where('user_id', $id)
+                            ->where('tabla', 'usuario')->get();
+        if ($actividades){
+            return response()->json($actividades);
+        
+        }else{
+            return response()->json(['error' => 'No hay datos']);
+        }
+    }
+
 }
