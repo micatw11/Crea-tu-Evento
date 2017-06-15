@@ -7,74 +7,81 @@
             </div>
             <form @submit.prevent="validateBeforeSubmit">
 
-                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('apellido')}">
-                    <input name="apellido" v-model="usuario.apellido" v-validate:apelido="'required|min:4|max:55'"type="text" class="form-control" placeholder="Ingresar apellido">
-                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
-                    <!-- validacion vee-validation -->
-                    <span v-show="errors.has('apellido')" class="help-block">{{ errors.first('apellido') }}</span>
-                 </div>
-                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('nombre')}">
+                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('nombre')&&validar}">
                     <input name="nombre" v-model="usuario.nombre" v-validate:nombre="'required|min:4|max:55'"type="text" class="form-control" placeholder="Ingresar nombre">
                     <span class="glyphicon glyphicon-user form-control-feedback"></span>
                     <!-- validacion vee-validation -->
-                    <span v-show="errors.has('nombre')" class="help-block">{{ errors.first('nombre') }}</span>
+                    <span  v-show="errors.has('nombre')&&validar" class="help-block">{{ errors.first('nombre') }}</span>
                     
-                    <div class="help-block" v-if="errorsApi.nombre">
+                    <div class="text-red" v-if="errorsApi.nombre">
                         <div v-for="msj in errorsApi.nombre">
-                            <p>{{ msj }}.</p>
+                            <p>{{ msj }}</p>
                         </div>
                     </div>
                  </div>
+
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('apellido')&&validar}">
+                    <input name="apellido" v-model="usuario.apellido" v-validate:apelido="'required|min:4|max:55'"type="text" class="form-control" placeholder="Ingresar apellido">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                    <!-- validacion vee-validation -->
+                    <span   v-show="errors.has('apellido') && validar" class="help-block">{{ errors.first('apellido') }}</span>
+                    <div class="text-red" v-if="errorsApi.apellido">
+                        <div v-for="msj in errorsApi.apellido">
+                            <p>{{ msj }}</p>
+                        </div>
+                    </div>
+                 </div>
+                
   
 
-                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('email')}">
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('email')&&validar}">
                     <input name="email" v-model="email" v-validate:email="'required|email'" type="email" class="form-control" placeholder="Ingresar Email">
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                     <!-- validacion vee-validation -->
-                    <span v-show="errors.has('email')" class="help-block">{{ errors.first('email') }}</span>
+                    <span v-show="errors.has('email')&&validar" class="help-block">{{ errors.first('email') }}</span>
                     
                     <!-- validacion api-->
-                    <div class="help-block" v-if="errorsApi.email">
+                    <div class="text-red" v-if="errorsApi.email">
                         <div v-for="msj in errorsApi.email">
-                            <p>{{ msj }}.</p>
+                            <p>{{ msj }}</p>
                         </div>
                     </div>
                 </div>
 
-                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('password')}">
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('password')&&validar}">
                     <input name="password" v-model="password" type="password" v-validate:password="'required|min:6'" class="form-control" placeholder="Ingresar Contraseña">
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                     <!-- validacion vee-validation -->
-                    <span v-show="errors.has('password')" class="help-block">{{ errors.first('password') }}</span>
+                    <span v-show="errors.has('password')&&validar" class="help-block">{{ errors.first('password') }}</span>
                     
                     <!-- validacion api-->
-                    <div class="help-block" v-if="errorsApi.password">
+                    <div class="text-red" v-if="errorsApi.password">
                         <div v-for="msj in errorsApi.password">
-                            <p>{{ msj }}.</p>
+                            <p>{{ msj }}</p>
                         </div>
                     </div>
                 </div>
 
-                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('confirmation')}">
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('confirmation')&&validar}">
                     <input name="confirmation" v-model="password_confirmation" type="password" v-validate:confirmation="'required|confirmed:password'" class="form-control" placeholder="Confirmar contraseña">
                     <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
                     <!-- validacion vee-validation -->
-                    <span v-show="errors.has('confirmation')" class="help-block">{{ errors.first('confirmation') }}</span>
+                    <span v-show="errors.has('confirmation')&&validar" class="help-block">{{ errors.first('confirmation') }}</span>
                     
                     <!-- validacion api-->
-                    <div class="help-block" v-if="errorsApi.password_confirmation">
+                    <div class="text-red" v-if="errorsApi.password_confirmation">
                         <div v-for="msj in errorsApi.password_confirmation">
-                            <p>{{ msj }}.</p>
+                            <p>{{ msj }}</p>
                         </div>
                     </div>
                 </div>
 
                 
-                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('fecha')}">
+                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('fecha')&&validar}">
                     <input name="fecha" v-model="usuario.fecha_nac" type="date" v-validate="'required'" class="form-control" placeholder="Ingresar fecha de nacimiento">
                     <span class="glyphicon glyphicon-calendar form-control-feedback"></span>
                     <!-- validacion vee-validation -->
-                    <span v-show="errors.has('fecha')" class="help-block">{{ errors.first('fecha') }}</span>
+                    <span v-show="errors.has('fecha')&&validar" class="help-block">{{ errors.first('fecha') }}</span>
                     <!-- validacion api-->
                     <div class="text-red" v-if="errorsApi.fecha_nac">
                         <div v-for="msj in errorsApi.fecha_nac">
@@ -84,7 +91,7 @@
                  
                  </div>
 
-                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('localidad')}">
+                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('localidad')&&validar}">
                     <v-select
                         :debounce="250" 
                         :on-search="getOptions" 
@@ -95,7 +102,7 @@
                         placeholder="Seleccione una localidad">
                     </v-select>
                     <!-- vee-validate-->
-                    <span v-show="errors.has('localidad')" class="help-block">{{ errors.first('localidad') }}</span>
+                    <span v-show="errors.has('localidad')&&validar" class="help-block">{{ errors.first('localidad') }}</span>
                     <!-- validacion api-->
                     <div class="text-red" v-if="errorsApi.localidad_id">
                         <div v-for="msj in errorsApi.localidad_id">
@@ -104,14 +111,14 @@
                     </div>
                 </div>
 
-                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('sexo')}">
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('sexo')&&validar}">
                     <label for="inputSexo" class="col-sm-2 control-label">Sexo</label>
                     <div class="col-sm-10">
                         <input name="sexo" v-validate="'required'" type="radio" v-model="usuario.sexo" value="M">Masculino</input><br>
                         <input name="sexo" type="radio" v-model="usuario.sexo" value="F">Femenino</input>
                     </div>
                     <!-- validacion vee-validation -->
-                    <span v-show="errors.has('sexo')" class="help-block">{{ errors.first('sexo') }}</span>
+                    <span v-show="errors.has('sexo')&&validar" class="help-block">{{ errors.first('sexo') }}</span>
 
                     <!-- validacion api-->
                     <div class="text-red" v-if="errorsApi.sexo">
@@ -157,6 +164,7 @@ export default {
     
     data() {
         return {
+            validar: false,
             name: null,
             email: null,
             password: null,
@@ -205,17 +213,18 @@ export default {
                     name: 'home'
                 })
             }, response => {
-                    console.log(response);
                     this.error = true //error de 
                     this.errorsApi = response.body//lista de errores
+                    this.validar = false
             })
         },
         validateBeforeSubmit: function(e) {
             this.clearErrors();
             this.$validator.validateAll().then(() => {
+
                 this.register();
             }).catch(() => {
-                // failed
+                this.validar = true;
             });
 
         },

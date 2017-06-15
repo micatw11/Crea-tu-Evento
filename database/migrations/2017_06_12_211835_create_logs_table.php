@@ -13,7 +13,7 @@ class CreateLogTable extends Migration
      */
     public function up()
     {
-        Schema::create('log', function (Blueprint $table) {
+        Schema::create('logs', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
@@ -22,7 +22,7 @@ class CreateLogTable extends Migration
             $table->string('accion');
             $table->string('tabla');
             $table->integer('registro_id')->unsigned();
-            $table->string('valor_antiguo');
+            $table->string('valor_antiguo')->nullable();
             $table->timestamps();
         });
     }

@@ -35,5 +35,7 @@ class Usuario extends Model
         return $this->hasMany('App\Telefono');
     }
 
-    
+          public function __toString(){
+        return $this->avatar.', '.$this->nombre.', '.$this->apellido.', '.$this->fecha_nac.', '.$this->sexo.', '.$this->user_id.', '.$this->localidad_id;
+    }
 }

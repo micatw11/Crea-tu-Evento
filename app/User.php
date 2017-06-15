@@ -59,4 +59,8 @@ class User extends Authenticatable
         $this->estado = 1;
         return $this->save();
     }
+
+      public function __toString(){
+        return $this->estado.', '.$this->roles_id;
+    }
 }
