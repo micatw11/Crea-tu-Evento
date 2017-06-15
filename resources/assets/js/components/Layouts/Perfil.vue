@@ -70,46 +70,15 @@
 
                              <div v-if="perfil !== null && perfil.user_id == auth.user.profile.id" 
                                 class="tab-pane content " id="account">
-                                    <div class="col-sm-4">
-                                        <account></account>
-                                    </div>
-                                    <br><hr>
-                                    <div>
+                                     <div>
                                         <form-perfil 
                                                 @reload="reload()">
                                         </form-perfil>
                                     </div>
                                     <br><hr>
-                                    <div class="col-sm-4">
-                                        <button type="button" class="btn-block" data-toggle="modal" data-target="#myModal">Desactivar</button>
+                                    <div>
+                                        <account></account>
                                     </div>
-                                    <!-- Modal Disable-->
-                                    <div id="myModal" class="modal fade modal-primary" role="dialog">
-                                        <div class="modal-dialog">
-
-                                            <!-- Modal content-->
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                    <h4 class="modal-title">Desactivar cuenta</h4>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <p>Al desactivar tu cuenta, se desactivará tu perfil y se borrará 
-                                                    tu nombre y tu foto de la mayor parte del contenido que compartiste. 
-                                                    Algunas personas podrán seguir viendo determinada información, como 
-                                                    tu nombre en los mensajes que les enviaste.
-                                                    Podras volver a activarla cuando desees introduciendo tu correo y contraseña 
-                                                    desde la pagina de inicio de sesión.
-                                                    </p>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button @click="disableAccount()" type="button" class="btn btn-outline" data-dismiss="modal">Dasactivar</button>
-                                                    <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Cancelar</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                  
                              </div>
                             <!-- /.tab-pane -->
                         </div>
