@@ -10,12 +10,15 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Router;
 use App\Usuario;
 use App\User;
+use App\Log;
+
 
 
 class UsuarioController extends Controller
-{
+{  
     /**
      * Display a listing of the resource.
      *
@@ -94,12 +97,15 @@ class UsuarioController extends Controller
      */
     public function update(UsuarioRequest $request, $id)
     {
+        $table_name= "usuario";
+        $accion = "update";
         $usuario = Usuario::where('user_id', $id)->firstOrFail();
+        Log::logs($id, $table_name, $accion , $usuario);
         $usuario->update($request->all());
         if($usuario->save()){
             return response()->json(['data' =>  'OK'], 200);
         } else {
-            return response()-json(['error' => 'Internal Server Error'], 500 );
+            return response()->json(['error' => 'Internal Server Error'], 500 );
         }
     }
 
@@ -111,8 +117,10 @@ class UsuarioController extends Controller
      */
     public function destroy(Request $request, $id)
     {
+        $table_name= "users";
+        $accion = "destroy";
         $user = User::where('id', $id)->firstOrFail();
-
+        Log::logs($id, $table_name, $accion , $user);
         if($user->baja()){
             if($request->logout){
                  Auth::logout();
@@ -126,23 +134,27 @@ class UsuarioController extends Controller
 
     public function bloquear(Request $request, $id)
     {
+        $table_name= "users";
+        $accion= "bloquear";
         $user = User::where('id', $id)->firstOrFail();
 
         if($user->bloqueo()){
+            Log::logs($id, $table_name, $accion , $user);
             return response()->json(['data' =>  'OK'], 200);
         } else {
-            return response()->json(['error' =>  'Internal Server Error'], 500);
+            return response()->json(['error' =>  'Internal Server Error' , 'request' => $request ], 500);
         }
 
     }
 
     public function updateAvatar(Request $request, $id){
-
+        $table_name= "usuarios";
+        $accion= "updateAvatar";
         $usuario = Usuario::where('user_id', $id)->firstOrFail();
 
         //Se guarda el avatar en el almacenamiento 
         $filename = $this->saveAvatar($request);
-
+        Log::logs($id, $table_name, $accion, $usuario);
         //Se elimina el anterior avatar del almacenamiento 
         $this->deleteAvatar($usuario);
 
@@ -156,7 +168,8 @@ class UsuarioController extends Controller
     }
 
     public function changePassword(Request $request, $id){
-
+        $table_name= "users";
+        $accion=  "changePassword";
         $this->validator($request);
 
         $user = User::where('id', $id)->firstOrFail();
@@ -164,6 +177,7 @@ class UsuarioController extends Controller
         $validCredentials = Hash::check($request->oldPassword, $user->getAuthPassword());
         
         if($validCredentials){
+            Log::logs($id, $table_name, $accion );
             $user->password =  Hash::make($request->password);
             $user->save();
             return response()->json(['data' =>  'OK'], 200);
@@ -175,9 +189,10 @@ class UsuarioController extends Controller
     }
 
     public function cambiarRol(Request $request, $id){
-
+        $table_name= "users";
+        $accion= "cambiarRol";
         $user = User::where('id', $id)->firstOrFail();
-
+        Log::logs($id, $table_name,  $accion , $user);
         $user->roles_id = $request->roles_id;
 
         if($user->save()){

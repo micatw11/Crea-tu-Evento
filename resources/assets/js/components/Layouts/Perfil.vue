@@ -63,19 +63,25 @@
 
                             <div v-if="perfil !== null && perfil.user_id == auth.user.profile.id" 
                                 class="active tab-pane" id="info">
-                                <form-perfil 
-                                    @reload="reload()">
-                                </form-perfil>
-                            </div>
-
-                            <div v-if="perfil !== null && perfil.user_id == auth.user.profile.id" 
-                                class="tab-pane" id="account">
-                                <account></account>
+                                <show>  </show>
                             </div>
 
                             <div class="tab-pane" id="timeline">
                                 <time-line></time-line>
                             </div>
+
+                             <div v-if="perfil !== null && perfil.user_id == auth.user.profile.id" 
+                                class="tab-pane content " id="account">
+                                     <div>
+                                        <form-perfil 
+                                                @reload="reload()">
+                                        </form-perfil>
+                                    </div>
+                                    <br><hr>
+                                    <div>
+                                        <account></account>
+                                    </div>
+                             </div>
                             <!-- /.tab-pane -->
                         </div>
                         <!-- /.tab-content -->
@@ -91,6 +97,7 @@
 <script>
 import PathContent from './Path.vue';
 import FormPerfil from '../Usuarios/EditForm.vue';
+import Show from '../Usuarios/Show.vue';
 import ImageInput from '../Usuarios/ImageInput.vue';
 import Activity from '../Usuarios/Activity.vue';
 import TimeLine from '../Usuarios/TimeLine.vue';
@@ -119,9 +126,11 @@ export default {
         Activity, 
         Account,
         ImageInput,
-        TimeLine
+        TimeLine,
+        Show
     },
     methods:{
+
         getUserPerfil: function(){
             this.$http.get('api/usuario/'+ this.$route.params.userId )
                 .then(response => {

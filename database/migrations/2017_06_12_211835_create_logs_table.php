@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsuariosTable extends Migration
+class CreateLogTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,16 @@ class CreateUsuariosTable extends Migration
      */
     public function up()
     {
-        Schema::create('usuarios', function (Blueprint $table) {
+        Schema::create('logs', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('avatar', 200);
-            $table->string('nombre', 50);
-            $table->string('apellido', 50);
-            $table->date('fecha_nac');
-            $table->enum('sexo', ['F', 'M']);
             $table->integer('user_id')->unsigned();
-            $table->integer('localidad_id')->unsigned();
-
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('localidad_id')->references('id')->on('localidades');
+            $table->integer('roles_id')->unsigned();
+            $table->foreign('roles_id')->references('id')->on('roles');
+            $table->string('accion');
+            $table->string('tabla');
+            $table->integer('registro_id')->unsigned();
+            $table->string('valor_antiguo')->nullable();
             $table->timestamps();
         });
     }
@@ -36,6 +34,6 @@ class CreateUsuariosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('usuarios');
+        Schema::dropIfExists('log');
     }
 }

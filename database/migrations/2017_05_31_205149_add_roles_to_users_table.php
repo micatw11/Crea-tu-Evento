@@ -15,7 +15,7 @@ class AddRolesToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->integer('estado')->default(1);//habilitado
-            $table->integer('roles_id')->unsigned()->nullable();
+            $table->integer('roles_id')->unsigned();
             $table->foreign('roles_id')->references('id')->on('roles');
         });
     }

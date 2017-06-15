@@ -1,105 +1,125 @@
 <style src="cxlt-vue2-toastr/dist/css/cxlt-vue2-toastr.css"></style>
-
-
 <template>
-    <form @submit.prevent="validateBeforeSubmit" class="form-horizontal">
+    <div>
+        <div  class="col-sm-4">
+            <button type="button" class="btn-block" @click="showContrasenia = true">Cambiar contraseña</button>
+        </div>
+                                
+        <!-- Modal cambiar contraseña-->
+        <div class="modal" role="dialog" :style="{ display : showContrasenia  ? 'block' : 'none' }">
+            <div class="modal-dialog">
 
-        <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('contraseña')}">
-            <label for="contraseña" class="col-sm-2 control-label">Contraseña</label>
-            <div class="col-sm-10">
-                <input name="contraseña" v-model="oldPassword" type="password" v-validate="'required|min:6'" class="form-control" placeholder="Actual Contraseña">
-                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" @click="clearForm()">&times;</button>
+                        <h4 class="modal-title">Cambiar contraseña</h4>
+                    </div>
+                    <div class="modal-body">
 
-                <!-- validacion vee-validation -->
-                <span v-show="errors.has('contraseña')" class="help-block">{{ errors.first('contraseña') }}</span>
+                        <form class="form-horizontal">
 
-                <!-- validacion api-->
-                <div class="text-red" v-if="errorsApi.oldPassword">
-                    <div v-for="msj in errorsApi.oldPassword">
-                        <p>{{ msj }}</p>
+                            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('contraseña')&&validar}">
+                                <label for="contraseña" class="col-sm-2 control-label">Contraseña</label>
+                                <div class="col-sm-10">
+                                    <input name="contraseña" v-model="oldPassword" type="password" v-validate="'required|min:6'" class="form-control" placeholder="Actual Contraseña">
+                                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+
+                                    <!-- validacion vee-validation -->
+                                    <span v-show="errors.has('contraseña')&& validar" class="help-block">{{ errors.first('contraseña') }}</span>
+
+                                    <!-- validacion api-->
+                                    <div class="text-red" v-if="errorsApi.oldPassword">
+                                        <div v-for="msj in errorsApi.oldPassword">
+                                            <p>{{ msj }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('nueva')&&validar}">
+                                <label for="nueva" class="col-sm-2 control-label">Nueva</label>
+                                <div class="col-sm-10">
+                                    <input name="nueva" v-model="password" type="password" v-validate="'required|min:6'" class="form-control" placeholder="Nueva Contraseña">
+                                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+
+                                    <!-- validacion vee-validation -->
+                                    <span v-show="errors.has('nueva')&&validar" class="help-block">{{ errors.first('nueva') }}</span>
+
+                                    <!-- validacion api-->
+                                    <div class="text-red" v-if="errorsApi.password">
+                                        <div v-for="msj in errorsApi.password">
+                                            <p>{{ msj }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('confirmar')&&validar}">
+                                <label for="confirmar" class="col-sm-2 control-label">Confirmar</label>
+                                <div class="col-sm-10">
+                                    <input name="confirmar" v-model="password_confirmation" type="password" v-validate="'required|confirmed:nueva'" class="form-control" placeholder="Confirmar contraseña">
+                                    <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
+
+                                    <!-- validacion vee-validation -->
+                                    <span v-show="errors.has('confirmar')&&validar" class="help-block">{{ errors.first('confirmar') }}</span>
+                                    <!-- validacion api-->
+                                    <div class="text-red" v-if="errorsApi.password_confirmation">
+                                        <div v-for="msj in errorsApi.password_confirmation">
+                                            <p>{{ msj }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <button @click="validateBeforeSubmit()" type="button" class="btn btn-danger">
+                                     Guargar cambios
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
+        <br><hr>
 
-        <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('nueva')}">
-            <label for="nueva" class="col-sm-2 control-label">Nueva</label>
-            <div class="col-sm-10">
-                <input name="nueva" v-model="password" type="password" v-validate="'required|min:6'" class="form-control" placeholder="Nueva Contraseña">
-                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+        <div class="col-sm-4">
+            <button type="button" class="btn-block" data-toggle="modal" data-target="#desactivar">Desactivar</button>
+        </div>
 
-                <!-- validacion vee-validation -->
-                <span v-show="errors.has('nueva')" class="help-block">{{ errors.first('nueva') }}</span>
+        <!-- Modal Disable-->
+        <div id="desactivar" class="modal fade modal-primary" role="dialog">
+            <div class="modal-dialog">
 
-                <!-- validacion api-->
-                <div class="text-red" v-if="errorsApi.password">
-                    <div v-for="msj in errorsApi.password">
-                        <p>{{ msj }}</p>
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Desactivar cuenta</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Al desactivar tu cuenta, se desactivará tu perfil y se borrará 
+                        tu nombre y tu foto de la mayor parte del contenido que compartiste. 
+                        Algunas personas podrán seguir viendo determinada información, como 
+                        tu nombre en los mensajes que les enviaste.
+                        Podras volver a activarla cuando desees introduciendo tu correo y contraseña 
+                        desde la pagina de inicio de sesión.
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button @click="disableAccount()" type="button" class="btn btn-outline" data-dismiss="modal">
+                         Dasactivar Cuenta
+                         </button>
+                        <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Cancelar</button>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('confirmar')}">
-            <label for="confirmar" class="col-sm-2 control-label">Confirmar</label>
-            <div class="col-sm-10">
-                <input name="confirmar" v-model="password_confirmation" type="password" v-validate="'required|confirmed:nueva'" class="form-control" placeholder="Confirmar contraseña">
-                <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
-
-                <!-- validacion vee-validation -->
-                <span v-show="errors.has('confirmar')" class="help-block">{{ errors.first('confirmar') }}</span>
-                <!-- validacion api-->
-                <div class="text-red" v-if="errorsApi.password_confirmation">
-                    <div v-for="msj in errorsApi.password_confirmation">
-                        <p>{{ msj }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-primary">Guardar cambios</button>
-            </div>
-        </div>
-        <hr>
-        <div class="form-group">
-            <label for="desactivar" class="col-sm-3 control-label">Desactivar Cuenta</label>
-            <div class="col-sm-9">
-                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal">Desactivar</button>
-            </div>
-            <!-- Modal Disable-->
-            <div id="myModal" class="modal fade modal-primary" role="dialog">
-                <div class="modal-dialog">
-
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Desactivar cuenta</h4>
-                        </div>
-                        <div class="modal-body">
-                            <p>Al desactivar tu cuenta, se desactivará tu perfil y se borrará 
-                            tu nombre y tu foto de la mayor parte del contenido que compartiste. 
-                            Algunas personas podrán seguir viendo determinada información, como 
-                            tu nombre en los mensajes que les enviaste.
-                            Podras volver a activarla cuando desees introduciendo tu correo y contraseña 
-                            desde la pagina de inicio de sesión.
-                            </p>
-                        </div>
-                        <div class="modal-footer">
-                            <button @click="disableAccount()" type="button" class="btn btn-outline" data-dismiss="modal">Dasactivar</button>
-                            <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Cancelar</button>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-        
-    </form>
-
+    </div>
 </template>
 
 <script>
@@ -109,6 +129,8 @@ import router from './../../routes.js'
 export default {
     data() {
         return {
+            validar: false,
+            showContrasenia: false,
             auth: auth,
             errorsApi: [],
             oldPassword: '',
@@ -122,7 +144,7 @@ export default {
             this.$validator.validateAll().then(() => {
                 this.sendChangePaswword();
                 }).catch(() => {
-                    // failed
+                    this.validar = true;
                 });
         },
         //envia formulario de cambio de contraseña
@@ -136,11 +158,13 @@ export default {
                 })
                 .then(response => {
                     this.clearErrors();
+                    this.clearForm();
                     this.$toast.success({
                         title:'¡Cambios realizados!',
                         message:'Se ha cambiado correctamente su contraseña. :D'
                     });
                 }, response => {
+                    this.validar = false;
                     this.$toast.error({
                         title:'¡Error!',
                         message:'No se han podido guardar los cambios. :('
@@ -178,7 +202,8 @@ export default {
         clearForm: function(){
             this.oldPassword= '',
             this.password_confirmation= '',
-            this.password= ''
+            this.password= '',
+            this.showContrasenia = false;
         },
         //limpia errores de api
         clearErrors: function(){

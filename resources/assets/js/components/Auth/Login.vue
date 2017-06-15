@@ -15,31 +15,33 @@
                 <p class="text-red">Estas credenciales no coinciden con nuestros registros.</p>
             </div>
             <form @submit.prevent="validateBeforeSubmit">
-                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('email')}">
+
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('email') && validar}">
                     <input name="email" v-model="email" type="email" v-validate="'required|email'" class="form-control" placeholder="Email">
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                     <!-- validacion vee-validation -->
-                    <span v-show="errors.has('email')" class="help-block">{{ errors.first('email') }}</span>
+                    <span v-show="errors.has('email') && validar" class="help-block">{{ errors.first('email') }}</span>
                     <!-- validacion api-->
                     <div class="text-red" v-if="errorsApi.email">
                         <div v-for="msj in errorsApi.email">
-                            <p>{{ msj }}.</p>
+                            <p>{{ msj }}</p>
                         </div>
                     </div>
                 </div>
-                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('password')}">
+
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('password') && validar}">
                     <input name="password" v-model="password" v-validate="'required|min:4'" type="password" class="form-control" placeholder="Password">
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                     <!-- validacion vee-validation -->
-                    <span v-show="errors.has('password')" class="help-block">{{ errors.first('password') }}</span>
+                    <span v-show="errors.has('password')&&validar" class="help-block">{{ errors.first('password') }}</span>
                     <!-- validacion api-->
                     <div class="text-red" v-if="errorsApi.password">
                         <div v-for="msj in errorsApi.password">
-                            <p>{{ msj }}.</p>
+                            <p>{{ msj }}</p>
                         </div>
                     </div>
-
                 </div>
+
                 <div class="row">
                     <div class="col-xs-7 col-xs-offset-1">
                         <div class="checkbox icheck">
@@ -73,6 +75,7 @@ export default {
 
     data() {
         return {
+            validar: false,
             email: null,
             password: null,
             remember: false,
@@ -110,6 +113,7 @@ export default {
                 })
                 
             }, response => {
+                this.validar = false;
                 if(response.body.error) {
                     this.error = true
                 } else {
@@ -120,7 +124,10 @@ export default {
         //form validation
         validateBeforeSubmit: function() {
             this.clearErrors();
+            //mensaje para desactivar cuenta
             this.deactivated = false;
+            //validacion despues de el evento enviar
+            this.validar = true;
             this.$validator.validateAll().then(() => {
                 this.sendForm();
             }).catch(() => {
