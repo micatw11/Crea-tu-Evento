@@ -17,9 +17,7 @@
             <!-- Menu Footer-->
             <li class="user-footer">
                 <div class="pull-left">
-                    <router-link :to="pathUser">
-                        <a class="btn btn-default btn-flat">Perfil</a>
-                    </router-link>
+                    <a @click="showPerfil" class="btn btn-default btn-flat">Perfil</a>
                 </div>
                 <div class="pull-right">
                     <a  @click="logout" class="btn btn-default btn-flat">
@@ -34,11 +32,12 @@
     import auth from '../../auth.js';
     import router from '../../routes.js';
     import moment from 'moment';
+
     export default {
         data() {
             return {
                 auth: auth,
-                pathUser: 'user/'+auth.user.profile.id +'/perfil',
+                pathUser: '/user/'+auth.user.profile.id +'/perfil',
                 srcUrl: ''
             }
         },
@@ -56,6 +55,9 @@
                     router.push('/login')
                 })
 
+            },
+            showPerfil: function(){
+                router.push(this.pathUser);
             },
             avatarUpdate: function(){
                 this.srcUrl = '/storage/avatars/'+ auth.user.profile.usuario.avatar

@@ -63,7 +63,7 @@
 
                             <div v-if="perfil !== null && perfil.user_id == auth.user.profile.id" 
                                 class="active tab-pane" id="info">
-                                <show>  </show>
+                                <show></show>
                             </div>
 
                             <div class="tab-pane" id="timeline">
@@ -71,7 +71,8 @@
                             </div>
 
                              <div v-if="perfil !== null && perfil.user_id == auth.user.profile.id" 
-                                class="tab-pane content " id="account">
+                                class="tab-pane content" 
+                                id="account">
                                      <div>
                                         <form-perfil 
                                                 @reload="reload()">
@@ -91,9 +92,8 @@
             </div>
         </section>
     </div>
-
- 
 </template>
+
 <script>
 import PathContent from './Path.vue';
 import FormPerfil from '../Usuarios/EditForm.vue';
@@ -137,11 +137,9 @@ export default {
                     this.perfil = response.data.data,
                     this.srcUrl = '/storage/avatars/'+this.perfil.avatar
                 }, response => {
-
                     if(response.status === 404){
                         router.push('/404');
                     }
-
                 })
         },
         updateAvatar: function(){

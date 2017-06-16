@@ -203,6 +203,7 @@ export default {
             this.oldPassword= '',
             this.password_confirmation= '',
             this.password= '',
+            this.validar = false;
             this.showContrasenia = false;
         },
         //limpia errores de api

@@ -48,11 +48,16 @@
                                                 @click="onAction('view-item', props.rowData, props.rowIndex)">
                                                 <i class="glyphicon glyphicon-search"></i>
                                             </button>
-                                             <button class="btn-xs btn-default"
-                                                @click="onActionDelete('delete-item', props.rowData, props.rowIndex)">
-                                                <i class="glyphicon glyphicon-trash"></i>
+
+                                             <button v-if="props.rowData.estado == 2" class="btn-xs btn-default"
+                                                @click="onActionDelete(1, props.rowData, props.rowIndex)">
+                                                <i class="fa fa-unlock"></i>
                                             </button>
-                                           
+                                             <button v-else class="btn-xs btn-default"
+                                                @click="onActionDelete(2, props.rowData, props.rowIndex)">
+                                                <i class="ion-locked"></i>
+                                            </button>
+
                                         </div>
                                     </template>
 
@@ -126,13 +131,18 @@
         methods: {
             genderLabel (value) {
                 return value == 'M'
-                ? '<span class="label label-info"><i class="glyphicon glyphicon-star"></i> Masculino</span>'
-                : '<span class="label label-success"><i class="glyphicon glyphicon-heart"></i> Femenino</span>'
+                ? '<span class="label label-info"><i class="ion-male"></i> Masculino</span>'
+                : '<span class="label label-success"><i class="ion-female"></i> Femenino</span>'
             },
             formatDate (value, fmt = 'D MMM YYYY') {
                 return (value == null)
                     ? ''
                     : moment(value, 'YYYY-MM-DD hh:mm:ss').format(fmt)
+            },
+            formatEstado (value){
+                if(value === 0) return 'Inactivo';
+                else if(value === 1) return 'Activo';
+                else return 'Bloqueado';
             },
             onPaginationData (paginationData) {
                 this.$refs.pagination.setPaginationData(paginationData)
@@ -143,21 +153,20 @@
             },
             onAction (action, data, index) {
                 route.push("/user/"+data.id+"/perfil")
-                console.log('slot) action: ' + action, data.name, index)
             },
             onActionDelete(action, data, index) {
-                console.log('slot) action: ' + action, data.name, index),
                     this.$http.post('api/user/'+ data.id+'/block',
                     {
                         _method: 'PATCH',
-                        logout: true,
+                        action: action
 
                     })
                     .then(response => {
                         this.$toast.success({
                             title:'¡Acción realizada!',
-                            message:'El usuario se a bloqueado. :('
+                            message:'La acción se ha realizado correctamente.'
                         });
+                        data.estado = action;
                     }, response => {
                         this.$toast.error({
                             title:'¡Error!',
@@ -167,7 +176,6 @@
                     })
             },
             onCellClicked (data, field, event) {
-                console.log('cellClicked: ', field.name)
                 this.$refs.vuetable.toggleDetailRow(data.id)
             },
             //filtros de busqueda
@@ -180,7 +188,7 @@
             //cambiar rol
             changeItemRol(action, data, index) {
                 this.selected = `${event.target.value}`
-               this.$http.post('api/user/'+ data.id+'/rol',
+                this.$http.post('api/user/'+ data.id+'/rol',
                 {
                     _method: 'PATCH',
                     roles_id: this.selected

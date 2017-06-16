@@ -39,6 +39,13 @@ export default [
                         callback: 'formatDate|DD-MM-YYYY'
                     },
                     {
+                        name: 'estado',
+                        title: 'Estado',
+                        titleClass: 'text-center',
+                        dataClass: 'text-center',
+                        callback: 'formatEstado'
+                    },
+                    {
                     name: '__slot:actions',   // <----
                     title: 'Actions',
                     titleClass: 'center aligned',
