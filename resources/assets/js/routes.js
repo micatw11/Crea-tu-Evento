@@ -14,6 +14,7 @@ var PageNotFound = require('./components/Errors/404');
 var FormPasswordReset = require('./components/Auth/Password/Email');
 var PasswordReset = require('./components/Auth/Password/Reset');
 var IndexUsuarios = require('./components/Usuarios/Index');
+var IndexProveedor = require('./components/Proveedores/Index');
 var InternalServerError = require('./components/Errors/500');
 
 let routes = [
@@ -52,10 +53,16 @@ let routes = [
 			beforeEnter: guardLogin
 		},
 		{
-			path: '/index-usuario',
+			path: '/usuario',
 			component: IndexUsuarios,
 			beforeEnter: guardRoute,
 			meta: { Role: [role.ADMINISTRADOR] }		
+		},
+		{
+			path: '/proveedores',
+			component: IndexProveedor,
+			beforeEnter: guardRoute,
+			meta: { Role: [role.ADMINISTRADOR, role.SUPERVISOR] }	
 		},
 		{
 			path: '/about',
@@ -145,7 +152,7 @@ function guardLogin(to, from, next)
 		Vue.http.get('api/user').then(response => {
 			auth.user.authenticated = true;
 			auth.user.profile = response.data.data;
-			next('/');//se redirecciona a home
+			next(from.path);//se redirecciona a home
 		}, response => {
 			next();//se autoriza a acceder a login
 		})

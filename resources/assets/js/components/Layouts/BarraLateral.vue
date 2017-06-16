@@ -43,22 +43,27 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    
-                    <router-link is-active tag="li" to="/about">
-                        <a><i class="fa fa-circle-o"></i>
-                            About
-                        </a>
-                    </router-link>
-
                     <router-link tag="li" to="/">
                         <a><i class="fa fa-circle-o"></i>
                             Home
                         </a>
                     </router-link>
-                    <router-link v-if="auth.user.profile.roles_id == role.ADMINISTRADOR" tag="li" to="/index-usuario">
-                        <a><i class="fa fa-circle-o"></i>
-                            Usuarios
+                    <router-link 
+                        v-if="auth.user.profile.roles_id == role.ADMINISTRADOR"
+                        tag="li" 
+                        to="/usuario">
+                        <a>
+                            <i class="fa fa-circle-o"></i> Usuarios
                         </a>
+                    </router-link>
+                    <router-link
+                        v-if="auth.user.profile.roles_id == role.ADMINISTRADOR ||
+                            auth.user.profile.roles_id == role.SUPERVISOR"
+                            tag="li"
+                            to="/proveedores">
+                            <a>
+                                <i class="fa fa-circle-o"></i> Proveedores
+                            </a>
                     </router-link>
                 </ul>
             </li>
@@ -71,7 +76,6 @@
                     </span>
                 </a>
             </li>
-
             <li class="treeview">
                 <a href="/calendario">
                     <i class="fa fa-calendar"></i> <span>Calendar</span>
@@ -80,33 +84,6 @@
                     <small class="label pull-right bg-blue">17</small>
                     </span>
                 </a>
-            </li>
-            <li class="treeview">
-                <a href="/calendario">
-                    <i class="fa fa-calendar"></i> <span>Calendar</span>
-                    <span class="pull-right-container">
-                    <small class="label pull-right bg-red">3</small>
-                    <small class="label pull-right bg-blue">17</small>
-                    </span>
-                </a>
-            </li>
-            <li class="treeview">
-                <a href="/calendario">
-                    <i class="fa fa-calendar"></i> <span>Calendar</span>
-                    <span class="pull-right-container">
-                    <small class="label pull-right bg-red">3</small>
-                    <small class="label pull-right bg-blue">17</small>
-                    </span>
-                </a>
-            </li>
-            <li class="treeview">
-                <a href="/calendario">
-                    <i class="fa fa-calendar"></i> <span>Calendar</span>
-                    <span class="pull-right-container">
-                    <small class="label pull-right bg-red">3</small>
-                    <small class="label pull-right bg-blue">17</small>
-                    </span>
-                </a> 
             </li>
         </ul>
         </section>

@@ -242,7 +242,7 @@ class UsuarioController extends Controller
     public function activity(Request $request, $id){
 
         $actividades = Log::where('user_id', $id)
-                            ->where('tabla', 'usuario')->get();
+                            ->where('tabla', 'users')->get();
         if ($actividades){
             return response()->json($actividades);
         

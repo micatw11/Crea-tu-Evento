@@ -100,7 +100,7 @@
     import PathContent from '../Layouts/Path';
 
     Vue.component('my-detail-row', DetailRow);
-    Vue.component('filter-bar', FilterBar)
+    Vue.component('filter-bar', FilterBar);
   
     export default {
 
