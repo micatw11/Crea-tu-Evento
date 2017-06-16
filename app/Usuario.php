@@ -36,6 +36,6 @@ class Usuario extends Model
     }
 
           public function __toString(){
-        return $this->avatar.', '.$this->nombre.', '.$this->apellido.', '.$this->fecha_nac.', '.$this->sexo.', '.$this->user_id.', '.$this->localidad_id;
+        return 'Imagen:'.$this->avatar.', nombre:'.$this->nombre.', '.$this->apellido.', fecha nacimiento:'.$this->fecha_nac.', sexo:'.$this->sexo.', localidad: '.$this->localidad_id;
     }
 }
