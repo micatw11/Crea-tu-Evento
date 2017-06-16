@@ -135,10 +135,13 @@ class UsuarioController extends Controller
     public function bloquear(Request $request, $id)
     {
         $table_name= "users";
-        $accion= "bloquear";
+        if($request->action == 2)
+            $accion= "bloquear";
+        else
+            $accion= "desbloquear";
         $user = User::where('id', $id)->firstOrFail();
 
-        if($user->bloqueo()){
+        if($user->bloqueo($request->action)){
             Log::logs($id, $table_name, $accion , $user);
             return response()->json(['data' =>  'OK'], 200);
         } else {

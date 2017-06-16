@@ -29223,7 +29223,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             auth: __WEBPACK_IMPORTED_MODULE_0__auth_js__["a" /* default */],
-            pathUser: 'user/' + __WEBPACK_IMPORTED_MODULE_0__auth_js__["a" /* default */].user.profile.id + '/perfil',
+            pathUser: '/user/' + __WEBPACK_IMPORTED_MODULE_0__auth_js__["a" /* default */].user.profile.id + '/perfil',
             srcUrl: ''
         };
     },
@@ -29433,7 +29433,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.$http.get('api/usuario/' + this.$route.params.userId).then(function (response) {
                 _this.perfil = response.data.data, _this.srcUrl = '/storage/avatars/' + _this.perfil.avatar;
             }, function (response) {
-
                 if (response.status === 404) {
                     __WEBPACK_IMPORTED_MODULE_7__routes_js__["a" /* default */].push('/404');
                 }
@@ -30538,7 +30537,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         //limpia formulario
         clearForm: function clearForm() {
-            this.oldPassword = '', this.password_confirmation = '', this.password = '', this.showContrasenia = false;
+            this.oldPassword = '', this.password_confirmation = '', this.password = '', this.validar = false;
+            this.showContrasenia = false;
         },
         //limpia errores de api
         clearErrors: function clearErrors() {
@@ -30605,10 +30605,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__auth_js__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_select__ = __webpack_require__(247);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_select___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_select__);
-var _data$beforeMount$bef;
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
+//
+//
 //
 //
 //
@@ -30739,17 +30737,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 
-/* harmony default export */ __webpack_exports__["default"] = (_data$beforeMount$bef = {
+/* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
             validar: false,
-            usuario: __WEBPACK_IMPORTED_MODULE_0__auth_js__["a" /* default */].user.profile.usuario,
+            showModificar: false,
+            usuario: { type: Object, default: null },
             error: false,
             fecha: null,
-            disabled: {
-                to: '1920-01-01',
-                from: null
-            },
+            disabled: { to: '1920-01-01', from: null },
             localidades: [],
             localidadSelect: [],
             errorsApi: []
@@ -30758,72 +30754,94 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
     beforeMount: function beforeMount() {
         //selected data
-        this.getLocalidadDefault();
-    }
-}, _defineProperty(_data$beforeMount$bef, 'beforeMount', function beforeMount() {
-    //selected data
-    this.localidadSelect = {
-        'value': __WEBPACK_IMPORTED_MODULE_0__auth_js__["a" /* default */].user.profile.usuario.localidad_id,
-        'label': __WEBPACK_IMPORTED_MODULE_0__auth_js__["a" /* default */].user.profile.usuario.localidad.nombre + ' (' + __WEBPACK_IMPORTED_MODULE_0__auth_js__["a" /* default */].user.profile.usuario.localidad.provincia.nombre + ')'
-    };
-}), _defineProperty(_data$beforeMount$bef, 'mounted', function mounted() {
-    //rangos maximos de fechas
-    this.fecha = new Date();
-    this.disabled.from = this.fecha.getFullYear() + '-' + this.fecha.getMonth() + '-' + this.fecha.getDate();
-}), _defineProperty(_data$beforeMount$bef, 'components', {
-    vSelect: __WEBPACK_IMPORTED_MODULE_1_vue_select___default.a
-}), _defineProperty(_data$beforeMount$bef, 'methods', {
-    //envio de formulario de modificación de informacion de usuario
-    sendForm: function sendForm() {
-        var _this = this;
-
-        this.$http.post('api/usuario/' + this.$route.params.userId, {
-            _method: 'PATCH',
-            nombre: this.usuario.nombre,
-            apellido: this.usuario.apellido,
-            fecha_nac: this.usuario.fecha_nac,
-            localidad_id: this.localidadSelect.value,
-            sexo: this.usuario.sexo
-        }).then(function (response) {
-            //recarga de informacion de perfil
-            _this.$emit('reload');
-            _this.$toast.success({
-                title: '¡Cambios realizados!',
-                message: 'Se han realizado correctamente los cambios. :D'
-            });
-        }, function (response) {
-            _this.validar = false;
-            _this.$toast.error({
-                title: '¡Error!',
-                message: 'No se han podido guardar los cambios. :('
-            });
-            if (response.status === 401) {
-                _this.errorsApi = response.body;
-            }
-        });
+        this.getUserPerfil();
+        this.setDefaultLocalidad();
     },
-
-    //form validation
-    validateBeforeSubmit: function validateBeforeSubmit(e) {
-        var _this2 = this;
-
-        this.$validator.validateAll().then(function () {
-            _this2.sendForm();
-        }).catch(function () {
-            _this2.validar = true;
-        });
+    mounted: function mounted() {
+        //rangos maximos de fechas
+        this.fecha = new Date();
+        this.disabled.from = this.fecha.getFullYear() + '-' + this.fecha.getMonth() + '-' + this.fecha.getDate();
     },
-    //obtiene lista de localidades segun correponda
-    getOptions: function getOptions(search, loading) {
-        var _this3 = this;
+    components: {
+        vSelect: __WEBPACK_IMPORTED_MODULE_1_vue_select___default.a
+    },
+    methods: {
+        //envio de formulario de modificación de informacion de usuario
+        sendForm: function sendForm() {
+            var _this = this;
 
-        loading(true);
-        this.$http.get('api/localidades/?q=' + search).then(function (response) {
-            _this3.localidades = response.data.data;
-            loading(false);
-        });
+            this.$http.post('api/usuario/' + this.$route.params.userId, {
+                _method: 'PATCH',
+                nombre: this.usuario.nombre,
+                apellido: this.usuario.apellido,
+                fecha_nac: this.usuario.fecha_nac,
+                localidad_id: this.localidadSelect.value,
+                sexo: this.usuario.sexo
+            }).then(function (response) {
+                //recarga de informacion de perfil
+                _this.$emit('reload');
+                _this.showModificar = false;
+                _this.$toast.success({
+                    title: '¡Cambios realizados!',
+                    message: 'Se han realizado correctamente los cambios. :D'
+                });
+            }, function (response) {
+                _this.validar = false;
+                _this.$toast.error({
+                    title: '¡Error!',
+                    message: 'No se han podido guardar los cambios. :('
+                });
+                if (response.status === 401) {
+                    _this.errorsApi = response.body;
+                }
+            });
+        },
+        closeModal: function closeModal() {
+            this.errorsApi = [];
+            this.getUserPerfil();
+            this.setDefaultLocalidad();
+            this.validar = false;
+            this.showModificar = false;
+        },
+        //form validation
+        validateBeforeSubmit: function validateBeforeSubmit() {
+            var _this2 = this;
+
+            this.$validator.validateAll().then(function () {
+                _this2.sendForm();
+            }).catch(function () {
+                _this2.validar = true;
+            });
+        },
+        //obtiene lista de localidades segun correponda
+        getOptions: function getOptions(search, loading) {
+            var _this3 = this;
+
+            loading(true);
+            this.$http.get('api/localidades/?q=' + search).then(function (response) {
+                _this3.localidades = response.data.data;
+                loading(false);
+            });
+        },
+        setDefaultLocalidad: function setDefaultLocalidad() {
+            this.localidadSelect = {
+                'value': __WEBPACK_IMPORTED_MODULE_0__auth_js__["a" /* default */].user.profile.usuario.localidad_id,
+                'label': __WEBPACK_IMPORTED_MODULE_0__auth_js__["a" /* default */].user.profile.usuario.localidad.nombre + ' (' + __WEBPACK_IMPORTED_MODULE_0__auth_js__["a" /* default */].user.profile.usuario.localidad.provincia.nombre + ')'
+            };
+        },
+        getUserPerfil: function getUserPerfil() {
+            var _this4 = this;
+
+            this.$http.get('api/usuario/' + this.$route.params.userId).then(function (response) {
+                _this4.usuario = response.data.data;
+            }, function (response) {
+                if (response.status === 404) {
+                    router.push('/404');
+                }
+            });
+        }
     }
-}), _data$beforeMount$bef);
+});
 
 /***/ }),
 /* 290 */
@@ -31041,6 +31059,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -31087,12 +31110,15 @@ Vue.component('filter-bar', __WEBPACK_IMPORTED_MODULE_5__FilterBarUsuario___defa
 
     methods: {
         genderLabel: function genderLabel(value) {
-            return value == 'M' ? '<span class="label label-info"><i class="glyphicon glyphicon-star"></i> Masculino</span>' : '<span class="label label-success"><i class="glyphicon glyphicon-heart"></i> Femenino</span>';
+            return value == 'M' ? '<span class="label label-info"><i class="ion-male"></i> Masculino</span>' : '<span class="label label-success"><i class="ion-female"></i> Femenino</span>';
         },
         formatDate: function formatDate(value) {
             var fmt = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'D MMM YYYY';
 
             return value == null ? '' : __WEBPACK_IMPORTED_MODULE_6_moment___default()(value, 'YYYY-MM-DD hh:mm:ss').format(fmt);
+        },
+        formatEstado: function formatEstado(value) {
+            if (value === 0) return 'Inactivo';else if (value === 1) return 'Activo';else return 'Bloqueado';
         },
         onPaginationData: function onPaginationData(paginationData) {
             this.$refs.pagination.setPaginationData(paginationData);
@@ -31103,20 +31129,20 @@ Vue.component('filter-bar', __WEBPACK_IMPORTED_MODULE_5__FilterBarUsuario___defa
         },
         onAction: function onAction(action, data, index) {
             __WEBPACK_IMPORTED_MODULE_8__routes_js__["a" /* default */].push("/user/" + data.id + "/perfil");
-            console.log('slot) action: ' + action, data.name, index);
         },
         onActionDelete: function onActionDelete(action, data, index) {
             var _this2 = this;
 
-            console.log('slot) action: ' + action, data.name, index), this.$http.post('api/user/' + data.id + '/block', {
+            this.$http.post('api/user/' + data.id + '/block', {
                 _method: 'PATCH',
-                logout: true
+                action: action
 
             }).then(function (response) {
                 _this2.$toast.success({
                     title: '¡Acción realizada!',
-                    message: 'El usuario se a bloqueado. :('
+                    message: 'La acción se ha realizado correctamente.'
                 });
+                data.estado = action;
             }, function (response) {
                 _this2.$toast.error({
                     title: '¡Error!',
@@ -31125,7 +31151,6 @@ Vue.component('filter-bar', __WEBPACK_IMPORTED_MODULE_5__FilterBarUsuario___defa
             });
         },
         onCellClicked: function onCellClicked(data, field, event) {
-            console.log('cellClicked: ', field.name);
             this.$refs.vuetable.toggleDetailRow(data.id);
         },
 
@@ -31316,6 +31341,12 @@ window.axios.defaults.headers.common = {
     titleClass: 'text-center',
     dataClass: 'text-center',
     callback: 'formatDate|DD-MM-YYYY'
+}, {
+    name: 'estado',
+    title: 'Estado',
+    titleClass: 'text-center',
+    dataClass: 'text-center',
+    callback: 'formatEstado'
 }, {
     name: '__slot:actions', // <----
     title: 'Actions',
@@ -38417,15 +38448,24 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           }
         }, [_c('i', {
           staticClass: "glyphicon glyphicon-search"
-        })]), _vm._v(" "), _c('button', {
+        })]), _vm._v(" "), (props.rowData.estado == 2) ? _c('button', {
           staticClass: "btn-xs btn-default",
           on: {
             "click": function($event) {
-              _vm.onActionDelete('delete-item', props.rowData, props.rowIndex)
+              _vm.onActionDelete(1, props.rowData, props.rowIndex)
             }
           }
         }, [_c('i', {
-          staticClass: "glyphicon glyphicon-trash"
+          staticClass: "fa fa-unlock"
+        })]) : _c('button', {
+          staticClass: "btn-xs btn-default",
+          on: {
+            "click": function($event) {
+              _vm.onActionDelete(2, props.rowData, props.rowIndex)
+            }
+          }
+        }, [_c('i', {
+          staticClass: "ion-locked"
         })])])]
       }
     }])
@@ -39099,7 +39139,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "id": "timeline"
     }
   }, [_c('time-line')], 1), _vm._v(" "), (_vm.perfil !== null && _vm.perfil.user_id == _vm.auth.user.profile.id) ? _c('div', {
-    staticClass: "tab-pane content ",
+    staticClass: "tab-pane content",
     attrs: {
       "id": "account"
     }
@@ -39188,74 +39228,50 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [_vm._m(0), _vm._v(" "), _c('div', {
-    staticClass: "modal",
+  return _c('div', [_c('div', {
+    staticClass: "col-sm-4"
+  }, [_c('button', {
+    staticClass: "btn-block",
     attrs: {
-      "id": "modificar"
+      "type": "button"
+    },
+    on: {
+      "click": function($event) {
+        _vm.showModificar = true
+      }
+    }
+  }, [_vm._v("Modificar Información")])]), _vm._v(" "), _c('div', {
+    staticClass: "modal",
+    style: ({
+      display: _vm.showModificar ? 'block' : 'none'
+    }),
+    attrs: {
+      "id": "modificar",
+      "role": "dialog"
     }
   }, [_c('div', {
     staticClass: "modal-dialog"
   }, [_c('div', {
     staticClass: "modal-content"
-  }, [_vm._m(1), _vm._v(" "), _c('div', {
+  }, [_c('div', {
+    staticClass: "modal-header"
+  }, [_c('button', {
+    staticClass: "close",
+    attrs: {
+      "type": "button"
+    },
+    on: {
+      "click": function($event) {
+        _vm.closeModal()
+      }
+    }
+  }, [_vm._v("×")]), _vm._v(" "), _c('h4', {
+    staticClass: "modal-title"
+  }, [_vm._v("Modificar datos de Perfil")])]), _vm._v(" "), _c('div', {
     staticClass: "modal-body"
   }, [_c('form', {
     staticClass: "form-horizontal"
   }, [_c('div', {
-    class: {
-      'form-group has-feedback': true, 'form-group has-error': _vm.errors.has('apellido') && _vm.validar
-    }
-  }, [_c('label', {
-    staticClass: "col-sm-2 control-label",
-    attrs: {
-      "for": "inputApellido"
-    }
-  }, [_vm._v("Apellido")]), _vm._v(" "), _c('div', {
-    staticClass: "col-sm-10"
-  }, [_c('input', {
-    directives: [{
-      name: "validate",
-      rawName: "v-validate:usuario.apellido",
-      value: ('required|min:4'),
-      expression: "'required|min:4'",
-      arg: "usuario",
-      modifiers: {
-        "apellido": true
-      }
-    }, {
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.usuario.apellido),
-      expression: "usuario.apellido"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      "name": "apellido",
-      "type": "text",
-      "placeholder": "Apellido"
-    },
-    domProps: {
-      "value": (_vm.usuario.apellido)
-    },
-    on: {
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.usuario.apellido = $event.target.value
-      }
-    }
-  }), _vm._v(" "), _c('span', {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: (_vm.errors.has('apellido') && _vm.validar),
-      expression: "errors.has('apellido')&&validar"
-    }],
-    staticClass: "help-block"
-  }, [_vm._v(_vm._s(_vm.errors.first('apellido')))]), _vm._v(" "), (_vm.errorsApi.apellido) ? _c('div', {
-    staticClass: "text-red"
-  }, _vm._l((_vm.errorsApi.apellido), function(msj) {
-    return _c('div', [_c('p', [_vm._v(_vm._s(msj))])])
-  })) : _vm._e()])]), _vm._v(" "), _c('div', {
     class: {
       'form-group has-feedback': true, 'form-group has-error': _vm.errors.has('nombre') && _vm.validar
     }
@@ -39308,6 +39324,60 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_vm._v(_vm._s(_vm.errors.first('nombre')))]), _vm._v(" "), (_vm.errorsApi.nombre) ? _c('div', {
     staticClass: "text-red"
   }, _vm._l((_vm.errorsApi.nombre), function(msj) {
+    return _c('div', [_c('p', [_vm._v(_vm._s(msj))])])
+  })) : _vm._e()])]), _vm._v(" "), _c('div', {
+    class: {
+      'form-group has-feedback': true, 'form-group has-error': _vm.errors.has('apellido') && _vm.validar
+    }
+  }, [_c('label', {
+    staticClass: "col-sm-2 control-label",
+    attrs: {
+      "for": "inputApellido"
+    }
+  }, [_vm._v("Apellido")]), _vm._v(" "), _c('div', {
+    staticClass: "col-sm-10"
+  }, [_c('input', {
+    directives: [{
+      name: "validate",
+      rawName: "v-validate:usuario.apellido",
+      value: ('required|min:4'),
+      expression: "'required|min:4'",
+      arg: "usuario",
+      modifiers: {
+        "apellido": true
+      }
+    }, {
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.usuario.apellido),
+      expression: "usuario.apellido"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "name": "apellido",
+      "type": "text",
+      "placeholder": "Apellido"
+    },
+    domProps: {
+      "value": (_vm.usuario.apellido)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.usuario.apellido = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _c('span', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.errors.has('apellido') && _vm.validar),
+      expression: "errors.has('apellido')&&validar"
+    }],
+    staticClass: "help-block"
+  }, [_vm._v(_vm._s(_vm.errors.first('apellido')))]), _vm._v(" "), (_vm.errorsApi.apellido) ? _c('div', {
+    staticClass: "text-red"
+  }, _vm._l((_vm.errorsApi.apellido), function(msj) {
     return _c('div', [_c('p', [_vm._v(_vm._s(msj))])])
   })) : _vm._e()])]), _vm._v(" "), _c('div', {
     class: {
@@ -39494,41 +39564,17 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('div', {
     staticClass: "col-sm-offset-2 col-sm-10"
   }, [_c('button', {
-    staticClass: "btn btn-danger",
+    staticClass: "btn btn-primary",
     attrs: {
-      "type": "button",
-      "data-dismiss": "modal"
+      "type": "button"
     },
     on: {
       "click": function($event) {
         _vm.validateBeforeSubmit()
       }
     }
-  }, [_vm._v("Guargar")])])])])])])])])])
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "col-sm-4"
-  }, [_c('button', {
-    staticClass: "btn-block",
-    attrs: {
-      "type": "button",
-      "data-toggle": "modal",
-      "data-target": "#modificar"
-    }
-  }, [_vm._v("Modificar")])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "modal-header"
-  }, [_c('button', {
-    staticClass: "close",
-    attrs: {
-      "type": "button",
-      "data-dismiss": "modal"
-    }
-  }, [_vm._v("×")]), _vm._v(" "), _c('h4', {
-    staticClass: "modal-title"
-  }, [_vm._v("Modificar datos de Perfil")])])
-}]}
+  }, [_vm._v("\n                                    Guargar\n                                ")])])])])])])])])])
+},staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()

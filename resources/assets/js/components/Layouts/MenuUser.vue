@@ -38,7 +38,7 @@
         data() {
             return {
                 auth: auth,
-                pathUser: 'user/'+auth.user.profile.id +'/perfil',
+                pathUser: '/user/'+auth.user.profile.id +'/perfil',
                 srcUrl: ''
             }
         },

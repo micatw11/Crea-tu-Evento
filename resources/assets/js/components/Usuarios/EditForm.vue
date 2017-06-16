@@ -1,36 +1,21 @@
 <template>
     <div>
         <div class="col-sm-4">
-            <button type="button" class="btn-block" data-toggle="modal" data-target="#modificar">Modificar</button>
+            <button type="button" class="btn-block" @click="showModificar = true">Modificar Informaci&oacute;n</button>
         </div>
 
         <!-- Modal Modificar-->
-        <div id="modificar" class="modal">
+        <div id="modificar" class="modal" role="dialog" :style="{ display : showModificar  ? 'block' : 'none' }">
             <div class="modal-dialog">
 
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <button type="button" class="close" @click="closeModal()">&times;</button>
                         <h4 class="modal-title">Modificar datos de Perfil</h4>
                     </div>
                     <div class="modal-body">
                         <form class="form-horizontal">
-
-                            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('apellido')&&validar}">
-                                <label for="inputApellido" class="col-sm-2 control-label">Apellido</label>
-                                <div class="col-sm-10">
-                                    <input name="apellido"  v-validate:usuario.apellido="'required|min:4'" type="text" class="form-control" v-model="usuario.apellido" placeholder="Apellido">
-                                    <!-- validacion vee-validation -->
-                                    <span v-show="errors.has('apellido')&&validar" class="help-block">{{ errors.first('apellido') }}</span>
-                                    <!-- validacion api-->
-                                    <div class="text-red" v-if="errorsApi.apellido">
-                                        <div v-for="msj in errorsApi.apellido">
-                                            <p>{{ msj }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
                             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('nombre')&&validar}">
                                 <label for="inputNombre" class="col-sm-2 control-label">Nombre</label>
@@ -41,6 +26,21 @@
                                     <!-- validacion api-->
                                     <div class="text-red" v-if="errorsApi.nombre">
                                         <div v-for="msj in errorsApi.nombre">
+                                            <p>{{ msj }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('apellido')&&validar}">
+                                <label for="inputApellido" class="col-sm-2 control-label">Apellido</label>
+                                <div class="col-sm-10">
+                                    <input name="apellido"  v-validate:usuario.apellido="'required|min:4'" type="text" class="form-control" v-model="usuario.apellido" placeholder="Apellido">
+                                    <!-- validacion vee-validation -->
+                                    <span v-show="errors.has('apellido')&&validar" class="help-block">{{ errors.first('apellido') }}</span>
+                                    <!-- validacion api-->
+                                    <div class="text-red" v-if="errorsApi.apellido">
+                                        <div v-for="msj in errorsApi.apellido">
                                             <p>{{ msj }}</p>
                                         </div>
                                     </div>
@@ -113,7 +113,9 @@
                           
                                 <div class="col-sm-offset-2 col-sm-10">
                                   
-                                    <button @click="validateBeforeSubmit()" type="button" class="btn btn-danger" data-dismiss="modal">Guargar</button>
+                                    <button @click="validateBeforeSubmit()" type="button" class="btn btn-primary">
+                                        Guargar
+                                    </button>
                                 </div>
                             </div>
                         </form>
@@ -132,13 +134,11 @@ export default {
     data() {
         return {
             validar: false,
-            usuario: auth.user.profile.usuario,
+            showModificar: false,
+            usuario: { type: Object, default: null},
             error: false,
             fecha: null,
-            disabled: {
-                to: '1920-01-01',
-                from: null
-            },
+            disabled: { to: '1920-01-01', from: null },
             localidades: [],
             localidadSelect: [],
             errorsApi: []
@@ -146,15 +146,8 @@ export default {
     },
     beforeMount: function(){
         //selected data
-        this.getLocalidadDefault();
-
-    },
-    beforeMount: function(){
-        //selected data
-       this.localidadSelect = {
-           'value':auth.user.profile.usuario.localidad_id,
-           'label':auth.user.profile.usuario.localidad.nombre+' ('+auth.user.profile.usuario.localidad.provincia.nombre+')'
-        }
+        this.getUserPerfil();
+        this.setDefaultLocalidad();
     },
     mounted: function(){
         //rangos maximos de fechas
@@ -182,6 +175,7 @@ export default {
                 .then(response => {
                     //recarga de informacion de perfil
                     this.$emit('reload')
+                    this.showModificar = false;
                     this.$toast.success({
                         title:'¡Cambios realizados!',
                         message:'Se han realizado correctamente los cambios. :D'
@@ -200,13 +194,19 @@ export default {
                 })
 
         },
-
+        closeModal: function(){
+            this.errorsApi = [];
+            this.getUserPerfil();
+            this.setDefaultLocalidad();
+            this.validar = false;
+            this.showModificar = false;
+        },
         //form validation
-        validateBeforeSubmit: function(e) {
+        validateBeforeSubmit: function() {
             this.$validator.validateAll().then(() => {
                     this.sendForm();
                 }).catch(() => {
-                    this.validar= true;
+                    this.validar = true;
                 });
         },
         //obtiene lista de localidades segun correponda
@@ -216,6 +216,22 @@ export default {
                 ).then(response => {
                     this.localidades = response.data.data
                     loading(false)
+                })
+        },
+        setDefaultLocalidad: function(){
+            this.localidadSelect = {
+               'value':auth.user.profile.usuario.localidad_id,
+               'label':auth.user.profile.usuario.localidad.nombre+' ('+auth.user.profile.usuario.localidad.provincia.nombre+')'
+            }
+        },
+        getUserPerfil: function(){
+            this.$http.get('api/usuario/'+ this.$route.params.userId )
+                .then(response => {
+                    this.usuario = response.data.data
+                }, response => {
+                    if(response.status === 404){
+                        router.push('/404');
+                    }
                 })
         }
     }
