@@ -9,9 +9,7 @@ class Salon extends Model
     protected $table = 'salones';
 
     protected $fillable = [ 'proveedor_id', 
-    						'denominacion',//descripcion de la actividad 
-    						'codigo', 
-    						'habilitacion',
+    						'descripcion',
                             'fecha_habilitacion',
     						'domicilio_id'
     					  ];

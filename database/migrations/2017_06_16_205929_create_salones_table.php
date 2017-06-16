@@ -14,7 +14,13 @@ class CreateSalonesTable extends Migration
     public function up()
     {
         Schema::create('salones', function (Blueprint $table) {
-            $table->increments('id');
+            $table->increments('id'); 
+            $table->integer('proveedor_id')->unsigned();
+            $table->string('descripcion', 200);
+            $table->date('fecha_habilitacion');
+            $table->integer('domicilio_id')->unsigned();
+            $table->foreign('proveedor_id')->references('id')->on('proveedores');
+            $table->foreign('domicilio_id')->references('id')->on('domicilios');
             $table->timestamps();
         });
     }

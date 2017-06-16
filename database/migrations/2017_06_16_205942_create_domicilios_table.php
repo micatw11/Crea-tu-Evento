@@ -15,6 +15,13 @@ class CreateDomiciliosTable extends Migration
     {
         Schema::create('domicilios', function (Blueprint $table) {
             $table->increments('id');
+            $table->enum('tipo_domicilio', ['Real', 'Social']);
+            $table->string('calle', 50);
+            $table->integer('numero')->unsigned();
+            $table->integer('piso')->unsigned();
+            $table->integer('codigo_postal')->unsigned();
+            $table->integer('localidad_id')->unsigned();
+            $table->foreign('localidad_id')->references('id')->on('localidades');
             $table->timestamps();
         });
     }

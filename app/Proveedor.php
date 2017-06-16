@@ -12,9 +12,10 @@ class Proveedor extends Model
     						'cuit',
     						'nombre', 
     						'habilitacion', 
-    						'IIBB',
+    						'ingresos_brutos',
                             'persona',
     						'email',
-    						'domicilio_id'
+    						'domicilio_id',
+    						'estado'
     					  ];
 }
