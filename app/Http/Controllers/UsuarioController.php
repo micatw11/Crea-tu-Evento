@@ -251,4 +251,20 @@ class UsuarioController extends Controller
         }
     }
 
+    public function buscarUsuarios(Request $request)
+    {
+        $like = '%'.$request->q.'%';
+        $usuarios = DB::table('users')
+            ->join('usuarios', 'usuarios.user_id', '=', 'users.id')
+            ->select('users.id as value', DB::raw('CONCAT(usuarios.apellido, ", ",usuarios.nombre, " - ", users.email) as label'))
+                ->where('usuarios.nombre','like' ,$like)
+                ->orWhere('usuarios.apellido', 'like', $like)
+                ->orWhere('users.email', 'like', $like)
+                ->orderBy('usuarios.nombre', 'asc')
+                ->get();
+
+
+     return response()->json($usuarios);
+    }
+
 }
