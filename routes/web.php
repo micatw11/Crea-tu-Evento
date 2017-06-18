@@ -49,9 +49,12 @@ Route::group(['prefix' => 'api'], function () {
     Route::patch('user/{id}/block', 'UsuarioController@bloquear');
     Route::patch('user/{id}/rol', 'UsuarioController@cambiarRol')->middleware('role:administrador,supervisor');
 
+    //proveedores
+    Route::get('proveedor', 'ProveedorController@index');
 
     Route::get('localidades', 'LocalidadController@index');
     Route::get('localidades/{id}', 'LocalidadController@show');
     Route::get('roles', 'UsuarioController@roles');
     Route::get('user/actividad/{id}', 'UsuarioController@activity');
+    Route::get('busqueda/usuarios', 'UsuarioController@buscarUsuarios');
 });

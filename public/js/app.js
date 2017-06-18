@@ -30574,10 +30574,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Layouts_Style_css_js__ = __webpack_require__(101);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__FilterBarProveedor__ = __webpack_require__(516);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__FilterBarProveedor___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__FilterBarProveedor__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__colums_js__ = __webpack_require__(302);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__routes_js__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__Layouts_Path__ = __webpack_require__(45);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__Layouts_Path___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__Layouts_Path__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__DetailRowProveedor__ = __webpack_require__(571);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__DetailRowProveedor___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__DetailRowProveedor__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__colums_js__ = __webpack_require__(302);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__routes_js__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__Layouts_Path__ = __webpack_require__(45);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__Layouts_Path___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__Layouts_Path__);
+//
+//
 //
 //
 //
@@ -30659,6 +30663,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 Vue.component('filter-bar', __WEBPACK_IMPORTED_MODULE_4__FilterBarProveedor___default.a);
+Vue.component('my-detail-row', __WEBPACK_IMPORTED_MODULE_5__DetailRowProveedor___default.a);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -30669,13 +30674,13 @@ Vue.component('filter-bar', __WEBPACK_IMPORTED_MODULE_4__FilterBarProveedor___de
             info: 'Mirando de {from} a {to} de {total} proveedores',
             noData: 'No hay datos',
             moreParams: {},
-            colums: __WEBPACK_IMPORTED_MODULE_5__colums_js__["a" /* default */],
+            colums: __WEBPACK_IMPORTED_MODULE_6__colums_js__["a" /* default */],
             url: '/api/proveedor'
         };
     },
 
     components: {
-        Vuetable: __WEBPACK_IMPORTED_MODULE_0_vuetable_2_src_components_Vuetable___default.a, VuetablePagination: __WEBPACK_IMPORTED_MODULE_1_vuetable_2_src_components_VuetablePagination___default.a, VuetablePaginationInfo: __WEBPACK_IMPORTED_MODULE_2_vuetable_2_src_components_VuetablePaginationInfo___default.a, PathContent: __WEBPACK_IMPORTED_MODULE_7__Layouts_Path___default.a
+        Vuetable: __WEBPACK_IMPORTED_MODULE_0_vuetable_2_src_components_Vuetable___default.a, VuetablePagination: __WEBPACK_IMPORTED_MODULE_1_vuetable_2_src_components_VuetablePagination___default.a, VuetablePaginationInfo: __WEBPACK_IMPORTED_MODULE_2_vuetable_2_src_components_VuetablePaginationInfo___default.a, PathContent: __WEBPACK_IMPORTED_MODULE_8__Layouts_Path___default.a
     },
     mounted: function mounted() {
         var _this = this;
@@ -30692,6 +30697,9 @@ Vue.component('filter-bar', __WEBPACK_IMPORTED_MODULE_4__FilterBarProveedor___de
         },
         onChangePage: function onChangePage(page) {
             this.$refs.vuetable.changePage(page);
+        },
+        onCellClicked: function onCellClicked(data, field, event) {
+            this.$refs.vuetable.toggleDetailRow(data.id);
         },
 
         //filtros de busqueda
@@ -31660,11 +31668,6 @@ window.axios.defaults.headers.common = {
 
 "use strict";
 /* harmony default export */ __webpack_exports__["a"] = ([{
-    name: '__sequence', // <----
-    title: '#',
-    titleClass: 'center aligned',
-    dataClass: 'right aligned'
-}, {
     name: 'nombre',
     title: 'Nombre',
     titleClass: 'text-center',
@@ -31680,8 +31683,8 @@ window.axios.defaults.headers.common = {
     titleClass: 'text-center',
     dataClass: 'text-center'
 }, {
-    name: 'persona',
-    title: 'Persona',
+    name: 'cuit',
+    title: 'N° Cuit',
     titleClass: 'text-center',
     dataClass: 'text-center'
 }, {
@@ -39332,7 +39335,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "form-control pull-right",
     attrs: {
       "type": "text",
-      "placeholder": "Nombre, Apellido o Email"
+      "placeholder": "Nombre o Email"
     },
     domProps: {
       "value": (_vm.filterText)
@@ -40320,10 +40323,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "css": _vm.css,
       "append-params": _vm.moreParams,
       "api-url": _vm.url,
-      "pagination-path": ""
+      "pagination-path": "",
+      "detail-row-component": "my-detail-row"
     },
     on: {
-      "vuetable:pagination-data": _vm.onPaginationData
+      "vuetable:pagination-data": _vm.onPaginationData,
+      "vuetable:cell-clicked": _vm.onCellClicked
     },
     scopedSlots: _vm._u([{
       key: "actions",
@@ -40339,7 +40344,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           }
         }, [_c('i', {
           staticClass: "glyphicon glyphicon-search"
-        }), _vm._v(" Ver\n                                            ")]), _vm._v(" "), (props.rowData.estado == 2) ? _c('button', {
+        }), _vm._v(" Ver\n                                            ")]), _vm._v(" "), (props.rowData.estado === 'Tramite') ? _c('button', {
           staticClass: "btn-xs btn-default",
           on: {
             "click": function($event) {
@@ -53202,6 +53207,108 @@ module.exports = function(module) {
 __webpack_require__(252);
 module.exports = __webpack_require__(253);
 
+
+/***/ }),
+/* 568 */,
+/* 569 */,
+/* 570 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    rowData: {
+      type: Object,
+      required: true
+    },
+    rowIndex: {
+      type: Number
+    }
+  },
+  methods: {
+    onClick: function onClick(event) {
+      console.log('my-detail-row: on-click', event.target);
+    }
+  }
+});
+
+/***/ }),
+/* 571 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(3)(
+  /* script */
+  __webpack_require__(570),
+  /* template */
+  __webpack_require__(572),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "C:\\Users\\matia\\Desktop\\Proyecto\\Crea-tu-Evento\\resources\\assets\\js\\components\\Proveedores\\DetailRowProveedor.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] DetailRowProveedor.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-e78e996a", Component.options)
+  } else {
+    hotAPI.reload("data-v-e78e996a", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 572 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    on: {
+      "click": _vm.onClick
+    }
+  }, [_c('p', {
+    staticClass: "inline-block"
+  }, [_c('label', [_vm._v("Nombre: ")]), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.rowData.nombre))])]), _vm._v(" "), _c('p', {
+    staticClass: "inline-block"
+  }, [_c('label', [_vm._v("Email: ")]), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.rowData.email))])]), _vm._v(" "), _c('p', {
+    staticClass: "inline-block"
+  }, [_c('label', [_vm._v("Genero: ")]), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.rowData.user.usuario.sexo == 'F' ? 'Femenino' : 'Masculino'))])])])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-e78e996a", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Proveedor;
 
 class ProveedorController extends Controller
 {
@@ -13,7 +14,10 @@ class ProveedorController extends Controller
      */
     public function index()
     {
-        //
+        $query = Proveedor::with('user.usuario', 'domicilio')->where('estado','!=', 'Baja');
+
+        $proveedores = $query->paginate(10);
+        return response()->json($proveedores);
     }
 
     /**

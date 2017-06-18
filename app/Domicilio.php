@@ -15,4 +15,14 @@ class Domicilio extends Model
     						'codigo_postal',
     						'localidad_id'
     					  ];
+
+    public function proveedor()
+    {
+        return $this->hasOne('App\Proveedor');
+    }
+
+	public function localidad()
+    {
+        return $this->belongsTo('App\Localidad');
+    }
 }

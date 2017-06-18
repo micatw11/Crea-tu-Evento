@@ -1,11 +1,5 @@
 export default [
                     {
-                         name: '__sequence',   // <----
-                         title: '#',
-                         titleClass: 'center aligned',
-                         dataClass: 'right aligned'
-                    },
-                    {
                         name: 'nombre',
                         title: 'Nombre',
                         titleClass: 'text-center',
@@ -24,8 +18,8 @@ export default [
                         dataClass: 'text-center'           
                     },
                     {
-                        name: 'persona',
-                        title: 'Persona',
+                        name: 'cuit',
+                        title: 'N° Cuit',
                         titleClass: 'text-center',
                         dataClass: 'text-center'           
                     },

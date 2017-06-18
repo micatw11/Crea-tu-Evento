@@ -32,6 +32,11 @@ class User extends Authenticatable
         return $this->hasOne('App\Usuario');
     }
 
+    public function proverdor()
+    {
+        return $this->hasOne('App\Proverdor');
+    }
+
     public function rol()
     {     
         return $this->belongsTo('App\Rol', 'roles_id', 'id');    

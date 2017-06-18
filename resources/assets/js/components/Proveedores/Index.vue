@@ -20,7 +20,9 @@
                                 ref="vuetable"
                                 :api-url="url"
                                 pagination-path=""
-                                @vuetable:pagination-data="onPaginationData">
+                                @vuetable:pagination-data="onPaginationData"
+                                detail-row-component="my-detail-row"
+                                @vuetable:cell-clicked="onCellClicked">
 
                                     <template slot="actions" scope="props">
                                         <div class="custom-actions">
@@ -30,7 +32,7 @@
                                                 <i class="glyphicon glyphicon-search"></i> Ver
                                             </button>
 
-                                             <button v-if="props.rowData.estado == 2" class="btn-xs btn-default"
+                                             <button v-if="props.rowData.estado === 'Tramite'" class="btn-xs btn-default"
                                                 @click="onActionConfirmar(1, props.rowData, props.rowIndex)">
                                                 <i class="fa fa-check"></i> Aceptar
                                             </button>
@@ -73,12 +75,13 @@
     import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo';
     import Style from './../Layouts/Style-css.js';
     import FilterBar from './FilterBarProveedor';
-
+    import DetailRow from './DetailRowProveedor';
     import colums from './colums.js';
     import route from '../../routes.js';
     import PathContent from '../Layouts/Path';
 
     Vue.component('filter-bar', FilterBar);
+    Vue.component('my-detail-row', DetailRow);
 
     export default {
         data(){
@@ -106,6 +109,9 @@
             },
             onChangePage (page) {
                 this.$refs.vuetable.changePage(page)
+            },
+            onCellClicked (data, field, event) {
+                this.$refs.vuetable.toggleDetailRow(data.id)
             },
             //filtros de busqueda
             onFilterSet (filterText) {

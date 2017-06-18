@@ -24,4 +24,9 @@ class Localidad extends Model
     {
         return $this->belongsTo('App\Provincia');
     }
+
+    public function domicilios()
+    {
+        return $this->hasMany('App\Domicilio');
+    }
 }
