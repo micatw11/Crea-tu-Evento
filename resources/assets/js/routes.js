@@ -87,8 +87,7 @@ let routes = [
 		{
 			path: '/404',
 			name: 'pageNotFound',
-			component: PageNotFound,
-			beforeEnter: guardRoute
+			component: PageNotFound
 
 		},
 		{
@@ -192,8 +191,9 @@ function checkRole(to, from, next){
 
 		if(match) next();
 		else next(from.path);
-	} else
-		next();	
+	} else {
+		next();
+	}
 }
 
 /** checkAuth 

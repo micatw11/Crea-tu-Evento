@@ -27,12 +27,7 @@
 
                                     <template slot="actions" scope="props">
                                         <div class="custom-actions">
-                                           
-                                           <!-- <button class="btn-xs btn-default"
-                                                @click="onActionEdit('edit-item', props.rowData, props.rowIndex)">
-                                                <i class="glyphicon glyphicon-pencil"></i>
-                                            </button>-->
-                                           
+
                                             <select 
                                                 v-model="props.rowData.roles_id" 
                                                 @change="changeItemRol($event, props.rowData, props.rowIndex)">
@@ -45,7 +40,7 @@
                                             </select>
 
                                             <button class="btn-xs btn-default"
-                                                @click="onAction('view-item', props.rowData, props.rowIndex)">
+                                                @click="onActionShow('view-item', props.rowData, props.rowIndex)">
                                                 <i class="glyphicon glyphicon-search"></i>
                                             </button>
 
@@ -151,7 +146,7 @@
             onChangePage (page) {
                 this.$refs.vuetable.changePage(page)
             },
-            onAction (action, data, index) {
+            onActionShow(action, data, index) {
                 route.push("/user/"+data.id+"/perfil")
             },
             onActionDelete(action, data, index) {

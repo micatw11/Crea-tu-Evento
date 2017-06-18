@@ -1,6 +1,6 @@
 <template>
     <div class="content-wrapper">
-        <path-content :titleContent="titleContent"></path-content>
+        <path-content></path-content>
         <section class="content">
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
@@ -20,11 +20,6 @@
 <script>
 import PathContent from './Layouts/Path.vue'
     export default {
-        data(){
-            return {
-                titleContent: 'Dashboard'
-            }
-        },
         components: {PathContent}
     }
 </script>

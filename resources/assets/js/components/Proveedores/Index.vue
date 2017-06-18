@@ -18,7 +18,7 @@
                                 :css="css"
                                 :append-params="moreParams"
                                 ref="vuetable"
-                                api-url=""
+                                :api-url="url"
                                 pagination-path=""
                                 @vuetable:pagination-data="onPaginationData">
 
@@ -83,13 +83,14 @@
     export default {
         data(){
             return {
-                titleContent: 'Proveedores pendientes',
+                titleContent: 'Proveedores',
                 css: Style,
                 noDataTemplate: 'No hay datos para visualizar',
                 info: 'Mirando de {from} a {to} de {total} proveedores',
                 noData:'No hay datos',
                 moreParams: {},
-                colums: colums
+                colums: colums,
+                url: '/api/proveedor'
             }
         },
         components: {

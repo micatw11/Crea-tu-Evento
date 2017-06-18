@@ -1,11 +1,5 @@
 export default [
                     {
-                    name: '__sequence',   // <----
-                    title: '#',
-                    titleClass: 'center aligned',
-                    dataClass: 'right aligned'
-                    },
-                    {
                         name: 'usuario.nombre',
                         title: 'Nombre',
                         titleClass: 'text-center',
@@ -46,9 +40,9 @@ export default [
                         callback: 'formatEstado'
                     },
                     {
-                    name: '__slot:actions',   // <----
-                    title: 'Actions',
-                    titleClass: 'center aligned',
-                    dataClass: 'center aligned'
+                        name: '__slot:actions',   // <----
+                        title: 'Acciones',
+                        titleClass: 'center aligned',
+                        dataClass: 'center aligned'
                     }
                 ]

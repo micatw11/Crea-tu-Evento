@@ -6,7 +6,7 @@
             <!-- timeline time label -->
             <li class="time-label">
                     <span class="bg-red">
-                    {{actividad.created_at}}
+                    {{formatData(actividad.created_at)}}
                     </span>
             </li>
             <!-- /.timeline-label -->
@@ -19,7 +19,7 @@
 
                     <h3 class="timeline-header">Se realizo un <a href="#">{{actividad.accion}}</a> en la tabla {{actividad.tabla}} con rol {{actividad.roles_id}}</h3>
 
-                    <div class="timeline-body">
+                    <div v-if="actividad.valor_antiguo" class="timeline-body">
                       Los valores antiguos son:
                         {{actividad.valor_antiguo}} 
                     </div>
@@ -31,41 +31,48 @@
 </template>
 
 <script>
-import router from '../../routes.js';
-import auth from '../../auth.js';
+    import router from '../../routes.js';
+    import auth from '../../auth.js';
+    import moment from 'moment';
 
-export default {
-    data(){
-        return {
-            titleContent: 'Linea de Tiempo',
-            actividades: [],
-            auth: auth
-        }
-    },
-    beforeMount: function() {
-        this.getUserlog()
-
-    },
-    components: {
-        
-    },
-    methods:{
-
-        getUserlog: function(){
-            this.$http.get('api/user/actividad/'+ this.$route.params.userId )
-                .then(response => {
-                    this.actividades = response.data
-                }, response => {
-
-                    if(response.status === 404){
-                        router.push('/404');
-                    }
-
-                })
+    export default {
+        data(){
+            return {
+                titleContent: 'Linea de Tiempo',
+                actividades: [],
+                auth: auth
+            }
         },
-        reload: function(){
-            this.getUserlog();
+        beforeMount: function() {
+            this.getUserlog()
+
+        },
+        components: {
+            
+        },
+        methods:{
+
+            getUserlog: function(){
+                this.$http.get('api/user/actividad/'+ this.$route.params.userId )
+                    .then(response => {
+                        this.actividades = response.data
+                    }, response => {
+
+                        if(response.status === 404){
+                            router.push('/404');
+                        }
+
+                    })
+            },
+            reload: function(){
+                this.getUserlog();
+            },
+            formatData: function(value){
+                moment.locale('es');
+                return (value == null)
+                    ? ''
+                    : moment(value, 'YYYY-MM-DD').format('DD MMM YYYY');
+            }
         }
     }
-}
 </script>
