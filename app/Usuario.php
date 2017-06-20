@@ -9,7 +9,8 @@ class Usuario extends Model
     
     protected $table = 'usuarios';
 
-    protected $fillable = [ 'avatar', 
+    protected $fillable = [ 
+                            'avatar', 
     						'nombre', 
     						'apellido', 
     						'fecha_nac',

@@ -51,6 +51,7 @@ Route::group(['prefix' => 'api'], function () {
 
     //proveedores
     Route::get('proveedor', 'ProveedorController@index');
+    Route::patch('proveedor/{id}/estado', 'ProveedorController@cambiarEstado')->middleware('role:administrador,supervisor');
 
     Route::get('localidades', 'LocalidadController@index');
     Route::get('localidades/{id}', 'LocalidadController@show');

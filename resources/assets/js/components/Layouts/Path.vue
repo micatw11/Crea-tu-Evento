@@ -1,28 +1,24 @@
 <template>
     <section class="content-header">
-        <h1 v-if="titleContent">
-            {{titleContent}}
+        <h1 v-if="titlePath">
+            {{titlePath}}
         </h1>
         <h1 v-else>
             Home
         </h1>
         <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i>Home</a></li>
-            <li v-if="titleContent" class="active">{{ titleContent }}</li>
-
-            <div v-if="listContent" v-for="path in listContent">
-                <li class="active">{{ path }}</li>
-            </div>
+            <li><a href="#">Home</a></li>
+            <li v-for="path in listPath" href="#"><a>{{ path }}</a></li>
         </ol>
     </section>
 </template>
 <script>
 export default {
     props:{
-        titleContent: {
+        titlePath: {
             required: false
         },
-        listContent: {
+        listPath: {
             required: false
         }
     }

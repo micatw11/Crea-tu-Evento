@@ -76,7 +76,7 @@ let routes = [
 
 		},
 		{
-			path: '/user/:userId/perfil',
+			path: '/usuario/:userId/perfil',
 			name: 'user',
 			component: Perfil,
 			beforeEnter: guardRoute

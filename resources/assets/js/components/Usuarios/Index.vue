@@ -1,7 +1,7 @@
 <template>
 
-    <div class="content-wrapper">
-        <path-content :titleContent="titleContent"></path-content>
+    <div>
+
         <div class="content"> 
             <div class="row">
                 <div class="col-xs-12">
@@ -92,7 +92,6 @@
     import moment from 'moment';
     import colums from './colums.js';
     import route from '../../routes.js';
-    import PathContent from '../Layouts/Path';
 
     Vue.component('my-detail-row', DetailRow);
     Vue.component('filter-bar', FilterBar);
@@ -117,7 +116,7 @@
             }
         },
         components: {
-            Vuetable, VuetablePagination, VuetablePaginationInfo, PathContent
+            Vuetable, VuetablePagination, VuetablePaginationInfo
         },
         mounted() {
             this.$events.$on('filter-set', eventData => this.onFilterSet(eventData))
@@ -147,7 +146,7 @@
                 this.$refs.vuetable.changePage(page)
             },
             onActionShow(action, data, index) {
-                route.push("/user/"+data.id+"/perfil")
+                route.push("/usuario/"+data.id+"/perfil")
             },
             onActionDelete(action, data, index) {
                     this.$http.post('api/user/'+ data.id+'/block',

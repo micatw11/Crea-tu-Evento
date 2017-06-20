@@ -1,6 +1,6 @@
 <template>
-    <div class="content-wrapper">
-        <path-content :titleContent="titleContent"></path-content>
+    <div>
+
         <section class="content">
             <div class="row">
                 <div class="col-md-3">
@@ -9,7 +9,9 @@
                         <div class="box-body box-profile">
                             <img class="profile-user-img img-responsive img-circle" :src="srcUrl" alt="User profile picture">
 
-                            <h3 v-if="perfil !== null" class="profile-username text-center">{{perfil.apellido}}, {{perfil.nombre}}</h3>
+                            <h3 v-if="perfil !== null" class="profile-username">
+                                {{perfil.apellido}}, {{perfil.nombre}}
+                            </h3>
 
                             <image-input @avatarUpdate="updateAvatar()" v-if="perfil !== null && perfil.user_id == auth.user.profile.id" ></image-input>
                         </div>
@@ -51,8 +53,8 @@
                             <li v-if="perfil !== null && perfil.user_id == auth.user.profile.id">
                                 <a href="#account" data-toggle="tab">Cuenta</a>
                             </li>
-                            <li>
-                                <a href="#timeline" data-toggle="tab">Timeline</a>
+                            <li v-if="perfil !== null && perfil.user_id == auth.user.profile.id">
+                                <a href="#timeline" data-toggle="tab">Actividades</a>
                             </li>
                         </ul>
                         <div class="tab-content">
@@ -95,7 +97,7 @@
 </template>
 
 <script>
-import PathContent from './Path.vue';
+
 import FormPerfil from '../Usuarios/EditForm.vue';
 import Show from '../Usuarios/Show.vue';
 import ImageInput from '../Usuarios/ImageInput.vue';
@@ -121,7 +123,6 @@ export default {
 
     },
     components: {
-        PathContent,
         FormPerfil, 
         Activity, 
         Account,
@@ -149,6 +150,16 @@ export default {
         reload: function(){
             this.getUserPerfil();
         }
+    },
+    watch: {
+        '$route.params.userId' (){
+            this.getUserPerfil();
+        }
     }
 }
 </script>
+<style>
+    .nav-tabs-custom > .tab-content {
+        min-height: 250px;
+    }
+</style>

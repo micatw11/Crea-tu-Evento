@@ -17,7 +17,10 @@
             <!-- Menu Footer-->
             <li class="user-footer">
                 <div class="pull-left">
-                    <a @click="showPerfil" class="btn btn-default btn-flat">Perfil</a>
+                    <router-link 
+                        :to="pathUser" replace>
+                        <a class="btn btn-default btn-flat">Perfil</a>
+                    </router-link>
                 </div>
                 <div class="pull-right">
                     <a  @click="logout" class="btn btn-default btn-flat">
@@ -37,12 +40,13 @@
         data() {
             return {
                 auth: auth,
-                pathUser: '/user/'+auth.user.profile.id +'/perfil',
+                pathUser: '',
                 srcUrl: ''
             }
         },
         mounted: function(){
             this.avatarUpdate();
+            this.pathUser = '/usuario/'+auth.user.profile.id +'/perfil';
         },
         methods: {
             logout: function() {
@@ -55,9 +59,6 @@
                     router.push('/login')
                 })
 
-            },
-            showPerfil: function(){
-                router.push(this.pathUser);
             },
             avatarUpdate: function(){
                 this.srcUrl = '/storage/avatars/'+ auth.user.profile.usuario.avatar

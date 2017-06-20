@@ -15,14 +15,14 @@ class CreateProveedoresTable extends Migration
     {
         Schema::create('proveedores', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('cuit')->unsigned();               
+            $table->integer('cuit', 11)->unsigned(); 
             $table->string('nombre', 50);  //nombre o razon social o denominacion
             $table->string('email', 50);
             $table->integer('habilitacion')->unsigned();
             $table->integer('ingresos_brutos')->unsigned();
             $table->enum('persona', ['Juridica', 'Fisica']);
             $table->integer('user_id')->unsigned();
-            $table->integer('domicilio_id')->unsigned();//real
+            $table->integer('domicilio_id')->unsigned()->nullable();//real
             $table->enum('estado', ['Tramite', 'Aprobado', 'Rechazado','Baja']);
 
             $table->foreign('user_id')->references('id')->on('users');

@@ -1,33 +1,43 @@
 <template>
-  <div>
-    <div v-for="actividad in actividades">
-    <!-- The timeline -->
-        <ul class="timeline timeline-inverse">
-            <!-- timeline time label -->
-            <li class="time-label">
-                    <span class="bg-red">
-                    {{formatData(actividad.created_at)}}
-                    </span>
-            </li>
-            <!-- /.timeline-label -->
-            <!-- timeline item -->
-            <li>
-                <i class="fa fa-envelope bg-blue"></i>
+    <div v-if="actividades.length > 0">
+        <!-- The timeline -->
+            <ul class="timeline">
+                <!-- timeline time label -->
+                <template v-for="actividad in actividades">
+                    <template v-if="compareTimeLabel(actividad.fecha)">
+                    <li class="time-label">
+                        <span class="bg-red">
+                            {{formatDate(actividad.fecha)}}
+                        </span>
+                    </li>
+                    </template>
 
-                <div class="timeline-item">
-                    <span class="time"><i class="fa fa-clock-o"></i> {{actividad.created_at}}</span>
+                    <!-- /.timeline-label -->
+                    <!-- timeline item -->
+                    <li>
+                        <i v-bind:class="iconsAction(actividad.accion)"></i>
 
-                    <h3 class="timeline-header">Se realizo un <a href="#">{{actividad.accion}}</a> en la tabla {{actividad.tabla}} con rol {{actividad.roles_id}}</h3>
+                        <div class="timeline-item">
+                            <span class="time"><i class="fa fa-clock-o"></i> {{actividad.created_at}}</span>
 
-                    <div v-if="actividad.valor_antiguo" class="timeline-body">
-                      Los valores antiguos son:
-                        {{actividad.valor_antiguo}} 
-                    </div>
-                </div>
-            </li>
-        </ul>
+                            <h3 class="timeline-header">Se realizo un <a href="#">{{actividad.accion}}</a> en la tabla {{actividad.tabla}} con rol {{actividad.roles_id}}</h3>
+
+                            <div v-if="actividad.valor_antiguo" class="timeline-body">
+                              Los valores antiguos son:
+                                {{actividad.valor_antiguo}} 
+                            </div>
+                        </div>
+                    </li>
+                </template>
+                <li>
+                    <i class="fa fa-clock-o bg-gray"></i>
+                </li>
+            </ul>
+
     </div>
-  </div>
+    <div v-else class="text-center">
+        No se econtraron actividades!.
+    </div>
 </template>
 
 <script>
@@ -40,7 +50,8 @@
             return {
                 titleContent: 'Linea de Tiempo',
                 actividades: [],
-                auth: auth
+                auth: auth,
+                dateCompare: null
             }
         },
         beforeMount: function() {
@@ -51,7 +62,6 @@
             
         },
         methods:{
-
             getUserlog: function(){
                 this.$http.get('api/user/actividad/'+ this.$route.params.userId )
                     .then(response => {
@@ -67,12 +77,34 @@
             reload: function(){
                 this.getUserlog();
             },
-            formatData: function(value){
+            formatDate: function(value){
                 moment.locale('es');
                 return (value == null)
                     ? ''
                     : moment(value, 'YYYY-MM-DD').format('DD MMM YYYY');
+            },
+            compareTimeLabel: function(value){
+                let newDate = value;
+                if(this.dateCompare === null){
+                    this.dateCompare = newDate;
+                    return true;
+                } else {
+                    if(!moment(this.dateCompare, 'YYYY-MM-DD').isSame(moment(value, 'YYYY-MM-DD'))){
+                        this.dateCompare = newDate;
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            },
+            iconsAction: function(action){
+                return 'fa fa-check-circle bg-blue'
             }
         }
     }
 </script>
+<style>
+    .text-center {
+        margin-top: 75px;
+    }
+</style>

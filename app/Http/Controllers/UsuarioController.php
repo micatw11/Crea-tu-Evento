@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use App\Usuario;
 use App\User;
+use App\Rol;
 use App\Log;
 
 
@@ -26,7 +27,10 @@ class UsuarioController extends Controller
      */
     public function index(Request $request)
     {
-        $query = User::where('id', '!=', Auth::user()->id)->with('usuario');
+
+        $query = User::where('id', '!=', Auth::user()->id)
+                        ->where('roles_id', '!=', Rol::roleId('Proveedor'))
+                            ->with('usuario');
 
         if($request->filter){
             $like = '%'.$request->filter.'%';
@@ -241,14 +245,13 @@ class UsuarioController extends Controller
 
     public function activity(Request $request, $id){
 
-        $actividades = Log::where('user_id', $id)
-                            ->where('tabla', 'users')->get();
-        if ($actividades){
-            return response()->json($actividades);
-        
-        }else{
-            return response()->json(['error' => 'No hay datos']);
-        }
+        $actividades = DB::table('logs')
+                            ->select('*', DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as fecha'))
+                                ->where('user_id', $id)
+                                ->orderBy('fecha', 'desc')
+                                ->get();
+
+        return response()->json($actividades);
     }
 
     public function buscarUsuarios(Request $request)
@@ -264,7 +267,7 @@ class UsuarioController extends Controller
                 ->get();
 
 
-     return response()->json($usuarios);
+        return response()->json($usuarios);
     }
 
 }

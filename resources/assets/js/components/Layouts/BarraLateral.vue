@@ -34,20 +34,20 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu">
             <li class="header">MENU</li>
-            <li class="active treeview">
+
+            <li class="active treeview" 
+                v-if="auth.user.profile.roles_id == role.ADMINISTRADOR 
+                || auth.user.profile.roles_id ==role.SUPERVISOR">
+                
                 <a href="#">
                     <i class="fa fa-dashboard"></i>
-                    <span>Ejemplo componenete</span>
+                    <span>Administraci&oacute;n de Usuarios</span>
                     <span class="pull-right-container">
                     <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <router-link tag="li" to="/">
-                        <a><i class="fa fa-circle-o"></i>
-                            Home
-                        </a>
-                    </router-link>
+
                     <router-link 
                         v-if="auth.user.profile.roles_id == role.ADMINISTRADOR"
                         tag="li" 

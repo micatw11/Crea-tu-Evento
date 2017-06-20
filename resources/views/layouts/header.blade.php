@@ -32,9 +32,7 @@
     <title>{{ config('app.name', 'Crea tu Evento') }}</title>
     <!--<title> @yield ('title') | Crea tu Evento</title>-->
     <style>
-            html, body{
-                background-color:#ecf0f5;
-            }
+        html, body{background-color:#ecf0f5;}
     </style>
   <!-- Scripts -->
   <script>

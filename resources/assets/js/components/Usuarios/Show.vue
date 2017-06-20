@@ -1,14 +1,8 @@
 <template>
         <div class="content">
-            <p> 
-                <b>Apellido: </b>
-            
-                {{usuario.apellido}}
-            </p>
-
             <p>
                 <b>Nombre: </b>
-                {{usuario.nombre}}
+                {{usuario.apellido}}, {{usuario.nombre}}
             </p>
 
             <p>

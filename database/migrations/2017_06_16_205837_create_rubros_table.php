@@ -21,7 +21,7 @@ class CreateRubrosTable extends Migration
             $table->integer('codigo')->unsigned();
             $table->integer('categoria_id')->unsigned();
             $table->integer('proveedor_id')->unsigned();
-            $table->integer('domicilio_id')->unsigned();
+            $table->integer('domicilio_id')->unsigned()->nullable();
             $table->foreign('proveedor_id')->references('id')->on('proveedores');
             $table->foreign('domicilio_id')->references('id')->on('domicilios');
             $table->timestamps();

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Proveedor;
+use App\Rol;
 
 class ProveedorController extends Controller
 {
@@ -14,7 +15,7 @@ class ProveedorController extends Controller
      */
     public function index()
     {
-        $query = Proveedor::with('user.usuario', 'domicilio')->where('estado','!=', 'Baja');
+        $query = Proveedor::with('user.usuario', 'domicilio');
 
         $proveedores = $query->paginate(10);
         return response()->json($proveedores);
@@ -84,5 +85,26 @@ class ProveedorController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function cambiarEstado(Request $request, $id){
+
+        $proveedor = Proveedor::where('user_id', $id)->with('user')->firstOrFail();
+
+        if($request->has('action') === 'Baja'){
+            $proveedor->user->roles_id = Rol::roleId('Usuario');
+        } 
+        else if ( $request->has('action') === 'Aprobado' && $proveedor->user->roles_id == Rol::roleId('Usuario') ) 
+        {
+            $proveedor->user->roles_id = Rol::roleId('Proveedor');
+        }
+        $proveedor->estado = $request->input('action');
+
+
+        if($proveedor->save()){
+            return response()->json(['data' =>  'OK'], 200);
+        } else {
+            return response()->json(['error' =>  'Internal Server Error' , 'request' => $request ], 500);
+        }
     }
 }

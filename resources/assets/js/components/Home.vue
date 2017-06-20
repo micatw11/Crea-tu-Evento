@@ -1,6 +1,5 @@
 <template>
-    <div class="content-wrapper">
-        <path-content></path-content>
+    <div>
         <section class="content">
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
@@ -18,8 +17,16 @@
 </template>
 
 <script>
-import PathContent from './Layouts/Path.vue'
     export default {
-        components: {PathContent}
+        props: {
+            titlePath: {
+                type: String,
+                required: true
+            },
+            listPath: {
+                type: Array,
+                required: true
+            }
+        }
     }
 </script>

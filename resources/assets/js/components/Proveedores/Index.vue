@@ -1,12 +1,11 @@
 <template>
-	<div class="content-wrapper">
-		<path-content :titleContent="titleContent"></path-content>
+	<div>
         <div class="content"> 
             <div class="row">
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <filter-bar></filter-bar>
+                            <filter-bar-proveedor></filter-bar-proveedor>
                         </div>
 
                         <!-- /.box-header -->
@@ -21,26 +20,40 @@
                                 :api-url="url"
                                 pagination-path=""
                                 @vuetable:pagination-data="onPaginationData"
-                                detail-row-component="my-detail-row"
+                                detail-row-component="my-detail-row-proveedor"
                                 @vuetable:cell-clicked="onCellClicked">
 
                                     <template slot="actions" scope="props">
                                         <div class="custom-actions">
 
+                                            <!-- Ver perfil -->
                                             <button class="btn-xs btn-default"
-                                                @click="onActionVer('view-item', props.rowData, props.rowIndex)">
+                                                @click="onActionShow(props.rowData, props.rowIndex)">
                                                 <i class="glyphicon glyphicon-search"></i> Ver
                                             </button>
 
-                                             <button v-if="props.rowData.estado === 'Tramite'" class="btn-xs btn-default"
-                                                @click="onActionConfirmar(1, props.rowData, props.rowIndex)">
-                                                <i class="fa fa-check"></i> Aceptar
+                                            <!-- Aprobar a proveedor -->
+                                            <button v-if="props.rowData.estado === 'Tramite' ||
+                                                        props.rowData.estado === 'Baja'" 
+                                                        class="btn-xs btn-default"
+                                                @click="onActionEstado('Aprobado', props.rowData, props.rowIndex)">
+                                                <i class="fa fa-check"></i> Aprobar
                                             </button>
-                                             <button v-else class="btn-xs btn-default"
-                                                @click="onActionRechazar(2, props.rowData, props.rowIndex)">
+
+                                            <!-- Rechazar a proveedor -->
+                                            <button v-if="props.rowData.estado === 'Tramite'"
+                                                        class="btn-xs btn-default"
+                                                @click="onActionEstado('Rechazado', props.rowData, props.rowIndex)">
                                                 <i class="fa fa-close"></i> Rechazar
                                             </button>
 
+                                            <!-- Baja a proveedor -->
+                                            <button 
+                                                v-if="props.rowData.estado === 'Aprobado'" 
+                                                     class="btn-xs btn-default"
+                                                @click="onActionEstado('Baja',props.rowData, props.rowIndex)">
+                                                <i class="fa fa-close"></i> Baja
+                                            </button>
                                         </div>
                                     </template>
 
@@ -75,13 +88,12 @@
     import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo';
     import Style from './../Layouts/Style-css.js';
     import FilterBar from './FilterBarProveedor';
-    import DetailRow from './DetailRowProveedor';
+    import DetailRowProveedor from './DetailRowProveedor';
     import colums from './colums.js';
     import route from '../../routes.js';
-    import PathContent from '../Layouts/Path';
 
-    Vue.component('filter-bar', FilterBar);
-    Vue.component('my-detail-row', DetailRow);
+    Vue.component('filter-bar-proveedor', FilterBar);
+    Vue.component('my-detail-row-proveedor', DetailRowProveedor);
 
     export default {
         data(){
@@ -97,7 +109,7 @@
             }
         },
         components: {
-            Vuetable, VuetablePagination, VuetablePaginationInfo, PathContent
+            Vuetable, VuetablePagination, VuetablePaginationInfo
         },
         mounted() {
             this.$events.$on('filter-set', eventData => this.onFilterSet(eventData));
@@ -120,6 +132,29 @@
                 }
                 Vue.nextTick( () => this.$refs.vuetable.refresh())
             },
+            onActionShow(data, index){
+                route.push("/usuario/"+data.user_id+"/perfil")
+            },
+            onActionEstado(action, data, index){
+                this.$http.post(
+                    'api/proveedor/'+data.user_id+'/estado',
+                    {
+                        _method: 'PATCH',
+                        action: action
+                    }
+                ).then(response => {
+                    this.$toast.success({
+                        title:'¡Acción realizada!',
+                        message:'La acción se ha realizado correctamente.'
+                    });
+                    data.estado = action;
+                }, response => {
+                    this.$toast.error({
+                        title:'¡Error!',
+                        message:'No se han podido realizar los cambios. :('
+                    });
+                })
+            }
         },
 
     }
