@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\ProveedorRequest;
 use App\Proveedor;
+use App\Domicilio;
 
 class ProveedorController extends Controller
 {
@@ -36,9 +38,33 @@ class ProveedorController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(ProveedorRequest $request)
+    {   
+        
+        $proveedor= Proveedor::create([
+                    'user_id' => $request->user_id,
+                    'nombre' => $request->nombre,
+                    'cuit' => $request->cuit,
+                    'habilitacion' => $request->habilitacion,
+                    'ingresos_brutos' => $request->ingresos_brutos,
+                    //'persona' => $request->persona,
+                    'email' => $request->email,
+                    'estado' => "Tramite"]);
+        $domicilio= Domicilio::create([
+                    'calle'=> $request->calle,
+                    'numero'=> $request->numero,
+                    'piso'=> $request->piso,
+                    'localidad_id'=> $request->localidad_id,
+                    'codigo_postal'=> $request->codigo_postal
+            ]);
+        if (($proveedor)&&($domicilio)){
+            return response()->json(['data' => 'OK'], 200);
+        
+        } else {
+            return response()->json([
+                'error' => 'Unauthorized',
+            ], 401);
+        }
     }
 
     /**
