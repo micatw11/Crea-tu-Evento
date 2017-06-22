@@ -12,12 +12,6 @@ export default [
                         dataClass: 'text-center'           
                     },
                     {
-                        name: 'persona',
-                        title: 'Persona',
-                        titleClass: 'text-center',
-                        dataClass: 'text-center'           
-                    },
-                    {
                         name: 'cuit',
                         title: 'N° Cuit',
                         titleClass: 'text-center',

@@ -1,18 +1,13 @@
 <template>
-    <div>
+    <div v-bind:class="classWrapper">
         <bar v-if="auth.user.authenticated && showComponent"></bar>
         <barra-lateral v-if="auth.user.authenticated & showComponent"></barra-lateral>
-        <div v-bind:class="classWrapper">
+        <div v-bind:class="classContentWrapper">
             <path-content 
-                v-if="auth.user.authenticated"
-                :listPath="listPath"
-                :titlePath="titlePath">
+                v-if="auth.user.authenticated">
             </path-content>
-            <router-view 
-                @reloadComponents="reloadComponents()" 
-                :titlePath="titlePath" 
-                :listPath="listPath">
-            </router-view>
+
+            <router-view></router-view>
         </div>
     </div>
 </template>
@@ -32,10 +27,19 @@ export default {
             titlePath: ''
         }
     },
+    mounted() {
+        this.$events.listen('reloadComponents', this.reloadComponents);
+    },
     computed: {
-        classWrapper: function () {
+        classContentWrapper: function () {
             return {
                 'content-wrapper': this.auth.user.authenticated,
+                '': !this.auth.user.authenticated,
+            }
+        },
+        classWrapper: function () {
+            return {
+                'wrapper': this.auth.user.authenticated,
                 '': !this.auth.user.authenticated,
             }
         }

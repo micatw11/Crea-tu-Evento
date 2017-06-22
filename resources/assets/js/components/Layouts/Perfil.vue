@@ -1,6 +1,5 @@
 <template>
-    <div>
-
+    <div class="default-content">
         <section class="content">
             <div class="row">
                 <div class="col-md-3">
@@ -10,10 +9,14 @@
                             <img class="profile-user-img img-responsive img-circle" :src="srcUrl" alt="User profile picture">
 
                             <h3 v-if="perfil !== null" class="profile-username">
-                                {{perfil.apellido}}, {{perfil.nombre}}
+                                {{perfil.nombre}} {{perfil.apellido}}
                             </h3>
 
-                            <image-input @avatarUpdate="updateAvatar()" v-if="perfil !== null && perfil.user_id == auth.user.profile.id" ></image-input>
+                            <image-input 
+                                @avatarUpdate="updateAvatar()" 
+                                v-if="perfil !== null && perfil.user_id == auth.user.profile.id">
+                            </image-input>
+
                         </div>
                         <!-- /.box-body -->
                     </div>
@@ -22,12 +25,12 @@
                     <!-- About Me Box -->
                     <div class="box box-primary">
                         <div class="box-header with-border">
-                            <h3 class="box-title">About Me</h3>
+                            <h3 class="box-title">Informaci&oacute;n</h3>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
 
-                            <strong><i class="fa fa-map-marker margin-r-5"></i> Location</strong>
+                            <strong><i class="fa fa-map-marker margin-r-5"></i> Locati&oacute;n</strong>
 
                             <p v-if="perfil !== null" class="text-muted">{{ perfil.localidad.nombre}}, {{perfil.localidad.provincia.nombre}}</p>
 
@@ -145,7 +148,7 @@ export default {
         },
         updateAvatar: function(){
             this.getUserPerfil();
-            this.$emit('reloadComponents');
+            this.$events.fire('reloadComponents');
         },
         reload: function(){
             this.getUserPerfil();
@@ -161,5 +164,8 @@ export default {
 <style>
     .nav-tabs-custom > .tab-content {
         min-height: 250px;
+    }
+    .profile-username {
+        margin-left: 23px;
     }
 </style>

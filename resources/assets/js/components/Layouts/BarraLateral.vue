@@ -41,7 +41,7 @@
                 
                 <a href="#">
                     <i class="fa fa-dashboard"></i>
-                    <span>Administraci&oacute;n de Usuarios</span>
+                    <span>Usuarios</span>
                     <span class="pull-right-container">
                     <i class="fa fa-angle-left pull-right"></i>
                     </span>

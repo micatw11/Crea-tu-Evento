@@ -186,7 +186,7 @@ export default {
                         title:'¡Error!',
                         message:'No se han podido guardar los cambios. :('
                     });
-                    if(response.status === 401)
+                    if(response.status === 401|| response.status === 422 )
                     {
                         this.errorsApi = response.body;
                     }

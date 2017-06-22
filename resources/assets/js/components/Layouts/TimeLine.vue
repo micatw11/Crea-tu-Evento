@@ -86,11 +86,13 @@
             compareTimeLabel: function(value){
                 let newDate = value;
                 if(this.dateCompare === null){
+
                     this.dateCompare = newDate;
                     return true;
                 } else {
                     if(!moment(this.dateCompare, 'YYYY-MM-DD').isSame(moment(value, 'YYYY-MM-DD'))){
                         this.dateCompare = newDate;
+
                         return true;
                     } else {
                         return false;
@@ -99,7 +101,7 @@
             },
             iconsAction: function(action){
                 return 'fa fa-check-circle bg-blue'
-            }
+            },
         }
     }
 </script>

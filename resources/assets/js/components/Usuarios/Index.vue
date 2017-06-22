@@ -1,11 +1,9 @@
 <template>
-
-    <div>
-
+    <div class="default-content">
         <div class="content"> 
             <div class="row">
                 <div class="col-xs-12">
-                    <div class="box">
+                    <div class="box box-primary">
                         <div class="box-header">
                             <filter-bar></filter-bar>
                         </div>
@@ -22,7 +20,7 @@
                                 api-url="/api/usuario"
                                 pagination-path=""
                                 @vuetable:pagination-data="onPaginationData"
-                                detail-row-component="my-detail-row"
+                                detail-row-component="detail-row-usuario"
                                 @vuetable:cell-clicked="onCellClicked">
 
                                     <template slot="actions" scope="props">
@@ -41,16 +39,17 @@
 
                                             <button class="btn-xs btn-default"
                                                 @click="onActionShow('view-item', props.rowData, props.rowIndex)">
-                                                <i class="glyphicon glyphicon-search"></i>
+                                                <i class="glyphicon glyphicon-search"></i> Ver
                                             </button>
 
                                              <button v-if="props.rowData.estado == 2" class="btn-xs btn-default"
                                                 @click="onActionDelete(1, props.rowData, props.rowIndex)">
-                                                <i class="fa fa-unlock"></i>
+                                                <i class="fa fa-unlock"></i> Desbloquear
                                             </button>
+
                                              <button v-else class="btn-xs btn-default"
                                                 @click="onActionDelete(2, props.rowData, props.rowIndex)">
-                                                <i class="ion-locked"></i>
+                                                <i class="ion-locked"></i> Bloquear
                                             </button>
 
                                         </div>
@@ -93,18 +92,18 @@
     import colums from './colums.js';
     import route from '../../routes.js';
 
-    Vue.component('my-detail-row', DetailRow);
+    Vue.component('detail-row-usuario', DetailRow);
     Vue.component('filter-bar', FilterBar);
   
     export default {
 
         data() {
             return {
-                titleContent: 'Usuarios',
+                titlePath: 'Usuarios',
                 options: [
                           { text: 'Administrador', value: '1' },
-                          { text: 'Operador', value: '3' },
                           { text: 'Supervisor', value: '2' },
+                          { text: 'Operador', value: '3' },
                           { text: 'Usuario', value: '5' }
                       ],
                 css: Style,
@@ -112,15 +111,17 @@
                 info: 'Mirando de {from} a {to} de {total} usuarios',
                 noData:'No hay datos',
                 moreParams: {},
-                colums: colums
+                colums: colums,
+                listPath : [{route: '/', name: 'Home'}, {route: '/usuario', name: 'Usuarios'}]
             }
         },
         components: {
-            Vuetable, VuetablePagination, VuetablePaginationInfo
+            Vuetable, VuetablePagination, VuetablePaginationInfo,
         },
         mounted() {
             this.$events.$on('filter-set', eventData => this.onFilterSet(eventData))
             this.$events.$on('filter-reset', e => this.onFilterReset())
+            this.$events.fire('changePath', this.listPath, this.titlePath);
         },
         methods: {
             genderLabel (value) {
@@ -146,6 +147,9 @@
                 this.$refs.vuetable.changePage(page)
             },
             onActionShow(action, data, index) {
+                this.listPath.push({route: '/usuario/'+data.id+'/perfil', name: 'Perfil'})
+                this.$events.fire('changePath', this.listPath, 'Perfil');
+                
                 route.push("/usuario/"+data.id+"/perfil")
             },
             onActionDelete(action, data, index) {

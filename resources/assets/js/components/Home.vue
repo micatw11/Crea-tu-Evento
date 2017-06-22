@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="default-content">
         <section class="content">
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
@@ -18,15 +18,19 @@
 
 <script>
     export default {
-        props: {
-            titlePath: {
-                type: String,
-                required: true
-            },
-            listPath: {
-                type: Array,
-                required: true
+        data(){
+            return {
+                titlePath: 'Home',
+                listaPath: [{route: '/', name: 'Home'}]
             }
+        },
+        mounted() {
+            this.$events.fire('changePath', this.listaPath, this.titlePath);
         }
     }
 </script>
+<style>
+    .default-content {
+        min-height: 570px;
+    }
+</style>

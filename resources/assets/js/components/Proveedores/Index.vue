@@ -1,17 +1,17 @@
 <template>
-	<div>
+	<div class="default-content">
         <div class="content"> 
             <div class="row">
                 <div class="col-xs-12">
-                    <div class="box">
+                    <div class="box box-primary">
                         <div class="box-header">
                             <filter-bar-proveedor></filter-bar-proveedor>
                         </div>
 
                         <!-- /.box-header -->
                         <div class="box-body table-responsive no-padding">
-                            <vuetable
-                                :fields="colums"
+                            <vuetable-p
+                                :fields="tableColumns"
                                 tableClass="table table-bordered"
                                 :noDataTemplate="noDataTemplate"
                                 :css="css"
@@ -20,7 +20,7 @@
                                 :api-url="url"
                                 pagination-path=""
                                 @vuetable:pagination-data="onPaginationData"
-                                detail-row-component="my-detail-row-proveedor"
+                                detail-row-component="detail-row-proveedor"
                                 @vuetable:cell-clicked="onCellClicked">
 
                                     <template slot="actions" scope="props">
@@ -57,24 +57,25 @@
                                         </div>
                                     </template>
 
-                            </vuetable>
+                            </vuetable-p>
                         </div>
 
                         <div class="box-footer clearfix">
 
-                            <vuetable-pagination-info 
+                            <vuetable-pagination-info-p 
                                 ref="paginationInfo"
                                 :info-template='info'
                                 :no-data-template='noData'>
-                            </vuetable-pagination-info>
+                            </vuetable-pagination-info-p>
 
-                            <vuetable-pagination 
+                            <vuetable-pagination-p 
                                 ref="pagination"
                                 :css="css.pagination"
                                 @vuetable-pagination:change-page="onChangePage">
-                            </vuetable-pagination>
-                            
+                            </vuetable-pagination-p>
+
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -83,36 +84,40 @@
 </template>
 
 <script>
-    import Vuetable from 'vuetable-2/src/components/Vuetable';
-    import VuetablePagination from 'vuetable-2/src/components/VuetablePagination';
-    import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo';
+    import VuetableP from 'vuetable-2/src/components/Vuetable';
+    import VuetablePaginationP from 'vuetable-2/src/components/VuetablePagination';
+    import VuetablePaginationInfoP from 'vuetable-2/src/components/VuetablePaginationInfo';
     import Style from './../Layouts/Style-css.js';
     import FilterBar from './FilterBarProveedor';
     import DetailRowProveedor from './DetailRowProveedor';
-    import colums from './colums.js';
+    import tableColumns from './colums.js';
     import route from '../../routes.js';
 
     Vue.component('filter-bar-proveedor', FilterBar);
-    Vue.component('my-detail-row-proveedor', DetailRowProveedor);
+    Vue.component('detail-row-proveedor', DetailRowProveedor);
 
     export default {
         data(){
             return {
-                titleContent: 'Proveedores',
                 css: Style,
                 noDataTemplate: 'No hay datos para visualizar',
                 info: 'Mirando de {from} a {to} de {total} proveedores',
                 noData:'No hay datos',
                 moreParams: {},
-                colums: colums,
-                url: '/api/proveedor'
+                tableColumns: tableColumns,
+                url: '/api/proveedor',
+                titlePath: 'Proveedores',
+                listPath : [{route: '/', name: 'Home'}, {route: '/proveedores', name: 'Proveedores'}]
             }
         },
         components: {
-            Vuetable, VuetablePagination, VuetablePaginationInfo
+            VuetableP, VuetablePaginationP, VuetablePaginationInfoP
         },
         mounted() {
             this.$events.$on('filter-set', eventData => this.onFilterSet(eventData));
+
+            this.$events.fire('changePath', this.listPath, this.titlePath);
+
         },
         methods: {
             onPaginationData (paginationData) {
@@ -125,6 +130,7 @@
             onCellClicked (data, field, event) {
                 this.$refs.vuetable.toggleDetailRow(data.id)
             },
+
             //filtros de busqueda
             onFilterSet (filterText) {
                 this.moreParams = {
@@ -132,9 +138,14 @@
                 }
                 Vue.nextTick( () => this.$refs.vuetable.refresh())
             },
+
             onActionShow(data, index){
+                this.listPath.push({route: '/usuario/'+data.user_id+'/perfil', name: 'Perfil'})
+                this.$events.fire('changePath', this.listPath, 'Perfil');
+
                 route.push("/usuario/"+data.user_id+"/perfil")
             },
+
             onActionEstado(action, data, index){
                 this.$http.post(
                     'api/proveedor/'+data.user_id+'/estado',

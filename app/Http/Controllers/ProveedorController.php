@@ -13,9 +13,15 @@ class ProveedorController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $query = Proveedor::with('user.usuario', 'domicilio');
+
+        if($request->filter){
+            $like = '%'.$request->filter.'%';
+            $query->where('nombre','like', $like )
+                    ->orWhere('email', 'like', $like);
+        }
 
         $proveedores = $query->paginate(10);
         return response()->json($proveedores);

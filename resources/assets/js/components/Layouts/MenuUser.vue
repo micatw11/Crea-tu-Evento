@@ -17,10 +17,7 @@
             <!-- Menu Footer-->
             <li class="user-footer">
                 <div class="pull-left">
-                    <router-link 
-                        :to="pathUser" replace>
-                        <a class="btn btn-default btn-flat">Perfil</a>
-                    </router-link>
+                    <a @click="pushToProfile" class="btn btn-default btn-flat">Perfil</a>
                 </div>
                 <div class="pull-right">
                     <a  @click="logout" class="btn btn-default btn-flat">
@@ -41,7 +38,9 @@
             return {
                 auth: auth,
                 pathUser: '',
-                srcUrl: ''
+                srcUrl: '',
+                titlePath: 'Perfil',
+                listPath : [{route: '/', name: 'Home'}, {route: '/usuario/'+auth.user.profile.id +'/perfil' , name: 'Perfil'}]
             }
         },
         mounted: function(){
@@ -68,6 +67,10 @@
                 return (value == null)
                     ? ''
                     : moment(value, 'YYYY-MM-DD').fromNow();
+            },
+            pushToProfile: function(){
+                this.$events.fire('changePath', this.listPath, this.titlePath);
+                router.push(this.pathUser);
             }
         }
     }
