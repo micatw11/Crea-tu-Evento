@@ -15,6 +15,8 @@ var FormPasswordReset = require('./components/Auth/Password/Email');
 var PasswordReset = require('./components/Auth/Password/Reset');
 var IndexUsuarios = require('./components/Usuarios/Index');
 var IndexProveedor = require('./components/Proveedores/Index');
+var NewProveedor = require('./components/Proveedores/New');
+var Form = require('./components/Proveedores/Form');
 var InternalServerError = require('./components/Errors/500');
 
 let routes = [
@@ -63,6 +65,17 @@ let routes = [
 			component: IndexProveedor,
 			beforeEnter: guardRoute,
 			meta: { Role: [role.ADMINISTRADOR, role.SUPERVISOR] }	
+		},
+		{
+			path: '/proveedor/new',
+			component: NewProveedor,
+			beforeEnter: guardRoute,
+			meta: { Role: [role.ADMINISTRADOR, role.SUPERVISOR, role.OPERADOR]}	
+		},
+		{
+			path: '/form',
+			component: Form,
+			beforeEnter: guardRoute	
 		},
 		{
 			path: '/about',

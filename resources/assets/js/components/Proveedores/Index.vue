@@ -1,13 +1,17 @@
 <template>
 	<div class="default-content">
         <div class="content"> 
+            <div class="box-header">
+                <div class="col-sm-2">
+                    <router-link to='/proveedor/new'><button type="button" class="btn btn-block btn-primary btn-sm">Nuevo Proveedor</button></router-link>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-xs-12">
                     <div class="box box-primary">
                         <div class="box-header">
                             <filter-bar-proveedor></filter-bar-proveedor>
                         </div>
-
                         <!-- /.box-header -->
                         <div class="box-body table-responsive no-padding">
                             <vuetable-p
@@ -92,6 +96,9 @@
     import DetailRowProveedor from './DetailRowProveedor';
     import tableColumns from './colums.js';
     import route from '../../routes.js';
+    import PathContent from '../Layouts/Path';
+    import NewProveedor from './New';
+
 
     Vue.component('filter-bar-proveedor', FilterBar);
     Vue.component('detail-row-proveedor', DetailRowProveedor);
@@ -111,7 +118,7 @@
             }
         },
         components: {
-            VuetableP, VuetablePaginationP, VuetablePaginationInfoP
+            VuetableP, VuetablePaginationP, VuetablePaginationInfoP, PathContent, NewProveedor
         },
         mounted() {
             this.$events.$on('filter-set', eventData => this.onFilterSet(eventData));
