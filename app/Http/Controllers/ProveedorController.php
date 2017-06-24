@@ -7,6 +7,7 @@ use App\Http\Requests\ProveedorRequest;
 use App\Proveedor;
 use App\Rol;
 use App\Domicilio;
+use App\Rubro;
 
 class ProveedorController extends Controller
 {
@@ -47,31 +48,46 @@ class ProveedorController extends Controller
      */
     public function store(ProveedorRequest $request)
     {   
-        
+        $domicilio= $this->createDomicilio($request);
         $proveedor= Proveedor::create([
                     'user_id' => $request->user_id,
                     'nombre' => $request->nombre,
                     'cuit' => $request->cuit,
                     'ingresos_brutos' => $request->ingresos_brutos,
                     'email' => $request->email,
-                    'estado' => "Tramite"]);
-        $domicilio= Domicilio::create([
+                    'estado' => "Tramite",
+                    'domicilio_id' => $domicilio->id]);
+       
+        $rubro= Rubro::create([
+                    'proveedor_id'=> $proveedor->id,
+                    'categoria_id'=> $request->rubro_categoria_id,
+                    'denominacion'=> $request->rubro_denominacion,
+                    'fecha_habilitacion'=> $request->rubro_fecha_habilitacion,
+                    'habilitacion'=> $request->rubro_habilitacion
+            ]);
+
+        $domicilioRubro= $this->createDomicilio($request->rubro_domicilio);
+
+        if (($proveedor)&&($domicilio)&&$rubro){
+            return response()->json(['data' => 'OK'], 200);
+        
+        } else {
+            return response()->json([
+                'error' => 'Unauthorized', 'proveedor' => $proveedor
+            ], 401);
+        }
+    }
+
+    public function createDomicilio(Request $request)
+    {
+        return Domicilio::create([
                     'calle'=> $request->calle,
                     'numero'=> $request->numero,
                     'piso'=> $request->piso,
                     'localidad_id'=> $request->localidad_id
             ]);
-        $proveedor->domicilio_id= $domicilio->id;
-        $proveedor->save();
-        if (($proveedor)&&($domicilio)){
-            return response()->json(['data' => 'OK'], 200);
-        
-        } else {
-            return response()->json([
-                'error' => 'Unauthorized',
-            ], 401);
-        }
     }
+
 
     /**
      * Display the specified resource.

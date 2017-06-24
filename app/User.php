@@ -32,7 +32,7 @@ class User extends Authenticatable
         return $this->hasOne('App\Usuario');
     }
 
-    public function proverdor()
+    public function proveedor()
     {
         return $this->hasOne('App\Proverdor');
     }

@@ -9,6 +9,7 @@
                         :debounce="250"
                         v-validate="'required'" 
                         v-model="proveedor.user_id"
+                        name= "user_id"
                         data-vv-name="usuarios"
                         :on-search="getOptions" 
                         :options="usuarios"
@@ -74,7 +75,7 @@
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('ingresos_brutos')&&validar}">
                 <label for="inputIngresosBrutos" class="col-sm-2 control-label">N° Ingresos Brutos</label>
                     <div class="col-sm-10">
-                     <input name="ingresos brutos" v-validate="'required'" type="number" v-model="proveedor.ingresos_brutos" class="form-control" value="ingresos_brutos">
+                     <input name="ingresos_brutos" v-validate="'required'" type="number" v-model="proveedor.ingresos_brutos" class="form-control" value="ingresos_brutos">
                 </div>
                 <!-- validacion vee-validation -->
                 <div>
@@ -82,7 +83,7 @@
                 </div>
                 <!-- validacion api-->
                 <div class="text-red" v-if="errorsApi.ingresos_brutos">
-                    <div v-if="errorsApi.ingresos_brutos" v-for="msj in errorsApi.ingresos_brutos">
+                    <div v-for="msj in errorsApi.ingresos_brutos">
                         <p>{{ msj }}</p>
                     </div>
                 </div>
@@ -100,17 +101,17 @@
                 </div>
             
                 <div v-if="tipoProveedor == 'rubro'">
-                     <label for="tipoProveedor" class="control-label">Complete los datos del {{tipoProveedor}}</label>
+                     <label for="tipoProveedor" class="control-label">Complete los datos del {{tipoProveedor}}</label><br><br>
                     <form-rubro :rubro="rubro" :validarRubro="validarRubro" :validarDomicilio="validarDomicilio" :errorsApi="errorsApi"></form-rubro>
                 </div>
 
                 <div v-if="tipoProveedor == 'salon'">salon
-                    <label for="tipoProveedor" class="control-label">Complete los datos del {{tipoProveedor}}</label>
+                    <label for="tipoProveedor" class="control-label">Complete los datos del {{tipoProveedor}}</label><br><br>
                     <form-rubro :rubro="rubro" :validarRubro="validarRubro" :validarDomicilio="validarDomicilio" :errorsApi="errorsApi"></form-rubro>
                 </div>
         </div>
      </form>
-     <div class="box-footer clearfix">
+     <div class="col-sm-12 box-footer clearfix" style="text-align:center;">
         <button class="btn btn-default">
             <i class="glyphicon glyphicon-chevron-left"></i>
             Atras
@@ -188,7 +189,7 @@ export default {
     methods: {
        //envio de formulario de modificación de informacion de usuario
         sendForm: function() {
-             console.log('send')
+             console.log('send', this.rubro)
             this.$http.post(
                 'api/proveedor', 
                 {
@@ -200,7 +201,15 @@ export default {
                     calle: this.domicilio.calle,
                     numero: this.domicilio.numero,
                     piso: this.domicilio.piso,
-                    localidad_id: this.domicilio.localidad_id.value
+                    localidad_id: this.domicilio.localidad_id.value,
+                    rubro_categoria_id: this.rubro.categoria_id,
+                    rubro_denominacion: this.rubro.denominacion,
+                    rubro_habilitacion: this.rubro.habilitacion,
+                    rubro_fecha_habilitacion: this.rubro.fecha_habilitacion,
+                    rubro_domicilio:  {calle: this.rubro.domicilio.calle,
+                            numero: this.rubro.domicilio.numero,
+                            piso: this.rubro.domicilio.piso, 
+                            localidad_id: this.rubro.domicilio.localidad_id}
                 })
                 .then(response => {
                     this.$emit('reload')
@@ -257,7 +266,13 @@ export default {
                 calle: null,
                 numero: null,
                 piso: null,
-                localidad_id: null,
+                localidad_id: null
+            },
+            this.rubro={
+                categoria_id: null,
+                denominacion: null,
+                habilitacion: null,
+                fecha_habilitacion: null
             }
         }
     }

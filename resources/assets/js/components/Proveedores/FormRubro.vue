@@ -4,7 +4,7 @@
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('categoria')&&validarRubro}">
                 <label for="inputCategoria" class="col-sm-2 control-label">Categoria</label>
                 <div class="col-sm-10">
-                     <input name="categoria" v-validate="'required'" type="number" v-model="rubro.categoria" value="categoria">
+                     <input name="categoria" v-validate="'required'" type="number" v-model="rubro.categoria_id" value="categoria">
                     <!-- validacion vee-validation -->
                     <span v-show="errors.has('categoria')&&validarRubro" class="help-block">{{ errors.first('categoria') }}</span>
                     <!-- validacion api-->
@@ -32,7 +32,7 @@
             </div>
             <!--Datos de Habilitación y dirección del comercio-->
             <label class="control-label">Cuenta con Comercio de atención. </label> <br>  
-            <input type="checkbox" id="checkbox" v-model="Comercio">
+            <input type="checkbox" id="checkbox" v-model="Comercio" style="text-align:center;">
             <label for="checkbox">{{ Comercio == true ? "Si" : "No" }}</label>
              <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('facha')&&validarRubro}" v-if="Comercio == true">
                 <label for="inputNombre" class="col-sm-2 control-label">Fecha de habilitación</label>
@@ -97,7 +97,7 @@ export default {
                 required: true
             },
             validarDomicilio: {
-                value: this.validarRubro,
+                value: this.validarDomicilio,
                 type: Boolean,
                 required: true
             },

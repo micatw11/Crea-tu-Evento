@@ -27,14 +27,21 @@ class ProveedorRequest extends FormRequest
             'user_id' => 'required|exists:usuarios,id',
             'nombre' => 'required|min:4|max:55',
             'cuit' => 'required|min:9|max:11',
-            'habilitacion' => 'required|min:5|max:10',
             'ingresos_brutos' => 'required|min:5|max:10',
             'email' => 'required|email',
             'calle'=>'required|min:4|max:55',
             'numero'=> 'required|min:1|max:10',
             'piso'=> 'min:1|max:10',
             'localidad_id'=> 'required|exists:localidades,id',
-            'codigo_postal'=> 'min:3|max:10',
+            'rubro_categoria_id',
+            'rubro_denominacion',
+            'rubro_fecha_habilitacion',
+            'rubro_habilitacion',
+            'rubro_domicilio.calle',
+            'rubro_domicilio.numero',
+            'rubro_domicilio.piso',
+            'rubro_domicilio.localidad_id'
+
         ];
     }
 

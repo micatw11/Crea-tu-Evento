@@ -11,7 +11,6 @@ class Rubro extends Model
     protected $fillable = [ 'proveedor_id', 
     						'categoria_id',
     						'denominacion',//descripcion de la actividad 
-    						'codigo', 
     						'habilitacion',
                             'fecha_habilitacion',
     						'domicilio_id'
