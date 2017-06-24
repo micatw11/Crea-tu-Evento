@@ -30,11 +30,11 @@
                     </div>
                 </div>
             </div>
-        <!--Datos de Habilitación y dirección del comercio-->
-        <label class="control-label">Cuenta con Comercio de atención. </label> <br>  
-        <input type="checkbox" id="checkbox" v-model="Comercio">
-        <label for="checkbox">{{ Comercio == true ? "Si" : "No" }}</label>
-         <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('facha')&&validarRubro}" v-if="Comercio == true">
+            <!--Datos de Habilitación y dirección del comercio-->
+            <label class="control-label">Cuenta con Comercio de atención. </label> <br>  
+            <input type="checkbox" id="checkbox" v-model="Comercio">
+            <label for="checkbox">{{ Comercio == true ? "Si" : "No" }}</label>
+             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('facha')&&validarRubro}" v-if="Comercio == true">
                 <label for="inputNombre" class="col-sm-2 control-label">Fecha de habilitación</label>
                 <div class="col-sm-10"><br/>
 

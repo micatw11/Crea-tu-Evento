@@ -15,7 +15,7 @@ class CreateProveedoresTable extends Migration
     {
         Schema::create('proveedores', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('cuit', 11)->unsigned(); 
+            $table->integer('cuit')->length(12)->unsigned(); 
             $table->string('nombre', 50);  //nombre o razon social o denominacion
             $table->string('email', 50);
             $table->integer('ingresos_brutos')->unsigned();
