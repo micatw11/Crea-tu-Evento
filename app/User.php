@@ -58,6 +58,7 @@ class User extends Authenticatable
      public function scopeBloqueo($action){
         if($action === 2 || $action === 1){
           $this->estado = $action;
+
           return $this->save();
         }else
           return false;

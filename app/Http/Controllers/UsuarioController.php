@@ -138,13 +138,19 @@ class UsuarioController extends Controller
 
     public function bloquear(Request $request, $id)
     {
-        $table_name= "users";
-        if($request->action == 2)
-            $accion= "bloquear";
-        else
-            $accion= "desbloquear";
         $user = User::where('id', $id)->firstOrFail();
-        if($user->bloqueo($request->action)){
+        $table_name= "users";
+        
+        $action = $request->action;
+        if( $action === 2){
+            $accion= "bloquear";
+            $user->estado = 2;
+        } else {
+            $accion= "desbloquear";
+            $user->estado = 1;
+        }
+
+        if($user->save()){
             Log::logs($id, $table_name, $accion , $user);
             return response()->json(['data' =>  'OK'], 200);
         } else {
@@ -198,7 +204,9 @@ class UsuarioController extends Controller
         $table_name= "users";
         $accion= "cambiarRol";
         $user = User::where('id', $id)->firstOrFail();
+
         Log::logs($id, $table_name,  $accion , $user);
+
         $user->roles_id = $request->roles_id;
 
         if($user->save()){

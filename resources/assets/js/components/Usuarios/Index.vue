@@ -43,12 +43,12 @@
                                             </button>
 
                                              <button v-if="props.rowData.estado == 2" class="btn-xs btn-default"
-                                                @click="onActionDelete(1, props.rowData, props.rowIndex)">
+                                                @click="onActionBlock(1, props.rowData, props.rowIndex)">
                                                 <i class="fa fa-unlock"></i> Desbloquear
                                             </button>
 
                                              <button v-else class="btn-xs btn-default"
-                                                @click="onActionDelete(2, props.rowData, props.rowIndex)">
+                                                @click="onActionBlock(2, props.rowData, props.rowIndex)">
                                                 <i class="ion-locked"></i> Bloquear
                                             </button>
 
@@ -152,7 +152,7 @@
                 
                 route.push("/usuario/"+data.id+"/perfil")
             },
-            onActionDelete(action, data, index) {
+            onActionBlock(action, data, index) {
                     this.$http.post('api/user/'+ data.id+'/block',
                     {
                         _method: 'PATCH',
