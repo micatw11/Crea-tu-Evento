@@ -56,12 +56,9 @@ class User extends Authenticatable
     }
 
      public function scopeBloqueo($action){
-        if($action === 2){
-          $this->estado = 2;
-          return $this->save();
-        }else
-          return false;
-
+        if($action === 2 || $action === 1){
+          $this->estado = $action;
+        }
     }
 
       public function scopeAlta(){

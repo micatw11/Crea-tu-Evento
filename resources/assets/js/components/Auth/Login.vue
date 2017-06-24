@@ -11,6 +11,14 @@
                 <p>Podras volver a activarla cuando desees introduciendo tu correo
                  y contraseña.</p>
             </div>
+            <div v-if="internalServerError" class="callout callout-danger">
+                <h4>¡Vaya! Algo salió mal. :(</h4>
+                <p>Hemos tenido un problema en el servidor. Intentelo nuevamente mas tarde.</p>
+            </div>
+            <div v-if="block" class="callout callout-danger">
+                <h4>¡Vaya!</h4>
+                <p>Su cuenta se encuentra temporalmente bloqueada.</p>
+            </div>
             <div class="text-center" v-if="error">
                 <p class="text-red">Estas credenciales no coinciden con nuestros registros.</p>
             </div>
@@ -59,7 +67,7 @@
             <router-link tag="a" to="/password-reset">¿Se olvido la contraseña?</router-link><br>
             <router-link tag="a" to="/registrar" class="text-center">
                     Registrar una nueva cuenta
-              </router-link>
+            </router-link>
 
         </div>
         <!-- /.login-box-body -->
@@ -81,7 +89,9 @@ export default {
             remember: false,
             error: false,
             errorsApi: [],
-            deactivated: false
+            deactivated: false,
+            internalServerError: false,
+            block: false
         }
     },
     beforeMount() {
@@ -116,6 +126,10 @@ export default {
                 this.validar = false;
                 if(response.body.error) {
                     this.error = true
+                } else if (response.status === 500) {
+                    this.internalServerError = true;
+                } else if(response.status === 403) {
+                    this.block = true;
                 } else {
                     this.errorsApi = response.body
                 }
@@ -128,6 +142,9 @@ export default {
             this.deactivated = false;
             //validacion despues de el evento enviar
             this.validar = true;
+            //elimino errors si los hubo anteriormente
+            this.internalServerError = false;
+            this.block = false;
             this.$validator.validateAll().then(() => {
                 this.sendForm();
             }).catch(() => {

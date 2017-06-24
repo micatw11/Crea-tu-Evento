@@ -23,10 +23,11 @@ class AuthController extends Controller
                 $user->usuario->localidad->provincia;
                 return response()->json(['data' =>  $user, 'csrfToken', csrf_token()]);
              }  else {
+                    Auth::logout();
                     return response()->json([
-                        'error' => 'Unauthorized', 'message' => 'Bloqueado',
-                    ], 401);
-                }
+                        'message' => 'La cuenta se ecuentra temporalmente bloqueada.',
+                    ], 403);
+            }
         } else {
             return response()->json([
                 'error' => 'Unauthorized',

@@ -3,13 +3,21 @@
         <!-- The timeline -->
             <ul class="timeline">
                 <!-- timeline time label -->
-                <template v-for="actividad in actividades">
-                    <template v-if="compareTimeLabel(actividad.fecha)">
-                    <li class="time-label">
-                        <span class="bg-red">
-                            {{formatDate(actividad.fecha)}}
-                        </span>
-                    </li>
+                <template v-for="(actividad, index) in actividades" v-if="index <= cantTimes">
+                    <template v-if="index > 0 && compareTimeLabel(index)">
+
+                            <li class="time-label">
+                                <span  class="bg-red">
+                                    {{formatDate(actividad.fecha)}} 
+                                </span>
+                            </li>
+                    </template>
+                    <template v-if="index == 0">
+                        <li class="time-label">
+                            <span class="bg-red">
+                                {{formatDate(actividad.fecha)}} 
+                            </span>
+                        </li>
                     </template>
 
                     <!-- /.timeline-label -->
@@ -27,12 +35,19 @@
                                 {{actividad.valor_antiguo}} 
                             </div>
                         </div>
+                        
+                    </li>
+                    <li v-if="index == cantTimes">
+                        <div class="timeline-item">
+                            <button class="btn 23btn-default btn-block" @click="verMas">Ver Mas</button>
+                        </div>
                     </li>
                 </template>
                 <li>
                     <i class="fa fa-clock-o bg-gray"></i>
                 </li>
             </ul>
+
 
     </div>
     <div v-else class="text-center">
@@ -51,15 +66,13 @@
                 titleContent: 'Linea de Tiempo',
                 actividades: [],
                 auth: auth,
-                dateCompare: null
+                cantTimes: 10
+
             }
         },
         beforeMount: function() {
             this.getUserlog()
 
-        },
-        components: {
-            
         },
         methods:{
             getUserlog: function(){
@@ -83,20 +96,21 @@
                     ? ''
                     : moment(value, 'YYYY-MM-DD').format('DD MMM YYYY');
             },
-            compareTimeLabel: function(value){
-                let newDate = value;
-                if(this.dateCompare === null){
+            compareTimeLabel: function(index){
 
-                    this.dateCompare = newDate;
+                if(!moment(this.actividades[index-1].fecha, 'YYYY-MM-DD')
+                    .isSame(moment(this.actividades[index].fecha, 'YYYY-MM-DD'))){
                     return true;
                 } else {
-                    if(!moment(this.dateCompare, 'YYYY-MM-DD').isSame(moment(value, 'YYYY-MM-DD'))){
-                        this.dateCompare = newDate;
-
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    return false;
+                }
+            },
+            verMas: function(){
+                if((this.cantTimes + 10) > this.actividades.length )
+                {
+                    this.cantTimes = this.cantTimes + 10;
+                } else {
+                    this.cantTimes = this.actividades.length;
                 }
             },
             iconsAction: function(action){
