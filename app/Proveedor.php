@@ -10,10 +10,8 @@ class Proveedor extends Model
 
     protected $fillable = [ 'user_id',
     						'cuit',
-    						'nombre', 
-    						'habilitacion', 
+    						'nombre',  
     						'ingresos_brutos',
-                            'persona',
     						'email',
     						'domicilio_id',
     						'estado'

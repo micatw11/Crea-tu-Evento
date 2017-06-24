@@ -71,20 +71,13 @@
             </div>
         </div>
         <div class="col-sm-6">
-            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('habilitacion')||('ingresos_brutos')&&validar}">
-                <div class="col-sm-6">
-                    <label for="inputHabilitacion" class="control-label">N° Habilitación</label>
-                     <input name="habilitación" v-validate="'required'" type="number" v-model="proveedor.habilitacion" class="form-control" value="habilitacion">
-                </div>
-                <div class="col-sm-6">
-                    <label for="inputIngresosBrutos" class="control-label">N° Ingresos Brutos</label>
+            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('ingresos_brutos')&&validar}">
+                <label for="inputIngresosBrutos" class="col-sm-2 control-label">N° Ingresos Brutos</label>
+                    <div class="col-sm-10">
                      <input name="ingresos brutos" v-validate="'required'" type="number" v-model="proveedor.ingresos_brutos" class="form-control" value="ingresos_brutos">
                 </div>
                 <!-- validacion vee-validation -->
-                <div class="col-sm-6">
-                    <span v-show="errors.has('habilitacion')&&validar" class="help-block">{{ errors.first('habilitacion') }}</span>
-                </div>
-                <div class="col-sm-6">
+                <div>
                     <span v-show="errors.has('ingresos_brutos')&&validar" class="help-block">{{ errors.first('ingresos_brutos') }}</span>
                 </div>
                 <!-- validacion api-->
@@ -92,15 +85,30 @@
                     <div v-if="errorsApi.ingresos_brutos" v-for="msj in errorsApi.ingresos_brutos">
                         <p>{{ msj }}</p>
                     </div>
-                    <div v-if="errorsApi.habilitacion" v-for="msj in errorsApi.habilitacion">
-                            <p>{{ msj }}</p>
-                    </div>
                 </div>
                 
             </div>
-           <form-domicilio :domicilio="domicilio" :validarDom="validarDom" :errorsApi="errorsApi"></form-domicilio>
+           <form-domicilio :domicilio="domicilio" :validarDomicilio="validarDomicilio" :errorsApi="errorsApi"></form-domicilio>
         </div>
-    
+        <div class="col-sm-12">
+                <div class="form-group has-feedback">
+                    <label for="tipoProveedor" class="col-sm-2 control-label">Tipo Proveedor</label>
+                    <div class="col-sm-10">
+                        <input v-model="tipoProveedor" name="tipoProveedor" id="rubro" type="radio" value="rubro">Rubro<br/>
+                        <input v-model="tipoProveedor" name="tipoProveedor" id="salon" type="radio" value="salon">Salón<br/>
+                    </div>
+                </div>
+            
+                <div v-if="tipoProveedor == 'rubro'">
+                     <label for="tipoProveedor" class="control-label">Complete los datos del {{tipoProveedor}}</label>
+                    <form-rubro :rubro="rubro" :validarRubro="validarRubro" :validarDomicilio="validarDomicilio" :errorsApi="errorsApi"></form-rubro>
+                </div>
+
+                <div v-if="tipoProveedor == 'salon'">salon
+                    <label for="tipoProveedor" class="control-label">Complete los datos del {{tipoProveedor}}</label>
+                    <form-rubro :rubro="rubro" :validarRubro="validarRubro" :validarDomicilio="validarDomicilio" :errorsApi="errorsApi"></form-rubro>
+                </div>
+        </div>
      </form>
      <div class="box-footer clearfix">
         <button class="btn btn-default">
@@ -120,38 +128,62 @@
 import auth from '../../auth.js';
 import vSelect from "vue-select";
 import FormDomicilio from './FormDomicilio.vue';
+import FormRubro from './FormRubro.vue';
 
 
 export default {
     data() {
         return {
+            tipoProveedor: null,
             showModificar: false,
             usuarios:[],
             validar: false,
-            validarDom: false,
+            validarDomicilio: false,
+            validarRubro: false,
             showModificar: false,
             proveedor: { 
                 user_id: null,
                 nombre: null,
                 cuit: null,
-                habilitacion: null,
                 ingresos_brutos: null,
-                persona: null,
                 email: null
             },
             domicilio: {
                 calle: null,
                 numero: null,
                 piso: null,
-                localidad_id: null,
-                codigo_postal: null
+                localidad_id: null
+            },
+            rubro:{
+                categoria_id: null,
+                denominacion: null,
+                habilitacion: null,
+                fecha_habilitacion: null,
+                domicilio: {
+                    calle: null,
+                    numero: null,
+                    piso: null,
+                    localidad_id: null
+                },
+            },
+            salon:{
+                denominacion: null, 
+                codigo: null, 
+                habilitacion: null,
+                fecha_habilitacion: null,
+                domicilio: {
+                    calle: null,
+                    numero: null,
+                    piso: null,
+                    localidad_id: null
+                },
             },
             error: false,
             errorsApi: {}
         }
     },
     components: {
-        vSelect, FormDomicilio
+        vSelect, FormDomicilio, FormRubro
     },
     methods: {
        //envio de formulario de modificación de informacion de usuario
@@ -163,17 +195,14 @@ export default {
                     user_id: this.proveedor.user_id.value,
                     nombre: this.proveedor.nombre,
                     cuit: this.proveedor.cuit,
-                    habilitacion: this.proveedor.habilitacion,
                     ingresos_brutos: this.proveedor.ingresos_brutos,
                     email: this.proveedor.email,
                     calle: this.domicilio.calle,
                     numero: this.domicilio.numero,
                     piso: this.domicilio.piso,
-                    localidad_id: this.domicilio.localidad_id.value,
-                    codigo_postal: this.domicilio.codigo_postal
+                    localidad_id: this.domicilio.localidad_id.value
                 })
                 .then(response => {
-                    //recarga de informacion de perfil
                     this.$emit('reload')
                     this.showModificar = false;
                     this.$toast.success({
@@ -183,6 +212,8 @@ export default {
                     this.resetForm();
                 }, response => {
                     this.validar= false;
+                    this.validarDomicilio= false;
+                    this.validarRubro= false;
                     this.$toast.error({
                         title:'¡Error!',
                         message:'No se han podido guardar los cambios. :('
@@ -199,7 +230,8 @@ export default {
                        this.sendForm();                  
                 }).catch(() => {
                     this.validar = true;
-                    this.validarDom = true;
+                    this.validarDomicilio = true;
+                    this.validarRubro = true;
                     this.$events.fire('validarForm')
                 });
         },
@@ -217,17 +249,15 @@ export default {
                 auser_id: null,
                 nombre: null,
                 cuit: null,
-                habilitacion: null,
                 ingresos_brutos: null,
-                persona: null,
                 email: null
             },
             this.domicilio= {
+                habilitacion: null,
                 calle: null,
                 numero: null,
                 piso: null,
                 localidad_id: null,
-                codigo_postal: null,
             }
         }
     }

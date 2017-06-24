@@ -151,9 +151,7 @@ class UsuarioController extends Controller
         }
 
         if($user->save()){
-
             Log::logs($id, $table_name, $accion , $user);
-
             return response()->json(['data' =>  'OK'], 200);
         } else {
             return response()->json(['error' =>  'Internal Server Error' , 'request' => $request ], 500);

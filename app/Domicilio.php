@@ -12,7 +12,6 @@ class Domicilio extends Model
     						'calle', 
     						'numero',
     						'piso',
-    						'codigo_postal',
     						'localidad_id'
     					  ];
 

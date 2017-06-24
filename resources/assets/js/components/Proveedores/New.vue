@@ -1,6 +1,5 @@
 <template>
-    <div class="content-wrapper">
-     <path-content :titleContent="titleContent"></path-content>
+    <div class="default-content">
         <section class="content">
             <div class="row">
                 <div class="col-xs-12">
@@ -11,15 +10,6 @@
                         <div class="box-body table-responsive no-padding">
                         	<form-prov></form-prov>
                         </div>
-                        <!--<div class="box-footer clearfix">
-                                <button class="btn btn-default" >
-                                    <i class="glyphicon glyphicon-chevron-left"></i>
-                                    Atras
-                                </button>
-                                <button @click="validateBeforeSubmit()" type="button" class="btn btn-primary">
-                                    Guargar
-                                </button>
-                        </div>-->
                     </div>
                 </div>
             </div>    
@@ -37,12 +27,15 @@ import PathContent from '../Layouts/Path.vue';
 export default {
     data() {
         return {
-            titleContent: 'Nuevo Proveedor',
-            
+            titlePath: 'Nuevo Proveedor',
+            listaPath: [{route: '/', name: 'Home'},{route: '/proveedor/new', name: 'Nuevo Proveedor'}]
         }
     },
     components: {
         FormProv,PathContent
     },
+    mounted() {
+            this.$events.fire('changePath', this.listaPath, this.titlePath);
+        }
 }
 </script>

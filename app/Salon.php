@@ -10,6 +10,7 @@ class Salon extends Model
 
     protected $fillable = [ 'proveedor_id', 
     						'descripcion',
+    						'habilitacion',
                             'fecha_habilitacion',
     						'domicilio_id'
     					  ];

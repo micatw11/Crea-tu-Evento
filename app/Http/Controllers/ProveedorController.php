@@ -52,18 +52,17 @@ class ProveedorController extends Controller
                     'user_id' => $request->user_id,
                     'nombre' => $request->nombre,
                     'cuit' => $request->cuit,
-                    'habilitacion' => $request->habilitacion,
                     'ingresos_brutos' => $request->ingresos_brutos,
-                    //'persona' => $request->persona,
                     'email' => $request->email,
                     'estado' => "Tramite"]);
         $domicilio= Domicilio::create([
                     'calle'=> $request->calle,
                     'numero'=> $request->numero,
                     'piso'=> $request->piso,
-                    'localidad_id'=> $request->localidad_id,
-                    'codigo_postal'=> $request->codigo_postal
+                    'localidad_id'=> $request->localidad_id
             ]);
+        $proveedor->domicilio_id= $domicilio->id;
+        $proveedor->save();
         if (($proveedor)&&($domicilio)){
             return response()->json(['data' => 'OK'], 200);
         
