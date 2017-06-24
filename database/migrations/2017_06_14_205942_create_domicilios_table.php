@@ -19,7 +19,6 @@ class CreateDomiciliosTable extends Migration
             $table->string('calle', 50);
             $table->integer('numero')->unsigned();
             $table->integer('piso')->unsigned();
-            $table->integer('codigo_postal')->unsigned();
             $table->integer('localidad_id')->unsigned();
             $table->foreign('localidad_id')->references('id')->on('localidades');
             $table->timestamps();

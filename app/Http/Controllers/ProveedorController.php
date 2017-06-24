@@ -54,7 +54,6 @@ class ProveedorController extends Controller
                     'cuit' => $request->cuit,
                     'habilitacion' => $request->habilitacion,
                     'ingresos_brutos' => $request->ingresos_brutos,
-                    //'persona' => $request->persona,
                     'email' => $request->email,
                     'estado' => "Tramite"]);
         $domicilio= Domicilio::create([
@@ -64,6 +63,8 @@ class ProveedorController extends Controller
                     'localidad_id'=> $request->localidad_id,
                     'codigo_postal'=> $request->codigo_postal
             ]);
+        $proveedor->domicilio_id= $domicilio->id;
+        $proveedor->save();
         if (($proveedor)&&($domicilio)){
             return response()->json(['data' => 'OK'], 200);
         

@@ -1,7 +1,7 @@
 <template>
    <form class="form-horizontal">
      <div>
-         <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('localidad_id')&&validarDom}">
+         <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('localidad_id')&&validarDomicilio}">
             <label class="col-sm-2 control-label">Localidad</label>
             <div class="col-sm-10">
                    <v-select
@@ -15,7 +15,7 @@
                     </v-select>
                
                 <!-- validacion vee-validation -->
-                <span v-show="errors.has('localidad_id')&&validarDom" class="help-block">{{ errors.first('localidad_id') }}</span>
+                <span v-show="errors.has('localidad_id')&&validarDomicilio" class="help-block">{{ errors.first('localidad_id') }}</span>
                 <!-- validacion api-->
                 <div class="text-red" v-if="errorsApi.localidad_id">
                     <div v-for="msj in errorsApi.localidad_id">
@@ -25,12 +25,12 @@
             </div>
         </div>
 
-        <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('calle')&&validarDom}">
+        <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('calle')&&validarDomicilio}">
             <label for="inputCalle" class="col-sm-2 control-label">Direccion: </label>
             <div class="col-sm-10">
                 <input name="calle"  v-validate:domicilio.calle="'required|min:4'" type="text" class="form-control" v-model="domicilio.calle" placeholder="calle">
                 <!-- validacion vee-validation -->
-                <span v-show="errors.has('calle')&&validarDom" class="help-block">{{ errors.first('calle') }}</span>
+                <span v-show="errors.has('calle')&&validarDomicilio" class="help-block">{{ errors.first('calle') }}</span>
                 <!-- validacion api-->
                 <div class="text-red" v-if="errorsApi.calle">
                     <div v-for="msj in errorsApi.calle">
@@ -40,41 +40,30 @@
             </div>
         </div>
         
-        <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has(('codigo_postal')||('numero')||('piso'))&&validarDom}">
+        <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has(('numero')||('piso'))&&validarDomicilio}">
             <div class="col-sm-12">
-                <div class="col-sm-4">
-                    <label for="inputNro" class="control-label">N°: </label>
-                    <div>
+                <div class="col-sm-6">
+                    <label for="inputNro" class="col-sm-2 control-label">N°: </label>
+                    <div class="col-sm-10">
                          <input name="numero" v-validate="'required'" type="number" v-model="domicilio.numero" value="numero" class="form-control">
                     </div>
                 </div>
 
-                <div class="col-sm-4">
-                    <label for="inputPiso" class="control-label">Piso: </label>
-                    <div>
+                <div class="col-sm-6">
+                    <label for="inputPiso" class="col-sm-2 control-label">Piso: </label>
+                    <div class="col-sm-10">
                          <input name="piso" v-validate="'required'" type="number" v-model="domicilio.piso" value="piso" class="form-control">
                     </div>
                 </div>
-
-                <div class="col-sm-4">
-                    <label for="inputCodigoPostal" class="control-label">C. Postal: </label>
-                    
-                         <input name="codigo_postal" v-validate="'required'" type="number" v-model="domicilio.codigo_postal" value="codigo_postal" class="form-control">
-                   
-                </div>
                 <!-- validacion vee-validation -->
-                <span v-show="errors.has('numero')&&validarDom" class="help-block">{{ errors.first('numero') }}</span>
-                <span v-show="errors.has('codigo_postal')&&validarDom" class="help-block">{{ errors.first('codigo_postal') }}</span>
-                <span v-show="errors.has('piso')&&validarDom" class="help-block">{{ errors.first('piso') }}</span>
+                <span v-show="errors.has('numero')&&validarDomicilio" class="help-block">{{ errors.first('numero') }}</span>
+                <span v-show="errors.has('piso')&&validarDomicilio" class="help-block">{{ errors.first('piso') }}</span>
                 <!-- validacion api-->
                 <div class="text-red">
                     <div v-if="errorsApi.numero" v-for="msj in errorsApi.numero">
                         <p>{{ msj }}</p>
                     </div>
                     <div v-if="errorsApi.piso" v-for="msj in errorsApi.piso">
-                        <p>{{ msj }}</p>
-                    </div>
-                    <div v-if="errorsApi.codigo_postal" v-for="msj in errorsApi.codigo_postal">
                         <p>{{ msj }}</p>
                     </div>
                 </div>
@@ -96,8 +85,8 @@ export default {
                 type: Object,
                 required: true
             },
-            validarDom: {
-                value: this.validarDom,
+            validarDomicilio: {
+                value: this.validarDomicilio,
                 type: Boolean,
                 required: true
             },
@@ -123,9 +112,9 @@ export default {
          validateBeforeSubmit: function() {
             console.log('domicilio');
             this.$validator.validateAll().then(() => {
-                    this.validarDom = false;
+                    this.validarDomicilio = false;
                 }).catch(() => {
-                    this.validarDom = true;
+                    this.validarDomicilio = true;
                 });
         },
         //obtiene lista de usuarios segun requiera

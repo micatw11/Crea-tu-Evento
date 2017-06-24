@@ -144,7 +144,6 @@ class UsuarioController extends Controller
         else
             $accion= "desbloquear";
         $user = User::where('id', $id)->firstOrFail();
-
         if($user->bloqueo($request->action)){
             Log::logs($id, $table_name, $accion , $user);
             return response()->json(['data' =>  'OK'], 200);
