@@ -209,7 +209,7 @@ export default {
                     rubro_domicilio:  {calle: this.rubro.domicilio.calle,
                             numero: this.rubro.domicilio.numero,
                             piso: this.rubro.domicilio.piso, 
-                            localidad_id: this.rubro.domicilio.localidad_id}
+                            localidad_id: this.rubro.domicilio.localidad_id.value}
                 })
                 .then(response => {
                     this.$emit('reload')

@@ -28598,6 +28598,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -28611,7 +28619,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             remember: false,
             error: false,
             errorsApi: [],
-            deactivated: false
+            deactivated: false,
+            internalServerError: false,
+            block: false
         };
     },
     beforeMount: function beforeMount() {
@@ -28643,6 +28653,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.validar = false;
                 if (response.body.error) {
                     _this.error = true;
+                } else if (response.status === 500) {
+                    _this.internalServerError = true;
+                } else if (response.status === 403) {
+                    _this.block = true;
                 } else {
                     _this.errorsApi = response.body;
                 }
@@ -28657,6 +28671,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.deactivated = false;
             //validacion despues de el evento enviar
             this.validar = true;
+            //elimino errors si los hubo anteriormente
+            this.internalServerError = false;
+            this.block = false;
             this.$validator.validateAll().then(function () {
                 _this2.sendForm();
             }).catch(function () {
@@ -29825,6 +29842,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -29836,14 +29868,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             titleContent: 'Linea de Tiempo',
             actividades: [],
             auth: __WEBPACK_IMPORTED_MODULE_1__auth_js__["a" /* default */],
-            dateCompare: null
+            cantTimes: 10
+
         };
     },
 
     beforeMount: function beforeMount() {
         this.getUserlog();
     },
-    components: {},
     methods: {
         getUserlog: function getUserlog() {
             var _this = this;
@@ -29864,20 +29896,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             __WEBPACK_IMPORTED_MODULE_2_moment___default.a.locale('es');
             return value == null ? '' : __WEBPACK_IMPORTED_MODULE_2_moment___default()(value, 'YYYY-MM-DD').format('DD MMM YYYY');
         },
-        compareTimeLabel: function compareTimeLabel(value) {
-            var newDate = value;
-            if (this.dateCompare === null) {
+        compareTimeLabel: function compareTimeLabel(index) {
 
-                this.dateCompare = newDate;
+            if (!__WEBPACK_IMPORTED_MODULE_2_moment___default()(this.actividades[index - 1].fecha, 'YYYY-MM-DD').isSame(__WEBPACK_IMPORTED_MODULE_2_moment___default()(this.actividades[index].fecha, 'YYYY-MM-DD'))) {
                 return true;
             } else {
-                if (!__WEBPACK_IMPORTED_MODULE_2_moment___default()(this.dateCompare, 'YYYY-MM-DD').isSame(__WEBPACK_IMPORTED_MODULE_2_moment___default()(value, 'YYYY-MM-DD'))) {
-                    this.dateCompare = newDate;
-
-                    return true;
-                } else {
-                    return false;
-                }
+                return false;
+            }
+        },
+        verMas: function verMas() {
+            if (this.cantTimes + 10 > this.actividades.length) {
+                this.cantTimes = this.cantTimes + 10;
+            } else {
+                this.cantTimes = this.actividades.length;
             }
         },
         iconsAction: function iconsAction(action) {
@@ -31064,7 +31095,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 rubro_domicilio: { calle: this.rubro.domicilio.calle,
                     numero: this.rubro.domicilio.numero,
                     piso: this.rubro.domicilio.piso,
-                    localidad_id: this.rubro.domicilio.localidad_id }
+                    localidad_id: this.rubro.domicilio.localidad_id.value }
             }).then(function (response) {
                 _this.$emit('reload');
                 _this.showModificar = false;
@@ -32513,7 +32544,7 @@ Vue.component('filter-bar', __WEBPACK_IMPORTED_MODULE_5__FilterBarUsuario___defa
 
             __WEBPACK_IMPORTED_MODULE_8__routes_js__["a" /* default */].push("/usuario/" + data.id + "/perfil");
         },
-        onActionDelete: function onActionDelete(action, data, index) {
+        onActionBlock: function onActionBlock(action, data, index) {
             var _this2 = this;
 
             this.$http.post('api/user/' + data.id + '/block', {
@@ -39886,7 +39917,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "login-box-msg"
   }, [_vm._v("Iniciar su sesión")]), _vm._v(" "), (_vm.deactivated) ? _c('div', {
     staticClass: "callout callout-danger"
-  }, [_c('h4', [_vm._v("Cuenta desactivada! :(")]), _vm._v(" "), _c('p', [_vm._v("Podras volver a activarla cuando desees introduciendo tu correo\n             y contraseña.")])]) : _vm._e(), _vm._v(" "), (_vm.error) ? _c('div', {
+  }, [_c('h4', [_vm._v("Cuenta desactivada! :(")]), _vm._v(" "), _c('p', [_vm._v("Podras volver a activarla cuando desees introduciendo tu correo\n             y contraseña.")])]) : _vm._e(), _vm._v(" "), (_vm.internalServerError) ? _c('div', {
+    staticClass: "callout callout-danger"
+  }, [_c('h4', [_vm._v("¡Vaya! Algo salió mal. :(")]), _vm._v(" "), _c('p', [_vm._v("Hemos tenido un problema en el servidor. Intentelo nuevamente mas tarde.")])]) : _vm._e(), _vm._v(" "), (_vm.block) ? _c('div', {
+    staticClass: "callout callout-danger"
+  }, [_c('h4', [_vm._v("¡Vaya!")]), _vm._v(" "), _c('p', [_vm._v("Su cuenta se encuentra temporalmente bloqueada.")])]) : _vm._e(), _vm._v(" "), (_vm.error) ? _c('div', {
     staticClass: "text-center"
   }, [_c('p', {
     staticClass: "text-red"
@@ -40035,7 +40070,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "tag": "a",
       "to": "/registrar"
     }
-  }, [_vm._v("\n                Registrar una nueva cuenta\n          ")])], 1)])
+  }, [_vm._v("\n                Registrar una nueva cuenta\n        ")])], 1)])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "login-logo"
@@ -40169,7 +40204,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           staticClass: "btn-xs btn-default",
           on: {
             "click": function($event) {
-              _vm.onActionDelete(1, props.rowData, props.rowIndex)
+              _vm.onActionBlock(1, props.rowData, props.rowIndex)
             }
           }
         }, [_c('i', {
@@ -40178,7 +40213,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           staticClass: "btn-xs btn-default",
           on: {
             "click": function($event) {
-              _vm.onActionDelete(2, props.rowData, props.rowIndex)
+              _vm.onActionBlock(2, props.rowData, props.rowIndex)
             }
           }
         }, [_c('i', {
@@ -43166,12 +43201,16 @@ if (false) {
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return (_vm.actividades.length > 0) ? _c('div', [_c('ul', {
     staticClass: "timeline"
-  }, [_vm._l((_vm.actividades), function(actividad) {
-    return [(_vm.compareTimeLabel(actividad.fecha)) ? [_c('li', {
+  }, [_vm._l((_vm.actividades), function(actividad, index) {
+    return (index <= _vm.cantTimes) ? [(index > 0 && _vm.compareTimeLabel(index)) ? [_c('li', {
       staticClass: "time-label"
     }, [_c('span', {
       staticClass: "bg-red"
-    }, [_vm._v("\n                        " + _vm._s(_vm.formatDate(actividad.fecha)) + "\n                    ")])])] : _vm._e(), _vm._v(" "), _c('li', [_c('i', {
+    }, [_vm._v("\n                                " + _vm._s(_vm.formatDate(actividad.fecha)) + " \n                            ")])])] : _vm._e(), _vm._v(" "), (index == 0) ? [_c('li', {
+      staticClass: "time-label"
+    }, [_c('span', {
+      staticClass: "bg-red"
+    }, [_vm._v("\n                            " + _vm._s(_vm.formatDate(actividad.fecha)) + " \n                        ")])])] : _vm._e(), _vm._v(" "), _c('li', [_c('i', {
       class: _vm.iconsAction(actividad.accion)
     }), _vm._v(" "), _c('div', {
       staticClass: "timeline-item"
@@ -43187,7 +43226,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }, [_vm._v(_vm._s(actividad.accion))]), _vm._v(" en la tabla " + _vm._s(actividad.tabla) + " con rol " + _vm._s(actividad.roles_id))]), _vm._v(" "), (actividad.valor_antiguo) ? _c('div', {
       staticClass: "timeline-body"
-    }, [_vm._v("\n                          Los valores antiguos son:\n                            " + _vm._s(actividad.valor_antiguo) + " \n                        ")]) : _vm._e()])])]
+    }, [_vm._v("\n                          Los valores antiguos son:\n                            " + _vm._s(actividad.valor_antiguo) + " \n                        ")]) : _vm._e()])]), _vm._v(" "), (index == _vm.cantTimes) ? _c('li', [_c('div', {
+      staticClass: "timeline-item"
+    }, [_c('button', {
+      staticClass: "btn 23btn-default btn-block",
+      on: {
+        "click": _vm.verMas
+      }
+    }, [_vm._v("Ver Mas")])])]) : _vm._e()] : _vm._e()
   }), _vm._v(" "), _vm._m(0)], 2)]) : _c('div', {
     staticClass: "text-center"
   }, [_vm._v("\n    No se econtraron actividades!.\n")])
