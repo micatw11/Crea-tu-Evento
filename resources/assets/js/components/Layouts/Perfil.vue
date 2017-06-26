@@ -23,7 +23,7 @@
                     <!-- /.box -->
 
                     <!-- About Me Box -->
-                    <div class="box box-primary">
+                    <div class="box box-primary" >
                         <div class="box-header with-border">
                             <h3 class="box-title">Informaci&oacute;n</h3>
                         </div>
@@ -60,52 +60,65 @@
                 <!-- /.col -->
 
                 <div class="col-md-9">
-                    <div class="nav-tabs-custom">
-                        <ul class="nav nav-tabs">
-                            <!--<li class="active"><a href="#activity" data-toggle="tab">Activity</a></li>-->
-                            <li class="active" v-if="perfil !== null && perfil.user_id == auth.user.profile.id">
-                                <a href="#info" data-toggle="tab">Informaci&oacute;n</a>
-                            </li>
-                            <li v-if="perfil !== null && perfil.user_id == auth.user.profile.id">
-                                <a href="#account" data-toggle="tab">Cuenta</a>
-                            </li>
-                            <li v-if="perfil !== null && 
-                                (perfil.user_id == auth.user.profile.id 
-                                || auth.user.profile.roles_id === role.ADMINISTRADOR)">
-                                <a href="#timeline" data-toggle="tab">Actividades</a>
-                            </li>
-                        </ul>
-                        <div class="tab-content">
-                            
-                            <!--<div class="active tab-pane" id="activity">
-                                <activity></activity>
-                            </div>-->
-
-                            <div v-if="perfil !== null && perfil.user_id == auth.user.profile.id" 
-                                class="active tab-pane" id="info">
-                                <show></show>
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Cuenta</h3>
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             </div>
-
-                            <div class="tab-pane" id="timeline">
-                                <time-line></time-line>
-                            </div>
-
-                             <div v-if="perfil !== null && perfil.user_id == auth.user.profile.id" 
-                                class="tab-pane content" 
-                                id="account">
-                                     <div>
-                                        <form-perfil 
-                                                @reload="reload()">
-                                        </form-perfil>
-                                    </div>
-                                    <br><hr>
-                                    <div>
-                                        <account></account>
-                                    </div>
-                             </div>
-                            <!-- /.tab-pane -->
                         </div>
+
+                        <div class="box-body" style="display: block;">
+                            <div class="nav-tabs-custom">
+                                <ul class="nav nav-tabs">
+                                    <!--<li class="active"><a href="#activity" data-toggle="tab">Activity</a></li>-->
+                                    <li class="active" v-if="perfil !== null && perfil.user_id == auth.user.profile.id">
+                                        <a href="#info" data-toggle="tab">Informaci&oacute;n</a>
+                                    </li>
+                                    <li v-if="perfil !== null && perfil.user_id == auth.user.profile.id">
+                                        <a href="#account" data-toggle="tab">Configuración</a>
+                                    </li>
+                                    <li v-if="perfil !== null && 
+                                        (perfil.user_id == auth.user.profile.id 
+                                        || auth.user.profile.roles_id === role.ADMINISTRADOR)">
+                                        <a href="#timeline" data-toggle="tab">Actividades</a>
+                                    </li>
+                                </ul>
+                            
+
+                                <div class="tab-content">
+                                    
+                                    <!--<div class="active tab-pane" id="activity">
+                                        <activity></activity>
+                                    </div>-->
+
+                                    <div v-if="perfil !== null && perfil.user_id == auth.user.profile.id" 
+                                        class="active tab-pane" id="info">
+                                        <show></show>
+                                    </div>
+
+                                    <div class="tab-pane" id="timeline">
+                                        <time-line></time-line>
+                                    </div>
+
+                                     <div v-if="perfil !== null && perfil.user_id == auth.user.profile.id" 
+                                        class="tab-pane content" 
+                                        id="account">
+                                             <div>
+                                                <form-perfil 
+                                                        @reload="reload()">
+                                                </form-perfil>
+                                            </div>
+                                            <br><hr>
+                                            <div>
+                                                <account></account>
+                                            </div>
+                                     </div>
+                                    <!-- /.tab-pane -->
+                                </div>
+                            </div>
                         <!-- /.tab-content -->
+                        </div>
                     </div>
                     <!-- /.nav-tabs-custom -->
                 </div>
