@@ -7,6 +7,7 @@ use App\Http\Requests\ProveedorRequest;
 use App\Proveedor;
 use App\Rol;
 use App\Domicilio;
+use App\Rubro;
 
 class ProveedorController extends Controller
 {
@@ -45,32 +46,88 @@ class ProveedorController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ProveedorRequest $request)
+    public function store(Request $request)
     {   
+        $this->validatorDomicilio($request);
+        $this->validatorProveedor($request);
+        $domicilio= $this->createDomicilio($request);
+        $proveedor= $this->createProveedor($request,$domicilio);
         
-        $proveedor= Proveedor::create([
-                    'user_id' => $request->user_id,
-                    'nombre' => $request->nombre,
-                    'cuit' => $request->cuit,
-                    'ingresos_brutos' => $request->ingresos_brutos,
-                    'email' => $request->email,
-                    'estado' => "Tramite"]);
-        $domicilio= Domicilio::create([
-                    'calle'=> $request->calle,
-                    'numero'=> $request->numero,
-                    'piso'=> $request->piso,
-                    'localidad_id'=> $request->localidad_id
-            ]);
-        $proveedor->domicilio_id= $domicilio->id;
-        $proveedor->save();
         if (($proveedor)&&($domicilio)){
             return response()->json(['data' => 'OK'], 200);
         
         } else {
             return response()->json([
-                'error' => 'Unauthorized',
+                'error' => 'Unauthorized', 'proveedor' => $proveedor
             ], 401);
         }
+    }
+
+    protected function validatorProveedor(Request $request)
+    {
+      return $this->validate($request, 
+        [
+            'user_id' => 'required|exists:usuarios,id',
+            'nombre' => 'required|min:4|max:55',
+            'cuit' => 'required|min:9|max:11',
+            'ingresos_brutos' => 'required|min:5|max:10',
+            'email' => 'required|email',
+        ]);
+    }
+
+    public function createProveedor(Request $request, $domicilio)
+    {
+        return Proveedor::create([
+                    'user_id' => $request->user_id,
+                    'nombre' => $request->nombre,
+                    'cuit' => $request->cuit,
+                    'ingresos_brutos' => $request->ingresos_brutos,
+                    'email' => $request->email,
+                    'estado' => "Tramite",
+                    'domicilio_id' => $domicilio->id]);
+    }
+
+    protected function validatorDomicilio(Request $request)
+    {
+      return $this->validate($request, 
+        [
+            'calle'=>'required|min:4|max:55',
+            'numero'=> 'required|min:1|max:10',
+            'piso'=> 'min:1|max:10',
+            'localidad_id'=> 'required|exists:localidades,id'
+        ]);
+    }
+
+    public function createDomicilio(Request $request)
+    {
+        return Domicilio::create([
+                    'calle'=> $request->calle,
+                    'numero'=> $request->numero,
+                    'piso'=> $request->piso,
+                    'localidad_id'=> $request->localidad_id
+            ]);
+    }
+
+    protected function validatorRubro(Request $request)
+    {
+      return $this->validate($request, 
+        [
+            'categoria_id',
+            'denominacion',
+            'fecha_habilitacion',
+            'habilitacion',
+        ]);
+    }
+
+    public function createRubro(Request $request,$proveedor)
+    {
+        return Rubro::create([
+                    'proveedor_id'=> $proveedor->id,
+                    'categoria_id'=> $request->categoria_id,
+                    'denominacion'=> $request->denominacion,
+                    'fecha_habilitacion'=> $request->fecha_habilitacion,
+                    'habilitacion'=> $request->habilitacion
+            ]);
     }
 
     /**
