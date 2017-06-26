@@ -2,8 +2,9 @@
     <div v-if="actividades.length > 0">
         <!-- The timeline -->
             <ul class="timeline">
+
                 <!-- timeline time label -->
-                <template v-for="(actividad, index) in actividades" v-if="index <= cantTimes">
+                <template v-for="(actividad, index) in actividades" v-if="index <= quantityTimeLine">
                     <template v-if="index > 0 && compareTimeLabel(index)">
 
                             <li class="time-label">
@@ -23,21 +24,82 @@
                     <!-- /.timeline-label -->
                     <!-- timeline item -->
                     <li>
-                        <i v-bind:class="iconsAction(actividad.accion)"></i>
+                        
+                        <icons-time :accion="actividad.accion" :table="actividad.tabla"></icons-time>
 
                         <div class="timeline-item">
                             <span class="time"><i class="fa fa-clock-o"></i> {{actividad.created_at}}</span>
 
-                            <h3 class="timeline-header">Se realizo un <a href="#">{{actividad.accion}}</a> en la tabla {{actividad.tabla}} con rol {{actividad.roles_id}}</h3>
+                            <div v-if="actividad.descripcion" class="timeline-body">
+                                {{ actividad.descripcion }} 
 
-                            <div v-if="actividad.valor_antiguo" class="timeline-body">
-                              Los valores antiguos son:
-                                {{actividad.valor_antiguo}} 
+                                <template v-if="actividad.tabla === 'users'"> 
+
+                                    <a
+                                        class="btn link"
+                                        @click="showUserProfil(actividad.registro_id)">
+                                            Ver Usuario
+                                     </a>
+
+                                                            
+                                    <!-- Modal cambiar contraseña-->
+                                    <div 
+                                        v-if="userData !== null" 
+                                        class="modal" role="dialog" 
+                                        :style="{ display : showUserData  ? 'block' : 'none' }">
+
+                                        <div class="modal-dialog">
+                                            <!-- Modal content-->
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" @click="showUserData = false">&times;</button>
+                                                    <h4 class="modal-title">{{userData.usuario.nombre}} {{userData.usuario.apellido}}</h4>
+                                                </div>
+                                                <div class="modal-body defaul-content">
+                                                    <div class="col-sm-12">
+                                                        <div class="col-sm-4">
+                                                            <div class="col-sm-12">
+                                                                <img :src="'/storage/avatars/'+ userData.usuario.avatar" width="150" height="150" class="img-responsive">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-8">
+                                                            <p>Email: {{userData.email}}</p>
+                                                            <p>Genero: {{ userData.usuario.sexo == 'F' ? 'Femenino' : 'Masculino'}}</p>
+                                                            <p>Rol: {{ userData.rol.nombre }}</p>
+                                                            <p>Cumpleaños: {{ userData.usuario.fecha_nac }}</p>
+                                                            <p>Estado: {{ formatEstado(userData.estado) }}</p>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button 
+                                                        type="button" 
+                                                        class="btn btn-default pull-left" 
+                                                        @click="showUserData = false">
+                                                        Cerrar
+                                                    </button>
+
+                                                    <button v-if="userData.estado === 1"
+                                                        type="button" 
+                                                        class="btn btn-primary pull-right"
+                                                        @click="pushUserProfil(userData.id)">
+                                                        Ver Perfil 
+                                                    </button>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </template>
+
                             </div>
                         </div>
                         
                     </li>
-                    <li v-if="index == cantTimes">
+                    <li v-if="index == quantityTimeLine">
                         <div class="timeline-item">
                             <button class="btn 23btn-default btn-block" @click="verMas">Ver Mas</button>
                         </div>
@@ -47,8 +109,6 @@
                     <i class="fa fa-clock-o bg-gray"></i>
                 </li>
             </ul>
-
-
     </div>
     <div v-else class="text-center">
         No se econtraron actividades!.
@@ -58,6 +118,7 @@
 <script>
     import router from '../../routes.js';
     import auth from '../../auth.js';
+    import IconsTime from './IconsTimeLine'
     import moment from 'moment';
 
     export default {
@@ -66,14 +127,19 @@
                 titleContent: 'Linea de Tiempo',
                 actividades: [],
                 auth: auth,
-                cantTimes: 10
+                quantityTimeLine: 9,
+                showUserData: false,
+                userData: null,
+                listPath : [
+                        {route: '/', name: 'Home'}
+                ]
 
             }
         },
         beforeMount: function() {
             this.getUserlog()
-
         },
+        components: { IconsTime },
         methods:{
             getUserlog: function(){
                 this.$http.get('api/user/actividad/'+ this.$route.params.userId )
@@ -106,15 +172,32 @@
                 }
             },
             verMas: function(){
-                if((this.cantTimes + 10) > this.actividades.length )
+                if((this.quantityTimeLine + 10) > this.actividades.length )
                 {
-                    this.cantTimes = this.cantTimes + 10;
+                    this.quantityTimeLine = this.quantityTimeLine + 10;
                 } else {
-                    this.cantTimes = this.actividades.length;
+                    this.quantityTimeLine = this.actividades.length;
                 }
             },
-            iconsAction: function(action){
-                return 'fa fa-check-circle bg-blue'
+            showUserProfil: function(id){
+                this.$http.get('api/actividad/'+ id )
+                    .then(response => {
+                        this.userData = response.data.user;
+                        this.showUserData = true;
+                    }, response => {
+
+
+                    })
+            },
+            pushUserProfil(id){
+                this.listPath.push({route: '/usuario/'+this.$route.params.userId+'/perfil', name: 'Perfil'})
+                this.$events.fire('changePath', this.listPath, 'Perfil');
+                router.push('/usuario/'+ id +'/perfil');
+            },
+            formatEstado (value){
+                if(value === 0) return 'Inactivo';
+                else if(value === 1) return 'Activo';
+                else return 'Bloqueado';
             },
         }
     }
@@ -122,5 +205,8 @@
 <style>
     .text-center {
         margin-top: 75px;
+    }
+    .modal-body.defaul-content {
+        min-height: 240px;
     }
 </style>

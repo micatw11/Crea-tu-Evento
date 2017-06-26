@@ -58,6 +58,9 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('localidades', 'LocalidadController@index');
     Route::get('localidades/{id}', 'LocalidadController@show');
     Route::get('roles', 'UsuarioController@roles');
-    Route::get('user/actividad/{id}', 'UsuarioController@activity');
+
     Route::get('busqueda/usuarios', 'UsuarioController@buscarUsuarios');
+
+    Route::get('user/actividad/{id}', 'UsuarioController@activity');
+    Route::get('actividad/{id}', 'LogController@show');
 });

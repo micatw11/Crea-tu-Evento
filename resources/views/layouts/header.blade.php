@@ -17,6 +17,8 @@
        folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="/dist/css/skins/_all-skins.min.css">
 
+    <link rel="stylesheet" href="/plugins/pace/pace.min.css">
+
     <!-- fullCalendar 2.2.5
     <link rel="stylesheet" href="/plugins/fullcalendar/fullcalendar.min.css">
     <link rel="stylesheet" href="/plugins/fullcalendar/fullcalendar.print.css" media="print">

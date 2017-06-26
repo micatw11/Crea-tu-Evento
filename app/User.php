@@ -71,6 +71,6 @@ class User extends Authenticatable
       }
 
       public function __toString(){
-        return $this->estado.', '.$this->roles_id;
+        return 'name: '.$this->name.', estado: '.$this->estado.', roles_id: '.$this->roles_id;
     }
 }

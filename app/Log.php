@@ -13,19 +13,21 @@ class Log extends Model
                             'user_id', 
                             'roles_id',
                             'accion',
+                            'descripcion',
                             'tabla',
                             'registro_id',
     						'valor_antiguo'
     					  ];
 
 
-    static public function logs($id, $table_name, $accion, $data = null){
-             $log = new Log;
+    static public function logs($id, $table_name, $accion, $data = null, $descripcion = null){
+            $log = new Log;
 
             $log->user_id = Auth::user()->id;
             $log->roles_id = Auth::user()->roles_id;
             $log->tabla = $table_name;
             $log->accion = $accion;
+            $log->descripcion = $descripcion;
             $log->registro_id = $id;
             $log->valor_antiguo = strval($data);
             $log->save();

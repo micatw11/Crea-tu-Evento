@@ -20,6 +20,7 @@ class CreateLogsTable extends Migration
             $table->integer('roles_id')->unsigned();
             $table->foreign('roles_id')->references('id')->on('roles');
             $table->string('accion');
+            $table->string('descripcion')->nullable();
             $table->string('tabla');
             $table->integer('registro_id')->unsigned();
             $table->string('valor_antiguo')->nullable();

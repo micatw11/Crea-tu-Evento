@@ -34,11 +34,24 @@
 
                             <p v-if="perfil !== null" class="text-muted">{{ perfil.localidad.nombre}}, {{perfil.localidad.provincia.nombre}}</p>
 
-                            <hr>
+                            <div 
+                                v-if="perfil !== null && (perfil.user.roles_id == role.ADMINISTRADOR ||
+                                perfil.user.roles_id == role.SUPERVISOR) && 
+                                perfil.user_id != auth.user.profile.id">
+                                <hr>
 
-                            <strong><i class="fa fa-file-text-o margin-r-5"></i> Notes</strong>
-
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p>
+                                <strong><i class="fa fa-users margin-r-5"></i> Rol </strong>
+                                <select 
+                                    v-model="perfil.user.roles_id" 
+                                    @change="changeItemRol()">
+                                    <option 
+                                        v-for="option in options" 
+                                        v-bind:value="option.value" 
+                                        selected>
+                                        {{ option.text }}
+                                    </option>
+                                </select>
+                            </div>
                         </div>
                         <!-- /.box-body -->
                     </div>
@@ -56,7 +69,9 @@
                             <li v-if="perfil !== null && perfil.user_id == auth.user.profile.id">
                                 <a href="#account" data-toggle="tab">Cuenta</a>
                             </li>
-                            <li v-if="perfil !== null && perfil.user_id == auth.user.profile.id">
+                            <li v-if="perfil !== null && 
+                                (perfil.user_id == auth.user.profile.id 
+                                || auth.user.profile.roles_id === role.ADMINISTRADOR)">
                                 <a href="#timeline" data-toggle="tab">Actividades</a>
                             </li>
                         </ul>
@@ -109,6 +124,7 @@ import TimeLine from './TimeLine.vue';
 import Account from '../Usuarios/Account.vue';
 import router from '../../routes.js';
 import auth from '../../auth.js';
+import Role from '../../config.js';
 
 export default {
     data(){
@@ -118,7 +134,14 @@ export default {
             auth: auth,
             form: null,
             avatar: null,
-            srcUrl: ''
+            srcUrl: '',
+            role: Role,
+            options: [
+                      { text: 'Administrador', value: '1' },
+                      { text: 'Supervisor', value: '2' },
+                      { text: 'Operador', value: '3' },
+                      { text: 'Usuario', value: '5' }
+                  ],
         }
     },
     beforeMount: function() {
@@ -152,6 +175,27 @@ export default {
         },
         reload: function(){
             this.getUserPerfil();
+        },
+        //cambiar rol
+        changeItemRol() {
+            //this.selected = `${event.target.value}`
+            this.$http.post('api/user/'+ this.$route.params.userId +'/rol',
+            {
+                _method: 'PATCH',
+                roles_id: this.perfil.user.roles_id
+            })
+            .then(response => {
+                this.$toast.success({
+                    title:'¡Cambios realizados!',
+                    message:'Se ha cambiado correctamente el rol.'
+                });
+            }, response => {
+                this.$toast.error({
+                    title:'¡Error!',
+                    message:'No se han podido guardar los cambios.'
+                });
+            })
+           
         }
     },
     watch: {

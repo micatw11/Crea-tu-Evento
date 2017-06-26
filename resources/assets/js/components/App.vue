@@ -7,7 +7,7 @@
                 v-if="auth.user.authenticated">
             </path-content>
 
-            <router-view></router-view>
+            <router-view transition="fade"></router-view>
         </div>
     </div>
 </template>
@@ -23,12 +23,11 @@ export default {
         return {
             auth: auth,
             showComponent: true,
-            listPath: [],
-            titlePath: ''
         }
     },
     mounted() {
         this.$events.listen('reloadComponents', this.reloadComponents);
+        $(this).ajaxStart(function() { Pace.restart(); });
     },
     computed: {
         classContentWrapper: function () {
@@ -57,3 +56,11 @@ export default {
     }
 }
 </script>
+<style>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .7s
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+  opacity: 0
+}
+</style>

@@ -1,6 +1,9 @@
 <script src="/plugins/jQuery/jquery-2.2.3.min.js"></script>
 <!-- Bootstrap 3.3.6 -->
 <script src="/bootstrap/js/bootstrap.min.js"></script>
+
+<script src="/plugins/pace/pace.min.js"></script>
+
 <!-- Slimscroll -->
 <script src="/plugins/slimScroll/jquery.slimscroll.min.js"></script>
 <!-- FastClick -->

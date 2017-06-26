@@ -77,7 +77,7 @@ class UsuarioController extends Controller
      */
     public function show($id)
     {
-        $usuario = Usuario::where('user_id', $id)->with('localidad.provincia')->firstOrFail();
+        $usuario = Usuario::where('user_id', $id)->with('localidad.provincia', 'user.rol')->firstOrFail();
         return response()->json(['data' =>  $usuario]);
     }
 
@@ -101,10 +101,10 @@ class UsuarioController extends Controller
      */
     public function update(UsuarioRequest $request, $id)
     {
-        $table_name= "usuario";
+        $table_name= "usuarios";
         $accion = "update";
         $usuario = Usuario::where('user_id', $id)->firstOrFail();
-        Log::logs($id, $table_name, $accion , $usuario);
+        Log::logs($id, $table_name, $accion , $usuario, 'Ha actualizado informacion personal');
         $usuario->update($request->all());
         if($usuario->save()){
             return response()->json(['data' =>  'OK'], 200);
@@ -124,7 +124,7 @@ class UsuarioController extends Controller
         $table_name= "users";
         $accion = "destroy";
         $user = User::where('id', $id)->firstOrFail();
-        Log::logs($id, $table_name, $accion , $user);
+        Log::logs($id, $table_name, $accion , $user, 'Ha desactivado la cuenta');
         if($user->baja()){
             if($request->logout){
                  Auth::logout();
@@ -143,15 +143,17 @@ class UsuarioController extends Controller
         
         $action = $request->action;
         if( $action === 2){
-            $accion= "bloquear";
+            $accion= "lock";
+            $descripcion = 'Ha bloqueado un usuario';
             $user->estado = 2;
         } else {
-            $accion= "desbloquear";
+            $accion= "unlock";
+            $descripcion = 'Ha desbloqueado un usuario';
             $user->estado = 1;
         }
 
         if($user->save()){
-            Log::logs($id, $table_name, $accion , $user);
+            Log::logs($id, $table_name, $accion , $user, $descripcion);
             return response()->json(['data' =>  'OK'], 200);
         } else {
             return response()->json(['error' =>  'Internal Server Error' , 'request' => $request ], 500);
@@ -166,7 +168,7 @@ class UsuarioController extends Controller
 
         //Se guarda el avatar en el almacenamiento 
         $filename = $this->saveAvatar($request);
-        Log::logs($id, $table_name, $accion, $usuario);
+        Log::logs($id, $table_name, $accion, $usuario, 'Ha actualizado su foto de perfil');
         //Se elimina el anterior avatar del almacenamiento 
         $this->deleteAvatar($usuario);
 
@@ -181,7 +183,7 @@ class UsuarioController extends Controller
 
     public function changePassword(Request $request, $id){
         $table_name= "users";
-        $accion=  "changePassword";
+        $accion=  "updatePassword";
         $this->validator($request);
 
         $user = User::where('id', $id)->firstOrFail();
@@ -189,7 +191,7 @@ class UsuarioController extends Controller
         $validCredentials = Hash::check($request->oldPassword, $user->getAuthPassword());
         
         if($validCredentials){
-            Log::logs($id, $table_name, $accion );
+            Log::logs($id, $table_name, $accion, 'Ha cambiado su contraseña');
             $user->password =  Hash::make($request->password);
             $user->save();
             return response()->json(['data' =>  'OK'], 200);
@@ -202,10 +204,10 @@ class UsuarioController extends Controller
 
     public function cambiarRol(Request $request, $id){
         $table_name= "users";
-        $accion= "cambiarRol";
+        $accion= "updateRole";
         $user = User::where('id', $id)->firstOrFail();
 
-        Log::logs($id, $table_name,  $accion , $user);
+        Log::logs($id, $table_name,  $accion , $user, 'ha cambiado el rol del usuario');
 
         $user->roles_id = $request->roles_id;
 
@@ -252,11 +254,16 @@ class UsuarioController extends Controller
 
     public function activity(Request $request, $id){
 
-        $actividades = DB::table('logs')
+        $query = DB::table('logs')
                             ->select('*', DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as fecha'))
-                                ->where('user_id', $id)
-                                ->orderBy('fecha', 'desc')
+                                ->where('user_id', $id);
+        if(Auth::user()->roles_id == Rol::roleId('Administrador')){
+            $query->whereIn('tabla', ['users', 'proveedores']);
+        }
+
+        $actividades = $query->orderBy('created_at', 'desc')
                                 ->get();
+                                
 
         return response()->json($actividades);
     }
