@@ -129,15 +129,6 @@ export default {
                 }).catch(() => {
                     this.validarRubro = true;
                 });
-        },
-        //obtiene lista de usuarios segun requiera
-        getOptions: function(search, loading) {
-            loading(true)
-            this.$http.get('api/busqueda/usuarios/?q='+ search
-                ).then(response => {
-                    this.usuarios = response.data
-                    loading(false)
-                })
         }
     }
 }

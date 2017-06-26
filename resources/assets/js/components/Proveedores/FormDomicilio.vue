@@ -2,8 +2,8 @@
    <form class="form-horizontal">
      <div>
          <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('localidad_id')&&validarDomicilio}">
-            <label class="col-sm-2 control-label">Localidad</label>
             <div class="col-sm-10">
+            <label class="control-label">Localidad</label><br>
                    <v-select
                         :debounce="250" 
                         :on-search="getOptions" 
@@ -26,8 +26,8 @@
         </div>
 
         <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('calle')&&validarDomicilio}">
-            <label for="inputCalle" class="col-sm-2 control-label">Direccion: </label>
             <div class="col-sm-10">
+            <label for="inputCalle" class="control-label">Direccion: </label><br>
                 <input name="calle"  v-validate:domicilio.calle="'required|min:4'" type="text" class="form-control" v-model="domicilio.calle" placeholder="calle">
                 <!-- validacion vee-validation -->
                 <span v-show="errors.has('calle')&&validarDomicilio" class="help-block">{{ errors.first('calle') }}</span>
@@ -41,31 +41,29 @@
         </div>
         
         <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has(('numero')||('piso'))&&validarDomicilio}">
-            <div class="col-sm-12">
-                <div class="col-sm-6">
-                    <label for="inputNro" class="col-sm-2 control-label">N°: </label>
-                    <div class="col-sm-10">
-                         <input name="numero" v-validate="'required'" type="number" v-model="domicilio.numero" value="numero" class="form-control">
-                    </div>
+            <div class="col-sm-6">
+                <div class="col-sm-10">
+                <label for="inputNro" class="control-label">N°: </label><br>
+                     <input name="numero" v-validate="'required'" type="number" v-model="domicilio.numero" value="numero" class="form-control">
                 </div>
+            </div>
 
-                <div class="col-sm-6">
-                    <label for="inputPiso" class="col-sm-2 control-label">Piso: </label>
-                    <div class="col-sm-10">
-                         <input name="piso" v-validate="'required'" type="number" v-model="domicilio.piso" value="piso" class="form-control">
-                    </div>
+            <div class="col-sm-6">
+                <div class="col-sm-10">
+                <label for="inputPiso" class="control-label">Dpto.: </label><br>
+                     <input name="piso" v-validate="'required'" type="number" v-model="domicilio.piso" value="piso" class="form-control">
                 </div>
-                <!-- validacion vee-validation -->
-                <span v-show="errors.has('numero')&&validarDomicilio" class="help-block">{{ errors.first('numero') }}</span>
-                <span v-show="errors.has('piso')&&validarDomicilio" class="help-block">{{ errors.first('piso') }}</span>
-                <!-- validacion api-->
-                <div class="text-red">
-                    <div v-if="errorsApi.numero" v-for="msj in errorsApi.numero">
-                        <p>{{ msj }}</p>
-                    </div>
-                    <div v-if="errorsApi.piso" v-for="msj in errorsApi.piso">
-                        <p>{{ msj }}</p>
-                    </div>
+            </div>
+            <!-- validacion vee-validation -->
+            <span v-show="errors.has('numero')&&validarDomicilio" class="help-block">{{ errors.first('numero') }}</span>
+            <span v-show="errors.has('piso')&&validarDomicilio" class="help-block">{{ errors.first('piso') }}</span>
+            <!-- validacion api-->
+            <div class="text-red">
+                <div v-if="errorsApi.numero" v-for="msj in errorsApi.numero">
+                    <p>{{ msj }}</p>
+                </div>
+                <div v-if="errorsApi.piso" v-for="msj in errorsApi.piso">
+                    <p>{{ msj }}</p>
                 </div>
             </div>
         </div>

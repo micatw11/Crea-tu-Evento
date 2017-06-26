@@ -49,15 +49,11 @@ class ProveedorController extends Controller
     public function store(Request $request)
     {   
         $this->validatorDomicilio($request);
+        $this->validatorProveedor($request);
         $domicilio= $this->createDomicilio($request);
         $proveedor= $this->createProveedor($request,$domicilio);
-        $rubro= $this->createRubro($request,$proveedor);
-
-        if ($request->rubro_domicilio){
-                //$this->validatorDomicilio($request->rubro_domicilio);
-                //$domicilioRubro= $this->createDomicilio($request->rubro_domicilio);
-        }
-        if (($proveedor)&&($domicilio)&&$rubro){
+        
+        if (($proveedor)&&($domicilio)){
             return response()->json(['data' => 'OK'], 200);
         
         } else {
@@ -127,10 +123,10 @@ class ProveedorController extends Controller
     {
         return Rubro::create([
                     'proveedor_id'=> $proveedor->id,
-                    'categoria_id'=> $request->rubro_categoria_id,
-                    'denominacion'=> $request->rubro_denominacion,
-                    'fecha_habilitacion'=> $request->rubro_fecha_habilitacion,
-                    'habilitacion'=> $request->rubro_habilitacion
+                    'categoria_id'=> $request->categoria_id,
+                    'denominacion'=> $request->denominacion,
+                    'fecha_habilitacion'=> $request->fecha_habilitacion,
+                    'habilitacion'=> $request->habilitacion
             ]);
     }
 

@@ -1,9 +1,9 @@
 <template>
-<div>
+    <div>
       <form class="form-horizontal">
          <div class="col-sm-6">
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('user_id')&&validar}">
-                <label class="col-sm-2 control-label">Usuario</label>
+                <label class="control-label">Usuario</label><br>
                 <div class="col-sm-10">
                     <v-select 
                         :debounce="250"
@@ -27,7 +27,7 @@
             </div>
                     
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('nombre')&&validar}">
-                <label for="inputNombre" class="col-sm-2 control-label">Nombre Razón social</label>
+                <label for="inputNombre" class="control-label">Nombre Razón social</label><br>
                 <div class="col-sm-10">
                     <input name="nombre"  v-validate:proveedor.nombre="'required|min:4'" type="text" class="form-control" v-model="proveedor.nombre" placeholder="Nombre">
                     <!-- validacion vee-validation -->
@@ -42,7 +42,7 @@
             </div>
 
              <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('cuit')&&validar}">
-                <label for="inputCuit" class="col-sm-2 control-label">N° de Cuit</label>
+                <label for="inputCuit" class="control-label">N° de Cuit</label><br>
                 <div class="col-sm-10">
                      <input name="cuit" v-validate="'required|min:9|max:11'" type="number" v-model="proveedor.cuit" value="cuit" class="form-control">
                     <!-- validacion vee-validation -->
@@ -57,7 +57,7 @@
             </div>
 
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('email')&&validar}">
-                <label for="inputEmail" class="col-sm-2 control-label">Email</label>
+                <label for="inputEmail" class="control-label">Email</label><br>
                 <div class="col-sm-10">
                     <input name="email"  v-validate="'required|email'" type="email" class="form-control" v-model="proveedor.email" placeholder="Email">
                     <!-- validacion vee-validation -->
@@ -73,7 +73,7 @@
         </div>
         <div class="col-sm-6">
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('ingresos_brutos')&&validar}">
-                <label for="inputIngresosBrutos" class="col-sm-2 control-label">N° Ingresos Brutos</label>
+                <label for="inputIngresosBrutos" class="control-label">N° Ingresos Brutos</label><br>
                     <div class="col-sm-10">
                      <input name="ingresos_brutos" v-validate="'required'" type="number" v-model="proveedor.ingresos_brutos" class="form-control" value="ingresos_brutos">
                 </div>
@@ -90,25 +90,6 @@
                 
             </div>
            <form-domicilio :domicilio="domicilio" :validarDomicilio="validarDomicilio" :errorsApi="errorsApi"></form-domicilio>
-        </div>
-        <div class="col-sm-12">
-                <div class="form-group has-feedback">
-                    <label for="tipoProveedor" class="col-sm-2 control-label">Tipo Proveedor</label>
-                    <div class="col-sm-10">
-                        <input v-model="tipoProveedor" name="tipoProveedor" id="rubro" type="radio" value="rubro">Rubro<br/>
-                        <input v-model="tipoProveedor" name="tipoProveedor" id="salon" type="radio" value="salon">Salón<br/>
-                    </div>
-                </div>
-            
-                <div v-if="tipoProveedor == 'rubro'">
-                     <label for="tipoProveedor" class="control-label">Complete los datos del {{tipoProveedor}}</label><br><br>
-                    <form-rubro :rubro="rubro" :validarRubro="validarRubro" :validarDomicilio="validarDomicilio" :errorsApi="errorsApi"></form-rubro>
-                </div>
-
-                <div v-if="tipoProveedor == 'salon'">salon
-                    <label for="tipoProveedor" class="control-label">Complete los datos del {{tipoProveedor}}</label><br><br>
-                    <form-rubro :rubro="rubro" :validarRubro="validarRubro" :validarDomicilio="validarDomicilio" :errorsApi="errorsApi"></form-rubro>
-                </div>
         </div>
      </form>
      <div class="col-sm-12 box-footer clearfix" style="text-align:center;">
@@ -129,18 +110,14 @@
 import auth from '../../auth.js';
 import vSelect from "vue-select";
 import FormDomicilio from './FormDomicilio.vue';
-import FormRubro from './FormRubro.vue';
-
 
 export default {
     data() {
         return {
-            tipoProveedor: null,
             showModificar: false,
             usuarios:[],
             validar: false,
             validarDomicilio: false,
-            validarRubro: false,
             showModificar: false,
             proveedor: { 
                 user_id: null,
@@ -155,36 +132,12 @@ export default {
                 piso: null,
                 localidad_id: null
             },
-            rubro:{
-                categoria_id: null,
-                denominacion: null,
-                habilitacion: null,
-                fecha_habilitacion: null,
-                domicilio: {
-                    calle: null,
-                    numero: null,
-                    piso: null,
-                    localidad_id: null
-                },
-            },
-            salon:{
-                denominacion: null, 
-                codigo: null, 
-                habilitacion: null,
-                fecha_habilitacion: null,
-                domicilio: {
-                    calle: null,
-                    numero: null,
-                    piso: null,
-                    localidad_id: null
-                },
-            },
             error: false,
             errorsApi: {}
         }
     },
     components: {
-        vSelect, FormDomicilio, FormRubro
+        vSelect, FormDomicilio
     },
     methods: {
        //envio de formulario de modificación de informacion de usuario
@@ -201,15 +154,7 @@ export default {
                     calle: this.domicilio.calle,
                     numero: this.domicilio.numero,
                     piso: this.domicilio.piso,
-                    localidad_id: this.domicilio.localidad_id.value,
-                    rubro_categoria_id: this.rubro.categoria_id,
-                    rubro_denominacion: this.rubro.denominacion,
-                    rubro_habilitacion: this.rubro.habilitacion,
-                    rubro_fecha_habilitacion: this.rubro.fecha_habilitacion,
-                    rubro_domicilio:  {calle: this.rubro.domicilio.calle,
-                            numero: this.rubro.domicilio.numero,
-                            piso: this.rubro.domicilio.piso, 
-                            localidad_id: this.rubro.domicilio.localidad_id.value}
+                    localidad_id: this.domicilio.localidad_id.value
                 })
                 .then(response => {
                     this.$emit('reload')
@@ -222,7 +167,6 @@ export default {
                 }, response => {
                     this.validar= false;
                     this.validarDomicilio= false;
-                    this.validarRubro= false;
                     this.$toast.error({
                         title:'¡Error!',
                         message:'No se han podido guardar los cambios. :('
@@ -231,7 +175,6 @@ export default {
                     {
                         this.errorsApi = response.body;
                     }
-
                 })
         },
         validateBeforeSubmit: function() {
@@ -240,7 +183,6 @@ export default {
                 }).catch(() => {
                     this.validar = true;
                     this.validarDomicilio = true;
-                    this.validarRubro = true;
                     this.$events.fire('validarForm')
                 });
         },
@@ -267,12 +209,6 @@ export default {
                 numero: null,
                 piso: null,
                 localidad_id: null
-            },
-            this.rubro={
-                categoria_id: null,
-                denominacion: null,
-                habilitacion: null,
-                fecha_habilitacion: null
             }
         }
     }
