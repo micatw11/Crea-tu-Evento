@@ -195,4 +195,15 @@ class ProveedorController extends Controller
             return response()->json(['error' =>  'Internal Server Error' , 'request' => $request ], 500);
         }
     }
+
+    public function PerfilProveedor (Request $request, $id){
+        $proveedor = Proveedor::where('user_id', $id)
+                              ->with('user.usuario', 'domicilio')->firstOrFail();
+    
+        if($proveedor){
+            return response()->json(['data' =>  $proveedor], 200);
+        } else {
+            return response()->json(['error' =>  'Internal Server Error' , 'request' => $request ], 500);
+        }
+    }
 }

@@ -8,9 +8,11 @@ class Rubro extends Model
 {
     protected $table = 'rubros';
 
-    protected $fillable = [ 'proveedor_id', 
+    protected $fillable = [ 'proveedor_id',
+    						'tipo_rubro', 
     						'categoria_id',
-    						'denominacion',//descripcion de la actividad 
+    						'denominacion',
+    						'descripcion',
     						'habilitacion',
                             'fecha_habilitacion',
     						'domicilio_id'

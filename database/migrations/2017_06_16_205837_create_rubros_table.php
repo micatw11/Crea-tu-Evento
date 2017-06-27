@@ -15,8 +15,10 @@ class CreateRubrosTable extends Migration
     {
         Schema::create('rubros', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('denominacion', 200);
-            $table->date('fecha_habilitacion')->nullable()->nullable();
+            $table->enum('tipo_rubro', ['Producto', 'Servicio', 'Salon']);
+            $table->string('denominacion', 50);
+            $table->string('descripcion', 200)->nullable();
+            $table->date('fecha_habilitacion')->nullable();
             $table->integer('habilitacion')->unsigned()->nullable();
             $table->integer('categoria_id')->unsigned();
             $table->integer('proveedor_id')->unsigned();

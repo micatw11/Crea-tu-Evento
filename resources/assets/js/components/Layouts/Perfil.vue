@@ -55,6 +55,7 @@
                         </div>
                         <!-- /.box-body -->
                     </div>
+
                     <!-- /.box -->
                 </div>
                 <!-- /.col -->
@@ -122,6 +123,7 @@
                     </div>
                     <!-- /.nav-tabs-custom -->
                 </div>
+                <box-proveedor></box-proveedor>
             </div>
         </section>
     </div>
@@ -138,6 +140,7 @@ import Account from '../Usuarios/Account.vue';
 import router from '../../routes.js';
 import auth from '../../auth.js';
 import Role from '../../config.js';
+import BoxProveedor from '../Proveedores/PerfilProveedor.vue';
 
 export default {
     data(){
@@ -167,7 +170,8 @@ export default {
         Account,
         ImageInput,
         TimeLine,
-        Show
+        Show,
+        BoxProveedor
     },
     methods:{
 
