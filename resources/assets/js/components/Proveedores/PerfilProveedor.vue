@@ -17,10 +17,10 @@
                                 <a href="#notificacion" data-toggle="tab">Notificación</a>
                             </li>
                             <li>
-                                <a href="1" data-toggle="tab">proveedor</a>
+                                <a href="#h1" data-toggle="tab">proveedor</a>
                             </li>
                             <li >
-                                <a href="2" data-toggle="tab">Proveedor2</a>
+                                <a href="#h2" data-toggle="tab">Proveedor2</a>
                             </li>
                         </ul>
                     
@@ -32,19 +32,19 @@
                             </div>-->
 
                             <div class="active tab-pane" id="notificacion">
-                                Estas Habilitado a Ser Proveedor con Habilitación de ingresos brutos: {{perfil.ingresos_brutos}}
+                                Estas Habilitado a Ser Proveedor con Habilitación de ingresos brutos: {{perfilProveedor.ingresos_brutos}}
                                 
                                 Completar Formulario de Rubro:
                                       <form-rubro></form-rubro>
                                 
                             </div>
 
-                            <div class="tab-pane" id="1">
+                            <div class="tab-pane" id="h1">
                                 recontra datssss
                             </div>
 
                              <div class="tab-pane content" 
-                                id="2">
+                                id="h2">
                                      <div> 
                                      mas datos
                                     </div>
@@ -70,7 +70,7 @@ import FormRubro from './FormRubro.vue';
 export default {
     data(){
         return {
-            perfil: []
+            perfilProveedor: []
         }
     },
     components: {
@@ -83,8 +83,8 @@ export default {
         getProveedorPerfil: function(){
             this.$http.get('api/proveedor/'+ this.$route.params.userId+'/perfil' )
                 .then(response => {
-                    this.perfil = response.data.data,
-                    this.srcUrl = '/storage/avatars/'+this.perfil.avatar
+                    this.perfilProveedor = response.data.data
+                    //this.srcUrl = '/storage/avatars/'+this.perfil.avatar
                 }, response => {
                     if(response.status === 404){
                         router.push('/404');

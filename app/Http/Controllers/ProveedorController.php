@@ -108,6 +108,24 @@ class ProveedorController extends Controller
             ]);
     }
 
+    public function storeRubro(Request $request, $id)
+    {   
+        $proveedor = Proveedor::where('user_id', $id)->firstOrFail();
+        $this->validatorDomicilio($request);
+        $this->validatorRubro($request);
+        $domicilio= $this->createDomicilio($request);
+        $rubro= $this->createRubro($request,$proveedor, $domicilio);
+        
+        if (($rubro)&&($domicilio)){
+            return response()->json(['data' => 'OK'], 200);
+        
+        } else {
+            return response()->json([
+                'error' => 'Unauthorized', 'rubro' => $rubro
+            ], 401);
+        }
+    }
+
     protected function validatorRubro(Request $request)
     {
       return $this->validate($request, 
@@ -119,14 +137,16 @@ class ProveedorController extends Controller
         ]);
     }
 
-    public function createRubro(Request $request,$proveedor)
+    public function createRubro(Request $request,$proveedor,$domicilio)
     {
         return Rubro::create([
+                    'tipo_rubro'=> $request->tipo_rubro,
                     'proveedor_id'=> $proveedor->id,
                     'categoria_id'=> $request->categoria_id,
                     'denominacion'=> $request->denominacion,
-                    'fecha_habilitacion'=> $request->fecha_habilitacion,
-                    'habilitacion'=> $request->habilitacion
+                    'descripcion'=> $request->descripcion,
+                    'habilitacion'=> $request->habilitacion,
+                    'domicilio_id'=> $domicilio->id,
             ]);
     }
 
