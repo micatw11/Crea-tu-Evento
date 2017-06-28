@@ -32,11 +32,12 @@
                             </div>-->
 
                             <div class="active tab-pane" id="notificacion">
-                                Estas Habilitado a Ser Proveedor con Habilitación de ingresos brutos: {{perfilProveedor.ingresos_brutos}}
-                                
-                                Completar Formulario de Rubro:
-                                      <form-rubro></form-rubro>
-                                
+                                <div v-if="!perfilProveedor.rubro">
+                                    Estas Habilitado a Ser Proveedor con Habilitación de ingresos brutos: {{perfilProveedor.ingresos_brutos}}
+                                    
+                                    Completar Formulario de Rubro:
+                                          <new-rubro></new-rubro>
+                                </div>
                             </div>
 
                             <div class="tab-pane" id="h1">
@@ -65,7 +66,7 @@
 </template>
 
 <script>
-import FormRubro from './FormRubro.vue';
+import NewRubro from './NewRubro.vue';
 
 export default {
     data(){
@@ -74,7 +75,7 @@ export default {
         }
     },
     components: {
-        FormRubro
+        NewRubro
     },
     beforeMount: function() {
         this.getProveedorPerfil()

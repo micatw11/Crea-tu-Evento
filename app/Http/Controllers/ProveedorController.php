@@ -218,7 +218,7 @@ class ProveedorController extends Controller
 
     public function PerfilProveedor (Request $request, $id){
         $proveedor = Proveedor::where('user_id', $id)
-                              ->with('user.usuario', 'domicilio')->firstOrFail();
+                              ->with('user.usuario', 'domicilio', 'rubro')->firstOrFail();
     
         if($proveedor){
             return response()->json(['data' =>  $proveedor], 200);

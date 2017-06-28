@@ -99,6 +99,7 @@
         </div>
         
         <div class="col-sm-6">
+          <div>
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('habilitacion')&&validarRubro}">
                 <div>
                     <label for="inputHabilitacion" class="control-label">Habilitación</label><br>
@@ -113,7 +114,10 @@
                     </div>
                 </div>
             </div>
+            </div>
+          <div>
            <form-domicilio :domicilio="domicilio" :validarDomicilio="validarDomicilio" :errorsApi="errorsApi"></form-domicilio>
+            </div>
         </div>
     </form>
      <div class="col-sm-12 box-footer clearfix" style="text-align:center;">

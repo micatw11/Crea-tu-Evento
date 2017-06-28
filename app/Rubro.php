@@ -17,4 +17,15 @@ class Rubro extends Model
                             'fecha_habilitacion',
     						'domicilio_id'
     					  ];
+    					      ///RELACIONES//
+    public function proveeedor()
+    {
+        return $this->belongsTo('App\Proveeedor');
+    }
+
+      public function domicilio()
+    {     
+        return $this->belongsTo('App\Domicilio');    
+    }
+
 }
