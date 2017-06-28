@@ -20,6 +20,11 @@ class Domicilio extends Model
         return $this->hasOne('App\Proveedor');
     }
 
+      public function rubro()
+    {
+        return $this->hasOne('App\Rubro');
+    }
+
 	public function localidad()
     {
         return $this->belongsTo('App\Localidad');
