@@ -28,7 +28,7 @@ export default {
     data() {
         return {
             titlePath: 'Nuevo Proveedor',
-            listaPath: [{route: '/', name: 'Home'},{route: '/proveedor/new', name: 'Nuevo Proveedor'}]
+            listaPath: [{route: '/', name: 'Home'},{route: '/proveedores', name: 'Proveedores'},{route: '/proveedor/new', name: 'Nuevo Proveedor'}]
         }
     },
     components: {
