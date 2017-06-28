@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\ProveedorRequest;
+use Illuminate\Support\Facades\Storage;
 use App\Proveedor;
 use App\Rol;
 use App\Domicilio;
@@ -72,11 +73,41 @@ class ProveedorController extends Controller
             'cuit' => 'required|min:9|max:11',
             'ingresos_brutos' => 'required|min:5|max:10',
             'email' => 'required|email',
+            'dni' => 'required'
         ]);
     }
 
     public function createProveedor(Request $request, $domicilio)
     {
+        
+        $img = $request->dni;
+        $extension = null;
+
+        if(strstr($img, 'data:image/jpeg;base64,'))
+        {
+            $img = str_replace('data:image/jpeg;base64,', '', $img);
+            $extension = 'jpeg';
+        }
+        else if(strstr($img, 'data:image/jpg;base64,'))
+        {
+            $img = str_replace('data:image/jpg;base64,', '', $img);
+            $extension = 'jpg';
+        }
+        else if(strstr($img, 'data:application/pdf;base64,'))
+        {
+            $img = str_replace('data:application/pdf;base64,', '', $img);
+            $extension = 'pdf';
+        }
+        else 
+        {
+            $img = str_replace('data:image/png;base64,', '', $img);
+            $extension = 'png';
+        }
+
+        $file = base64_decode($img);
+        $filename  = str_random(30) . '.'.$extension;
+        Storage::put('public/proveedores/'.$filename, $file);
+
         return Proveedor::create([
                     'user_id' => $request->user_id,
                     'nombre' => $request->nombre,
@@ -84,7 +115,8 @@ class ProveedorController extends Controller
                     'ingresos_brutos' => $request->ingresos_brutos,
                     'email' => $request->email,
                     'estado' => "Tramite",
-                    'domicilio_id' => $domicilio->id]);
+                    'domicilio_id' => $domicilio->id,
+                    'dni' => $filename]);
     }
 
     protected function validatorDomicilio(Request $request)
@@ -179,20 +211,24 @@ class ProveedorController extends Controller
 
         $proveedor = Proveedor::where('user_id', $id)->with('user')->firstOrFail();
 
-        if($request->has('action') === 'Baja'){
+        if($request->action == 'Baja'){
             $proveedor->user->roles_id = Rol::roleId('Usuario');
         } 
-        else if ( $request->has('action') === 'Aprobado' && $proveedor->user->roles_id == Rol::roleId('Usuario') ) 
+        else if ( $request->action == 'Aprobado' && $proveedor->user->roles_id == Rol::roleId('Usuario') ) 
         {
             $proveedor->user->roles_id = Rol::roleId('Proveedor');
         }
+        else {
+            return response()->json(['error' =>  'Bad Request'], 400);
+        }
+
         $proveedor->estado = $request->input('action');
 
 
-        if($proveedor->save()){
-            return response()->json(['data' =>  'OK'], 200);
+        if($proveedor->user->save() && $proveedor->save()){
+            return response()->json(['data' =>  'OK', 'proveedor' => $proveedor], 200);
         } else {
-            return response()->json(['error' =>  'Internal Server Error' , 'request' => $request ], 500);
+            return response()->json(['error' =>  'Internal Server Error'], 500);
         }
     }
 

@@ -14,7 +14,8 @@ class Proveedor extends Model
     						'ingresos_brutos',
     						'email',
     						'domicilio_id',
-    						'estado'
+    						'estado',
+                            'dni'
     					  ];
 
     public function user()
