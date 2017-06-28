@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="box">
-                        <div class="box-header">
+                        <div class="box-header with-border">
                             <h4>Alta Proveedor</h4>
                         </div>
                         <div class="box-body table-responsive no-padding">
@@ -28,7 +28,7 @@ export default {
     data() {
         return {
             titlePath: 'Nuevo Proveedor',
-            listaPath: [{route: '/', name: 'Home'},{route: '/proveedor/new', name: 'Nuevo Proveedor'}]
+            listaPath: [{route: '/', name: 'Home'},{route: '/proveedores', name: 'Proveedores'},{route: '/proveedor/new', name: 'Nuevo Proveedor'}]
         }
     },
     components: {

@@ -1,21 +1,21 @@
 <template>
-   <form class="form-horizontal">
+   <form role="form">
      <div>
-         <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('localidad_id')&&validarDomicilio}">
-            <div class="col-sm-10">
-            <label class="control-label">Localidad</label><br>
-                   <v-select
-                        :debounce="250" 
-                        :on-search="getOptions" 
-                        :options="localidades"
-                        data-vv-name="localidad"
-                        v-model="domicilio.localidad_id" 
-                        v-validate="'required'" 
-                        placeholder="Seleccione una localidad">
-                    </v-select>
+         <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('localidad')&&validarDomicilio}">
+            <div class="col-sm-12">
+                <label class="control-label">Localidad</label><br>
+                <v-select
+                    :debounce="250" 
+                    :on-search="getOptions" 
+                    :options="localidades"
+                    data-vv-name="localidad"
+                    v-model="domicilio.localidad_id" 
+                    v-validate="'required'" 
+                    placeholder="Seleccione una localidad">
+                </v-select>
                
                 <!-- validacion vee-validation -->
-                <span v-show="errors.has('localidad_id')&&validarDomicilio" class="help-block">{{ errors.first('localidad_id') }}</span>
+                <span v-show="errors.has('localidad')&&validarDomicilio" class="help-block">{{ errors.first('localidad') }}</span>
                 <!-- validacion api-->
                 <div class="text-red" v-if="errorsApi.localidad_id">
                     <div v-for="msj in errorsApi.localidad_id">
@@ -26,8 +26,8 @@
         </div>
 
         <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('calle')&&validarDomicilio}">
-            <div class="col-sm-10">
-            <label for="inputCalle" class="control-label">Direccion: </label><br>
+            <div class="col-sm-12">
+                <label for="inputCalle" class="control-label">Direccion </label><br>
                 <input name="calle"  v-validate:domicilio.calle="'required|min:4'" type="text" class="form-control" v-model="domicilio.calle" placeholder="calle">
                 <!-- validacion vee-validation -->
                 <span v-show="errors.has('calle')&&validarDomicilio" class="help-block">{{ errors.first('calle') }}</span>
@@ -42,30 +42,38 @@
         
         <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has(('numero')||('piso'))&&validarDomicilio}">
             <div class="col-sm-6">
-                <div class="col-sm-10">
-                <label for="inputNro" class="control-label">N°: </label><br>
-                     <input name="numero" v-validate="'required'" type="number" v-model="domicilio.numero" value="numero" class="form-control">
-                </div>
+                    <label for="inputNro" class="control-label">N° </label><br>
+                    <input 
+                        name="numero" 
+                        v-validate="'required'" 
+                        type="number" v-model="domicilio.numero" 
+                        value="numero" 
+                        class="form-control">
+
+                    <!-- validacion vee-validation -->
+                    <span v-show="errors.has('numero')&&validarDomicilio" class="help-block">{{ errors.first('numero') }}</span>
+                    <!-- validacion api-->
+                    <div class="text-red">
+                        <div v-if="errorsApi.numero" v-for="msj in errorsApi.numero">
+                            <p>{{ msj }}</p>
+                        </div>
+                    </div>
             </div>
 
             <div class="col-sm-6">
-                <div class="col-sm-10">
-                <label for="inputPiso" class="control-label">Dpto.: </label><br>
-                     <input name="piso" v-validate="'required'" type="number" v-model="domicilio.piso" value="piso" class="form-control">
+                
+                <label for="inputPiso" class="control-label">Dpto. </label><br>
+                <input name="piso" v-validate="'required'" type="number" v-model="domicilio.piso" value="piso" class="form-control">
+
+                <!-- validacion vee-validation -->
+                <span v-show="errors.has('piso')&&validarDomicilio" class="help-block">{{ errors.first('piso') }}</span>
+                <div class="text-red">
+                    <div v-if="errorsApi.piso" v-for="msj in errorsApi.piso">
+                        <p>{{ msj }}</p>
+                    </div>
                 </div>
             </div>
-            <!-- validacion vee-validation -->
-            <span v-show="errors.has('numero')&&validarDomicilio" class="help-block">{{ errors.first('numero') }}</span>
-            <span v-show="errors.has('piso')&&validarDomicilio" class="help-block">{{ errors.first('piso') }}</span>
-            <!-- validacion api-->
-            <div class="text-red">
-                <div v-if="errorsApi.numero" v-for="msj in errorsApi.numero">
-                    <p>{{ msj }}</p>
-                </div>
-                <div v-if="errorsApi.piso" v-for="msj in errorsApi.piso">
-                    <p>{{ msj }}</p>
-                </div>
-            </div>
+
         </div>
     </div>
   </form>

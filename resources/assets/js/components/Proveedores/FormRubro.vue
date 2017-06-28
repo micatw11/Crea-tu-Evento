@@ -1,9 +1,9 @@
 <template>
 <div>
-    <form class="form-horizontal"><br><br>
+    <form role="form"><br><br>
         <div class="col-sm-6">
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('tipo_rubro')&&validarRubro}">
-                <div>
+                <div class="col-sm-12">
                     <label for="inputTipoRubro" class="control-label">Tipo de Proveedor</label><br>
                     <select 
                         v-model="rubro.tipo_rubro" class="form-control">
@@ -26,7 +26,7 @@
             </div>
 
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('categoria')&&validarRubro}">
-                <div>
+                <div class="col-sm-12">
                     <label for="inputCategoria" class="control-label">Categoria</label><br>
                      <input name="categoria" v-validate="'required'" type="number" v-model="rubro.categoria_id" value="categoria" class="form-control">
                     <!-- validacion vee-validation -->
@@ -41,7 +41,7 @@
             </div>
 
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('denominacion')&&validarRubro}">
-                <div>
+                <div class="col-sm-12">
                     <label for="inputDenominacion" class="control-label">Denominacion del rubro: </label><br>
                     <input name="denominacion"  v-validate:rubro.denominacion="'required|min:4'" type="text" class="form-control" v-model="rubro.denominacion" placeholder="Nombre">
                     <!-- validacion vee-validation -->
@@ -56,7 +56,7 @@
             </div>
 
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('descripcion')&&validarRubro}">
-                <div>
+                <div class="col-sm-12">
                     <label for="inputDescripcion" class="control-label">Descripcion: </label><br>
                     <input name="descripcion"  v-validate:rubro.descripcion="'required|min:4'" type="text" class="form-control" v-model="rubro.descripcion" placeholder="Descripcion">
                     <!-- validacion vee-validation -->
@@ -76,7 +76,7 @@
             <label for="checkbox">{{ Comercio == true ? "Si" : "No" }}</label>
             v-if="Comercio == true"-->
              <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('facha')&&validarRubro}">
-                <div><br/>
+                <div class="col-sm-12"><br/>
                     <label for="inputNombre" class="control-label">Fecha de habilitación</label><br>
                     <input 
                         v-model="rubro.fecha_habilitacion" 
@@ -101,7 +101,7 @@
         <div class="col-sm-6">
           <div>
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('habilitacion')&&validarRubro}">
-                <div>
+                <div class="col-sm-12">
                     <label for="inputHabilitacion" class="control-label">Habilitación</label><br>
                      <input name="habilitacion" v-validate="'required'" type="number" v-model="rubro.habilitacion" value="habilitacion" class="form-control">
                     <!-- validacion vee-validation -->
@@ -114,9 +114,13 @@
                     </div>
                 </div>
             </div>
-            </div>
-          <div>
-           <form-domicilio :domicilio="domicilio" :validarDomicilio="validarDomicilio" :errorsApi="errorsApi"></form-domicilio>
+          </div>
+            <div>
+                <form-domicilio 
+                    :domicilio="domicilio" 
+                    :validarDomicilio="validarDomicilio" 
+                    :errorsApi="errorsApi">
+                </form-domicilio>
             </div>
         </div>
     </form>
