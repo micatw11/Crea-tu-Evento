@@ -18,11 +18,10 @@ class AuthController extends Controller
             // Authentication passed...
             $user = Auth::user();
             if ($user->estado!=2){
-                if(!$user->estado) 
-                    $user->alta();
+                if(!$user->estado) $user->alta();
                 $user->usuario->localidad->provincia;
                 return response()->json(['data' =>  $user, 'csrfToken', csrf_token()]);
-             }  else {
+            } else {
                     Auth::logout();
                     return response()->json([
                         'message' => 'La cuenta se ecuentra temporalmente bloqueada.',

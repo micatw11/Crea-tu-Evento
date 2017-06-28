@@ -47,17 +47,74 @@
                                             <!-- Rechazar a proveedor -->
                                             <button v-if="props.rowData.estado === 'Tramite'"
                                                         class="btn-xs btn-default"
-                                                @click="onActionEstado('Rechazado', props.rowData, props.rowIndex)">
+                                                @click="showModalObservation = true, action = 'Rechazado'">
                                                 <i class="fa fa-close"></i> Rechazar
                                             </button>
 
-                                            <!-- Baja a proveedor -->
-                                            <button 
-                                                v-if="props.rowData.estado === 'Aprobado'" 
-                                                     class="btn-xs btn-default"
-                                                @click="onActionEstado('Baja',props.rowData, props.rowIndex)">
-                                                <i class="fa fa-close"></i> Baja
-                                            </button>
+                                            <!-- Baja a proveedor  -->
+
+                                            <template>
+                                                <button 
+                                                    v-if="props.rowData.estado === 'Aprobado'" 
+                                                         class="btn-xs btn-default"
+                                                    @click="showModalObservation = true, action = 'Baja'">
+                                                    <i class="fa fa-close"></i> Baja
+                                                </button>
+                                                <!-- Modal cambiar observaciones (baja)-->
+                                                <div class="modal" role="dialog" :style="{ display : showModalObservation  ? 'block' : 'none' }">
+                                                    <div class="modal-dialog">
+
+                                                        <!-- Modal content-->
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" @click="clearForm()">&times;</button>
+                                                                <h4 class="modal-title">Agregue el motivo de la accion</h4>
+                                                            </div>
+                                                            <div class="modal-body">
+
+                                                                <div class="box-body">
+                                                                    <form role="form">
+                                                                        <div class="col-sm-12">
+                                                                            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('observaciones')&&validar}">
+                                                                                <div class="col-sm-12">
+                                                                                    <textarea  
+                                                                                        v-model="observaciones" 
+                                                                                        placeholder="Agregue un observación"
+                                                                                        name="observaciones" 
+                                                                                        v-validate="'required|min:15'" 
+                                                                                        class="form-control"></textarea>
+
+                                                                                    <!-- validacion vee-validation -->
+                                                                                    <span v-show="errors.has('observaciones')&& validar" class="help-block">{{ errors.first('observaciones') }}</span>
+
+                                                                                    <!-- validacion api -->
+                                                                                    <div class="text-red" v-if="errorsApi.observaciones">
+                                                                                        <div v-for="msj in errorsApi.observaciones">
+                                                                                            <p>{{ msj }}</p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <div class="col-sm-12">
+                                                                    <div class="pull-right">
+                                                                        <button
+                                                                            @click="validateBeforeSubmit(action, props.rowData, props.rowIndex)" 
+                                                                            type="button" class="btn btn-danger">
+                                                                         Guargar
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </template>
                                         </div>
                                     </template>
 
@@ -114,7 +171,12 @@
                 tableColumns: tableColumns,
                 url: '/api/proveedor',
                 titlePath: 'Proveedores',
-                listPath : [{route: '/', name: 'Home'}, {route: '/proveedores', name: 'Proveedores'}]
+                observaciones: null,
+                showModalObservation: false,
+                listPath : [{route: '/', name: 'Home'}, {route: '/proveedores', name: 'Proveedores'}],
+                action: '',
+                validar: false,
+                errorsApi: []
             }
         },
         components: {
@@ -158,7 +220,8 @@
                     'api/proveedor/'+data.user_id+'/estado',
                     {
                         _method: 'PATCH',
-                        action: action
+                        action: action,
+                        observaciones: this.observaciones
                     }
                 ).then(response => {
                     this.$toast.success({
@@ -172,6 +235,21 @@
                         message:'No se han podido realizar los cambios. :('
                     });
                 })
+            },
+            clearForm(){
+                this.observaciones = '';
+                this.showModalObservation = false;
+                this.validar = false;
+            },
+            validateBeforeSubmit: function(action, data, index) {
+                    this.$validator.validateAll().then(() => {
+                        
+                        this.onActionEstado(action, data, index); 
+                        this.clearForm();
+
+                    }).catch(() => {
+                        this.validar = true;
+                    });
             }
         },
 

@@ -243,6 +243,7 @@ class ProveedorController extends Controller
         }
 
         $proveedor->estado = $request->input('action');
+        $proveedor->observaciones = $request->input('observaciones');
 
 
         if($proveedor->user->save() && $proveedor->save()){

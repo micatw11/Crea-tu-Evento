@@ -98,7 +98,7 @@
                                         <show></show>
                                     </div>
 
-                                    <div class="tab-pane" id="timeline">
+                                    <div v-bind:class="classTabActive" id="timeline">
                                         <time-line></time-line>
                                     </div>
 
@@ -219,6 +219,17 @@ export default {
         '$route.params.userId' (){
             this.getUserPerfil();
         }
+    },
+    computed: {
+        classTabActive: function () {
+            if(this.perfil!=null)
+                return {
+                    'active tab-pane': this.auth.user.profile.id !== this.perfil.user_id,
+                    'tab-pane': this.auth.user.profile.id === this.perfil.user_id,
+                }
+                else
+                    return 'tab-pane';
+        },
     }
 }
 </script>
