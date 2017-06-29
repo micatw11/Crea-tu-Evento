@@ -11,7 +11,7 @@
                         <!-- /.box-header -->
                         <div class="box-body table-responsive no-padding">
                             <vuetable
-                                :fields="colums"
+                                :fields="fieldDefs"
                                 tableClass="table table-bordered"
                                 :noDataTemplate="noDataTemplate"
                                 :css="css"
@@ -89,7 +89,7 @@
     import FilterBar from './FilterBarUsuario';
 
     import moment from 'moment';
-    import colums from './colums.js';
+    import FieldDefs from './FieldDefs.js';
     import route from '../../routes.js';
 
     Vue.component('detail-row-usuario', DetailRow);
@@ -111,7 +111,7 @@
                 info: 'Mirando de {from} a {to} de {total} usuarios',
                 noData:'No hay datos',
                 moreParams: {},
-                colums: colums,
+                fieldDefs: FieldDefs,
                 listPath : [{route: '/', name: 'Home'}, {route: '/usuario', name: 'Usuarios'}]
             }
         },
@@ -120,7 +120,6 @@
         },
         mounted() {
             this.$events.$on('filter-set', eventData => this.onFilterSet(eventData))
-            this.$events.$on('filter-reset', e => this.onFilterReset())
             this.$events.fire('changePath', this.listPath, this.titlePath);
         },
         methods: {
@@ -178,10 +177,9 @@
             },
             //filtros de busqueda
             onFilterSet (filterText) {
-                this.moreParams = {
-                    'filter': filterText
-                }
-                Vue.nextTick( () => this.$refs.vuetable.refresh())
+                this.moreParams.filter = filterText
+
+                Vue.nextTick( () => this.$refs.vuetable.refresh() )
             },
             //cambiar rol
             changeItemRol(action, data, index) {

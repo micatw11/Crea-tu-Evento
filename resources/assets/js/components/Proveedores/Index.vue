@@ -203,10 +203,9 @@
 
             //filtros de busqueda
             onFilterSet (filterText) {
-                this.moreParams = {
-                    'filter': filterText
-                }
-                Vue.nextTick( () => this.$refs.vuetable.refresh())
+                this.moreParams.filter = filterText
+
+                Vue.nextTick( () => this.$refs.vuetable.refresh() )
             },
 
             onActionShow(data, index){
