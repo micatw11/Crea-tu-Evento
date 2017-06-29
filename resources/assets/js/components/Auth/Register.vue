@@ -177,7 +177,8 @@ export default {
                 nombre: null,
                 apellido: null,
                 sexo: null,
-                fecha_nac: null
+                fecha_nac: null,
+                login: true
             }
         }
     },

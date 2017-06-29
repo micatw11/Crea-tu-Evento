@@ -3,6 +3,7 @@
         <section class="content">
             <div class="row">
                 <div class="col-xs-12">
+                    <new-user></new-user>
                     <div class="box">
                         <div class="box-header with-border">
                             <h4>Alta Proveedor</h4>
@@ -23,6 +24,7 @@ import auth from '../../auth.js';
 import vSelect from "vue-select";
 import FormProv from './Form.vue';
 import PathContent from '../Layouts/Path.vue';
+import NewUser from '../Auth/RegisterUser.vue';
 
 export default {
     data() {
@@ -32,7 +34,7 @@ export default {
         }
     },
     components: {
-        FormProv,PathContent
+        FormProv, PathContent, NewUser
     },
     mounted() {
             this.$events.fire('changePath', this.listaPath, this.titlePath);

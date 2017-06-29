@@ -40,7 +40,7 @@
                                             <button v-if="props.rowData.estado === 'Tramite' ||
                                                         props.rowData.estado === 'Baja'" 
                                                         class="btn-xs btn-default"
-                                                @click="onActionEstado('Aprobado', props.rowData, props.rowIndex)">
+                                                @click="onActionEstado('Aprobado', props.rowData)">
                                                 <i class="fa fa-check"></i> Aprobar
                                             </button>
 
@@ -57,10 +57,10 @@
                                                 <button 
                                                     v-if="props.rowData.estado === 'Aprobado'" 
                                                          class="btn-xs btn-default"
-                                                    @click="showModalObservation = true, action = 'Baja'">
+                                                    @click="showModalObservation = true, action = 'Baja', dataUser = props.rowData">
                                                     <i class="fa fa-close"></i> Baja
                                                 </button>
-                                                <!-- Modal cambiar observaciones (baja)-->
+                                                <!-- Modal cambiar observaciones (baja/rechazo)-->
                                                 <div class="modal" role="dialog" :style="{ display : showModalObservation  ? 'block' : 'none' }">
                                                     <div class="modal-dialog">
 
@@ -104,7 +104,7 @@
                                                                 <div class="col-sm-12">
                                                                     <div class="pull-right">
                                                                         <button
-                                                                            @click="validateBeforeSubmit(action, props.rowData, props.rowIndex)" 
+                                                                            @click="validateBeforeSubmit(action, dataUser)" 
                                                                             type="button" class="btn btn-danger">
                                                                          Guargar
                                                                         </button>
@@ -175,6 +175,7 @@
                 showModalObservation: false,
                 listPath : [{route: '/', name: 'Home'}, {route: '/proveedores', name: 'Proveedores'}],
                 action: '',
+                dataUser: null,
                 validar: false,
                 errorsApi: []
             }
@@ -215,7 +216,7 @@
                 route.push("/usuario/"+data.user_id+"/perfil")
             },
 
-            onActionEstado(action, data, index){
+            onActionEstado(action, data){
                 this.$http.post(
                     'api/proveedor/'+data.user_id+'/estado',
                     {
@@ -241,10 +242,10 @@
                 this.showModalObservation = false;
                 this.validar = false;
             },
-            validateBeforeSubmit: function(action, data, index) {
+            validateBeforeSubmit: function(action, data) {
                     this.$validator.validateAll().then(() => {
                         
-                        this.onActionEstado(action, data, index); 
+                        this.onActionEstado(action, data); 
                         this.clearForm();
 
                     }).catch(() => {
