@@ -100,9 +100,6 @@ export default {
                     this.perfilProveedor = response.data.data
                     //this.srcUrl = '/storage/avatars/'+this.perfil.avatar
                 }, response => {
-                    if(response.status === 404){
-                        router.push('/404');
-                    }
                 })
         }*/
     

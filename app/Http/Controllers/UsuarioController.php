@@ -38,13 +38,16 @@ class UsuarioController extends Controller
         if($request->filter){
             $like = '%'.$request->filter.'%';
             $usuario = Usuario::where('nombre', 'like', $like)
-                            ->orWhere('apellido', 'like', $like)->get()->pluck('user_id');
+                            ->orWhere('apellido', 'like', $like)
+                            ->where('id', '!=', Auth::user()->id)->get()->pluck('user_id');
                 
             $query=$query->where('email', 'like', $like);
 
             if (!$usuario->isEmpty())
-                $query=$query->orWhereIn('id',$usuario);
+                $query=$query->orWhereIn('id',$usuario)->where('id', '!=', Auth::user()->id);
         }
+
+
 
         $users = $query->paginate(10);
 
@@ -260,9 +263,9 @@ class UsuarioController extends Controller
         $query = DB::table('logs')
                             ->select('*', DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as fecha'))
                                 ->where('user_id', $id);
-        if(Auth::user()->roles_id == Rol::roleId('Administrador')){
-            $query->whereIn('tabla', ['users', 'proveedores']);
-        }
+        //if(Auth::user()->roles_id == Rol::roleId('Administrador')){
+        //    $query->whereIn('tabla', ['users', 'proveedores']);
+        //}
 
         $actividades = $query->orderBy('created_at', 'desc')
                                 ->get();
@@ -277,9 +280,15 @@ class UsuarioController extends Controller
         $usuarios = DB::table('users')
             ->join('usuarios', 'usuarios.user_id', '=', 'users.id')
             ->select('users.id as value', DB::raw('CONCAT(usuarios.apellido, ", ",usuarios.nombre, " - ", users.email) as label'))
-                ->where('usuarios.nombre','like' ,$like)
-                ->orWhere('usuarios.apellido', 'like', $like)
-                ->orWhere('users.email', 'like', $like)
+                ->where([
+                    ['users.roles_id', Rol::roleId('Usuario')],
+                    ['users.id','!=', Auth::user()->id]
+                ])
+                ->where(function($query) use ($like){
+                    $query->where('usuarios.nombre','like' ,$like)
+                        ->orWhere('usuarios.apellido', 'like', $like)
+                        ->orWhere('users.email', 'like', $like);
+                })
                 ->orderBy('usuarios.nombre', 'asc')
                 ->get();
 

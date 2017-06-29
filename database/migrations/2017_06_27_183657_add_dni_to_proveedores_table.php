@@ -14,7 +14,8 @@ class AddDniToProveedoresTable extends Migration
     public function up()
     {
         Schema::table('proveedores', function (Blueprint $table) {
-            $table->string('dni', 200);
+            $table->string('dni', 40);
+            $table->string('observaciones', 200)->nullable();
         });
     }
 
