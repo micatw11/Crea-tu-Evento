@@ -252,4 +252,15 @@ class ProveedorController extends Controller
             return response()->json(['error' =>  'Internal Server Error'], 500);
         }
     }
+
+    public function rubros(Request $request, $id){
+        $rubro= Rubro::where('id', $id)->with('domicilio')->get();
+
+
+        if ($rubro) {
+            return response()->json(['data' => $rubro], 200);
+        } else {
+            return response()->json(['error' =>  'Internal Server Error'], 500);
+        }
+    }
 }

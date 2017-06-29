@@ -16,6 +16,7 @@ var PasswordReset = require('./components/Auth/Password/Reset');
 var IndexUsuarios = require('./components/Usuarios/Index');
 var IndexProveedor = require('./components/Proveedores/Index');
 var NewProveedor = require('./components/Proveedores/New');
+var EditRubro = require('./components/Proveedores/EditRubro');
 var Form = require('./components/Proveedores/Form');
 var InternalServerError = require('./components/Errors/500');
 
@@ -71,6 +72,13 @@ let routes = [
 			component: NewProveedor,
 			beforeEnter: guardRoute,
 			meta: { Role: [role.ADMINISTRADOR, role.SUPERVISOR, role.OPERADOR]}	
+		},
+		{
+			path: '/proveedor/rubro/:idRubro',
+			name: 'EditRubro',
+			component: EditRubro,
+			beforeEnter: guardRoute,
+			meta: { Role: [role.ADMINISTRADOR, role.SUPERVISOR, role.OPERADOR, role.PROVEEDOR]}	
 		},
 		{
 			path: '/form',

@@ -58,8 +58,8 @@ export default {
         FormRubro
     },
      mounted() {
-        this.fecha_habilitacion = new Date();
-        this.disabled.from = this.fecha.getFullYear()+'-'+this.fecha.getMonth()+'-'+this.fecha.getDate();
+        //this.fecha_habilitacion = new Date();
+        //this.disabled.from = this.fecha.getFullYear()+'-'+this.fecha.getMonth()+'-'+this.fecha.getDate();
         this.$events.$on('validado', () =>this.sendForm());
     },
     methods: {

@@ -167,7 +167,6 @@ export default {
                           { text: 'Salon' }
                       ],
             validar: false,
-            showModificar: false,
             error: false,
             Comercio: null
         }
