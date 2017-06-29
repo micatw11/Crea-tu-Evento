@@ -11,7 +11,8 @@ import VeeValidate, { Validator } from 'vee-validate';
 
 
 const config = {
-    locale: 'es'
+    locale: 'es',
+    fieldsBagName: 'formFields'
 };
 
 Validator.addLocale(messages);
