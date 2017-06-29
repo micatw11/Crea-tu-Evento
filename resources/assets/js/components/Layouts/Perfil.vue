@@ -123,7 +123,7 @@
                     </div>
                     <!-- /.nav-tabs-custom -->
                 </div>
-                <box-proveedor></box-proveedor>
+                <box-proveedor v-if="perfil !== null && (perfil.user.roles_id == 4)" :perfil="perfil"></box-proveedor>
             </div>
         </section>
     </div>

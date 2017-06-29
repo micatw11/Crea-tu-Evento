@@ -6,10 +6,10 @@
                 <div class="col-sm-12">
                     <label for="inputTipoRubro" class="control-label">Tipo de Proveedor</label><br>
                     <select 
-                        v-model="rubro.tipo_rubro" class="form-control">
+                        v-model="rubro.tipo_rubro" class="form-control" placeholder="Seleccione el tipo de Rubro" >
                         <option 
                             v-for="option in options" 
-                            v-bind:value="option.text" 
+                            v-bind:value="option.text"
                             selected>
                             {{ option.text }}
                         </option>
@@ -28,7 +28,7 @@
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('categoria')&&validarRubro}">
                 <div class="col-sm-12">
                     <label for="inputCategoria" class="control-label">Categoria</label><br>
-                     <input name="categoria" v-validate="'required'" type="number" v-model="rubro.categoria_id" value="categoria" class="form-control">
+                     <input name="categoria" v-validate="'required'" type="number" v-model="rubro.categoria_id" value="categoria" class="form-control" placeholder="Categoria">
                     <!-- validacion vee-validation -->
                     <span v-show="errors.has('categoria')&&validarRubro" class="help-block">{{ errors.first('categoria') }}</span>
                     <!-- validacion api-->
@@ -124,15 +124,8 @@
             </div>
         </div>
     </form>
-     <div class="col-sm-12 box-footer clearfix" style="text-align:center;">
-        <button class="btn btn-default">
-            <i class="glyphicon glyphicon-chevron-left"></i>
-            Atras
-        </button>
-        <button @click="validateBeforeSubmit()" type="button" class="btn btn-primary">
-            Guargar
-        </button>
-    </div>
+     
+    <div v-model:validar-rubro="validarRubro"></div>
 </div>
 </template>
 
@@ -144,22 +137,30 @@ import vSelect from "vue-select";
 import FormDomicilio from './FormDomicilio.vue';
 
 export default {
+    props: {
+            domicilio: {
+                type: Object,
+                required: true
+            },
+            rubro: {
+                type: Object,
+                required: true
+            },
+            validarDomicilio: {
+                type: Boolean,
+                required: true
+            },
+            validarRubro: {
+                type: Boolean,
+                required: true
+            },
+            errorsApi: {
+                type: Object,
+                required: true
+            }
+    },
     data() {
         return {
-            domicilio: {
-                calle: null,
-                numero: null,
-                piso: null,
-                localidad_id: null
-            },
-            rubro:{
-                tipo_rubro: null,
-                categoria_id: null,
-                denominacion: null,
-                descripcion: null,
-                habilitacion: null,
-                fecha_habilitacion: null
-            },
             options: [
                           { text: 'Producto' },
                           { text: 'Servicio' },
@@ -167,9 +168,6 @@ export default {
                       ],
             validar: false,
             showModificar: false,
-            validarRubro: false,
-            validarDomicilio: false,
-            errorsApi: {},
             error: false,
             Comercio: null
         }
@@ -177,73 +175,18 @@ export default {
     components: {
         vSelect, FormDomicilio
     },
+   mounted() {
+        this.$events.$on('validarForm', () =>this.validateBeforeSubmit());
+    },
     methods: {
-        //envio de formulario de modificación de informacion de usuario
-        sendForm: function() {
-             console.log('send', this.rubro)
-            this.$http.post(
-                'api/proveedor/rubro/'+ this.$route.params.userId, 
-                {
-                    tipo_rubro: this.rubro.tipo_rubro,
-                    categoria_id: this.rubro.categoria_id,
-                    denominacion: this.rubro.denominacion,
-                    descripcion: this.rubro.descripcion,
-                    habilitacion: this.rubro.habilitacion,
-                    fecha_habilitacion: this.rubro.fecha_habilitacion,
-                    calle: this.domicilio.calle,
-                    numero: this.domicilio.numero,
-                    piso: this.domicilio.piso,
-                    localidad_id: this.domicilio.localidad_id.value
-                })
-                .then(response => {
-                    this.$emit('reload')
-                    this.showModificar = false;
-                    this.$toast.success({
-                        title:'¡Cambios realizados!',
-                        message:'Se han realizado correctamente los cambios. :D'
-                    });
-                    this.resetForm();
-                }, response => {
-                    this.validar= false;
-                    this.validarDomicilio= false;
-                    this.validarRubro= false;
-                    this.$toast.error({
-                        title:'¡Error!',
-                        message:'No se han podido guardar los cambios. :('
-                    });
-                    if(response.status === 422)
-                    {
-                        this.errorsApi = response.body;
-                    }
-                })
-        },
         //form validation
         validateBeforeSubmit: function() {
          this.$validator.validateAll().then(() => {
-                       this.sendForm();                  
+                    this.validarRubro = false; 
+                    this.$events.fire('validado')
                 }).catch(() => {
-                    this.validar = true;
                     this.validarRubro = true;
-                    this.validarDomicilio = true;
-                    this.$events.fire('validarForm')
                 });
-        },
-        resetForm() {
-            this.rubro={
-                tipo_rubro: null,
-                categoria_id: null,
-                denominacion: null,
-                descripcion: null,
-                habilitacion: null,
-                fecha_habilitacion: null
-            },
-            this.domicilio= {
-                habilitacion: null,
-                calle: null,
-                numero: null,
-                piso: null,
-                localidad_id: null
-            }
         }
     }
 }

@@ -18,9 +18,9 @@ class Rubro extends Model
     						'domicilio_id'
     					  ];
     					      ///RELACIONES//
-    public function proveeedor()
+    public function proveedor()
     {
-        return $this->belongsTo('App\Proveeedor');
+        return $this->belongsTo('App\Proveedor');
     }
 
       public function domicilio()

@@ -14,7 +14,7 @@
                         <ul class="nav nav-tabs">
                             <!--<li class="active"><a href="#activity" data-toggle="tab">Activity</a></li>-->
                             <li class="active">
-                                <a href="#notificacion" data-toggle="tab">Notificación</a>
+                                <a href="#rubro" data-toggle="tab">Rubro</a>
                             </li>
                             <li>
                                 <a href="#h1" data-toggle="tab">proveedor</a>
@@ -29,19 +29,24 @@
                             
                             <!--<div class="active tab-pane" id="activity">
                                 <activity></activity>
-                            </div>-->
+                            </div> v-if="!perfil.user.proveedor.rubro" -->
 
-                            <div class="active tab-pane" id="notificacion">
-                                <div v-if="!perfilProveedor.rubro">
-                                    Estas Habilitado a Ser Proveedor con Habilitación de ingresos brutos: {{perfilProveedor.ingresos_brutos}}
+                            <div class="active tab-pane" id="rubro">
+                                 <div v-if="perfil.user.proveedor.rubro">
+                                        <show :perfil="perfil"></show>
+                                </div>
+                                <div>
+                                    Estas Habilitado a Ser Proveedor con Habilitación de ingresos brutos: 
                                     
                                     Completar Formulario de Rubro:
                                           <new-rubro></new-rubro>
                                 </div>
+                                
+                               
                             </div>
 
                             <div class="tab-pane" id="h1">
-                                recontra datssss
+                                <edit-rubro :perfil="perfil"></edit-rubro>
                             </div>
 
                              <div class="tab-pane content" 
@@ -67,20 +72,28 @@
 
 <script>
 import NewRubro from './NewRubro.vue';
+import EditRubro from './EditRubro.vue';
+import Show from './Show.vue';
 
 export default {
+    props: {
+            perfil: {
+                type: Object,
+                required: true
+            }
+    },
     data(){
         return {
             perfilProveedor: []
         }
     },
     components: {
-        NewRubro
+        NewRubro,Show,EditRubro
     },
     beforeMount: function() {
-        this.getProveedorPerfil()
+       // this.getProveedorPerfil()
     },
-    methods: {
+   /* methods: {
         getProveedorPerfil: function(){
             this.$http.get('api/proveedor/'+ this.$route.params.userId+'/perfil' )
                 .then(response => {
@@ -91,7 +104,7 @@ export default {
                         router.push('/404');
                     }
                 })
-        }
-    }
+        }*/
+    
 }
 </script>

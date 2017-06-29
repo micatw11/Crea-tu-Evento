@@ -73,7 +73,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
   </form>
@@ -92,7 +91,6 @@ export default {
                 required: true
             },
             validarDomicilio: {
-                value: this.validarDomicilio,
                 type: Boolean,
                 required: true
             },
@@ -120,7 +118,7 @@ export default {
             this.$validator.validateAll().then(() => {
                     this.validarDomicilio = false;
                 }).catch(() => {
-                    this.validarDomicilio = true;
+                    this.validarDomicilio= true;
                 });
         },
         //obtiene lista de usuarios segun requiera

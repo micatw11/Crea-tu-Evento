@@ -15,6 +15,9 @@ use App\Usuario;
 use App\User;
 use App\Rol;
 use App\Log;
+use App\Proveedor;
+use App\Rubro;
+
 
 
 
@@ -77,7 +80,7 @@ class UsuarioController extends Controller
      */
     public function show($id)
     {
-        $usuario = Usuario::where('user_id', $id)->with('localidad.provincia', 'user.rol')->firstOrFail();
+        $usuario = Usuario::where('user_id', $id)->with('localidad.provincia', 'user.rol', 'user.proveedor.rubro.domicilio', 'user.proveedor.domicilio')->firstOrFail();
         return response()->json(['data' =>  $usuario]);
     }
 

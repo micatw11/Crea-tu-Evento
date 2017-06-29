@@ -34,7 +34,7 @@ class User extends Authenticatable
 
     public function proveedor()
     {
-        return $this->hasOne('App\Proverdor');
+        return $this->hasOne('App\Proveedor');
     }
 
     public function rol()
