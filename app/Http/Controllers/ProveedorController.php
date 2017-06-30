@@ -254,7 +254,7 @@ class ProveedorController extends Controller
     }
 
     public function rubros(Request $request, $id){
-        $rubro= Rubro::where('id', $id)->with('domicilio')->get();
+        $rubro= Rubro::where('id', $id)->with('domicilio')->firstOrFail();
 
 
         if ($rubro) {

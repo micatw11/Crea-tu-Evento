@@ -2,7 +2,7 @@
     <div>
         <div class="modal-body">
                 Formulario
-        	<form-rubro :rubro="rubro" :domicilio="domilio" :validarDomicilio="validarDomicilio" :validarRubro="validarRubro" :errorsApi="errorsApi"></form-rubro>
+        	<form-rubro :rubro="rubro" :domicilio="domicilio" :validarDomicilio="validarDomicilio" :validarRubro="validarRubro" :errorsApi="errorsApi"></form-rubro>
         </div>
         <div class="modal-footer">
             <div class="col-sm-12 box-footer clearfix" style="text-align:center;">
@@ -32,8 +32,8 @@ export default {
     data() {
         return {
             rubros: { type: Object},
-            domicilio: null,
-            rubro: null,
+            domicilio: { type: Object},
+            rubro: { type: Object},
             validarRubro: false,
             validarDomicilio: false,
             showModificar: false,
@@ -49,7 +49,7 @@ export default {
     },
     beforeMount: function(){
         //selected data
-        this.getUserPerfil();
+        this.getRubro();
         //this.setDefaultLocalidad();
     },
      mounted() {
@@ -71,7 +71,7 @@ export default {
                     this.$events.fire('validarForm')
 
         },
-        getUserPerfil: function(){
+        getRubro: function(){
             console.log(this.idRubro)
             this.$http.get('api/proveedor/'+ this.idRubro +'/rubro' )
                 .then(response => {

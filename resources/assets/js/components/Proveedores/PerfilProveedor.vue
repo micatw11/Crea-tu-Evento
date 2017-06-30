@@ -44,9 +44,9 @@
                                 
                                
                             </div>
-
+                            
                             <div class="tab-pane" id="h1">
-                                <edit-rubro :perfil="perfil"></edit-rubro>
+                                datos mas datos 
                             </div>
 
                              <div class="tab-pane content" 
