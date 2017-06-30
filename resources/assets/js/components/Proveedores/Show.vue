@@ -2,32 +2,36 @@
 <div>
     <div v-for="item in perfil.user.proveedor.rubro">
         <div class="content">
-            <p>
-                <b>Tipo de Rubro: </b>
-                {{item.tipo_rubro}}
-            </p>
+            <div class="content" style="border-style: double;">
+                <div class="col-sm-8">
+                    <p>
+                        <b>Tipo de Rubro: </b>
+                        {{item.tipo_rubro}}
+                    </p>
 
-            <p>
-                <b>Nro Habilitación: </b>
-                {{item.habilitacion}}
-            </p>
-        
-            <p>
-                <b>Denominacion: </b>
-               {{item.denominacion}}
-            </p>
-            <p>
-                <b>Descripcion: </b>
-               {{item.desripcion}}
-            </p>
-        
-            <p>
-                <b>Fecha de habilitacion: </b>
-            
-                {{item.fecha_habilitacion}}
-            </p>
-           <div class="col-sm-4">
-                <button type="button" class="btn-block" @click="showModificar = true, idRubro=item.id" >Modificar Rubro</button>
+                    <p>
+                        <b>Nro Habilitación: </b>
+                        {{item.habilitacion}}
+                    </p>
+                
+                    <p>
+                        <b>Denominacion: </b>
+                       {{item.denominacion}}
+                    </p>
+                    <p>
+                        <b>Descripcion: </b>
+                       {{item.descripcion}}
+                    </p>
+                
+                    <p>
+                        <b>Fecha de habilitacion: </b>
+                    
+                        {{item.fecha_habilitacion}}
+                    </p>
+                </div>
+                <div class="col-sm-4" style="text-align: center;">
+                    <button type="button" class="btn-block" @click="showModificar = true, idRubro=item.id" >Modificar Rubro</button>
+                </div>
             </div>
         </div>
     </div>

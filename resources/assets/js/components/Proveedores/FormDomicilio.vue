@@ -9,7 +9,7 @@
                     :on-search="getOptions" 
                     :options="localidades"
                     data-vv-name="localidad"
-                    v-model="domicilio.localidad_id" 
+                    v-model="localidadSelect" 
                     v-validate="'required'" 
                     placeholder="Seleccione una localidad">
                 </v-select>
@@ -73,6 +73,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
   </form>
@@ -103,7 +104,8 @@ export default {
         return {
             showModificar: false,
             error: false,
-            localidades: []
+            localidades: [],
+            localidadSelect: [],
         }
     },
     components: {
@@ -111,7 +113,8 @@ export default {
     },
     mounted() {
             this.$events.$on('validarForm', () =>this.validateBeforeSubmit());
-        },
+            this.$events.$on('cargarLocalidad', () =>this.setDefaultLocalidad());
+    },
     methods: {
          validateBeforeSubmit: function() {
             console.log('domicilio');
@@ -129,7 +132,13 @@ export default {
                     this.localidades = response.data.data
                     loading(false)
                 })
-        }
+        },
+        setDefaultLocalidad: function(){
+            this.localidadSelect = {
+               'value':this.domicilio.localidad_id,
+               'label':this.domicilio.localidad.nombre+' ('+this.domicilio.localidad.provincia.nombre+')'
+            }
+        },
     }
 }
 </script>

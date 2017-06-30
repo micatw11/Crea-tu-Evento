@@ -9,6 +9,7 @@ use App\Proveedor;
 use App\Rol;
 use App\Domicilio;
 use App\Rubro;
+use App\Log;
 
 class ProveedorController extends Controller
 {
@@ -199,9 +200,20 @@ class ProveedorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function updateRubro(Request $request, $id)
     {
-        //
+        $this->validatorDomicilio($request);
+        $this->validatorRubro($request);
+        //$table_name= "rubro";
+        //$accion = "update";
+        $rubro = Rubro::where('id', $id)->firstOrFail();
+        //Log::logs($id, $table_name, $accion , $rubro, 'Ha actualizado informacion personal');
+        $rubro->update($request->all());
+        if($rubro->save()){
+            return response()->json(['data' =>  'OK'], 200);
+        } else {
+            return response()->json(['error' => 'Internal Server Error'], 500 );
+        }
     }
 
     /**
@@ -254,7 +266,7 @@ class ProveedorController extends Controller
     }
 
     public function rubros(Request $request, $id){
-        $rubro= Rubro::where('id', $id)->with('domicilio')->firstOrFail();
+        $rubro= Rubro::where('id', $id)->with('domicilio.localidad.provincia')->firstOrFail();
 
 
         if ($rubro) {

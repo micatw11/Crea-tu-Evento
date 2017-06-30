@@ -58,7 +58,7 @@
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('descripcion')&&validarRubro}">
                 <div class="col-sm-12">
                     <label for="inputDescripcion" class="control-label">Descripcion: </label><br>
-                    <input name="descripcion"  v-validate:rubro.descripcion="'required|min:4'" type="text" class="form-control" v-model="rubro.descripcion" placeholder="Descripcion">
+                    <textarea name="descripcion"  v-validate:rubro.descripcion="'required|min:4'" type="text" class="form-control" v-model="rubro.descripcion" placeholder="Descripcion"></textarea>
                     <!-- validacion vee-validation -->
                     <span v-show="errors.has('descripcion')&&validarRubro" class="help-block">{{ errors.first('descripcion') }}</span>
                     <!-- validacion api-->
@@ -125,7 +125,6 @@
         </div>
     </form>
      
-    <div v-model:validar-rubro="validarRubro"></div>
 </div>
 </template>
 

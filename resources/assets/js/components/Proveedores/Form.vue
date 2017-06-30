@@ -122,7 +122,8 @@
                <form-domicilio 
                     :domicilio="domicilio" 
                     :validarDomicilio="validarDomicilio" 
-                    :errorsApi="errorsApi">    
+                    :errorsApi.sync="errorsApi"
+                    @update:validarDomicilio='validarEstadoDomicilio(val)'>
                 </form-domicilio>
             </div>
         </div>
@@ -224,6 +225,9 @@ export default {
                     this.validarDomicilio = true;
                     this.$events.fire('validarForm')
                 });
+        },
+        validarEstadoDomicilio: function(val){
+            this.validarDomicilio = val
         },
         //obtiene lista de usuarios segun requiera
         getOptions: function(search, loading) {

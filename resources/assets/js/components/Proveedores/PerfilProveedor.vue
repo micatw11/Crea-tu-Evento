@@ -39,7 +39,7 @@
                                     Estas Habilitado a Ser Proveedor con Habilitación de ingresos brutos: 
                                     
                                     Completar Formulario de Rubro:
-                                          <new-rubro></new-rubro>
+                                         
                                 </div>
                                 
                                

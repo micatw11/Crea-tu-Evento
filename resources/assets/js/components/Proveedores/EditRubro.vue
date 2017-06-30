@@ -2,7 +2,7 @@
     <div>
         <div class="modal-body">
                 Formulario
-        	<form-rubro :rubro="rubro" :domicilio="domicilio" :validarDomicilio="validarDomicilio" :validarRubro="validarRubro" :errorsApi="errorsApi"></form-rubro>
+        	<form-rubro :rubro="rubro" :domicilio="domicilio" :validarDomicilio="validarDomicilio" :validarRubro.sync="validarRubro" :errorsApi.sync="errorsApi" ></form-rubro>
         </div>
         <div class="modal-footer">
             <div class="col-sm-12 box-footer clearfix" style="text-align:center;">
@@ -31,8 +31,8 @@ export default {
     },
     data() {
         return {
-            rubros: { type: Object},
-            domicilio: { type: Object},
+            rubros: { type: Object},//Peticion de datos
+            domicilio: { type: Object}, 
             rubro: { type: Object},
             validarRubro: false,
             validarDomicilio: false,
@@ -50,7 +50,7 @@ export default {
     beforeMount: function(){
         //selected data
         this.getRubro();
-        //this.setDefaultLocalidad();
+        this.$events.fire('cargarLocalidad');
     },
      mounted() {
          //rangos maximos de fechas
@@ -61,8 +61,45 @@ export default {
     },
     methods: {
         //envio de formulario de modificación de informacion de usuario
-        
-
+        sendForm: function() {
+             console.log('send', this.rubros)
+            this.$http.post(
+                'api/proveedor/rubro/'+ this.rubros.id+'/edit', 
+                {
+                    _method: 'PATCH',
+                    tipo_rubro: this.rubro.tipo_rubro,
+                    categoria_id: this.rubro.categoria_id,
+                    denominacion: this.rubro.denominacion,
+                    descripcion: this.rubro.descripcion,
+                    habilitacion: this.rubro.habilitacion,
+                    fecha_habilitacion: this.rubro.fecha_habilitacion,
+                    calle: this.domicilio.calle,
+                    numero: this.domicilio.numero,
+                    piso: this.domicilio.piso,
+                    localidad_id: this.domicilio.localidad_id.value
+                })
+                .then(response => {
+                    this.$emit('reload')
+                    this.showModificar = false;
+                    this.$toast.success({
+                        title:'¡Cambios realizados!',
+                        message:'Se han realizado correctamente los cambios. :D'
+                    });
+                    this.resetForm();
+                }, response => {
+                    this.validar= false;
+                    this.validarDomicilio= false;
+                    this.validarRubro= false;
+                    this.$toast.error({
+                        title:'¡Error!',
+                        message:'No se han podido guardar los cambios. :('
+                    });
+                    if(response.status === 422)
+                    {
+                        this.errorsApi = response.body;
+                    }
+                })
+        },
 
         //form validation
         validateBeforeSubmit: function() {                 
@@ -86,20 +123,8 @@ export default {
                 })
         },
         cargarRubro:function(){
-           this.domicilio= {
-                calle: this.rubros.domicilio.calle,
-                numero: this.rubros.domicilio.numero,
-                piso: this.rubros.domicilio.piso,
-                localidad_id: this.rubros.domicilio.localidad_id
-            },
-            this.rubro= {
-                tipo_rubro: this.rubros.tipo_rubro,
-                categoria_id: this.rubros.categoria_id,
-                denominacion: this.rubros.denominacion,
-                descripcion: this.rubros.descripcion,
-                habilitacion: this.rubros.habilitacion,
-                fecha_habilitacion: this.rubros.fecha_habilitacion
-            }
+           this.domicilio= this.rubros.domicilio,
+            this.rubro= this.rubros
         }
     }
 }
