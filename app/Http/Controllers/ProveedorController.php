@@ -207,9 +207,11 @@ class ProveedorController extends Controller
         //$table_name= "rubro";
         //$accion = "update";
         $rubro = Rubro::where('id', $id)->firstOrFail();
+        $domicilio= Domicilio::where('id', $rubro->domicilio_id)->firstOrFail();
         //Log::logs($id, $table_name, $accion , $rubro, 'Ha actualizado informacion personal');
         $rubro->update($request->all());
-        if($rubro->save()){
+        $domicilio->update($request->all());
+        if($rubro->save()&& $domicilio->save()){
             return response()->json(['data' =>  'OK'], 200);
         } else {
             return response()->json(['error' => 'Internal Server Error'], 500 );

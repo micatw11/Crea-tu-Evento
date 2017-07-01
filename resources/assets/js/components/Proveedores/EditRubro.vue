@@ -6,7 +6,7 @@
         </div>
         <div class="modal-footer">
             <div class="col-sm-12 box-footer clearfix" style="text-align:center;">
-                <button class="btn btn-default">
+                <button class="btn btn-default" @click="atras()">
                     <i class="glyphicon glyphicon-chevron-left"></i>
                     Atras
                 </button>
@@ -31,12 +31,11 @@ export default {
     },
     data() {
         return {
-            rubros: { type: Object},//Peticion de datos
-            domicilio: { type: Object}, 
-            rubro: { type: Object},
+            rubros: { type: Object, default: null},//Peticion de datos
+            domicilio: { type: Object, default: null}, 
+            rubro: { type: Object, default: null},
             validarRubro: false,
             validarDomicilio: false,
-            showModificar: false,
             errorsApi: {},
             error: false,
             Comercio: null,
@@ -50,13 +49,9 @@ export default {
     beforeMount: function(){
         //selected data
         this.getRubro();
-        this.$events.fire('cargarLocalidad');
+        
     },
      mounted() {
-         //rangos maximos de fechas
-        //this.fecha_habilitacion = new Date();
-        //this.disabled.from = this.fecha.getFullYear()+'-'+this.fecha.getMonth()+'-'+this.fecha.getDate();
-
         this.$events.$on('validado', () =>this.sendForm());
     },
     methods: {
@@ -80,12 +75,11 @@ export default {
                 })
                 .then(response => {
                     this.$emit('reload')
-                    this.showModificar = false;
+                    this.atras();
                     this.$toast.success({
                         title:'¡Cambios realizados!',
                         message:'Se han realizado correctamente los cambios. :D'
                     });
-                    this.resetForm();
                 }, response => {
                     this.validar= false;
                     this.validarDomicilio= false;
@@ -116,6 +110,7 @@ export default {
                     this.rubros = response.data.data
                    console.log(this.rubros)
                    this.cargarRubro()
+
                 }, response => {
                     if(response.status === 404){
                         router.push('/404');
@@ -123,9 +118,18 @@ export default {
                 })
         },
         cargarRubro:function(){
-           this.domicilio= this.rubros.domicilio,
+            this.domicilio= this.rubros.domicilio,
+            this.domicilio.localidad_id = {
+               'value':this.domicilio.localidad_id,
+               'label':this.domicilio.localidad.nombre+' ('+this.domicilio.localidad.provincia.nombre+')'
+            }
             this.rubro= this.rubros
+        },
+        atras: function(){
+            this.$events.fire('cerrar');
+            this.$events.fire('reloadComponentPerfil');
         }
+
     }
 }
 

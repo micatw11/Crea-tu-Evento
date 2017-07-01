@@ -164,6 +164,9 @@ export default {
         this.getUserPerfil()
 
     },
+    mounted: function(){
+        this.$events.$on('reloadComponentPerfil', () => this.getUserPerfil());
+    },
     components: {
         FormPerfil, 
         Activity, 

@@ -1,4 +1,4 @@
-<template>
+<template >
 <div>
     <div v-for="item in perfil.user.proveedor.rubro">
         <div class="content">
@@ -30,13 +30,13 @@
                     </p>
                 </div>
                 <div class="col-sm-4" style="text-align: center;">
-                    <button type="button" class="btn-block" @click="showModificar = true, idRubro=item.id" >Modificar Rubro</button>
+                    <button type="button" class="btn-block" @click="modificar(item.id)" >Modificar Rubro</button>
                 </div>
             </div>
         </div>
     </div>
     <!-- Modal Modificar-->
-    <div v-if="idRubro" id="modificar" class="modal" role="dialog" :style="{ display : showModificar  ? 'block' : 'none' }">
+    <div v-if="showModificar" id="modificar" class="modal" role="dialog" :style="{ display : showModificar  ? 'block' : 'none' }">
         <div class="modal-dialog">
           <!-- Modal content-->
             <div class="modal-content">
@@ -69,12 +69,19 @@ export default {
             showModificar: false
         }
     },
+    mounted() {
+        this.$events.$on('cerrar', () =>this.closeModal());
+    },
     components: {
         EditRubro
     },
     methods: {
         closeModal: function(){
             this.showModificar = false;
+        },
+        modificar: function(id){
+            this.showModificar = true, 
+            this.idRubro=id
         }
     }
 }
