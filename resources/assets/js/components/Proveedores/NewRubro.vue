@@ -1,16 +1,33 @@
 <template>
-    <div class="default-content">
-        <section class="content">
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="box">
-                        <div class="box-header">
-                            <h4>Crear Rubro</h4>
-                        </div>
+    <div>
+        <div class="box-header">
+            <div class="col-xs-2">
+                <button class="btn btn-block btn-primary btn-sm"
+                    @click="showNew = true">
+                    Crear Rubro
+                </button>
+            </div>
+        </div>
+        <div class="modal" role="dialog" :style="{ display : showNew  ? 'block' : 'none' }">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" @click="closeModal()">&times;</button>
+                        <h4 class="modal-title">Crear Rubro</h4>
+                    </div>
+                    <div class="modal-body">
+
                         <div class="box-body table-responsive no-padding">
-                        	<form-rubro :rubro="rubro" :domicilio= "domicilio" :validarDomicilio="validarDomicilio" :validarRubro="validarRubro" :errorsApi="errorsApi"></form-rubro>
-                            <div class="col-sm-12 box-footer clearfix" style="text-align:center;">
-                                <button class="btn btn-default">
+                        	<form-rubro 
+                                :rubro="rubro" 
+                                :domicilio= "domicilio" 
+                                :validarDomicilio="validarDomicilio" 
+                                :validarRubro="validarRubro" 
+                                :errorsApi="errorsApi">
+                            </form-rubro>
+                            <div class="modal-footer" style="text-align:center;">
+                                <button class="btn btn-default" @click="closeModal()">
                                     <i class="glyphicon glyphicon-chevron-left"></i>
                                     Atras
                                 </button>
@@ -22,7 +39,7 @@
                     </div>
                 </div>
             </div>    
-        </section>
+        </div>
     </div> 
 </template>
 
@@ -47,6 +64,7 @@ export default {
                 habilitacion: null,
                 fecha_habilitacion: null
             },
+            showNew: false,
             validarRubro: false,
             validarDomicilio: false,
             errorsApi: {},
@@ -58,8 +76,6 @@ export default {
         FormRubro
     },
      mounted() {
-        //this.fecha_habilitacion = new Date();
-        //this.disabled.from = this.fecha.getFullYear()+'-'+this.fecha.getMonth()+'-'+this.fecha.getDate();
         this.$events.$on('validado', () =>this.sendForm());
     },
     methods: {
@@ -82,7 +98,7 @@ export default {
                 })
                 .then(response => {
                     this.$emit('reload')
-                    this.showModificar = false;
+                    this.showNew = false;
                     this.$toast.success({
                         title:'¡Cambios realizados!',
                         message:'Se han realizado correctamente los cambios. :D'
@@ -125,7 +141,10 @@ export default {
                 piso: null,
                 localidad_id: null
             }
-        }
+        },
+        closeModal: function(){
+            this.showNew = false;
+        },
     }
 }
 </script>
