@@ -18,7 +18,7 @@
             </p>
             <p>
                 <b>Descripcion: </b>
-               {{item.desripcion}}
+               {{item.descripcion}}
             </p>
         
             <p>

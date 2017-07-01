@@ -179,6 +179,7 @@ class ProveedorController extends Controller
                     'descripcion'=> $request->descripcion,
                     'habilitacion'=> $request->habilitacion,
                     'domicilio_id'=> $domicilio->id,
+                    'fecha_habilitacion' => $request->fecha_habilitacion
             ]);
     }
 
@@ -254,7 +255,7 @@ class ProveedorController extends Controller
     }
 
     public function rubros(Request $request, $id){
-        $rubro= Rubro::where('id', $id)->with('domicilio')->firstOrFail();
+        $rubro= Rubro::where('id', $id)->with('domicilio.localidad.provincia')->firstOrFail();
 
 
         if ($rubro) {
