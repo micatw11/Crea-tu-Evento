@@ -32,15 +32,16 @@
                             </div> v-if="!perfil.user.proveedor.rubro" -->
 
                             <div class="active tab-pane" id="rubro">
-                                 <div v-if="perfil.user.proveedor.rubro">
-                                        <show :perfil="perfil"></show>
-                                </div>
                                 <div>
                                     Estas Habilitado a Ser Proveedor con Habilitación de ingresos brutos: 
                                     
-                                    Completar Formulario de Rubro:
-                                          <new-rubro></new-rubro>
+                                    <new-rubro></new-rubro>
+                                         
                                 </div>
+                                 <div v-if="perfil.user.proveedor.rubro">
+                                        <show :perfil="perfil"></show>
+                                </div>
+                                
                                 
                                
                             </div>
@@ -89,19 +90,6 @@ export default {
     },
     components: {
         NewRubro,Show,EditRubro
-    },
-    beforeMount: function() {
-       // this.getProveedorPerfil()
-    },
-   /* methods: {
-        getProveedorPerfil: function(){
-            this.$http.get('api/proveedor/'+ this.$route.params.userId+'/perfil' )
-                .then(response => {
-                    this.perfilProveedor = response.data.data
-                    //this.srcUrl = '/storage/avatars/'+this.perfil.avatar
-                }, response => {
-                })
-        }*/
-    
+    }
 }
 </script>

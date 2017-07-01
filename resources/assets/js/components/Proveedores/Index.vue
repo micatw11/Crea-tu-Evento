@@ -36,6 +36,12 @@
                                                 <i class="glyphicon glyphicon-search"></i> Ver
                                             </button>
 
+                                            <!-- Modificar Proveedor -->
+                                            <button class="btn-xs btn-default"
+                                                @click="onActionModificar(props.rowData, props.rowIndex)">
+                                                <i class="glyphicon glyphicon-pencil"></i> Modificar
+                                            </button>
+
                                             <!-- Aprobar a proveedor -->
                                             <button v-if="props.rowData.estado === 'Tramite' ||
                                                         props.rowData.estado === 'Baja'" 
@@ -140,6 +146,19 @@
                     </div>
                 </div>
             </div>
+            <!-- Modal Modificar-->
+            <div v-if="showModificar" id="modificar" class="modal" role="dialog" :style="{ display : showModificar  ? 'block' : 'none' }">
+                <div class="modal-dialog">
+                  <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" @click="closeModal()">&times;</button>
+                            <h4 class="modal-title">Modificar datos de Proveedor</h4>
+                        </div>
+                        <edit-proveedor :idProveedor="idProveedor"></edit-proveedor>
+                    </div>
+                </div>
+            </div>
         </div>
 	</div>
 </template>
@@ -155,6 +174,7 @@
     import route from '../../routes.js';
     import PathContent from '../Layouts/Path';
     import NewProveedor from './New';
+    import EditProveedor from './Edit';
 
 
     Vue.component('filter-bar-proveedor', FilterBar);
@@ -175,13 +195,15 @@
                 showModalObservation: false,
                 listPath : [{route: '/', name: 'Home'}, {route: '/proveedores', name: 'Proveedores'}],
                 action: '',
+                idProveedor: null,
+                showModificar: false,
                 dataUser: null,
                 validar: false,
                 errorsApi: []
             }
         },
         components: {
-            VuetableP, VuetablePaginationP, VuetablePaginationInfoP, PathContent, NewProveedor
+            VuetableP, VuetablePaginationP, VuetablePaginationInfoP, PathContent, NewProveedor, EditProveedor
         },
         mounted() {
             this.$events.$on('filter-set', eventData => this.onFilterSet(eventData));
@@ -213,6 +235,15 @@
                 this.$events.fire('changePath', this.listPath, 'Perfil');
 
                 route.push("/usuario/"+data.user_id+"/perfil")
+            },
+
+            onActionModificar(data, index){
+                this.showModificar = true, 
+                this.idProveedor=data.id
+            },
+
+            closeModal: function(){
+                this.showModificar = false;
             },
 
             onActionEstado(action, data){

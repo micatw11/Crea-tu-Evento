@@ -3,7 +3,7 @@
         <form role="form">
         <div class="col-sm-12">
             <div class="col-sm-6">
-                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('usuarios')&&validar}">
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('usuarios')&&validarProveedor}">
                     <div class="col-sm-12">
                         <label class="control-label">Usuario</label><br>
                         <v-select 
@@ -17,7 +17,7 @@
                             placeholder="Seleccione un usuario">
                         </v-select>
                         <!-- validacion vee-validation -->
-                        <span v-show="errors.has('usuarios')&&validar" class="help-block">{{ errors.first('usuarios') }}</span>
+                        <span v-show="errors.has('usuarios')&&validarProveedor" class="help-block">{{ errors.first('usuarios') }}</span>
                         <!-- validacion api-->
                         <div class="text-red" v-if="errorsApi.user_id">
                             <div v-for="msj in errorsApi.user_id">
@@ -27,12 +27,12 @@
                     </div>
                 </div>
                     
-                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('nombre')&&validar}">
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('nombre')&&validarProveedor}">
                     <div class="col-sm-12">
                         <label for="inputNombre" class="control-label">Nombre Razón social</label><br>
                         <input name="nombre"  v-validate:proveedor.nombre="'required|min:4'" type="text" class="form-control" v-model="proveedor.nombre" placeholder="Nombre">
                         <!-- validacion vee-validation -->
-                        <span v-show="errors.has('nombre')&&validar" class="help-block">{{ errors.first('nombre') }}</span>
+                        <span v-show="errors.has('nombre')&&validarProveedor" class="help-block">{{ errors.first('nombre') }}</span>
                         <!-- validacion api-->
                         <div class="text-red" v-if="errorsApi.nombre">
                             <div v-for="msj in errorsApi.nombre">
@@ -42,12 +42,12 @@
                     </div>
                 </div>
 
-                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('cuit')&&validar}">
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('cuit')&&validarProveedor}">
                     <div class="col-sm-12">
                         <label for="inputCuit" class="control-label">N° de Cuit</label><br>
                          <input name="cuit" v-validate="'required|min:9|max:11'" type="number" v-model="proveedor.cuit" value="cuit" class="form-control">
                         <!-- validacion vee-validation -->
-                        <span v-show="errors.has('cuit')&&validar" class="help-block">{{ errors.first('cuit') }}</span>
+                        <span v-show="errors.has('cuit')&&validarProveedor" class="help-block">{{ errors.first('cuit') }}</span>
                         <!-- validacion api-->
                         <div class="text-red" v-if="errorsApi.cuit">
                             <div v-for="msj in errorsApi.cuit">
@@ -57,13 +57,13 @@
                     </div>
                 </div>
 
-                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('email')&&validar}">
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('email')&&validarProveedor}">
                     <div class="col-sm-12">
                         <label for="inputEmail" class="control-label">Email</label><br>
                         <input name="email"  v-validate="'required|email'" type="email" class="form-control" v-model="proveedor.email" placeholder="Email">
 
                         <!-- validacion vee-validation -->
-                        <span v-show="errors.has('email')&&validar" class="help-block">{{ errors.first('email') }}</span>
+                        <span v-show="errors.has('email')&&validarProveedor" class="help-block">{{ errors.first('email') }}</span>
                         <!-- validacion api-->
                         <div class="text-red" v-if="errorsApi.email">
                             <div v-for="msj in errorsApi.email">
@@ -73,7 +73,7 @@
                     </div>
                 </div>
 
-                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('dni')&&validar}">
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('dni')&&validarProveedor}">
                     <div class="col-sm-12">
                         <label for="inputDni" class="control-label">DNI <i class="fa fa-file-image-o"></i></label><br>
                         <input 
@@ -83,7 +83,7 @@
                             name="dni">
 
                         <!-- validacion vee-validation -->
-                        <span v-show="errors.has('dni')&&validar" class="help-block">{{ errors.first('dni') }}</span>
+                        <span v-show="errors.has('dni')&&validarProveedor" class="help-block">{{ errors.first('dni') }}</span>
                         <!-- validacion api-->
                         <div class="text-red" v-if="errorsApi.dni">
                             <div v-for="msj in errorsApi.dni">
@@ -95,7 +95,7 @@
             </div>
 
             <div class="col-sm-6">
-                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('ingresos_brutos')&&validar}">
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('ingresos_brutos')&&validarProveedor}">
                     <div class="col-sm-12">
                         <label for="inputIngresosBrutos" class="control-label">N° Ingresos Brutos</label><br>
                         <input 
@@ -108,7 +108,7 @@
                             min="1">
 
                         <!-- validacion vee-validation -->
-                        <span v-show="errors.has('ingresos_brutos')&&validar" class="help-block">
+                        <span v-show="errors.has('ingresos_brutos')&&validarProveedor" class="help-block">
                                 {{ errors.first('ingresos_brutos') }}
                         </span>
                         <!-- validacion api-->
@@ -122,20 +122,12 @@
                <form-domicilio 
                     :domicilio="domicilio" 
                     :validarDomicilio="validarDomicilio" 
-                    :errorsApi="errorsApi">    
+                    :errorsApi="errorsApi"
+                    >
                 </form-domicilio>
             </div>
         </div>
      </form>
-     <div class="col-sm-12 box-footer clearfix" style="text-align:center;">
-        <button @click="goBack()" class="btn btn-default">
-            <i class="glyphicon glyphicon-chevron-left"></i>
-            Atras
-        </button>
-        <button @click="validateBeforeSubmit()" type="button" class="btn btn-primary">
-            Guargar
-        </button>
-    </div>
 </div>
 </template>
 
@@ -148,81 +140,48 @@ import vSelect from "vue-select";
 import FormDomicilio from './FormDomicilio.vue';
 
 export default {
+    props: {
+            domicilio: {
+                type: Object,
+                required: true
+            },
+            proveedor: {
+                type: Object,
+                required: true
+            },
+            validarDomicilio: {
+                type: Boolean,
+                required: true
+            },
+            validarProveedor: {
+                type: Boolean,
+                required: true
+            },
+            errorsApi: {
+                type: Object,
+                required: true
+            }
+    },
     data() {
         return {
-            showModificar: false,
             usuarios:[],
             validar: false,
-            validarDomicilio: false,
-            showModificar: false,
-            proveedor: { 
-                user_id: null,
-                nombre: null,
-                cuit: null,
-                ingresos_brutos: null,
-                email: null,
-                dni: null
-            },
-            domicilio: {
-                calle: null,
-                numero: null,
-                piso: null,
-                localidad_id: null
-            },
-            error: false,
-            errorsApi: {}
         }
     },
     components: {
         vSelect, FormDomicilio
     },
+    mounted() {
+        this.$events.$on('validarForm', () =>this.validateBeforeSubmit());
+    },
     methods: {
-       //envio de formulario de modificación de informacion de usuario
-        sendForm: function() {
-             console.log('send', this.rubro)
-            this.$http.post(
-                'api/proveedor', 
-                {
-                    user_id: this.proveedor.user_id.value,
-                    nombre: this.proveedor.nombre,
-                    cuit: this.proveedor.cuit,
-                    ingresos_brutos: this.proveedor.ingresos_brutos,
-                    email: this.proveedor.email,
-                    dni: this.proveedor.dni,
-                    calle: this.domicilio.calle,
-                    numero: this.domicilio.numero,
-                    piso: this.domicilio.piso,
-                    localidad_id: this.domicilio.localidad_id.value
-
-                })
-                .then(response => {
-                    this.$emit('reload')
-                    this.showModificar = false;
-                    this.$toast.success({
-                        title:'¡Cambios realizados!',
-                        message:'Se han realizado correctamente los cambios. :D'
-                    });
-                    this.resetForm();
-                }, response => {
-                    this.validar= false;
-                    this.validarDomicilio= false;
-                    this.$toast.error({
-                        title:'¡Error!',
-                        message:'No se han podido guardar los cambios. :('
-                    });
-                    if(response.status === 422)
-                    {
-                        this.errorsApi = response.body;
-                    }
-                })
-        },
+       
         validateBeforeSubmit: function() {
                 this.$validator.validateAll().then(() => {
-                       this.sendForm();                  
+                    this.validarProveedor = false;
+                    this.$events.fire('validado');                  
                 }).catch(() => {
-                    this.validar = true;
-                    this.validarDomicilio = true;
-                    this.$events.fire('validarForm')
+                    this.validarProveedor = true;
                 });
         },
         //obtiene lista de usuarios segun requiera
@@ -250,26 +209,7 @@ export default {
             };
             reader.readAsDataURL(file);
         },
-        resetForm() {
-            this.proveedor = {
-                auser_id: null,
-                nombre: null,
-                cuit: null,
-                ingresos_brutos: null,
-                email: null,
-                dni: null
-            },
-            this.domicilio= {
-                habilitacion: null,
-                calle: null,
-                numero: null,
-                piso: null,
-                localidad_id: null
-            }
-        },
-        goBack(){
-            route.go(-1)
-        }
+        
     }
 }
 </script>

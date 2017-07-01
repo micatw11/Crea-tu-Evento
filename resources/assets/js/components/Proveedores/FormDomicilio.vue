@@ -73,6 +73,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
   </form>
@@ -103,7 +104,8 @@ export default {
         return {
             showModificar: false,
             error: false,
-            localidades: []
+            localidades: [],
+            localidadSelect: [],
         }
     },
     components: {
@@ -111,7 +113,7 @@ export default {
     },
     mounted() {
             this.$events.$on('validarForm', () =>this.validateBeforeSubmit());
-        },
+    },
     methods: {
          validateBeforeSubmit: function() {
             console.log('domicilio');
@@ -129,7 +131,7 @@ export default {
                     this.localidades = response.data.data
                     loading(false)
                 })
-        }
+        },
     }
 }
 </script>

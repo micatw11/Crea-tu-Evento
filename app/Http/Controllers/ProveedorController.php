@@ -9,6 +9,7 @@ use App\Proveedor;
 use App\Rol;
 use App\Domicilio;
 use App\Rubro;
+use App\Log;
 
 class ProveedorController extends Controller
 {
@@ -195,14 +196,27 @@ class ProveedorController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for update the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function updateRubro(Request $request, $id)
     {
-        //
+        $this->validatorDomicilio($request);
+        $this->validatorRubro($request);
+        //$table_name= "rubro";
+        //$accion = "update";
+        $rubro = Rubro::where('id', $id)->firstOrFail();
+        $domicilio= Domicilio::where('id', $rubro->domicilio_id)->firstOrFail();
+        //Log::logs($id, $table_name, $accion , $rubro, 'Ha actualizado informacion personal');
+        $rubro->update($request->all());
+        $domicilio->update($request->all());
+        if($rubro->save()&& $domicilio->save()){
+            return response()->json(['data' =>  'OK'], 200);
+        } else {
+            return response()->json(['error' => 'Internal Server Error'], 500 );
+        }
     }
 
     /**
@@ -214,7 +228,20 @@ class ProveedorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validatorDomicilio($request);
+        $this->validatorProveedor($request);
+        //$table_name= "rubro";
+        //$accion = "update";
+        $proveedor = RubroProveedor::where('id', $id)->firstOrFail();
+        $domicilio= Domicilio::where('id', $proveedor->domicilio_id)->firstOrFail();
+        //Log::logs($id, $table_name, $accion , $rubro, 'Ha actualizado informacion personal');
+        $proveedor->update($request->all());
+        $domicilio->update($request->all());
+        if($rubro->save()&& $domicilio->save()){
+            return response()->json(['data' =>  'OK'], 200);
+        } else {
+            return response()->json(['error' => 'Internal Server Error'], 500 );
+        }
     }
 
     /**
@@ -254,12 +281,24 @@ class ProveedorController extends Controller
         }
     }
 
-    public function rubros(Request $request, $id){
+    public function rubros($id){
+
         $rubro= Rubro::where('id', $id)->with('domicilio.localidad.provincia')->firstOrFail();
 
 
         if ($rubro) {
             return response()->json(['data' => $rubro], 200);
+        } else {
+            return response()->json(['error' =>  'Internal Server Error'], 500);
+        }
+    }
+
+    public function proveedor($id){
+        $proveedor= Proveedor::where('id', $id)->with('domicilio.localidad.provincia','user.usuario')->firstOrFail();
+
+
+        if ($proveedor) {
+            return response()->json(['data' => $proveedor], 200);
         } else {
             return response()->json(['error' =>  'Internal Server Error'], 500);
         }

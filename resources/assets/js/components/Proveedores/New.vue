@@ -9,7 +9,16 @@
                             <h4>Alta Proveedor</h4>
                         </div>
                         <div class="box-body table-responsive no-padding">
-                        	<form-prov></form-prov>
+                        	<form-prov :proveedor="proveedor" :domicilio= "domicilio" :validarDomicilio="validarDomicilio" :validarProveedor="validarProveedor" :errorsApi="errorsApi"></form-prov>
+                            <div class="col-sm-12 box-footer clearfix" style="text-align:center;">
+                                <button @click="goBack()" class="btn btn-default">
+                                    <i class="glyphicon glyphicon-chevron-left"></i>
+                                    Atras
+                                </button>
+                                <button @click="validateBeforeSubmit()" type="button" class="btn btn-primary">
+                                    Guargar
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -30,7 +39,25 @@ export default {
     data() {
         return {
             titlePath: 'Nuevo Proveedor',
-            listaPath: [{route: '/', name: 'Home'},{route: '/proveedores', name: 'Proveedores'},{route: '/proveedor/new', name: 'Nuevo Proveedor'}]
+            listaPath: [{route: '/', name: 'Home'},{route: '/proveedores', name: 'Proveedores'},{route: '/proveedor/new', name: 'Nuevo Proveedor'}],
+            validarProveedor: false,
+            validarDomicilio: false,
+            proveedor: { 
+                user_id: null,
+                nombre: null,
+                cuit: null,
+                ingresos_brutos: null,
+                email: null,
+                dni: null
+            },
+            domicilio: {
+                calle: null,
+                numero: null,
+                piso: null,
+                localidad_id: null
+            },
+            error: false,
+            errorsApi: {}
         }
     },
     components: {
@@ -38,6 +65,73 @@ export default {
     },
     mounted() {
             this.$events.fire('changePath', this.listaPath, this.titlePath);
+            this.$events.$on('validado', () =>this.sendForm());
+    },
+    methods: {
+        //envio de formulario de modificación de informacion de usuario
+        sendForm: function() {
+            this.$http.post(
+                'api/proveedor', 
+                {
+                    user_id: this.proveedor.user_id.value,
+                    nombre: this.proveedor.nombre,
+                    cuit: this.proveedor.cuit,
+                    ingresos_brutos: this.proveedor.ingresos_brutos,
+                    email: this.proveedor.email,
+                    dni: this.proveedor.dni,
+                    calle: this.domicilio.calle,
+                    numero: this.domicilio.numero,
+                    piso: this.domicilio.piso,
+                    localidad_id: this.domicilio.localidad_id.value
+
+                })
+                .then(response => {
+                    this.$emit('reload')
+                    this.$toast.success({
+                        title:'¡Cambios realizados!',
+                        message:'Se han realizado correctamente los cambios. :D'
+                    });
+                    this.resetForm();
+                }, response => {
+                    this.validarProveedor= false;
+                    this.validarDomicilio= false;
+                    this.$toast.error({
+                        title:'¡Error!',
+                        message:'No se han podido guardar los cambios. :('
+                    });
+                    if(response.status === 422)
+                    {
+                        this.errorsApi = response.body;
+                    }
+                })
+        },
+          //form validation
+        validateBeforeSubmit: function() {                 
+                    this.validarProveedor = true;
+                    this.validarDomicilio = true;
+                    this.$events.fire('validarForm')
+
+        },
+        resetForm() {
+            this.proveedor = {
+                auser_id: null,
+                nombre: null,
+                cuit: null,
+                ingresos_brutos: null,
+                email: null,
+                dni: null
+            },
+            this.domicilio= {
+                habilitacion: null,
+                calle: null,
+                numero: null,
+                piso: null,
+                localidad_id: null
+            }
+        },
+        goBack(){
+            route.go(-1)
         }
+    }
 }
 </script>
