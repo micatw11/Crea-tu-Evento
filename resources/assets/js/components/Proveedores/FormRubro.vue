@@ -118,7 +118,6 @@
             <div>
                 <form-domicilio 
                     :domicilio="domicilio" 
-                    :validarDomicilio="validarDomicilio" 
                     :errorsApi="errorsApi">
                 </form-domicilio>
             </div>
@@ -145,14 +144,14 @@ export default {
                 type: Object,
                 required: true
             },
-            validarDomicilio: {
+            estado: {
                 type: Boolean,
                 required: true
             },
-            validarRubro: {
+            /*validarRubro: {
                 type: Boolean,
                 required: true
-            },
+            },*/
             errorsApi: {
                 type: Object,
                 required: true
@@ -166,6 +165,7 @@ export default {
                           { text: 'Salon' }
                       ],
             validar: false,
+            validarRubro: false,
             error: false,
             Comercio: null
         }
@@ -181,7 +181,13 @@ export default {
         validateBeforeSubmit: function() {
          this.$validator.validateAll().then(() => {
                     this.validarRubro = false; 
-                    this.$events.fire('validado')
+                    if (this.estado){
+                        console.log("evento nuevo ")
+                        this.$events.fire('validado')
+                    }else{
+                        console.log("evento modificarr ")
+                        this.$events.fire('validadoEdit')
+                    }
                 }).catch(() => {
                     this.validarRubro = true;
                 });

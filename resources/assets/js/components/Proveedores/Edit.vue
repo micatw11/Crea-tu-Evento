@@ -58,7 +58,7 @@ export default {
         
     },
      mounted() {
-        this.$events.$on('validado', () =>this.sendForm());
+        this.$events.$on('validadoprove', () =>this.sendForm());
     },
     methods: {
         //envio de formulario de modificación de informacion de usuario

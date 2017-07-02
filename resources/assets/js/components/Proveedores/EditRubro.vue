@@ -2,7 +2,12 @@
     <div>
         <div class="modal-body">
                 Formulario
-        	<form-rubro :rubro="rubro" :domicilio="domicilio" :validarDomicilio="validarDomicilio" :validarRubro="validarRubro" :errorsApi="errorsApi" ></form-rubro>
+        	<form-rubro 
+                :rubro="rubro"  
+                :domicilio="domicilio" 
+                :estado="estado" 
+                :errorsApi="errorsApi" >
+            </form-rubro>
         </div>
         <div class="modal-footer">
             <div class="col-sm-12 box-footer clearfix" style="text-align:center;">
@@ -40,6 +45,7 @@ export default {
             error: false,
             Comercio: null,
             fecha: null,
+            estado: false,
             disabled: { to: '1920-01-01', from: null }
         }
     },
@@ -52,12 +58,13 @@ export default {
         
     },
      mounted() {
-        this.$events.$on('validado', () =>this.sendForm());
+        this.$events.$on('validadoEdit', () =>this.sendFormEdit());
+        console.log("activado evento validar edit")
     },
     methods: {
         //envio de formulario de modificación de informacion de usuario
-        sendForm: function() {
-             console.log('send', this.rubros)
+        sendFormEdit: function() {
+             console.log('send edit', this.rubros)
             this.$http.post(
                 'api/proveedor/rubro/'+ this.rubros.id+'/edit', 
                 {
