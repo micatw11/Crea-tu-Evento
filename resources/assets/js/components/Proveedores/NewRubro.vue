@@ -1,46 +1,32 @@
 <template>
-    <div>
-        <div class="box-header">
-            <div class="col-xs-2">
-                <button class="btn btn-block btn-primary btn-sm"
-                    @click="showNew = true">
-                    Crear Rubro
+    <!-- Modal content-->
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" @click="closeModal()">&times;</button>
+            <h4 class="modal-title">Crear Rubro</h4>
+        </div>
+        <div class="modal-body">
+
+            <div class="box-body">
+            	<form-rubro 
+                    :rubro="rubro" 
+                    :domicilio= "domicilio" 
+                    :estado= "estado"
+                    :errorsApi="errorsApi">
+                </form-rubro>
+            </div>
+            <div class="modal-footer" style="text-align:center;">
+                <button class="btn btn-default" @click="closeModal()">
+                    <i class="glyphicon glyphicon-chevron-left"></i>
+                    Atras
+                </button>
+                <button @click="validateBeforeSubmit()" type="button" class="btn btn-primary">
+                    Guargar
                 </button>
             </div>
+        
         </div>
-        <div class="modal" role="dialog" :style="{ display : showNew  ? 'block' : 'none' }">
-            <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" @click="closeModal()">&times;</button>
-                        <h4 class="modal-title">Crear Rubro</h4>
-                    </div>
-                    <div class="modal-body">
-
-                        <div class="box-body table-responsive no-padding">
-                        	<form-rubro 
-                                :rubro="rubro" 
-                                :domicilio= "domicilio" 
-                                :validarDomicilio="validarDomicilio" 
-                                :validarRubro="validarRubro" 
-                                :errorsApi="errorsApi">
-                            </form-rubro>
-                            <div class="modal-footer" style="text-align:center;">
-                                <button class="btn btn-default" @click="closeModal()">
-                                    <i class="glyphicon glyphicon-chevron-left"></i>
-                                    Atras
-                                </button>
-                                <button @click="validateBeforeSubmit()" type="button" class="btn btn-primary">
-                                    Guargar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>    
-        </div>
-    </div> 
+    </div>
 </template>
 
 <script>
@@ -69,7 +55,8 @@ export default {
             validarDomicilio: false,
             errorsApi: {},
             error: false,
-            Comercio: null
+            Comercio: null,
+            estado: true
         }
     },
     components: {
@@ -77,11 +64,12 @@ export default {
     },
      mounted() {
         this.$events.$on('validado', () =>this.sendForm());
+        console.log("activado evento validar nuevo")
     },
     methods: {
         //envio de formulario de modificación de informacion de usuario
         sendForm: function() {
-             console.log('send', this.rubro)
+             console.log('send newww', this.rubro)
             this.$http.post(
                 'api/proveedor/rubro/'+ this.$route.params.userId, 
                 {
@@ -99,6 +87,7 @@ export default {
                 .then(response => {
                     this.$emit('reload')
                     this.showNew = false;
+                    this.errorsApi= {},
                     this.$toast.success({
                         title:'¡Cambios realizados!',
                         message:'Se han realizado correctamente los cambios. :D'
@@ -106,7 +95,6 @@ export default {
                     this.resetForm();
                 }, response => {
                     this.validar= false;
-                    this.validarDomicilio= false;
                     this.validarRubro= false;
                     this.$toast.error({
                         title:'¡Error!',
@@ -121,7 +109,6 @@ export default {
         //form validation
         validateBeforeSubmit: function() {                 
                     this.validarRubro = true;
-                    this.validarDomicilio = true;
                     this.$events.fire('validarForm')
 
         },

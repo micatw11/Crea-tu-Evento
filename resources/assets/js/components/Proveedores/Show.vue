@@ -1,5 +1,21 @@
 <template >
 <div>
+    <div>
+        <div class="box-header">
+            <div class="col-xs-2">
+                <button class="btn btn-block btn-primary btn-sm"
+                    @click="showNew = true">
+                    Crear Rubro
+                </button>
+            </div>
+        </div>
+
+        <div v-if="showNew" class="modal" role="dialog" :style="{ display : showNew  ? 'block' : 'none' }">
+            <div class="modal-dialog">
+                <new-rubro></new-rubro>
+            </div>    
+        </div>
+    </div> 
     <div v-for="item in perfil.user.proveedor.rubro">
         <div class="content">
             <div class="content" style="border-style: double;">
@@ -55,6 +71,7 @@
 <script>
 import auth from '../../auth.js';
 import EditRubro from './EditRubro.vue';
+import NewRubro from './NewRubro.vue';
 
 export default {
     props: {
@@ -66,18 +83,20 @@ export default {
     data() {
         return {
             idRubro: null,
-            showModificar: false
+            showModificar: false,
+            showNew: false
         }
     },
     mounted() {
         this.$events.$on('cerrar', () =>this.closeModal());
     },
     components: {
-        EditRubro
+        EditRubro, NewRubro
     },
     methods: {
         closeModal: function(){
             this.showModificar = false;
+            this.showNew = false;
         },
         modificar: function(id){
             this.showModificar = true, 

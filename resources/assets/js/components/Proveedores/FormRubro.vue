@@ -116,11 +116,82 @@
             </div>
           </div>
             <div>
-                <form-domicilio 
-                    :domicilio="domicilio" 
-                    :validarDomicilio="validarDomicilio" 
-                    :errorsApi="errorsApi">
-                </form-domicilio>
+                 <div>
+                     <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('localidad')&&validarRubro}">
+                        <div class="col-sm-12">
+                            <label class="control-label">Localidad</label><br>
+                            <v-select
+                                :debounce="250" 
+                                :on-search="getOptions" 
+                                :options="localidades"
+                                data-vv-name="localidad"
+                                v-model="domicilio.localidad_id" 
+                                v-validate="'required'" 
+                                placeholder="Seleccione una localidad">
+                            </v-select>
+                           
+                            <!-- validacion vee-validation -->
+                            <span v-show="errors.has('localidad')&&validarRubro" class="help-block">{{ errors.first('localidad') }}</span>
+                            <!-- validacion api-->
+                            <div class="text-red" v-if="errorsApi.localidad_id">
+                                <div v-for="msj in errorsApi.localidad_id">
+                                    <p>{{ msj }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('calle')&&validarRubro}">
+                        <div class="col-sm-12">
+                            <label for="inputCalle" class="control-label">Direccion </label><br>
+                            <input name="calle"  v-validate:domicilio.calle="'required|min:4'" type="text" class="form-control" v-model="domicilio.calle" placeholder="calle">
+                            <!-- validacion vee-validation -->
+                            <span v-show="errors.has('calle')&&validarRubro" class="help-block">{{ errors.first('calle') }}</span>
+                            <!-- validacion api-->
+                            <div class="text-red" v-if="errorsApi.calle">
+                                <div v-for="msj in errorsApi.calle">
+                                    <p>{{ msj }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has(('numero')||('piso'))&&validarRubro}">
+                        <div class="col-sm-6">
+                                <label for="inputNro" class="control-label">N° </label><br>
+                                <input 
+                                    name="numero" 
+                                    v-validate="'required'" 
+                                    type="number" v-model="domicilio.numero" 
+                                    value="numero" 
+                                    class="form-control">
+
+                                <!-- validacion vee-validation -->
+                                <span v-show="errors.has('numero')&&validarRubro" class="help-block">{{ errors.first('numero') }}</span>
+                                <!-- validacion api-->
+                                <div class="text-red">
+                                    <div v-if="errorsApi.numero" v-for="msj in errorsApi.numero">
+                                        <p>{{ msj }}</p>
+                                    </div>
+                                </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            
+                            <label for="inputPiso" class="control-label">Dpto. </label><br>
+                            <input name="piso" v-validate="'required'" type="number" v-model="domicilio.piso" value="piso" class="form-control">
+
+                            <!-- validacion vee-validation -->
+                            <span v-show="errors.has('piso')&&validarRubro" class="help-block">{{ errors.first('piso') }}</span>
+                            <div class="text-red">
+                                <div v-if="errorsApi.piso" v-for="msj in errorsApi.piso">
+                                    <p>{{ msj }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
         </div>
     </form>
@@ -145,14 +216,14 @@ export default {
                 type: Object,
                 required: true
             },
-            validarDomicilio: {
+            nuevo: {
                 type: Boolean,
                 required: true
             },
-            validarRubro: {
+            /*validarRubro: {
                 type: Boolean,
                 required: true
-            },
+            },*/
             errorsApi: {
                 type: Object,
                 required: true
@@ -165,7 +236,9 @@ export default {
                           { text: 'Servicio' },
                           { text: 'Salon' }
                       ],
+            localidades: [],
             validar: false,
+            validarRubro: false,
             error: false,
             Comercio: null
         }
@@ -174,18 +247,33 @@ export default {
         vSelect, FormDomicilio
     },
    mounted() {
-        this.$events.$on('validarForm', () =>this.validateBeforeSubmit());
+        this.$events.$listen('validarForm', () =>this.validateBeforeSubmit());
     },
     methods: {
         //form validation
         validateBeforeSubmit: function() {
          this.$validator.validateAll().then(() => {
                     this.validarRubro = false; 
-                    this.$events.fire('validado')
+                    if (this.nuevo){
+                        console.log("evento nuevo ")
+                        this.$events.fire('validado')
+                    }else{
+                        console.log("evento modificarr ")
+                        this.$events.fire('validadoEdit')
+                    }
                 }).catch(() => {
                     this.validarRubro = true;
                 });
-        }
+        },
+        //obtiene lista de localidades 
+        getOptions: function(search, loading) {
+            loading(true)
+            this.$http.get('api/localidades/?q='+ search
+                ).then(response => {
+                    this.localidades = response.data.data
+                    loading(false)
+                })
+        },
     }
 }
 </script>

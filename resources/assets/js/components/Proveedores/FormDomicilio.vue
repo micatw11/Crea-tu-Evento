@@ -91,10 +91,10 @@ export default {
                 type: Object,
                 required: true
             },
-            validarDomicilio: {
+            /*validarDomicilio: {
                 type: Boolean,
                 required: true
-            },
+            },*/
             errorsApi: {
                 type: Object,
                 required: true
@@ -106,6 +106,7 @@ export default {
             error: false,
             localidades: [],
             localidadSelect: [],
+            validarDomicilio: false,
         }
     },
     components: {
@@ -116,7 +117,6 @@ export default {
     },
     methods: {
          validateBeforeSubmit: function() {
-            console.log('domicilio');
             this.$validator.validateAll().then(() => {
                     this.validarDomicilio = false;
                 }).catch(() => {

@@ -2,7 +2,12 @@
     <div>
         <div class="modal-body">
                 Formulario
-        	<form-rubro :rubro="rubro" :domicilio="domicilio" :validarDomicilio="validarDomicilio" :validarRubro="validarRubro" :errorsApi="errorsApi" ></form-rubro>
+        	<form-rubro 
+                :rubro="rubro"  
+                :domicilio="domicilio" 
+                :nuevo="nuevo" 
+                :errorsApi="errorsApi" >
+            </form-rubro>
         </div>
         <div class="modal-footer">
             <div class="col-sm-12 box-footer clearfix" style="text-align:center;">
@@ -40,6 +45,8 @@ export default {
             error: false,
             Comercio: null,
             fecha: null,
+            nuevo: false,
+            estado: false,
             disabled: { to: '1920-01-01', from: null }
         }
     },
@@ -52,12 +59,16 @@ export default {
         
     },
      mounted() {
-        this.$events.$on('validado', () =>this.sendForm());
+        this.$events.$on('validadoEdit', () =>this.sendFormEdit());
+        console.log("activado evento validar edit")
     },
     methods: {
         //envio de formulario de modificación de informacion de usuario
-        sendForm: function() {
-             console.log('send', this.rubros)
+        sendFormEdit: function() {
+             console.log('send edit', this.estado)
+             if (!this.estado){
+                console.log(this.estado, 'entro al send')
+
             this.$http.post(
                 'api/proveedor/rubro/'+ this.rubros.id+'/edit', 
                 {
@@ -76,13 +87,17 @@ export default {
                 .then(response => {
                     this.$emit('reload')
                     this.atras();
+                    this.estado = true,
+                    this.errorsApi= {},
+                    console.log(this.estado, 'todo bien')
                     this.$toast.success({
                         title:'¡Cambios realizados!',
                         message:'Se han realizado correctamente los cambios. :D'
                     });
                 }, response => {
+                    //this.estado = true,
+                     console.log(this.estado, 'error')
                     this.validar= false;
-                    this.validarDomicilio= false;
                     this.validarRubro= false;
                     this.$toast.error({
                         title:'¡Error!',
@@ -93,14 +108,15 @@ export default {
                         this.errorsApi = response.body;
                     }
                 })
+            }
         },
 
         //form validation
         validateBeforeSubmit: function() {                 
                     this.validarRubro = true;
-                    this.validarDomicilio = true;
+                    this.evento= false,
+                    console.log('validar estado ', this.estado),
                     this.$events.fire('validarForm')
-
         },
         getRubro: function(){
             console.log(this.idRubro)

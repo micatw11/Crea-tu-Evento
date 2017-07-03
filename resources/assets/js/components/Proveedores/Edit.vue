@@ -3,10 +3,9 @@
         <div class="modal-body">
         	<form-proveedor 
                 :proveedor="proveedor" 
-                :domicilio="domicilio" 
-                :validarDomicilio="validarDomicilio" 
                 :validarProveedor="validarProveedor" 
-                :errorsApi="errorsApi" >
+                :errorsApi="errorsApi" 
+                :nuevo= "nuevo">
                 
             </form-proveedor>
         </div>
@@ -38,13 +37,12 @@ export default {
     data() {
         return {
             Proveedores: { type: Object, default: null},//Peticion de datos
-            domicilio: { type: Object, default: null}, 
             proveedor: { type: Object, default: null},
             validarProveedor: false,
-            validarDomicilio: false,
             errorsApi: {},
             error: false,
             fecha: null,
+            nuevo: false,
             disabled: { to: '1920-01-01', from: null }
         }
     },
@@ -58,25 +56,27 @@ export default {
         
     },
      mounted() {
-        this.$events.$on('validado', () =>this.sendForm());
+        this.$events.$on('validadoEditProveedor', () =>this.sendForm());
     },
     methods: {
         //envio de formulario de modificación de informacion de usuario
         sendForm: function() {
+
+            console.log('send edit proveedor', this.proveedor)
             this.$http.post(
                 'api/proveedor/'+ this.proveedor.id+'/edit', 
                 {
                     _method: 'PATCH',
-                    tipo_rubro: this.proveedor.tipo_rubro,
-                    categoria_id: this.proveedor.categoria_id,
-                    denominacion: this.proveedor.denominacion,
-                    descripcion: this.proveedor.descripcion,
-                    habilitacion: this.proveedor.habilitacion,
-                    fecha_habilitacion: this.proveedor.fecha_habilitacion,
-                    calle: this.domicilio.calle,
-                    numero: this.domicilio.numero,
-                    piso: this.domicilio.piso,
-                    localidad_id: this.domicilio.localidad_id.value
+                    user_id: this.proveedor.user_id.value,
+                    nombre: this.proveedor.nombre,
+                    cuit: this.proveedor.cuit,
+                    ingresos_brutos: this.proveedor.ingresos_brutos,
+                    email: this.proveedor.email,
+                    dni: this.proveedor.dni,
+                    calle: this.proveedor.domicilio.calle,
+                    numero: this.proveedor.domicilio.numero,
+                    piso: this.proveedor.domicilio.piso,
+                    localidad_id: this.proveedor.domicilio.localidad_id.value
                 })
                 .then(response => {
                     this.$emit('reload')
@@ -87,7 +87,6 @@ export default {
                     });
                 }, response => {
                     this.validar= false;
-                    this.validarDomicilio= false;
                     this.validarProveedor= false;
                     this.$toast.error({
                         title:'¡Error!',
@@ -103,8 +102,7 @@ export default {
         //form validation
         validateBeforeSubmit: function() {                 
                     this.validarProveedor = true;
-                    this.validarDomicilio = true;
-                    this.$events.fire('validarForm')
+                    this.$events.fire('validarFormProveedor')
 
         },
         getProveedor: function(){
@@ -120,15 +118,14 @@ export default {
                 })
         },
         cargarProveedor:function(){
-            this.domicilio= this.proveedores.domicilio,
-            this.domicilio.localidad_id = {
-               'value':this.domicilio.localidad_id,
-               'label':this.domicilio.localidad.nombre+' ('+this.domicilio.localidad.provincia.nombre+')'
-            },
             this.proveedor= this.proveedores,
             this.proveedor.user_id = {
                'value':this.proveedor.user_id,
                'label':this.proveedor.user.usuario.apellido+', '+this.proveedor.user.usuario.nombre+' ('+this.proveedor.user.email+')'
+            },
+            this.proveedor.domicilio.localidad_id = {
+               'value':this.proveedor.domicilio.localidad.id,
+               'label':this.proveedor.domicilio.localidad.nombre+' ('+this.proveedor.domicilio.localidad.provincia.nombre+')'
             }
         },
         atras: function(){
