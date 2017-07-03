@@ -231,12 +231,12 @@ class ProveedorController extends Controller
         $this->validatorProveedor($request);
         //$table_name= "rubro";
         //$accion = "update";
-        $proveedor = RubroProveedor::where('id', $id)->firstOrFail();
+        $proveedor = Proveedor::where('id', $id)->firstOrFail();
         $domicilio= Domicilio::where('id', $proveedor->domicilio_id)->firstOrFail();
         //Log::logs($id, $table_name, $accion , $rubro, 'Ha actualizado informacion personal');
         $proveedor->update($request->all());
         $domicilio->update($request->all());
-        if($rubro->save()&& $domicilio->save()){
+        if($proveedor->save() && $domicilio->save()){
             return response()->json(['data' =>  'OK'], 200);
         } else {
             return response()->json(['error' => 'Internal Server Error'], 500 );

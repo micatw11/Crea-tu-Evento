@@ -87,6 +87,7 @@ export default {
                 .then(response => {
                     this.$emit('reload')
                     this.showNew = false;
+                    this.errorsApi= {},
                     this.$toast.success({
                         title:'¡Cambios realizados!',
                         message:'Se han realizado correctamente los cambios. :D'
@@ -94,7 +95,6 @@ export default {
                     this.resetForm();
                 }, response => {
                     this.validar= false;
-                    this.validarDomicilio= false;
                     this.validarRubro= false;
                     this.$toast.error({
                         title:'¡Error!',
@@ -109,7 +109,6 @@ export default {
         //form validation
         validateBeforeSubmit: function() {                 
                     this.validarRubro = true;
-                    this.validarDomicilio = true;
                     this.$events.fire('validarForm')
 
         },

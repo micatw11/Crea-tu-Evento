@@ -9,7 +9,12 @@
                             <h4>Alta Proveedor</h4>
                         </div>
                         <div class="box-body table-responsive no-padding">
-                        	<form-prov :proveedor="proveedor" :domicilio= "domicilio" :validarDomicilio="validarDomicilio" :validarProveedor="validarProveedor" :errorsApi="errorsApi"></form-prov>
+                        	<form-prov 
+                                :proveedor="proveedor" 
+                                :errorsApi="errorsApi"
+                                :nuevo= "nuevo">
+                                
+                            </form-prov>
                             <div class="col-sm-12 box-footer clearfix" style="text-align:center;">
                                 <button @click="goBack()" class="btn btn-default">
                                     <i class="glyphicon glyphicon-chevron-left"></i>
@@ -41,22 +46,23 @@ export default {
             titlePath: 'Nuevo Proveedor',
             listaPath: [{route: '/', name: 'Home'},{route: '/proveedores', name: 'Proveedores'},{route: '/proveedor/new', name: 'Nuevo Proveedor'}],
             validarProveedor: false,
-            validarDomicilio: false,
             proveedor: { 
                 user_id: null,
                 nombre: null,
                 cuit: null,
                 ingresos_brutos: null,
                 email: null,
-                dni: null
+                dni: null,
+                domicilio: {
+                    calle: null,
+                    numero: null,
+                    piso: null,
+                    localidad_id: null
+                }
             },
-            domicilio: {
-                calle: null,
-                numero: null,
-                piso: null,
-                localidad_id: null
-            },
+            
             error: false,
+            nuevo: true, 
             errorsApi: {}
         }
     },
@@ -65,11 +71,12 @@ export default {
     },
     mounted() {
             this.$events.fire('changePath', this.listaPath, this.titlePath);
-            this.$events.$on('validado', () =>this.sendForm());
+            this.$events.$on('validadoProveedor', () =>this.sendForm());
     },
     methods: {
         //envio de formulario de modificación de informacion de usuario
         sendForm: function() {
+            console.log('send nuevo proveedor')
             this.$http.post(
                 'api/proveedor', 
                 {
@@ -79,10 +86,10 @@ export default {
                     ingresos_brutos: this.proveedor.ingresos_brutos,
                     email: this.proveedor.email,
                     dni: this.proveedor.dni,
-                    calle: this.domicilio.calle,
-                    numero: this.domicilio.numero,
-                    piso: this.domicilio.piso,
-                    localidad_id: this.domicilio.localidad_id.value
+                    calle: this.proveedor.domicilio.calle,
+                    numero: this.proveedor.domicilio.numero,
+                    piso: this.proveedor.domicilio.piso,
+                    localidad_id: this.proveedor.domicilio.localidad_id.value
 
                 })
                 .then(response => {
@@ -94,7 +101,6 @@ export default {
                     this.resetForm();
                 }, response => {
                     this.validarProveedor= false;
-                    this.validarDomicilio= false;
                     this.$toast.error({
                         title:'¡Error!',
                         message:'No se han podido guardar los cambios. :('
@@ -108,8 +114,7 @@ export default {
           //form validation
         validateBeforeSubmit: function() {                 
                     this.validarProveedor = true;
-                    this.validarDomicilio = true;
-                    this.$events.fire('validarForm')
+                    this.$events.fire('validarFormProveedor')
 
         },
         resetForm() {
@@ -119,14 +124,14 @@ export default {
                 cuit: null,
                 ingresos_brutos: null,
                 email: null,
-                dni: null
-            },
-            this.domicilio= {
-                habilitacion: null,
-                calle: null,
-                numero: null,
-                piso: null,
-                localidad_id: null
+                dni: null,
+                domicilio: {
+                    habilitacion: null,
+                    calle: null,
+                    numero: null,
+                    piso: null,
+                    localidad_id: null
+                }
             }
         },
         goBack(){

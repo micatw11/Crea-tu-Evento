@@ -12,7 +12,7 @@
                             v-model="proveedor.user_id"
                             name= "user_id"
                             data-vv-name="usuarios"
-                            :on-search="getOptions" 
+                            :on-search="getOptionsUsuario" 
                             :options="usuarios"
                             placeholder="Seleccione un usuario">
                         </v-select>
@@ -119,12 +119,82 @@
                         </div>
                     </div>                    
                 </div>
-               <form-domicilio 
-                    :domicilio="domicilio" 
-                    :validarDomicilio="validarDomicilio" 
-                    :errorsApi="errorsApi"
-                    >
-                </form-domicilio>
+                <div>
+                    <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('localidad')&&validarProveedor}">
+                        <div class="col-sm-12">
+                            <label class="control-label">Localidad</label><br>
+                            <v-select
+                                :debounce="250" 
+                                :on-search="getOptionsLocalidad" 
+                                :options="localidades"
+                                data-vv-name="localidad"
+                                v-model="proveedor.domicilio.localidad_id" 
+                                v-validate="'required'" 
+                                placeholder="Seleccione una localidad">
+                            </v-select>
+                           
+                            <!-- validacion vee-validation -->
+                            <span v-show="errors.has('localidad')&&validarProveedor" class="help-block">{{ errors.first('localidad') }}</span>
+                            <!-- validacion api-->
+                            <div class="text-red" v-if="errorsApi.localidad_id">
+                                <div v-for="msj in errorsApi.localidad_id">
+                                    <p>{{ msj }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('calle')&&validarProveedor}">
+                        <div class="col-sm-12">
+                            <label for="inputCalle" class="control-label">Direccion </label><br>
+                            <input name="calle"  v-validate:domicilio.calle="'required|min:4'" type="text" class="form-control" v-model="proveedor.domicilio.calle" placeholder="calle">
+                            <!-- validacion vee-validation -->
+                            <span v-show="errors.has('calle')&&validarProveedor" class="help-block">{{ errors.first('calle') }}</span>
+                            <!-- validacion api-->
+                            <div class="text-red" v-if="errorsApi.calle">
+                                <div v-for="msj in errorsApi.calle">
+                                    <p>{{ msj }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has(('numero')||('piso'))&&validarProveedor}">
+                        <div class="col-sm-6">
+                                <label for="inputNro" class="control-label">N° </label><br>
+                                <input 
+                                    name="numero" 
+                                    v-validate="'required'" 
+                                    type="number" v-model="proveedor.domicilio.numero" 
+                                    value="numero" 
+                                    class="form-control">
+
+                                <!-- validacion vee-validation -->
+                                <span v-show="errors.has('numero')&&validarProveedor" class="help-block">{{ errors.first('numero') }}</span>
+                                <!-- validacion api-->
+                                <div class="text-red">
+                                    <div v-if="errorsApi.numero" v-for="msj in errorsApi.numero">
+                                        <p>{{ msj }}</p>
+                                    </div>
+                                </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            
+                            <label for="inputPiso" class="control-label">Dpto. </label><br>
+                            <input name="piso" v-validate="'required'" type="number" v-model="proveedor.domicilio.piso" value="piso" class="form-control">
+
+                            <!-- validacion vee-validation -->
+                            <span v-show="errors.has('piso')&&validarProveedor" class="help-block">{{ errors.first('piso') }}</span>
+                            <div class="text-red">
+                                <div v-if="errorsApi.piso" v-for="msj in errorsApi.piso">
+                                    <p>{{ msj }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
         </div>
      </form>
@@ -137,26 +207,25 @@
 import auth from '../../auth.js';
 import route from '../../routes.js';
 import vSelect from "vue-select";
-import FormDomicilio from './FormDomicilio.vue';
 
 export default {
     props: {
-            domicilio: {
+            /*domicilio: {
                 type: Object,
                 required: true
-            },
+            },*/
             proveedor: {
                 type: Object,
                 required: true
             },
-            validarDomicilio: {
+            nuevo: {
                 type: Boolean,
                 required: true
             },
-            validarProveedor: {
+            /*validarProveedor: {
                 type: Boolean,
                 required: true
-            },
+            },*/
             errorsApi: {
                 type: Object,
                 required: true
@@ -165,31 +234,48 @@ export default {
     data() {
         return {
             usuarios:[],
+            localidades: [],
             validar: false,
+            validarProveedor: false
         }
     },
     components: {
-        vSelect, FormDomicilio
+        vSelect
     },
     mounted() {
-        this.$events.$on('validarForm', () =>this.validateBeforeSubmit());
+        this.$events.$on('validarFormProveedor', () =>this.validateBeforeSubmit());
     },
     methods: {
        
         validateBeforeSubmit: function() {
                 this.$validator.validateAll().then(() => {
                     this.validarProveedor = false;
-                    this.$events.fire('validado');                  
+                    if (this.nuevo){
+                        console.log('validadoProveedor p nuevo')
+                        this.$events.fire('validadoProveedor'); 
+                    }else{
+                        console.log('validadoProveedor p edit')
+                        this.$events.fire('validadoEditProveedor');  
+                    }                 
                 }).catch(() => {
                     this.validarProveedor = true;
                 });
         },
         //obtiene lista de usuarios segun requiera
-        getOptions: function(search, loading) {
+        getOptionsUsuario: function(search, loading) {
             loading(true)
             this.$http.get('api/busqueda/usuarios/?q='+ search
                 ).then(response => {
                     this.usuarios = response.data
+                    loading(false)
+                })
+        },
+        //obtiene lista de usuarios segun requiera
+        getOptionsLocalidad: function(search, loading) {
+            loading(true)
+            this.$http.get('api/localidades/?q='+ search
+                ).then(response => {
+                    this.localidades = response.data.data
                     loading(false)
                 })
         },
