@@ -38,7 +38,7 @@
 
                                             <!-- Modificar Proveedor -->
                                             <button class="btn-xs btn-default"
-                                                @click="onActionModificar(props.rowData, props.rowIndex)">
+                                                @click="showModificar = true, idProveedor = props.rowData.id">
                                                 <i class="glyphicon glyphicon-pencil"></i> Modificar
                                             </button>
 
@@ -58,69 +58,12 @@
                                             </button>
 
                                             <!-- Baja a proveedor  -->
-
-                                            <template>
-                                                <button 
-                                                    v-if="props.rowData.estado === 'Aprobado'" 
-                                                         class="btn-xs btn-default"
-                                                    @click="showModalObservation = true, action = 'Baja', dataUser = props.rowData">
-                                                    <i class="fa fa-close"></i> Baja
-                                                </button>
-                                                <!-- Modal cambiar observaciones (baja/rechazo)-->
-                                                <div class="modal" role="dialog" :style="{ display : showModalObservation  ? 'block' : 'none' }">
-                                                    <div class="modal-dialog">
-
-                                                        <!-- Modal content-->
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <button type="button" class="close" @click="clearForm()">&times;</button>
-                                                                <h4 class="modal-title">Agregue el motivo de la accion</h4>
-                                                            </div>
-                                                            <div class="modal-body">
-
-                                                                <div class="box-body">
-                                                                    <form role="form">
-                                                                        <div class="col-sm-12">
-                                                                            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('observaciones')&&validar}">
-                                                                                <div class="col-sm-12">
-                                                                                    <textarea  
-                                                                                        v-model="observaciones" 
-                                                                                        placeholder="Agregue un observación"
-                                                                                        name="observaciones" 
-                                                                                        v-validate="'required|min:15'" 
-                                                                                        class="form-control"></textarea>
-
-                                                                                    <!-- validacion vee-validation -->
-                                                                                    <span v-show="errors.has('observaciones')&& validar" class="help-block">{{ errors.first('observaciones') }}</span>
-
-                                                                                    <!-- validacion api -->
-                                                                                    <div class="text-red" v-if="errorsApi.observaciones">
-                                                                                        <div v-for="msj in errorsApi.observaciones">
-                                                                                            <p>{{ msj }}</p>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </form>
-                                                                </div>
-
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <div class="col-sm-12">
-                                                                    <div class="pull-right">
-                                                                        <button
-                                                                            @click="validateBeforeSubmit(action, dataUser)" 
-                                                                            type="button" class="btn btn-danger">
-                                                                         Guargar
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </template>
+                                            <button 
+                                                v-if="props.rowData.estado === 'Aprobado'" 
+                                                     class="btn-xs btn-default"
+                                                @click="showModalObservation = true, action = 'Baja', dataUser = props.rowData">
+                                                <i class="fa fa-close"></i> Baja
+                                            </button>
                                         </div>
                                     </template>
 
@@ -146,6 +89,62 @@
                     </div>
                 </div>
             </div>
+            <template>
+                <!-- Modal cambiar observaciones (baja/rechazo)-->
+                <div class="modal" role="dialog" :style="{ display : showModalObservation  ? 'block' : 'none' }">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" @click="clearForm()">&times;</button>
+                                <h4 class="modal-title">Agregue el motivo de la accion</h4>
+                            </div>
+                            <div class="modal-body">
+
+                                <div class="box-body">
+                                    <form role="form">
+                                        <div class="col-sm-12">
+                                            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('observaciones')&&validar}">
+                                                <div class="col-sm-12">
+                                                    <textarea  
+                                                        v-model="observaciones" 
+                                                        placeholder="Agregue un observación"
+                                                        name="observaciones" 
+                                                        v-validate="'required|min:15'" 
+                                                        class="form-control"></textarea>
+
+                                                    <!-- validacion vee-validation -->
+                                                    <span v-show="errors.has('observaciones')&& validar" class="help-block">{{ errors.first('observaciones') }}</span>
+
+                                                    <!-- validacion api -->
+                                                    <div class="text-red" v-if="errorsApi.observaciones">
+                                                        <div v-for="msj in errorsApi.observaciones">
+                                                            <p>{{ msj }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <div class="col-sm-12">
+                                    <div class="pull-right">
+                                        <button
+                                            @click="validateBeforeSubmit(action, dataUser)" 
+                                            type="button" class="btn btn-danger">
+                                         Guargar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
             <!-- Modal Modificar-->
             <div v-if="showModificar" id="modificar" class="modal" role="dialog" :style="{ display : showModificar  ? 'block' : 'none' }">
                 <div class="modal-dialog">
@@ -209,6 +208,7 @@
             this.$events.$on('filter-set', eventData => this.onFilterSet(eventData));
 
             this.$events.fire('changePath', this.listPath, this.titlePath);
+            this.$events.on('cerrar', () => this.closeModal());
 
         },
         methods: {
@@ -244,6 +244,7 @@
 
             closeModal: function(){
                 this.showModificar = false;
+                this.idProveedor = null;
             },
 
             onActionEstado(action, data){

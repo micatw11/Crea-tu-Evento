@@ -236,7 +236,7 @@ class ProveedorController extends Controller
         $proveedor = Proveedor::where('id', $id)->firstOrFail();
         $domicilio= Domicilio::where('id', $proveedor->domicilio_id)->firstOrFail();
         //Log::logs($id, $table_name, $accion , $rubro, 'Ha actualizado informacion personal');
-        $proveedor->update($request->all());
+        $proveedor->update($request->except(['dni']));
         $domicilio->update($request->all());
         if($proveedor->save() && $domicilio->save()){
             return response()->json(['data' =>  'OK'], 200);

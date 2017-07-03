@@ -52,6 +52,7 @@
 	                    descripcion: this.publicacion.descripcion,
 	                    rubros: this.publicacion.rubros,
 	                    oferta: this.publicacion.oferta,
+	                    fecha_finalizacion: this.fecha_finalizacion,
 	                    fotos: this.publicacion.fotos
 
 	                })
@@ -74,7 +75,15 @@
 	                })
 	        },
 	        resetForm(){
-	        	this.publicacion = null;
+	        	this.publicacion = {
+	        		'titulo':'',
+	        		'descripcion': '',
+	        		'oferta': '',
+	        		'fotos': null,
+	        		'rubros': null,
+	        		'fecha_finalizacion': null
+
+	        	}
 	        }
 		}
 	}

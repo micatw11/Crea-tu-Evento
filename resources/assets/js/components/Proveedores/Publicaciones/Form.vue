@@ -69,6 +69,29 @@
                     </div>
                 </div>
 
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('fecha')&&validarPublicacion}">
+                    <div class="col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fecha" class="control-label">Fecha de Finalización</label>
+                            <input
+                                name="fecha" 
+                                v-validate="'required'" 
+                                type="date"
+                                v-model="publicacion.fecha_finalizacion" 
+                                class="form-control">
+
+                            <!-- validacion vee-validation -->
+                            <span v-show="errors.has('fecha')&&validarPublicacion" class="help-block">{{ errors.first('fecha') }}</span>
+                            <!-- validacion api-->
+                            <div class="text-red" v-if="errorsApi.fecha">
+                                <div v-for="msj in errorsApi.fecha">
+                                    <p>{{ msj }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('descripcion')&&validarPublicacion}">
                     <div class="col-sm-12">
                         <label for="descripcion" class="control-label">Descripci&oacute;n (*)</label>
