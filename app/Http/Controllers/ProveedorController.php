@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\ProveedorRequest;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Proveedor;
 use App\Rol;
@@ -302,5 +303,19 @@ class ProveedorController extends Controller
         } else {
             return response()->json(['error' =>  'Internal Server Error'], 500);
         }
+    }
+
+    public function buscarRubro(Request $request, $proveedorId){
+        $query = DB::table('rubros')
+            ->select('id as value',  DB::raw('denominacion as label'))
+                ->where('proveedor_id', $proveedorId);
+
+        if($request->q){
+            $like = '%'.$request->q.'%';
+            $query = $query->where('denominacion', 'like', $like)->orWhere('descripcion', 'like', $like);
+        }
+        $rubros = $query->get();
+        
+        return response()->json($rubros);
     }
 }

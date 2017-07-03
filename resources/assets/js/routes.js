@@ -6,19 +6,26 @@ import role from './config.js';
 //templates
 var Login = require('./components/Auth/Login');
 var Home = require('./components/Home');
-var About = require('./components/About');
+
+
 var Calendar = require('./components/Calendario');
-var Perfil = require('./components/Layouts/Perfil');
 var Registrar = require('./components/Auth/Register');
-var PageNotFound = require('./components/Errors/404');
+
 var FormPasswordReset = require('./components/Auth/Password/Email');
 var PasswordReset = require('./components/Auth/Password/Reset');
+
+var Perfil = require('./components/Layouts/Perfil');
+
 var IndexUsuarios = require('./components/Usuarios/Index');
 var IndexProveedor = require('./components/Proveedores/Index');
 var NewProveedor = require('./components/Proveedores/New');
 var EditRubro = require('./components/Proveedores/EditRubro');
 var Form = require('./components/Proveedores/Form');
+
+var NewPublicacion = require('./components/Proveedores/Publicaciones/NewPublicacion');
+
 var InternalServerError = require('./components/Errors/500');
+var PageNotFound = require('./components/Errors/404');
 
 let routes = [
 		{
@@ -86,11 +93,6 @@ let routes = [
 			beforeEnter: guardRoute	
 		},
 		{
-			path: '/about',
-			component: About,
-			beforeEnter: guardRoute
-		},
-		{
 			path: '/calendario',
 			component: Calendar,
 			beforeEnter: guardRoute
@@ -102,6 +104,14 @@ let routes = [
 			component: Perfil,
 			beforeEnter: guardRoute
 
+		},
+		//
+		{
+			path: '/publicacion/new',
+			name: 'new-publicacion',
+			component: NewPublicacion,
+			beforeEnter: guardRoute,
+			meta: { Role: [role.PROVEEDOR]}	
 		},
 
 		//errors
