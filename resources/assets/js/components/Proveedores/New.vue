@@ -34,6 +34,7 @@
 
 
 <script>
+import route from '../../routes.js';
 import auth from '../../auth.js';
 import vSelect from "vue-select";
 import FormProv from './Form.vue';
@@ -60,7 +61,6 @@ export default {
                     localidad_id: null
                 }
             },
-            
             error: false,
             nuevo: true, 
             errorsApi: {}
@@ -119,7 +119,7 @@ export default {
         },
         resetForm() {
             this.proveedor = {
-                auser_id: null,
+                user_id: null,
                 nombre: null,
                 cuit: null,
                 ingresos_brutos: null,

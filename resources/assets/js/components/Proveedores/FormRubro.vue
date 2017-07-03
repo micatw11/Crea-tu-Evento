@@ -204,7 +204,6 @@
 <script>
 import auth from '../../auth.js';
 import vSelect from "vue-select";
-import FormDomicilio from './FormDomicilio.vue';
 
 export default {
     props: {
@@ -244,10 +243,10 @@ export default {
         }
     },
     components: {
-        vSelect, FormDomicilio
+        vSelect
     },
    mounted() {
-        this.$events.$listen('validarForm', () =>this.validateBeforeSubmit());
+        this.$events.$on('validarForm', () =>this.validateBeforeSubmit());
     },
     methods: {
         //form validation

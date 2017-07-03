@@ -52,7 +52,7 @@
         </div>
     </div>
     <!-- Modal Modificar-->
-    <div v-if="showModificar" id="modificar" class="modal" role="dialog" :style="{ display : showModificar  ? 'block' : 'none' }">
+    <div v-if="showModificar && idRubro==idRubro" id="modificar" class="modal" role="dialog" :style="{ display : showModificar  ? 'block' : 'none' }">
         <div class="modal-dialog">
           <!-- Modal content-->
             <div class="modal-content">

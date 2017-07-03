@@ -81,6 +81,22 @@ class ProveedorController extends Controller
     public function createProveedor(Request $request, $domicilio)
     {
         
+        $filename= $this->storeImage($request);
+
+        return Proveedor::create([
+                    'user_id' => $request->user_id,
+                    'nombre' => $request->nombre,
+                    'cuit' => $request->cuit,
+                    'ingresos_brutos' => $request->ingresos_brutos,
+                    'email' => $request->email,
+                    'estado' => "Tramite",
+                    'domicilio_id' => $domicilio->id,
+                    'dni' => $filename]);
+    }
+
+
+    protected function storeImage(Request $request)
+    {
         $img = $request->dni;
         $extension = null;
 
@@ -108,16 +124,7 @@ class ProveedorController extends Controller
         $file = base64_decode($img);
         $filename  = str_random(30) . '.'.$extension;
         Storage::put('public/proveedores/'.$filename, $file);
-
-        return Proveedor::create([
-                    'user_id' => $request->user_id,
-                    'nombre' => $request->nombre,
-                    'cuit' => $request->cuit,
-                    'ingresos_brutos' => $request->ingresos_brutos,
-                    'email' => $request->email,
-                    'estado' => "Tramite",
-                    'domicilio_id' => $domicilio->id,
-                    'dni' => $filename]);
+        return $filename;
     }
 
     protected function validatorDomicilio(Request $request)
