@@ -1,5 +1,6 @@
 <template >
 <div>
+Estas Habilitado a Ser Proveedor con Habilitación de ingresos brutos: {{perfil.user.proveedor.ingresos_brutos}}
     <div>
         <div class="box-header">
             <div class="col-xs-2">
@@ -89,7 +90,7 @@
 </template>
 
 <script>
-import auth from '../../auth.js';
+import auth from '../../../auth.js';
 import EditRubro from './EditRubro.vue';
 import NewRubro from './NewRubro.vue';
 

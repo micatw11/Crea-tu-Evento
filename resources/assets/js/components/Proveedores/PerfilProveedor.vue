@@ -33,10 +33,10 @@
 
                             <div class="active tab-pane" id="rubro">
                                 <div>
-                                    Estas Habilitado a Ser Proveedor con Habilitación de ingresos brutos: 
+                                    
                                          
                                 </div>
-                                 <div v-if="perfil.user.proveedor.rubro">
+                                 <div v-if="perfil.user.proveedor">
                                         <show :perfil="perfil"></show>
                                 </div>
                                 
@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import Show from './Show.vue';
+import Show from './Rubros/Show.vue';
 
 export default {
     props: {

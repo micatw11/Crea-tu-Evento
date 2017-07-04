@@ -202,7 +202,7 @@
 
 
 <script>
-import auth from '../../auth.js';
+import auth from '../../../auth.js';
 import vSelect from "vue-select";
 
 export default {
@@ -219,10 +219,6 @@ export default {
                 type: Boolean,
                 required: true
             },
-            /*validarRubro: {
-                type: Boolean,
-                required: true
-            },*/
             errorsApi: {
                 type: Object,
                 required: true
@@ -254,11 +250,9 @@ export default {
          this.$validator.validateAll().then(() => {
                     this.validarRubro = false; 
                     if (this.nuevo){
-                        console.log("evento nuevo ")
-                        this.$events.fire('validado')
+                        this.$emit('validado')
                     }else{
-                        console.log("evento modificarr ")
-                        this.$events.fire('validadoEdit')
+                        this.$emit('validadoEdit')
                     }
                 }).catch(() => {
                     this.validarRubro = true;
