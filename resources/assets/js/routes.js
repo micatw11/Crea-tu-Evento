@@ -125,7 +125,8 @@ let routes = [
 		{
 			path: '/404',
 			name: 'pageNotFound',
-			component: PageNotFound
+			component: PageNotFound,
+			beforeEnter: guardRoute
 
 		},
 		{
