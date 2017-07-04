@@ -83,9 +83,11 @@ class UsuarioController extends Controller
      */
     public function show($id)
     {
+
         $usuario = Usuario::where('user_id', $id)
-            ->with('localidad.provincia', 'user.rol', 'user.proveedor.rubro.domicilio', 'user.proveedor.domicilio','user.proveedor.rubro.publicaciones')
+            ->with('localidad.provincia', 'user.rol', 'user.proveedor.rubro.domicilio', 'user.proveedor.domicilio','user.proveedor.rubro.publicaciones', 'user.proveedor.rubro.categoria')
                 ->firstOrFail();
+
         return response()->json(['data' =>  $usuario]);
     }
 

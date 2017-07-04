@@ -33,4 +33,9 @@ class Rubro extends Model
         return $this->belongsToMany('App\Publicacion');
     }
 
+      public function categoria()
+    {     
+        return $this->belongsTo('App\Categoria');    
+    }
+
 }
