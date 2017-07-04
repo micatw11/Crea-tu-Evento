@@ -23,7 +23,7 @@ var EditRubro = require('./components/Proveedores/Rubros/EditRubro');
 var Form = require('./components/Proveedores/Form');
 
 var NewPublicacion = require('./components/Proveedores/Publicaciones/NewPublicacion');
-
+var IndexCategoria = require('./components/Proveedores/Categorias/Index');
 var InternalServerError = require('./components/Errors/500');
 var PageNotFound = require('./components/Errors/404');
 
@@ -91,6 +91,12 @@ let routes = [
 			path: '/form',
 			component: Form,
 			beforeEnter: guardRoute	
+		},
+		{
+			path: '/categorias',
+			component: IndexCategoria,
+			beforeEnter: guardRoute,
+			meta: { Role: [role.ADMINISTRADOR, role.SUPERVISOR] }	
 		},
 		{
 			path: '/calendario',

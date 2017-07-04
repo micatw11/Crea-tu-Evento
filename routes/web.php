@@ -67,5 +67,9 @@ Route::group(['prefix' => 'api'], function () {
     Route::post('publicacion/', 'PublicacionController@store');
     Route::patch('publicacion/{id}', 'PublicacionController@update');
 
-    //Route::get('proveedor/{proveedorId}/rubros/search', 'ProveedorController@buscarRubro');
+    Route::post('categoria/', 'CategoriaController@store')->middleware('role:administrador,supervisor');
+   
+    Route::patch('categoria/{id}', 'CategoriaController@update')->middleware('role:administrador,supervisor');
+    Route::get('categoria/', 'CategoriaController@index');
+    Route::get('categoria/{id}', 'CategoriaController@show');
 });
