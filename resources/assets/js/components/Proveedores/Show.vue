@@ -12,7 +12,14 @@
 
         <div v-if="showNew" class="modal" role="dialog" :style="{ display : showNew  ? 'block' : 'none' }">
             <div class="modal-dialog">
-                <new-rubro></new-rubro>
+            <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" @click="closeModal()">&times;</button>
+                        <h4 class="modal-title">Crear Rubro</h4>
+                    </div>
+                    <new-rubro></new-rubro>
+                </div>
             </div>    
         </div>
     </div> 
@@ -43,6 +50,19 @@
                     
                         {{item.fecha_habilitacion}}
                     </p>
+
+                    <p>
+                        <b>Categoria: </b>
+                    
+                        {{item.categoria_id}}
+                    </p>
+
+                    <p if= "item.domicilio">
+                        <b>Domicilio: </b>
+                        calle: {{item.domicilio.calle}}
+                        numero: {{item.domicilio.numero}}
+                        piso: {{item.domicilio.piso}}
+                    </p>
                 </div>
                 <div class="col-sm-4" style="text-align: center;">
                     <button type="button" class="btn-block" @click="modificar(item.id)" >Modificar Rubro</button>
@@ -52,7 +72,7 @@
         </div>
     </div>
     <!-- Modal Modificar-->
-    <div v-if="showModificar && idRubro==idRubro" id="modificar" class="modal" role="dialog" :style="{ display : showModificar  ? 'block' : 'none' }">
+    <div v-if="showModificar" id="modificar" class="modal" role="dialog" :style="{ display : showModificar  ? 'block' : 'none' }">
         <div class="modal-dialog">
           <!-- Modal content-->
             <div class="modal-content">

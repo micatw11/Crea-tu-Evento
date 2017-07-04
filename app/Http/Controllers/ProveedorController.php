@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\ProveedorRequest;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Proveedor;
 use App\Rol;
@@ -51,7 +50,7 @@ class ProveedorController extends Controller
      */
     public function store(Request $request)
     {   
-        $this->validatorDomicilio($request);
+        $this->validatorDom($request);
         $this->validatorProveedor($request);
         $domicilio= $this->createDomicilio($request);
         $proveedor= $this->createProveedor($request,$domicilio);
@@ -72,7 +71,7 @@ class ProveedorController extends Controller
         [
             'user_id' => 'required|exists:usuarios,id',
             'nombre' => 'required|min:4|max:55',
-            'cuit' => 'required|min:9|max:11',
+            'cuit' => 'required|min:9|max:12',
             'ingresos_brutos' => 'required|min:5|max:10',
             'email' => 'required|email',
             'dni' => 'required'
@@ -95,103 +94,6 @@ class ProveedorController extends Controller
                     'dni' => $filename]);
     }
 
-
-    protected function storeImage(Request $request)
-    {
-        $img = $request->dni;
-        $extension = null;
-
-        if(strstr($img, 'data:image/jpeg;base64,'))
-        {
-            $img = str_replace('data:image/jpeg;base64,', '', $img);
-            $extension = 'jpeg';
-        }
-        else if(strstr($img, 'data:image/jpg;base64,'))
-        {
-            $img = str_replace('data:image/jpg;base64,', '', $img);
-            $extension = 'jpg';
-        }
-        else if(strstr($img, 'data:application/pdf;base64,'))
-        {
-            $img = str_replace('data:application/pdf;base64,', '', $img);
-            $extension = 'pdf';
-        }
-        else 
-        {
-            $img = str_replace('data:image/png;base64,', '', $img);
-            $extension = 'png';
-        }
-
-        $file = base64_decode($img);
-        $filename  = str_random(30) . '.'.$extension;
-        Storage::put('public/proveedores/'.$filename, $file);
-        return $filename;
-    }
-
-    protected function validatorDomicilio(Request $request)
-    {
-      return $this->validate($request, 
-        [
-            'calle'=>'required|min:4|max:55',
-            'numero'=> 'required|min:1|max:10',
-            'piso'=> 'min:1|max:10',
-            'localidad_id'=> 'required|exists:localidades,id'
-        ]);
-    }
-
-    public function createDomicilio(Request $request)
-    {
-        return Domicilio::create([
-                    'calle'=> $request->calle,
-                    'numero'=> $request->numero,
-                    'piso'=> $request->piso,
-                    'localidad_id'=> $request->localidad_id
-            ]);
-    }
-
-    public function storeRubro(Request $request, $id)
-    {   
-        $proveedor = Proveedor::where('user_id', $id)->firstOrFail();
-        $this->validatorDomicilio($request);
-        $this->validatorRubro($request);
-        $domicilio= $this->createDomicilio($request);
-        $rubro= $this->createRubro($request,$proveedor, $domicilio);
-        
-        if (($rubro)&&($domicilio)){
-            return response()->json(['data' => 'OK'], 200);
-        
-        } else {
-            return response()->json([
-                'error' => 'Unauthorized', 'rubro' => $rubro
-            ], 401);
-        }
-    }
-
-    protected function validatorRubro(Request $request)
-    {
-      return $this->validate($request, 
-        [
-            'categoria_id',
-            'denominacion',
-            'fecha_habilitacion',
-            'habilitacion',
-        ]);
-    }
-
-    public function createRubro(Request $request,$proveedor,$domicilio)
-    {
-        return Rubro::create([
-                    'tipo_rubro'=> $request->tipo_rubro,
-                    'proveedor_id'=> $proveedor->id,
-                    'categoria_id'=> $request->categoria_id,
-                    'denominacion'=> $request->denominacion,
-                    'descripcion'=> $request->descripcion,
-                    'habilitacion'=> $request->habilitacion,
-                    'domicilio_id'=> $domicilio->id,
-                    'fecha_habilitacion' => $request->fecha_habilitacion
-            ]);
-    }
-
     /**
      * Display the specified resource.
      *
@@ -204,30 +106,6 @@ class ProveedorController extends Controller
     }
 
     /**
-     * Show the form for update the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function updateRubro(Request $request, $id)
-    {
-        $this->validatorDomicilio($request);
-        $this->validatorRubro($request);
-        //$table_name= "rubro";
-        //$accion = "update";
-        $rubro = Rubro::where('id', $id)->firstOrFail();
-        $domicilio= Domicilio::where('id', $rubro->domicilio_id)->firstOrFail();
-        //Log::logs($id, $table_name, $accion , $rubro, 'Ha actualizado informacion personal');
-        $rubro->update($request->all());
-        $domicilio->update($request->all());
-        if($rubro->save()&& $domicilio->save()){
-            return response()->json(['data' =>  'OK'], 200);
-        } else {
-            return response()->json(['error' => 'Internal Server Error'], 500 );
-        }
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -236,21 +114,60 @@ class ProveedorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validatorDomicilio($request);
+        
+        $this->validatorDom($request);
         $this->validatorProveedor($request);
+        $filename= $this->storeImage($request);
         //$table_name= "rubro";
         //$accion = "update";
         $proveedor = Proveedor::where('id', $id)->firstOrFail();
         $domicilio= Domicilio::where('id', $proveedor->domicilio_id)->firstOrFail();
         //Log::logs($id, $table_name, $accion , $rubro, 'Ha actualizado informacion personal');
-        $proveedor->update($request->except(['dni']));
         $domicilio->update($request->all());
+        $proveedor->update([
+                    'user_id' => $request->user_id,
+                    'nombre' => $request->nombre,
+                    'cuit' => $request->cuit,
+                    'ingresos_brutos' => $request->ingresos_brutos,
+                    'email' => $request->email,
+                    'domicilio_id' => $domicilio->id,
+                    'dni' => $filename]);
+
         if($proveedor->save() && $domicilio->save()){
             return response()->json(['data' =>  'OK'], 200);
         } else {
             return response()->json(['error' => 'Internal Server Error'], 500 );
         }
     }
+
+           /**
+     * @param $request
+     */
+    public function validatorDom(Request $request)
+    {
+      return $this->validate($request, 
+        [
+            'calle'=>'required|min:4|max:55',
+            'numero'=> 'required|min:1|max:10',
+            'piso'=> 'min:1|max:10',
+            'localidad_id'=> 'required|exists:localidades,id'
+        ]);
+    }
+
+         /**
+     * @param $request
+     */
+    public function createDomicilio(Request $request)
+    {
+        return Domicilio::create([
+                    'tipo_domicilio'=>'Real',
+                    'calle'=> $request->calle,
+                    'numero'=> $request->numero,
+                    'piso'=> $request->piso,
+                    'localidad_id'=> $request->localidad_id
+            ]);
+    }
+
 
     /**
      * Remove the specified resource from storage.
@@ -289,17 +206,6 @@ class ProveedorController extends Controller
         }
     }
 
-    public function rubros($id){
-
-        $rubro= Rubro::where('id', $id)->with('domicilio.localidad.provincia')->firstOrFail();
-
-
-        if ($rubro) {
-            return response()->json(['data' => $rubro], 200);
-        } else {
-            return response()->json(['error' =>  'Internal Server Error'], 500);
-        }
-    }
 
     public function proveedor($id){
         $proveedor= Proveedor::where('id', $id)->with('domicilio.localidad.provincia','user.usuario')->firstOrFail();
@@ -312,17 +218,41 @@ class ProveedorController extends Controller
         }
     }
 
-    public function buscarRubro(Request $request, $proveedorId){
-        $query = DB::table('rubros')
-            ->select('id as value',  DB::raw('denominacion as label'))
-                ->where('proveedor_id', $proveedorId);
 
-        if($request->q){
-            $like = '%'.$request->q.'%';
-            $query = $query->where('denominacion', 'like', $like)->orWhere('descripcion', 'like', $like);
+    /**
+     * @param $request
+     */
+
+    protected function storeImage(Request $request)
+    {
+        $img = $request->dni;
+        $extension = null;
+
+        if(strstr($img, 'data:image/jpeg;base64,'))
+        {
+            $img = str_replace('data:image/jpeg;base64,', '', $img);
+            $extension = 'jpeg';
         }
-        $rubros = $query->get();
-        
-        return response()->json($rubros);
+        else if(strstr($img, 'data:image/jpg;base64,'))
+        {
+            $img = str_replace('data:image/jpg;base64,', '', $img);
+            $extension = 'jpg';
+        }
+        else if(strstr($img, 'data:application/pdf;base64,'))
+        {
+            $img = str_replace('data:application/pdf;base64,', '', $img);
+            $extension = 'pdf';
+        }
+        else 
+        {
+            $img = str_replace('data:image/png;base64,', '', $img);
+            $extension = 'png';
+        }
+
+        $file = base64_decode($img);
+        $filename  = str_random(30) . '.'.$extension;
+        Storage::put('public/proveedores/'.$filename, $file);
+        return $filename;
     }
+
 }

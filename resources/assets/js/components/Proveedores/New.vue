@@ -77,7 +77,6 @@ export default {
     methods: {
         //envio de formulario de modificación de informacion de usuario
         sendForm: function() {
-            console.log('send nuevo proveedor')
             this.$http.post(
                 'api/proveedor', 
                 {
@@ -95,11 +94,13 @@ export default {
                 })
                 .then(response => {
                     this.$emit('reload')
+                    this.errorsApi={},
                     this.$toast.success({
                         title:'¡Cambios realizados!',
                         message:'Se han realizado correctamente los cambios. :D'
                     });
                     this.resetForm();
+                    this.goBack();
                 }, response => {
                     this.validarProveedor= false;
                     this.$toast.error({
