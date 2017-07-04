@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Publicacion;
 use App\Foto;
+use App\Rol;
 
 class PublicacionController extends Controller
 {
@@ -14,7 +17,9 @@ class PublicacionController extends Controller
     }
 
     public function show(Request $request, $id){
+        $publicaciones = Publicacion::with('rubros')->where('id', $id)->where('estado', 1)->firstOrFail();
 
+        return response()->json($publicaciones);
     }
 
     public function store(Request $request){
@@ -48,7 +53,25 @@ class PublicacionController extends Controller
 
     	$publicacion = Publicacion::where('id', $id)->firstOrFail();
 
-    	$publicacion->update($request->all());
+    	$publicacion->update($request->except(['fotos', 'rubros']));
+        $publicacion->rubros()->detach();
+        $publicacion->rubros()->attach($request->rubros);
+        if($request->has($request->fotos) && $request->fotos !== ''){
+            foreach ($oldFoto as $publicacion->fotos) {
+                $file = "public/avatars/{$oldFoto}";
+                if(Storage::exists($file)) {
+                    Storage::delete($file);
+                }
+                Foto::where('publicacion_id', $publicacion.id)->get()->delete();
+            }
+            for ($i=0; $i < sizeof($request->fotos); $i++) { 
+                $filename = $this->createFoto($request->fotos[$i]);
+                $foto = new Foto;
+                $foto->nombre = $filename;
+                $foto->publicacion_id = $publicacion->id;
+                $foto->save();
+            }
+        }
 
     	if($publicacion->save()){
 			return response()->json(['data' => 'OK'], 200);
@@ -95,6 +118,37 @@ class PublicacionController extends Controller
 
         return $filename;
         
+    }
+
+    public function publicacionesProveedor(Request $request, $idProveedor){
+        $publicacionesId = DB::table('publicaciones')
+            ->join('publicacion_rubro', 'publicacion_rubro.publicacion_id', '=', 'publicaciones.id')
+            ->join('rubros', 'rubros.id', '=', 'publicacion_rubro.rubro_id')
+                ->select('publicaciones.id')
+                ->where('rubros.proveedor_id', $idProveedor)
+                ->where('publicaciones.estado', 1)
+                ->groupby('publicaciones.id')->distinct()->get()->pluck('id');
+
+        $publicaciones = Publicacion::with('rubros', 'fotos')->whereIn('id', $publicacionesId)->get();
+
+        return response()->json($publicaciones);
+    }
+
+    public function destroy($id){
+        if(Auth::user()->roles_id == Rol::roleId('Proveedor'))
+        {
+            $publicacion = Publicacion::with('rubros')->where('id', $id)->where('estado', 1)->firstOrFail();
+            if($publicacion->rubros->first()->proveedor_id == Auth::user()->proveedor->id)
+            {
+                $publicacion->estado = 0;
+                if($publicacion->save())
+                    return response()->json(['data' => 'OK'], 200);
+                else
+                    return response()->json(['error' => 'Internal Server Error'], 500);
+            }
+        }
+
+        return response()->json(['error' =>  'Unauthorized'], 401);
     }
 
 }

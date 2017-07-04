@@ -62,7 +62,10 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('actividad/{id}', 'LogController@show');
 
     Route::post('publicacion/', 'PublicacionController@store');
+    Route::get('publicacion/{id}', 'PublicacionController@show');
     Route::patch('publicacion/{id}', 'PublicacionController@update');
+    Route::delete('/publicacion/{id}', 'PublicacionController@destroy');
 
     Route::get('proveedor/{proveedorId}/rubros/search', 'ProveedorController@buscarRubro');
+    Route::get('proveedor/{proveedorId}/publicacion','PublicacionController@publicacionesProveedor');
 });

@@ -7,14 +7,22 @@
         		</div>
         		<div class="box box-body">
 		        	<form-publicacion 
-		        		:publicacion="publicacion" 
+		        		:publicacion="publicacion"
+		        		:nuevo="true"
 		        		:validarPublicacion="validarPublicacion"
+		        		@validadoNewPublicacion="sendNewForm()"
 		        		@update:validarPublicacion="val => validarPublicacion = val"
 		        		:errorsApi="errorsApi">
 		        	</form-publicacion>
 		        </div>
 		        <div class="box box-footer">
-		        	<button class="btn btn-primary" @click="validateBeforeSubmit()">Crear Publicaci&oacute;n</button>
+		        	<div style="text-align:center;">
+			            <button @click="goBack()" class="btn btn-default">
+	                        <i class="glyphicon glyphicon-chevron-left"></i>
+	                        Atras
+	                    </button>
+		        		<button class="btn btn-primary" @click="validateBeforeSubmit()">Crear Publicaci&oacute;n</button>
+		        	</div>
 		        </div>
         	</div>
         </div>
@@ -22,7 +30,7 @@
 </template>
 <script>
 	import FormPublicacion from './Form';
-
+	import route from './../../../routes.js';
 	export default {
 		data() {
 			return {
@@ -34,7 +42,7 @@
 			}
 		},
 		mounted(){
-			this.$events.on("validadoFormPublicacion", () => this.sendNewForm());
+			//this.$events.on("validadoFormPublicacion", () => this.sendNewForm());
 		},
 		components: {
 			FormPublicacion
@@ -62,6 +70,7 @@
 	                        message:'Se creado correctamente su publicación. :D'
 	                    });
 	                    this.resetForm();
+	                    this.goBack();
 	                }, response => {
 	                    this.validarPublicacion= false;
 	                    this.$toast.error({
@@ -84,6 +93,9 @@
 	        		'fecha_finalizacion': null
 
 	        	}
+	        },
+	        goBack(){
+	            route.go(-1)
 	        }
 		}
 	}

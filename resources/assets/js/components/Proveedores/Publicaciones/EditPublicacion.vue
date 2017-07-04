@@ -8,13 +8,21 @@
         		<div class="box box-body">
 		        	<form-publicacion 
 		        		:publicacion="publicacion" 
+		        		:nuevo="false"
 		        		:validarPublicacion="validarPublicacion"
+		        		@validadoEditPublicacion="sendEditForm()"
 		        		@update:validarPublicacion="val => validarPublicacion = val"
 		        		:errorsApi="errorsApi">
 		        	</form-publicacion>
 		        </div>
 		        <div class="box box-footer">
-		        	<button class="btn btn-primary" @click="validateBeforeSubmit()">Guardar Cambios</button>
+		        	<div style="text-align:center;">
+			            <button @click="goBack()" class="btn btn-default">
+	                        <i class="glyphicon glyphicon-chevron-left"></i>
+	                        Atras
+	                    </button>
+		        		<button class="btn btn-primary" @click="validateBeforeSubmit()">Ediat Publicaci&oacute;n</button>
+		        	</div>
 		        </div>
         	</div>
         </div>
@@ -22,6 +30,7 @@
 </template>
 <script>
 	import FormPublicacion from './Form';
+	import router from './../../../routes.js'
 
 	export default {
 		data() {
@@ -33,8 +42,11 @@
 				errorsApi:[]
 			}
 		},
+		beforeMount: function(){
+			this.getPublicacion();
+		},
 		mounted(){
-			this.$events.on("validadoFormPublicacion", () => this.sendEditForm());
+			//this.$events.on("validadoFormPublicacion", () => this.sendEditForm());
 		},
 		components: {
 			FormPublicacion
@@ -46,7 +58,7 @@
 	        },
 	        sendEditForm(){
 	            this.$http.patch(
-	                	'publicacion/', 
+	                	'api/publicacion/'+this.$route.params.publicacionId,
 	                {
 	                    titulo: this.publicacion.titulo,
 	                    descripcion: this.publicacion.descripcion,
@@ -60,7 +72,7 @@
 	                        title:'¡Publiacion Creada!',
 	                        message:'Se editado correctamente su publicación. :D'
 	                    });
-	                    this.resetForm();
+	                    this.goBack();
 	                }, response => {
 	                    this.validarPublicacion= false;
 	                    this.$toast.error({
@@ -74,13 +86,28 @@
 	                })
 	        },
 	        getPublicacion: function(){
-	        	this.$http.get(
-
-		        	).then(response =>{
-
+	        	this.$http.get('api/publicacion/'+this.$route.params.publicacionId)
+	        	.then(response =>{
+		        		this.publicacion = response.data
+		        		this.setDafaultRubros();
 		        	}, response => {
-
+	                    if(response.status === 404){
+	                        router.push('/404');
+	                    }
 		        	});
+	        },
+	        goBack: function(){
+	            router.go(-1)
+	        },
+	        setDafaultRubros: function(){
+	        	let rubros=[];
+	        	for (var i = 0; i < this.publicacion.rubros.length; i++) {
+	        		rubros.push({
+	        			'value':this.publicacion.rubros[i].id,
+	        			'label':this.publicacion.rubros[i].denominacion
+	        		});
+	        	}
+	        	this.publicacion.rubros = rubros;
 	        }
 		}
 	}

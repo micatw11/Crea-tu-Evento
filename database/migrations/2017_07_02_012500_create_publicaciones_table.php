@@ -17,7 +17,7 @@ class CreatePublicacionesTable extends Migration
             $table->increments('id');
             $table->date('fecha_finalizacion')->nullable();
             $table->string('titulo');
-            $table->string('oferta');
+            $table->string('oferta')->nullable();
             $table->string('descripcion');
             $table->integer('estado')->default(1);
             $table->timestamps();

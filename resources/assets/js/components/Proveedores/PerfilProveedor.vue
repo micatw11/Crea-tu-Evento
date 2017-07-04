@@ -14,10 +14,10 @@
                         <ul class="nav nav-tabs">
                             <!--<li class="active"><a href="#activity" data-toggle="tab">Activity</a></li>-->
                             <li class="active">
-                                <a href="#rubro" data-toggle="tab">Rubro</a>
+                                <a href="#publicaciones" data-toggle="tab">Publicaciones</a>
                             </li>
                             <li>
-                                <a href="#h1" data-toggle="tab">proveedor</a>
+                                <a href="#rubro" data-toggle="tab">Rubro</a>
                             </li>
                             <li >
                                 <a href="#h2" data-toggle="tab">Proveedor2</a>
@@ -30,24 +30,19 @@
                             <!--<div class="active tab-pane" id="activity">
                                 <activity></activity>
                             </div> v-if="!perfil.user.proveedor.rubro" -->
-
-                            <div class="active tab-pane" id="rubro">
+                            
+                            <div class="active tab-pane" id="publicaciones">
+                                <show-publicaciones :proveedorId="perfil.user.proveedor.id"></show-publicaciones>
+                            </div>
+                            <div class="tab-pane" id="rubro">
                                 <div>
                                     Estas Habilitado a Ser Proveedor con Habilitación de ingresos brutos: 
-                                         
                                 </div>
-                                 <div v-if="perfil.user.proveedor.rubro">
-                                        <show :perfil="perfil"></show>
+                                <div v-if="perfil.user.proveedor.rubro">
+                                    <show :perfil="perfil"></show>
                                 </div>
-                                
-                                
-                               
-                            </div>
-                            
-                            <div class="tab-pane" id="h1">
-                                datos mas datos 
-                            </div>
 
+                            </div>
                              <div class="tab-pane content" 
                                 id="h2">
                                      <div> 
@@ -71,6 +66,7 @@
 
 <script>
 import Show from './Show.vue';
+import ShowPublicaciones from './Publicaciones/Show.vue'
 
 export default {
     props: {
@@ -85,7 +81,7 @@ export default {
         }
     },
     components: {
-        Show
+        Show, ShowPublicaciones
     }
 }
 </script>

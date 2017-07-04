@@ -51,44 +51,22 @@
                         <label for="oferta" class="control-label">Oferta (*) </label>
                         <textarea
                         	name="oferta" 
-                        	v-validate="'required|min:5'" 
                         	type="text"
                         	style="min-height:100px;" 
                         	v-model="publicacion.oferta" 
                         	class="form-control">
                         </textarea>
-
-                        <!-- validacion vee-validation -->
-                        <span v-show="errors.has('oferta')&&validarPublicacion" class="help-block">{{ errors.first('oferta') }}</span>
-                        <!-- validacion api-->
-                        <div class="text-red" v-if="errorsApi.oferta">
-                            <div v-for="msj in errorsApi.oferta">
-                                <p>{{ msj }}</p>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('fecha')&&validarPublicacion}">
                     <div class="col-sm-12">
-                        <div class="col-sm-3">
-                            <label for="fecha" class="control-label">Fecha de Finalización</label>
-                            <input
-                                name="fecha" 
-                                v-validate="'required'" 
-                                type="date"
-                                v-model="publicacion.fecha_finalizacion" 
-                                class="form-control">
-
-                            <!-- validacion vee-validation -->
-                            <span v-show="errors.has('fecha')&&validarPublicacion" class="help-block">{{ errors.first('fecha') }}</span>
-                            <!-- validacion api-->
-                            <div class="text-red" v-if="errorsApi.fecha">
-                                <div v-for="msj in errorsApi.fecha">
-                                    <p>{{ msj }}</p>
-                                </div>
-                            </div>
-                        </div>
+                        <label for="fecha" class="control-label">Fecha de Finalización</label>
+                        <input
+                            name="fecha" 
+                            type="date"
+                            v-model="publicacion.fecha_finalizacion" 
+                            class="form-control">
                     </div>
                 </div>
 
@@ -117,9 +95,16 @@
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('fotos')&&validarPublicacion}">
                     <div class="col-sm-12">
                         <label for="fotos" class="control-label">Fotos <i class="fa fa-file-image-o"></i></label><br>
-                        <input 
+                        <input v-if="nuevo"
                             type="file" 
                             v-validate.reject="'required|ext:jpg,png,jpeg|size:4096'" 
+                            @change="onFilesChange" 
+                            name="fotos[]"
+                            multiple>
+
+                        <input v-else
+                            type="file" 
+                            v-validate.reject="'ext:jpg,png,jpeg|size:4096'" 
                             @change="onFilesChange" 
                             name="fotos[]"
                             multiple>
@@ -158,7 +143,11 @@
 			},
 			errorsApi: {
 				required: true
-			}
+			},
+            nuevo: {
+                type: Boolean,
+                required: true
+            }
 		},
 		data() {
 			return {
@@ -167,7 +156,7 @@
 			}
 		},
 		mounted(){
-			this.$events.on("validarFormPublicacion", () => this.validateBeforeSubmit())
+			this.$events.on("validarFormPublicacion", () => this.validateSubmit())
 		},
 		components: {vSelect},
 		methods: {
@@ -195,15 +184,22 @@
 				}
 				this.publicacion.fotos = fotos;
 	        },
-	        validateBeforeSubmit: function() {
+	        validateSubmit: function() {
 	        	console.log('validator form producto: ')
                 this.$validator.validateAll().then(() => {
-                    console.log( false)
                     this.setValueRubro();
-                    this.$events.fire('validadoFormPublicacion');  
+                    if(this.nuevo){
+                        console.log('valido nuevo')
+                        this.$emit('validadoNewPublicacion'); 
+                    }
+                    else
+                    {
+                        console.log('valido edita')
+                        this.$emit('validadoEditPublicacion'); 
+                    }
+
                     this.$emit('update:validarPublicacion', false);             
                 }).catch(() => {
-                	console.log( true)
                 	this.$emit('update:validarPublicacion', true);
                 });
 	        },

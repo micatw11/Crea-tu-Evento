@@ -83,7 +83,9 @@ class UsuarioController extends Controller
      */
     public function show($id)
     {
-        $usuario = Usuario::where('user_id', $id)->with('localidad.provincia', 'user.rol', 'user.proveedor.rubro.domicilio', 'user.proveedor.domicilio')->firstOrFail();
+        $usuario = Usuario::where('user_id', $id)
+            ->with('localidad.provincia', 'user.rol', 'user.proveedor.rubro.domicilio', 'user.proveedor.domicilio','user.proveedor.rubro.publicaciones')
+                ->firstOrFail();
         return response()->json(['data' =>  $usuario]);
     }
 
@@ -277,9 +279,11 @@ class UsuarioController extends Controller
     public function buscarUsuarios(Request $request)
     {
         $like = '%'.$request->q.'%';
+        $proveedores = Proveedor::all()->pluck('user_id');
         $usuarios = DB::table('users')
             ->join('usuarios', 'usuarios.user_id', '=', 'users.id')
             ->select('users.id as value', DB::raw('CONCAT(usuarios.apellido, ", ",usuarios.nombre, " - ", users.email) as label'))
+                //->whereNotIn('users.id', $proveedores)
                 ->where([
                     ['users.roles_id', Rol::roleId('Usuario')],
                     ['users.id','!=', Auth::user()->id]
@@ -288,9 +292,7 @@ class UsuarioController extends Controller
                     $query->where('usuarios.nombre','like' ,$like)
                         ->orWhere('usuarios.apellido', 'like', $like)
                         ->orWhere('users.email', 'like', $like);
-                })
-                ->orderBy('usuarios.nombre', 'asc')
-                ->get();
+                })->orderBy('usuarios.nombre', 'asc')->get();
 
 
         return response()->json($usuarios);

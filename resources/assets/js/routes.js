@@ -23,6 +23,7 @@ var EditRubro = require('./components/Proveedores/EditRubro');
 var Form = require('./components/Proveedores/Form');
 
 var NewPublicacion = require('./components/Proveedores/Publicaciones/NewPublicacion');
+var EditPublicacion = require('./components/Proveedores/Publicaciones/EditPublicacion');
 
 var InternalServerError = require('./components/Errors/500');
 var PageNotFound = require('./components/Errors/404');
@@ -105,7 +106,7 @@ let routes = [
 			beforeEnter: guardRoute
 
 		},
-		//
+		//publicaciones
 		{
 			path: '/publicacion/new',
 			name: 'new-publicacion',
@@ -113,7 +114,13 @@ let routes = [
 			beforeEnter: guardRoute,
 			meta: { Role: [role.PROVEEDOR]}	
 		},
-
+		{
+			path: '/publicacion/:publicacionId/edit',
+			name: 'edit-publicacion',
+			component: EditPublicacion,
+			beforeEnter: guardRoute,
+			meta: { Role: [role.PROVEEDOR]}	
+		},
 		//errors
 		{
 			path: '/404',
