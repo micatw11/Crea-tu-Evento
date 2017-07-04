@@ -202,9 +202,8 @@
 
 
 <script>
-import auth from '../../auth.js';
+import auth from '../../../auth.js';
 import vSelect from "vue-select";
-import FormDomicilio from './FormDomicilio.vue';
 
 export default {
     props: {
@@ -220,10 +219,6 @@ export default {
                 type: Boolean,
                 required: true
             },
-            /*validarRubro: {
-                type: Boolean,
-                required: true
-            },*/
             errorsApi: {
                 type: Object,
                 required: true
@@ -244,10 +239,10 @@ export default {
         }
     },
     components: {
-        vSelect, FormDomicilio
+        vSelect
     },
    mounted() {
-        this.$events.$listen('validarForm', () =>this.validateBeforeSubmit());
+        this.$events.$on('validarForm', () =>this.validateBeforeSubmit());
     },
     methods: {
         //form validation
@@ -255,11 +250,9 @@ export default {
          this.$validator.validateAll().then(() => {
                     this.validarRubro = false; 
                     if (this.nuevo){
-                        console.log("evento nuevo ")
-                        this.$events.fire('validado')
+                        this.$emit('validado')
                     }else{
-                        console.log("evento modificarr ")
-                        this.$events.fire('validadoEdit')
+                        this.$emit('validadoEdit')
                     }
                 }).catch(() => {
                     this.validarRubro = true;

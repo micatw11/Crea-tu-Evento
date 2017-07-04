@@ -1,22 +1,17 @@
 <template>
-    <!-- Modal content-->
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" @click="closeModal()">&times;</button>
-            <h4 class="modal-title">Crear Rubro</h4>
-        </div>
+    <div>
         <div class="modal-body">
-
-            <div class="box-body">
-            	<form-rubro 
-                    :rubro="rubro" 
-                    :domicilio= "domicilio" 
-                    :estado= "estado"
-                    :errorsApi="errorsApi">
-                </form-rubro>
-            </div>
-            <div class="modal-footer" style="text-align:center;">
-                <button class="btn btn-default" @click="closeModal()">
+        	<form-rubro 
+                :rubro="rubro"  
+                :domicilio="domicilio" 
+                :nuevo="nuevo"
+                @validadoEdit="sendFormEdit()"  
+                :errorsApi="errorsApi" >
+            </form-rubro>
+        </div>
+        <div class="modal-footer">
+            <div class="col-sm-12 box-footer clearfix" style="text-align:center;">
+                <button class="btn btn-default" @click="atras()">
                     <i class="glyphicon glyphicon-chevron-left"></i>
                     Atras
                 </button>
@@ -24,55 +19,51 @@
                     Guargar
                 </button>
             </div>
-        
         </div>
-    </div>
+    </div>   
 </template>
 
 <script>
-import auth from '../../auth.js';
+import auth from '../../../auth.js';
 import FormRubro from './FormRubro.vue';
 
 export default {
+    props: {
+            idRubro: {
+                type: Number,
+                required: true
+            },
+    },
     data() {
         return {
-            domicilio: {
-                calle: null,
-                numero: null,
-                piso: null,
-                localidad_id: null
-            },
-            rubro:{
-                tipo_rubro: null,
-                categoria_id: null,
-                denominacion: null,
-                descripcion: null,
-                habilitacion: null,
-                fecha_habilitacion: null
-            },
-            showNew: false,
+            rubros: { type: Object, default: null},//Peticion de datos
+            domicilio: { type: Object, default: null}, 
+            rubro: { type: Object, default: null},
             validarRubro: false,
             validarDomicilio: false,
             errorsApi: {},
             error: false,
             Comercio: null,
-            estado: true
+            fecha: null,
+            nuevo: false,
+            disabled: { to: '1920-01-01', from: null }
         }
     },
     components: {
         FormRubro
     },
-     mounted() {
-        this.$events.$on('validado', () =>this.sendForm());
-        console.log("activado evento validar nuevo")
+    beforeMount: function(){
+        //selected data
+        this.getRubro();
+        
     },
     methods: {
         //envio de formulario de modificación de informacion de usuario
-        sendForm: function() {
-             console.log('send newww', this.rubro)
+        sendFormEdit: function() {
             this.$http.post(
-                'api/proveedor/rubro/'+ this.$route.params.userId, 
+                'api/proveedor/rubro/'+ this.rubros.id+'/edit', 
                 {
+                    _method: 'PATCH',
                     tipo_rubro: this.rubro.tipo_rubro,
                     categoria_id: this.rubro.categoria_id,
                     denominacion: this.rubro.denominacion,
@@ -86,13 +77,12 @@ export default {
                 })
                 .then(response => {
                     this.$emit('reload')
-                    this.showNew = false;
+                    this.atras();
                     this.errorsApi= {},
                     this.$toast.success({
                         title:'¡Cambios realizados!',
                         message:'Se han realizado correctamente los cambios. :D'
                     });
-                    this.resetForm();
                 }, response => {
                     this.validar= false;
                     this.validarRubro= false;
@@ -106,32 +96,41 @@ export default {
                     }
                 })
         },
+
         //form validation
         validateBeforeSubmit: function() {                 
                     this.validarRubro = true;
                     this.$events.fire('validarForm')
+        },
+        getRubro: function(){
+            this.$http.get('api/proveedor/'+ this.idRubro +'/rubro' )
+                .then(response => {
+                    this.rubros = response.data.data
+                    this.cargarRubro()
 
+                }, response => {
+                    if(response.status === 404){
+                        router.push('/404');
+                    }
+                })
         },
-        resetForm() {
-            this.rubro={
-                tipo_rubro: null,
-                categoria_id: null,
-                denominacion: null,
-                descripcion: null,
-                habilitacion: null,
-                fecha_habilitacion: null
-            },
-            this.domicilio= {
-                habilitacion: null,
-                calle: null,
-                numero: null,
-                piso: null,
-                localidad_id: null
+        cargarRubro:function(){
+            this.domicilio= this.rubros.domicilio,
+            this.domicilio.localidad_id = {
+               'value':this.domicilio.localidad_id,
+               'label':this.domicilio.localidad.nombre+' ('+this.domicilio.localidad.provincia.nombre+')'
             }
+            this.rubro= this.rubros
         },
-        closeModal: function(){
-            this.showNew = false;
-        },
+        atras: function(){
+            this.$events.fire('cerrar');
+            this.$events.fire('reloadComponentPerfil');
+        }
+
     }
 }
+
+
+
+        
 </script>

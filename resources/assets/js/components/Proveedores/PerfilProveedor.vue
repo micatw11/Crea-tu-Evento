@@ -21,22 +21,15 @@
                             </li>
                         </ul>
                     
-
                         <div class="tab-content">
-                            
-                            <!--<div class="active tab-pane" id="activity">
-                                <activity></activity>
-                            </div> v-if="!perfil.user.proveedor.rubro" -->
                             
                             <div class="active tab-pane" id="publicaciones">
                                 <show-publicaciones :proveedorId="perfil.user.proveedor.id"></show-publicaciones>
                             </div>
                             <div class="tab-pane" id="rubro">
-                                <div>
-                                    Estas Habilitado a Ser Proveedor con Habilitación de ingresos brutos: 
-                                </div>
-                                <div v-if="perfil.user.proveedor.rubro">
-                                    <show :perfil="perfil"></show>
+
+                                 <div v-if="perfil.user.proveedor">
+                                        <show :perfil="perfil"></show>
                                 </div>
 
                             </div>
@@ -52,8 +45,8 @@
 </template>
 
 <script>
-import Show from './Show.vue';
-import ShowPublicaciones from './Publicaciones/Show.vue'
+
+import Show from './Rubros/Show.vue';
 
 export default {
     props: {

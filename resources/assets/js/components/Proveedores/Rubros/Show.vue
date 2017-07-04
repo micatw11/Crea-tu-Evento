@@ -1,5 +1,6 @@
 <template >
 <div>
+Estas Habilitado a Ser Proveedor con Habilitación de ingresos brutos: {{perfil.user.proveedor.ingresos_brutos}}
     <div>
         <div class="box-header">
             <div class="col-xs-2">
@@ -12,7 +13,14 @@
 
         <div v-if="showNew" class="modal" role="dialog" :style="{ display : showNew  ? 'block' : 'none' }">
             <div class="modal-dialog">
-                <new-rubro></new-rubro>
+            <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" @click="closeModal()">&times;</button>
+                        <h4 class="modal-title">Crear Rubro</h4>
+                    </div>
+                    <new-rubro></new-rubro>
+                </div>
             </div>    
         </div>
     </div> 
@@ -43,6 +51,19 @@
                     
                         {{item.fecha_habilitacion}}
                     </p>
+
+                    <p>
+                        <b>Categoria: </b>
+                    
+                        {{item.categoria_id}}
+                    </p>
+
+                    <p if= "item.domicilio">
+                        <b>Domicilio: </b>
+                        calle: {{item.domicilio.calle}}
+                        numero: {{item.domicilio.numero}}
+                        piso: {{item.domicilio.piso}}
+                    </p>
                 </div>
                 <div class="col-sm-4" style="text-align: center;">
                     <button type="button" class="btn-block" @click="modificar(item.id)" >Modificar Rubro</button>
@@ -69,7 +90,7 @@
 </template>
 
 <script>
-import auth from '../../auth.js';
+import auth from '../../../auth.js';
 import EditRubro from './EditRubro.vue';
 import NewRubro from './NewRubro.vue';
 

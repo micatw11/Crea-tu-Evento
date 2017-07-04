@@ -52,16 +52,10 @@ export default {
     beforeMount: function(){
         //selected data
         this.getProveedor();
-        
-    },
-    mounted() {
-        //this.$events.$on('validadoEditProveedor', () => this.sendForm());
     },
     methods: {
         //envio de formulario de modificación de informacion de usuario
         sendForm: function() {
-
-            console.log('send edit proveedor', this.proveedor)
             this.$http.post(
                 'api/proveedor/'+ this.proveedor.id+'/edit', 
                 {

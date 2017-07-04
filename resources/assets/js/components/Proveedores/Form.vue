@@ -76,7 +76,7 @@
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('dni')&&validarProveedor}">
                     <div class="col-sm-12">
                         <label for="inputDni" class="control-label">DNI <i class="fa fa-file-image-o"></i></label>
-                            <a v-if="!nuevo" :href="'/storage/proveedores/'+ proveedor.dni" target="_blank">{{proveedor.dni}}</a>
+                            
                         <br>
 
                         <input v-if="nuevo"
@@ -218,10 +218,6 @@ import vSelect from "vue-select";
 
 export default {
     props: {
-            /*domicilio: {
-                type: Object,
-                required: true
-            },*/
             proveedor: {
                 type: Object,
                 required: true
@@ -230,10 +226,6 @@ export default {
                 type: Boolean,
                 required: true
             },
-            /*validarProveedor: {
-                type: Boolean,
-                required: true
-            },*/
             errorsApi: {
                 type: Object,
                 required: true
@@ -259,10 +251,8 @@ export default {
                 this.$validator.validateAll().then(() => {
                     this.validarProveedor = false;
                     if (this.nuevo){
-                        console.log('validado nuevo')
                         this.$emit('validadoProveedor'); 
                     }else{
-                        console.log('validado edit')
                         this.$emit('validadoEditProveedor');  
                     }                 
                 }).catch(() => {
