@@ -15,14 +15,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/ejemplo', function () {
-    return view('ejemplo');
-});
-
-Route::get('/calendario', function () {
-    return view('calendar');
-});
-
 
 Route::group(['prefix' => 'api'], function () {
     // Rutas del Login
@@ -68,4 +60,9 @@ Route::group(['prefix' => 'api'], function () {
 
     Route::get('user/actividad/{id}', 'UsuarioController@activity');
     Route::get('actividad/{id}', 'LogController@show');
+
+    Route::post('publicacion/', 'PublicacionController@store');
+    Route::patch('publicacion/{id}', 'PublicacionController@update');
+
+    Route::get('proveedor/{proveedorId}/rubros/search', 'ProveedorController@buscarRubro');
 });

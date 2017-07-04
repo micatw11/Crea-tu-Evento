@@ -4,7 +4,8 @@
         	<form-proveedor 
                 :proveedor="proveedor" 
                 :validarProveedor="validarProveedor" 
-                :errorsApi="errorsApi" 
+                :errorsApi="errorsApi"
+                @validadoEditProveedor="sendForm()" 
                 :nuevo= "nuevo">
                 
             </form-proveedor>
@@ -42,8 +43,7 @@ export default {
             errorsApi: {},
             error: false,
             fecha: null,
-            nuevo: false,
-            disabled: { to: '1920-01-01', from: null }
+            nuevo: false
         }
     },
     components: {
@@ -51,12 +51,11 @@ export default {
     },
     beforeMount: function(){
         //selected data
-        console.log("proveedoreesss")
         this.getProveedor();
         
     },
-     mounted() {
-        this.$events.$on('validadoEditProveedor', () =>this.sendForm());
+    mounted() {
+        //this.$events.$on('validadoEditProveedor', () => this.sendForm());
     },
     methods: {
         //envio de formulario de modificación de informacion de usuario
@@ -108,7 +107,7 @@ export default {
         getProveedor: function(){
             this.$http.get('api/proveedor/'+ this.idProveedor )
                 .then(response => {
-                    this.proveedores = response.data.data
+                this.proveedores = response.data.data
                    this.cargarProveedor()
 
                 }, response => {
@@ -130,7 +129,6 @@ export default {
         },
         atras: function(){
             this.$events.fire('cerrar');
-            this.$events.fire('reloadComponentPerfil');
         }
 
     }

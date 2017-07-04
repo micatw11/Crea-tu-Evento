@@ -24,7 +24,6 @@
                         <b>Tipo de Rubro: </b>
                         {{item.tipo_rubro}}
                     </p>
-
                     <p>
                         <b>Nro Habilitación: </b>
                         {{item.habilitacion}}
@@ -48,6 +47,7 @@
                 <div class="col-sm-4" style="text-align: center;">
                     <button type="button" class="btn-block" @click="modificar(item.id)" >Modificar Rubro</button>
                 </div>
+
             </div>
         </div>
     </div>
@@ -75,10 +75,10 @@ import NewRubro from './NewRubro.vue';
 
 export default {
     props: {
-            perfil: {
-                type: Object,
-                required: true
-            },
+        perfil: {
+            type: Object,
+            required: true
+        },
     },
     data() {
         return {

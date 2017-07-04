@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\ProveedorRequest;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Proveedor;
 use App\Rol;
@@ -187,6 +188,7 @@ class ProveedorController extends Controller
                     'descripcion'=> $request->descripcion,
                     'habilitacion'=> $request->habilitacion,
                     'domicilio_id'=> $domicilio->id,
+                    'fecha_habilitacion' => $request->fecha_habilitacion
             ]);
     }
 
@@ -241,7 +243,7 @@ class ProveedorController extends Controller
         $proveedor = Proveedor::where('id', $id)->firstOrFail();
         $domicilio= Domicilio::where('id', $proveedor->domicilio_id)->firstOrFail();
         //Log::logs($id, $table_name, $accion , $rubro, 'Ha actualizado informacion personal');
-        $proveedor->update($request->all());
+        $proveedor->update($request->except(['dni']));
         $domicilio->update($request->all());
         if($proveedor->save() && $domicilio->save()){
             return response()->json(['data' =>  'OK'], 200);
@@ -288,6 +290,7 @@ class ProveedorController extends Controller
     }
 
     public function rubros($id){
+
         $rubro= Rubro::where('id', $id)->with('domicilio.localidad.provincia')->firstOrFail();
 
 
@@ -307,5 +310,19 @@ class ProveedorController extends Controller
         } else {
             return response()->json(['error' =>  'Internal Server Error'], 500);
         }
+    }
+
+    public function buscarRubro(Request $request, $proveedorId){
+        $query = DB::table('rubros')
+            ->select('id as value',  DB::raw('denominacion as label'))
+                ->where('proveedor_id', $proveedorId);
+
+        if($request->q){
+            $like = '%'.$request->q.'%';
+            $query = $query->where('denominacion', 'like', $like)->orWhere('descripcion', 'like', $like);
+        }
+        $rubros = $query->get();
+        
+        return response()->json($rubros);
     }
 }

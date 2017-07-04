@@ -75,13 +75,21 @@
 
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('dni')&&validarProveedor}">
                     <div class="col-sm-12">
-                        <label for="inputDni" class="control-label">DNI <i class="fa fa-file-image-o"></i></label><br>
-                        <input 
+                        <label for="inputDni" class="control-label">DNI <i class="fa fa-file-image-o"></i></label>
+                            <a v-if="!nuevo" :href="'/storage/proveedores/'+ proveedor.dni" target="_blank">{{proveedor.dni}}</a>
+                        <br>
+
+                        <input v-if="nuevo"
                             type="file" 
                             v-validate.reject="'required|ext:jpg,png,jpeg,pdf'" 
-                            @change="onFileChange" 
+                            @change="onFileChange"
                             name="dni">
 
+                        <input v-else
+                            type="file" 
+                            v-validate.reject="'ext:jpg,png,jpeg,pdf'" 
+                            @change="onFileChange"
+                            name="dni">
                         <!-- validacion vee-validation -->
                         <span v-show="errors.has('dni')&&validarProveedor" class="help-block">{{ errors.first('dni') }}</span>
                         <!-- validacion api-->
@@ -251,11 +259,11 @@ export default {
                 this.$validator.validateAll().then(() => {
                     this.validarProveedor = false;
                     if (this.nuevo){
-                        console.log('validadoProveedor p nuevo')
-                        this.$events.fire('validadoProveedor'); 
+                        console.log('validado nuevo')
+                        this.$emit('validadoProveedor'); 
                     }else{
-                        console.log('validadoProveedor p edit')
-                        this.$events.fire('validadoEditProveedor');  
+                        console.log('validado edit')
+                        this.$emit('validadoEditProveedor');  
                     }                 
                 }).catch(() => {
                     this.validarProveedor = true;
@@ -294,8 +302,7 @@ export default {
                 this.proveedor.dni = e.target.result;
             };
             reader.readAsDataURL(file);
-        },
-        
+        }
     }
 }
 </script>

@@ -12,6 +12,7 @@
                         	<form-prov 
                                 :proveedor="proveedor" 
                                 :errorsApi="errorsApi"
+                                @validadoProveedor="sendForm()"
                                 :nuevo= "nuevo">
                                 
                             </form-prov>
@@ -71,7 +72,7 @@ export default {
     },
     mounted() {
             this.$events.fire('changePath', this.listaPath, this.titlePath);
-            this.$events.$on('validadoProveedor', () =>this.sendForm());
+            //this.$events.$on('validadoProveedor', () =>this.sendForm());
     },
     methods: {
         //envio de formulario de modificación de informacion de usuario

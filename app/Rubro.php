@@ -23,9 +23,14 @@ class Rubro extends Model
         return $this->belongsTo('App\Proveedor');
     }
 
-      public function domicilio()
+    public function domicilio()
     {     
         return $this->belongsTo('App\Domicilio');    
+    }
+
+    public function publicaciones()
+    {
+        return $this->belongsToMany('App\Publicacion');
     }
 
 }

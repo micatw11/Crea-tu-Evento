@@ -26,7 +26,7 @@
             </p>
             <p class="inline-block">
                 <label>DNI: </label>
-                <a :href="'/storage/proveedores/'+ rowData.dni">
+                <a :href="'/storage/proveedores/'+ rowData.dni" target="_blank">
                     {{rowData.dni}}
                 </a>
             </p>

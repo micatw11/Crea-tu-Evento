@@ -67,6 +67,23 @@
                     </router-link>
                 </ul>
             </li>
+            <li>
+                <a href="#">
+                    <i class="fa fa-dashboard"></i>
+                    <span>Publicaiones</span>
+                    <span class="pull-right-container"></span>
+                </a>
+                <ul class="treeview-menu">
+                    <router-link
+                            v-if="auth.user.profile.roles_id == role.PROVEEDOR"
+                            tag="li" 
+                            to="/publicacion/new">
+                            <a>
+                                <i class="fa fa-circle-o"></i> Crear Publicaci&oacute;n
+                            </a>
+                    </router-link>
+                </ul>
+            </li>
 
             <li class="treeview">
                 <a href="/calendario">
