@@ -19,9 +19,6 @@
                             <li>
                                 <a href="#rubro" data-toggle="tab">Rubro</a>
                             </li>
-                            <li >
-                                <a href="#h2" data-toggle="tab">Proveedor2</a>
-                            </li>
                         </ul>
                     
 
@@ -43,16 +40,6 @@
                                 </div>
 
                             </div>
-                             <div class="tab-pane content" 
-                                id="h2">
-                                     <div> 
-                                     mas datos
-                                    </div>
-                                    <br><hr>
-                                    <div>
-                                        datosss
-                                    </div>
-                             </div>
                             <!-- /.tab-pane -->
                         </div>
                     </div>

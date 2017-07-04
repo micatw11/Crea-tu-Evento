@@ -36,8 +36,9 @@
             <li class="header">MENU</li>
 
             <li class="active treeview" 
-                v-if="auth.user.profile.roles_id == role.ADMINISTRADOR 
-                || auth.user.profile.roles_id ==role.SUPERVISOR">
+                v-if="auth.user.profile.roles_id == role.ADMINISTRADOR || 
+                    auth.user.profile.roles_id == role.SUPERVISOR ||
+                    auth.user.profile.roles_id == role.OPERADOR">
                 
                 <a href="#">
                     <i class="fa fa-dashboard"></i>
@@ -58,7 +59,8 @@
                     </router-link>
                     <router-link
                         v-if="auth.user.profile.roles_id == role.ADMINISTRADOR ||
-                            auth.user.profile.roles_id == role.SUPERVISOR"
+                            auth.user.profile.roles_id == role.SUPERVISOR ||
+                            auth.user.profile.roles_id == role.OPERADOR" 
                             tag="li"
                             to="/proveedores">
                             <a>

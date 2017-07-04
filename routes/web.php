@@ -47,7 +47,8 @@ Route::group(['prefix' => 'api'], function () {
     Route::post('proveedor', 'ProveedorController@store')->middleware('role:administrador,supervisor,operador');
     Route::post('proveedor/rubro/{id}', 'ProveedorController@storeRubro')->middleware('role:administrador,supervisor,operador,proveedor');
     Route::patch('proveedor/{id}/edit', 'ProveedorController@update')->middleware('role:administrador,supervisor,operador');
-    Route::patch('proveedor/rubro/{id}/edit', 'ProveedorController@updateRubro')->middleware('role:administrador,supervisor,operador,proveedor');
+    Route::patch('proveedor/rubro/{id}/edit', 'ProveedorController@updateRubro')
+        ->middleware('role:administrador,supervisor,operador,proveedor');
     
     Route::get('proveedor/{id}/rubro', 'ProveedorController@rubros');
     Route::get('proveedor/{id}', 'ProveedorController@proveedor');
@@ -61,10 +62,13 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('user/actividad/{id}', 'UsuarioController@activity');
     Route::get('actividad/{id}', 'LogController@show');
 
-    Route::post('publicacion/', 'PublicacionController@store');
+    Route::post('publicacion/', 'PublicacionController@store')
+        ->middleware('role:proveedor');
     Route::get('publicacion/{id}', 'PublicacionController@show');
-    Route::patch('publicacion/{id}', 'PublicacionController@update');
-    Route::delete('/publicacion/{id}', 'PublicacionController@destroy');
+    Route::patch('publicacion/{id}', 'PublicacionController@update')
+        ->middleware('role:proveedor');
+    Route::delete('/publicacion/{id}', 'PublicacionController@destroy')
+        ->middleware('role:proveedor');
 
     Route::get('proveedor/{proveedorId}/rubros/search', 'ProveedorController@buscarRubro');
     Route::get('proveedor/{proveedorId}/publicacion','PublicacionController@publicacionesProveedor');

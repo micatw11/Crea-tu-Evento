@@ -180,6 +180,7 @@ export default {
                         title:'¡Cambios realizados!',
                         message:'Se han realizado correctamente los cambios. :D'
                     });
+                    this.$events.fire('reloadComponentPerfil');
                 }, response => {
                     this.validar= false;
                     this.$toast.error({

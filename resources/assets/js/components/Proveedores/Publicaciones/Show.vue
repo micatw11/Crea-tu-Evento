@@ -1,16 +1,12 @@
 <template>
 	<div>
 		<div class="box-header">
-            <router-link
-            	tag="button"
-            	class="btn  btn-primary btn-sm"
-                to="/publicacion/new">
-                Crear Publicaci&oacute;n
-            </router-link>
+            <button type="button" @click="goToNewPublicacion()" class="btn  btn-primary btn-sm">Crear Publicaci&oacute;n</button>
         </div>
-	    <div v-for="item in productos">
-	        <div class="content">
-	            <div class="content" style="border-style: double;">
+	    <div class="content" v-for="item in productos">
+	        <!--<div class="content">
+	            <div class="content" style="border-style: double;">-->
+	            <div class="box-body">
 	            	<div class="col-sm-12">
 		            	<div class="col-sm-12">
 			                <div class="col-sm-8">
@@ -28,7 +24,7 @@
 			            </div>
 			            <div class="col-sm-12">
 
-		                	<div class="col-sm-4" v-for="img in item.fotos">
+		                	<div class="col-sm-2" v-for="img in item.fotos">
 		                    	<img 
 		                    		:src="'/storage/proveedores/publicaciones/'+img.nombre" 
 		                    		class="img-responsive" 
@@ -37,12 +33,14 @@
 		                </div>
 		            </div>
 	            </div>
-	        </div>
+	        <!--</div>-->
+	        <hr>
 	    </div>
 	</div>
 </template>
 <script>
 	import route from './../../../routes.js'
+	import auth from './../../../auth.js'
 	export default {
 		props: {
 			proveedorId: {
@@ -52,7 +50,9 @@
 		data() {
 			return {
 				productos: [],
-				productoId: null
+				productoId: null,
+				listPath : [{route: '/', name: 'Home'}, {route: '/usuario/'+auth.user.profile.id +'/perfil', name: 'Perfil'}],
+				auth: auth
 			}
 		},
 		mounted(){
@@ -72,6 +72,7 @@
 	                })
 			},
 			modificar(id){
+				this.$events.fire('changePath', this.listPath, 'Modificar Publicacion');
 				route.push('/publicacion/'+id+'/edit');
 			},
 			baja(id){
@@ -89,6 +90,10 @@
 	                    });
 
 	                })
+			},
+			goToNewPublicacion(){
+				this.$events.fire('changePath', this.listPath, 'Nueva Publicacion');
+				route.push('/publicacion/new');
 			}
 		}
 	}

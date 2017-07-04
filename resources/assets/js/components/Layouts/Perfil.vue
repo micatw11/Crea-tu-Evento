@@ -37,7 +37,7 @@
                             <div 
                                 v-if="perfil !== null && (perfil.user.roles_id == role.ADMINISTRADOR ||
                                 perfil.user.roles_id == role.SUPERVISOR) && 
-                                perfil.user_id != auth.user.profile.id">
+                                perfil.user_id != auth.user.profile.id && auth.user.profile.roles_id == role.ADMINISTRADOR">
                                 <hr>
 
                                 <strong><i class="fa fa-users margin-r-5"></i> Rol </strong>
@@ -153,7 +153,6 @@ export default {
             srcUrl: '',
             role: Role,
             options: [
-                      { text: 'Administrador', value: '1' },
                       { text: 'Supervisor', value: '2' },
                       { text: 'Operador', value: '3' },
                       { text: 'Usuario', value: '5' }

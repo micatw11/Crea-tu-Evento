@@ -101,7 +101,6 @@
             return {
                 titlePath: 'Usuarios',
                 options: [
-                          { text: 'Administrador', value: '1' },
                           { text: 'Supervisor', value: '2' },
                           { text: 'Operador', value: '3' },
                           { text: 'Usuario', value: '5' }

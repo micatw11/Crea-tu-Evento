@@ -37,30 +37,40 @@
                                             </button>
 
                                             <!-- Modificar Proveedor -->
-                                            <button class="btn-xs btn-default"
+                                            <button 
+                                                v-if="props.rowData.estado === 'Tramite'"
+                                                class="btn-xs btn-default"
                                                 @click="showModificar = true, idProveedor = props.rowData.id">
                                                 <i class="glyphicon glyphicon-pencil"></i> Modificar
                                             </button>
 
                                             <!-- Aprobar a proveedor -->
-                                            <button v-if="props.rowData.estado === 'Tramite' ||
-                                                        props.rowData.estado === 'Baja'" 
+                                            <button 
+                                                v-if="(props.rowData.estado === 'Tramite' ||
+                                                        props.rowData.estado === 'Baja') &&
+                                                        (role.ADMINISTRADOR == auth.user.profile.roles_id ||
+                                                        role.SUPERVISOR == auth.user.profile.roles_id)" 
                                                         class="btn-xs btn-default"
                                                 @click="onActionEstado('Aprobado', props.rowData)">
                                                 <i class="fa fa-check"></i> Aprobar
                                             </button>
 
                                             <!-- Rechazar a proveedor -->
-                                            <button v-if="props.rowData.estado === 'Tramite'"
-                                                        class="btn-xs btn-default"
+                                            <button 
+                                                v-if="props.rowData.estado === 'Tramite' &&
+                                                    (role.ADMINISTRADOR == auth.user.profile.roles_id ||
+                                                    role.SUPERVISOR == auth.user.profile.roles_id)" 
+                                                class="btn-xs btn-default"
                                                 @click="showModalObservation = true, action = 'Rechazado'">
                                                 <i class="fa fa-close"></i> Rechazar
                                             </button>
 
                                             <!-- Baja a proveedor  -->
                                             <button 
-                                                v-if="props.rowData.estado === 'Aprobado'" 
-                                                     class="btn-xs btn-default"
+                                                v-if="props.rowData.estado === 'Aprobado' &&
+                                                    (role.ADMINISTRADOR == auth.user.profile.roles_id ||
+                                                    role.SUPERVISOR == auth.user.profile.roles_id)" 
+                                                class="btn-xs btn-default"
                                                 @click="showModalObservation = true, action = 'Baja', dataUser = props.rowData">
                                                 <i class="fa fa-close"></i> Baja
                                             </button>
@@ -174,7 +184,8 @@
     import PathContent from '../Layouts/Path';
     import NewProveedor from './New';
     import EditProveedor from './Edit';
-
+    import Role from '../../config.js';
+    import auth from '../../auth.js';
 
     Vue.component('filter-bar-proveedor', FilterBar);
     Vue.component('detail-row-proveedor', DetailRowProveedor);
@@ -198,7 +209,9 @@
                 showModificar: false,
                 dataUser: null,
                 validar: false,
-                errorsApi: []
+                errorsApi: [],
+                role: Role,
+                auth: auth
             }
         },
         components: {

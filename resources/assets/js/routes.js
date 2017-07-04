@@ -73,7 +73,7 @@ let routes = [
 			path: '/proveedores',
 			component: IndexProveedor,
 			beforeEnter: guardRoute,
-			meta: { Role: [role.ADMINISTRADOR, role.SUPERVISOR] }	
+			meta: { Role: [role.ADMINISTRADOR, role.SUPERVISOR, role.OPERADOR] }	
 		},
 		{
 			path: '/proveedor/new',
