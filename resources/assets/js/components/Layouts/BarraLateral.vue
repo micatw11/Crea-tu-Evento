@@ -50,7 +50,8 @@
                 <ul class="treeview-menu">
 
                     <router-link 
-                        v-if="auth.user.profile.roles_id == role.ADMINISTRADOR"
+                        v-if="auth.user.profile.roles_id == role.ADMINISTRADOR ||
+                        auth.user.profile.roles_id == role.SUPERVISOR"
                         tag="li" 
                         to="/usuario">
                         <a>

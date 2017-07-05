@@ -114,7 +114,7 @@ class RubroController extends Controller
      */
     public function show($id)
     {
-        $rubro= Rubro::where('id', $id)->with('domicilio.localidad.provincia')->firstOrFail();
+        $rubro= Rubro::where('id', $id)->with('domicilio.localidad.provincia','categoria')->firstOrFail();
 
         if ($rubro) {
             return response()->json(['data' => $rubro], 200);

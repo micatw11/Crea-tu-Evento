@@ -10,7 +10,7 @@
         </div>
         <div class="modal-footer">
             <div class="col-sm-12 box-footer clearfix" style="text-align:center;">
-                <button class="btn btn-default" @click="atras()">
+                <button class="btn btn-default" @click="closeModal()">
                     <i class="glyphicon glyphicon-chevron-left"></i>
                     Atras
                 </button>
@@ -62,8 +62,8 @@ export default {
                     descripcion: this.categoria.descripcion
                 })
                 .then(response => {
-                    this.$emit('reload')
-                    this.atras();
+                    this.$events.fire('reloadIndexCategoria')
+                    this.closeModal();
                     this.errorsApi= {},
                     this.$toast.success({
                         title:'¡Cambios realizados!',
@@ -103,9 +103,8 @@ export default {
             this.categoria= this.categorias
         },
 
-        atras: function(){
+        closeModal: function(){
             this.$events.fire('cerrar');
-            this.$events.fire('reloadComponentPerfil');
         }
 
     }

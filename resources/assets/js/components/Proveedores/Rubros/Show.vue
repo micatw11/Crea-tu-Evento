@@ -55,7 +55,7 @@ Estas Habilitado a Ser Proveedor con Habilitación de ingresos brutos: {{perfil.
                     <p>
                         <b>Categoria: </b>
                     
-                        {{item.categoria_id}}
+                        {{item.categoria.nombre}}
                     </p>
 
                     <p if= "item.domicilio">

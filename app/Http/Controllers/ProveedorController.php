@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use App\Proveedor;
 use App\Rol;
 use App\Domicilio;
@@ -253,6 +254,19 @@ class ProveedorController extends Controller
         $filename  = str_random(30) . '.'.$extension;
         Storage::put('public/proveedores/'.$filename, $file);
         return $filename;
+    }
+
+    public function buscarRubro(Request $request, $proveedorId){
+        $query = DB::table('rubros')
+            ->select('id as value', 'denominacion as label')
+            ->where('proveedor_id', $proveedorId);
+        if($request->q){
+            $like = '%'.$request->q.'%';
+            $query->where('denominacion','like', $like )
+                    ->orWhere('descripcion', 'like', $like);
+        }
+        $rubros = $query->get();
+        return response()->json(['data' => $rubros], 200);
     }
 
 }

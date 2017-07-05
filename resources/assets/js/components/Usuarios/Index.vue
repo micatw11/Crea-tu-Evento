@@ -26,7 +26,7 @@
                                     <template slot="actions" scope="props">
                                         <div class="custom-actions">
 
-                                            <select 
+                                            <select v-if="auth.user.profile.roles_id == 1"
                                                 v-model="props.rowData.roles_id" 
                                                 @change="changeItemRol($event, props.rowData, props.rowIndex)">
                                                 <option 
@@ -36,6 +36,9 @@
                                                     {{ option.text }}
                                                 </option>
                                             </select>
+                                            <div v-else>
+                                                {{props.rowData.rol.nombre}}
+                                            </div>
 
                                             <button class="btn-xs btn-default"
                                                 @click="onActionShow('view-item', props.rowData, props.rowIndex)">
@@ -91,6 +94,7 @@
     import moment from 'moment';
     import FieldDefs from './FieldDefs.js';
     import route from '../../routes.js';
+    import auth from '../../auth.js';
 
     Vue.component('detail-row-usuario', DetailRow);
     Vue.component('filter-bar', FilterBar);
@@ -101,6 +105,7 @@
             return {
                 titlePath: 'Usuarios',
                 options: [
+                          { text: 'Administrador', value: '1' },
                           { text: 'Supervisor', value: '2' },
                           { text: 'Operador', value: '3' },
                           { text: 'Usuario', value: '5' }
@@ -111,6 +116,7 @@
                 noData:'No hay datos',
                 moreParams: {},
                 fieldDefs: FieldDefs,
+                auth: auth,
                 listPath : [{route: '/', name: 'Home'}, {route: '/usuario', name: 'Usuarios'}]
             }
         },

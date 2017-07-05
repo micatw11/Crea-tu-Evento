@@ -47,6 +47,7 @@
 <script>
 
 import Show from './Rubros/Show.vue';
+import ShowPublicaciones from './Publicaciones/Show.vue';
 
 export default {
     props: {

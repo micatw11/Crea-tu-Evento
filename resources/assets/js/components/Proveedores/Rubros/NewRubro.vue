@@ -52,6 +52,9 @@ export default {
             estado: true
         }
     },
+    mounted(){
+        this.getOptionsCategorias();
+    },
     components: {
         FormRubro
     },
@@ -118,7 +121,7 @@ export default {
                 localidad_id: null
             }
         },
-         closeModal: function(){
+        closeModal: function(){
             this.$events.fire('cerrar')
             this.$events.fire('reloadComponentPerfil');
         }

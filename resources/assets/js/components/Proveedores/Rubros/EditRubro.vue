@@ -1,13 +1,15 @@
 <template>
     <div>
         <div class="modal-body">
+        
         	<form-rubro 
                 :rubro="rubro"  
                 :domicilio="domicilio" 
                 :nuevo="nuevo"
-                @validadoEdit="sendFormEdit()"  
+                @validadoEdit="sendFormEdit()"
                 :errorsApi="errorsApi" >
             </form-rubro>
+
         </div>
         <div class="modal-footer">
             <div class="col-sm-12 box-footer clearfix" style="text-align:center;">
@@ -45,8 +47,7 @@ export default {
             error: false,
             Comercio: null,
             fecha: null,
-            nuevo: false,
-            disabled: { to: '1920-01-01', from: null }
+            nuevo: false
         }
     },
     components: {
@@ -57,6 +58,7 @@ export default {
         this.getRubro();
         
     },
+    
     methods: {
         //envio de formulario de modificación de informacion de usuario
         sendFormEdit: function() {
@@ -106,6 +108,7 @@ export default {
             this.$http.get('api/proveedor/'+ this.idRubro +'/rubro' )
                 .then(response => {
                     this.rubros = response.data.data
+                    console.log(response.data.data)
                     this.cargarRubro()
 
                 }, response => {
@@ -121,6 +124,7 @@ export default {
                'label':this.domicilio.localidad.nombre+' ('+this.domicilio.localidad.provincia.nombre+')'
             }
             this.rubro= this.rubros
+
         },
         atras: function(){
             this.$events.fire('cerrar');

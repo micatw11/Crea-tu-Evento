@@ -49,21 +49,23 @@ class PublicacionController extends Controller
     }
 
     public function update(Request $request, $id){
-    	$this->validatorPublicacion($request);
+
+        $this->validatorPublicacion($request);
 
     	$publicacion = Publicacion::where('id', $id)->firstOrFail();
 
     	$publicacion->update($request->except(['fotos', 'rubros']));
         $publicacion->rubros()->detach();
         $publicacion->rubros()->attach($request->rubros);
-        if($request->has($request->fotos) && $request->fotos !== ''){
-            foreach ($oldFoto as $publicacion->fotos) {
-                $file = "public/avatars/{$oldFoto}";
+        if($request->fotos){
+            for ($i=0; $i < sizeof($publicacion->fotos); $i++) { 
+                $file = "public/avatars/{$publicacion->fotos[$i]}";
                 if(Storage::exists($file)) {
                     Storage::delete($file);
                 }
-                Foto::where('publicacion_id', $publicacion.id)->get()->delete();
+                Foto::where('publicacion_id', $publicacion->id)->delete();
             }
+
             for ($i=0; $i < sizeof($request->fotos); $i++) { 
                 $filename = $this->createFoto($request->fotos[$i]);
                 $foto = new Foto;

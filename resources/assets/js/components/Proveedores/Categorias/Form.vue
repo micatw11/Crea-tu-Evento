@@ -45,7 +45,7 @@ import vSelect from "vue-select";
 export default {
     props: {
             categoria: {
-                type: Array,
+                type: Object,
                 required: true
             },
             nuevo: {

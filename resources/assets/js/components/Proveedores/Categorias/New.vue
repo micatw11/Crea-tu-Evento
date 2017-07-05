@@ -50,7 +50,7 @@ export default {
                     descripcion: this.categoria.descripcion
                 })
                 .then(response => {
-                    this.$emit('reload')
+                    this.$events.fire('reloadIndexCategoria')
                     this.closeModal(),
                     this.errorsApi= {},
                     this.$toast.success({
@@ -84,7 +84,6 @@ export default {
         },
          closeModal: function(){
             this.$events.fire('cerrar')
-            this.$events.fire('reloadComponentPerfil');
         }
     }
 }

@@ -28,7 +28,18 @@
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('categoria')&&validarRubro}">
                 <div class="col-sm-12">
                     <label for="inputCategoria" class="control-label">Categoria</label><br>
-                     <input name="categoria" v-validate="'required'" type="number" v-model="rubro.categoria_id" value="categoria" class="form-control" placeholder="Categoria">
+                    <select
+                        class="form-control"
+                        v-model="categoria_id"
+                        @change="cambiarCategoria()"
+                        placeholder="Seleccione la Categoria" >
+                        <option 
+                            v-for="option in optionsCategorias" 
+                            v-bind:value="option.value">
+                            {{ option.text }}
+                        </option>
+
+                    </select>
                     <!-- validacion vee-validation -->
                     <span v-show="errors.has('categoria')&&validarRubro" class="help-block">{{ errors.first('categoria') }}</span>
                     <!-- validacion api-->
@@ -235,19 +246,25 @@ export default {
             validar: false,
             validarRubro: false,
             error: false,
-            Comercio: null
+            Comercio: null,
+            optionsCategorias: [],
+            categoria_id: null
         }
     },
     components: {
         vSelect
     },
-   mounted() {
+    beforeMount(){
+        this.getOptionsCategorias()
+    },
+    mounted() {
         this.$events.$on('validarForm', () =>this.validateBeforeSubmit());
+        if(!this.nuevo) this.categoria_id = this.rubro.categoria_id;
     },
     methods: {
         //form validation
         validateBeforeSubmit: function() {
-         this.$validator.validateAll().then(() => {
+            this.$validator.validateAll().then(() => {
                     this.validarRubro = false; 
                     if (this.nuevo){
                         this.$emit('validado')
@@ -267,6 +284,22 @@ export default {
                     loading(false)
                 })
         },
+        getOptionsCategorias: function() {
+
+            this.$http.get('api/categoria'
+                ).then(response => {
+                    let options = response.data.data
+                    for (let categoria of options){
+                        this.optionsCategorias.push({ text: categoria.nombre, value: categoria.id })
+                    }
+                })
+
+        },
+        cambiarCategoria(){
+            this.rubro.categoria_id = this.categoria_id;
+        }
+
     }
+
 }
 </script>

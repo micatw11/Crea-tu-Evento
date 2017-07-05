@@ -120,11 +120,6 @@
                     </div>                    
                 </div>
             </div>
-            <div class="col-sm-12">
-            	<div v-if="publicacion.fotos != undefined" v-for="foto in publicacion.fotos" class="col-sm-3">
-            		<img :src="foto" class="img-responsive">
-            	</div>
-            </div>
         </form>
 </template>
 <script>
@@ -164,7 +159,7 @@
 	            loading(true)
 	            this.$http.get('api/proveedor/'+this.auth.user.profile.id+'/rubros/search/?q='+ search
 	                ).then(response => {
-	                    this.rubros = response.data
+	                    this.rubros = response.data.data
 	                    loading(false)
 	                })
 	        },

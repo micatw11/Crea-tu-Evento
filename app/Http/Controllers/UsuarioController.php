@@ -33,7 +33,7 @@ class UsuarioController extends Controller
 
         $query = User::where('id', '!=', Auth::user()->id)
                         ->where('roles_id', '!=', Rol::roleId('Proveedor'))
-                            ->with('usuario');
+                            ->with('usuario', 'rol');
 
         if($request->filter){
             $like = '%'.$request->filter.'%';

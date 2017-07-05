@@ -69,7 +69,7 @@ let routes = [
 			path: '/usuario',
 			component: IndexUsuarios,
 			beforeEnter: guardRoute,
-			meta: { Role: [role.ADMINISTRADOR] }		
+			meta: { Role: [role.ADMINISTRADOR, role.SUPERVISOR] }		
 		},
 		{
 			path: '/proveedores',

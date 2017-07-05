@@ -156,6 +156,8 @@
 
             this.$events.fire('changePath', this.listPath, this.titlePath);
             this.$events.on('cerrar', () => this.closeModal());
+            this.$events.on('reloadIndexCategoria', () => Vue.nextTick( () => this.$refs.vuetable.refresh()) );
+
         },
         methods: {
             onPaginationData (paginationData) {
