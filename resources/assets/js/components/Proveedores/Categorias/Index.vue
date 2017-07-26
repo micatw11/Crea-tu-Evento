@@ -125,7 +125,8 @@
                         name: 'descripcion',
                         title: 'Descripcion',
                         titleClass: 'text-center',
-                        dataClass: 'text-center'           
+                        dataClass: 'text-center',
+                        callback: 'descriptionLabel'     
                     },
                     {
                          name: '__slot:actions',   // <----
@@ -175,9 +176,13 @@
             onFilterSet (filterText) {
                 this.moreParams.filter = filterText
 
-                Vue.nextTick( () => this.$refs.vuetable.refresh() )
+                this.$nextTick( () => this.$refs.vuetable.refresh() )
             },
-
+            descriptionLabel (value) {
+              return value == null
+                ? 'Sin descripción'
+                : value
+            },
             onActionModificar(data, index){
                 this.showModificarCategoria = true, 
                 this.idCategoria=data.id

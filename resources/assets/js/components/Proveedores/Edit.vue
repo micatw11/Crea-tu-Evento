@@ -72,12 +72,13 @@ export default {
                     localidad_id: this.proveedor.domicilio.localidad_id.value
                 })
                 .then(response => {
-                    this.$emit('reload')
-                    this.atras();
+
                     this.$toast.success({
                         title:'¡Cambios realizados!',
                         message:'Se han realizado correctamente los cambios. :D'
                     });
+                    this.$events.fire('reloadIndexProveedor');
+                    this.atras();
                 }, response => {
                     this.validar= false;
                     this.validarProveedor= false;

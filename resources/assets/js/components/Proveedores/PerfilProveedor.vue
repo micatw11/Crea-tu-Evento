@@ -29,7 +29,7 @@
                             <div class="tab-pane" id="rubro">
 
                                  <div v-if="perfil.user.proveedor">
-                                        <show :perfil="perfil"></show>
+                                        <show-rubros :perfil="perfil"></show-rubros>
                                 </div>
 
                             </div>
@@ -46,7 +46,7 @@
 
 <script>
 
-import Show from './Rubros/Show.vue';
+import ShowRubros from './Rubros/Show.vue';
 import ShowPublicaciones from './Publicaciones/Show.vue';
 
 export default {
@@ -62,7 +62,7 @@ export default {
         }
     },
     components: {
-        Show, ShowPublicaciones
+        ShowRubros, ShowPublicaciones
     }
 }
 </script>

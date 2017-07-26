@@ -222,6 +222,7 @@
 
             this.$events.fire('changePath', this.listPath, this.titlePath);
             this.$events.on('cerrar', () => this.closeModal());
+            this.$events.on('reloadIndexProveedor', () => Vue.nextTick( () => this.$refs.vuetable.refresh()) );
 
         },
         methods: {
@@ -240,7 +241,7 @@
             onFilterSet (filterText) {
                 this.moreParams.filter = filterText
 
-                Vue.nextTick( () => this.$refs.vuetable.refresh() )
+               this.$nextTick( () => this.$refs.vuetable.refresh() )
             },
 
             onActionShow(data, index){

@@ -183,8 +183,7 @@
             //filtros de busqueda
             onFilterSet (filterText) {
                 this.moreParams.filter = filterText
-
-                Vue.nextTick( () => this.$refs.vuetable.refresh() )
+                this.$nextTick( () => this.$refs.vuetable.refresh() )
             },
             //cambiar rol
             changeItemRol(action, data, index) {

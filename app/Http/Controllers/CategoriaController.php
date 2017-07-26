@@ -13,12 +13,19 @@ class CategoriaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-         $categoria= Categoria::all();
+        $query = Categoria::orderBy('nombre', 'asc');
 
-        if ($categoria) {
-            return response()->json(['data' => $categoria], 200);
+        if ($request->filter) {
+            $like = '%'.$request->filter.'%';
+            $query = $query->where('nombre','like',$like)->orWhere('descripcion','like',$like);
+        }
+
+        $categorias = $query->get();
+
+        if ($categorias) {
+            return response()->json(['data' => $categorias], 200);
         } else {
             return response()->json(['error' =>  'Internal Server Error'], 500);
         }

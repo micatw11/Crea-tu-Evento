@@ -262,6 +262,7 @@ function checkAuth(){
 }
 
 export default new VueRouter({
+	mode: 'hash',
 	routes,
 	linkActiveClass: 'is-active'
 });

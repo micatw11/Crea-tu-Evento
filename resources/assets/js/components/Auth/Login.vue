@@ -19,8 +19,8 @@
                 <h4>¡Vaya!</h4>
                 <p>Su cuenta se encuentra temporalmente bloqueada.</p>
             </div>
-            <div class="text-center" v-if="error">
-                <p class="text-red">Estas credenciales no coinciden con nuestros registros.</p>
+            <div v-if="error">
+                <p class="login-box-msg text-red">Estas credenciales no coinciden con nuestros registros.</p>
             </div>
             <form @submit.prevent="validateBeforeSubmit">
 

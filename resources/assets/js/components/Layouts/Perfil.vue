@@ -95,7 +95,7 @@
 
                                     <div v-if="perfil !== null && perfil.user_id == auth.user.profile.id" 
                                         class="active tab-pane" id="info">
-                                        <show></show>
+                                        <show :usuario="perfil"></show>
                                     </div>
 
                                     <div v-bind:class="classTabActive" id="timeline">
@@ -106,9 +106,7 @@
                                         class="tab-pane content" 
                                         id="account">
                                              <div>
-                                                <form-perfil 
-                                                        @reload="reload()">
-                                                </form-perfil>
+                                                <form-perfil></form-perfil>
                                             </div>
                                             <br><hr>
                                             <div>
@@ -191,9 +189,6 @@ export default {
         updateAvatar: function(){
             this.getUserPerfil();
             this.$events.fire('reloadComponents');
-        },
-        reload: function(){
-            this.getUserPerfil();
         },
         //cambiar rol
         changeItemRol() {

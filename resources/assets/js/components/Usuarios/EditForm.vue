@@ -174,7 +174,6 @@ export default {
                 })
                 .then(response => {
                     //recarga de informacion de perfil
-                    this.$emit('reload')
                     this.showModificar = false;
                     this.$toast.success({
                         title:'¡Cambios realizados!',

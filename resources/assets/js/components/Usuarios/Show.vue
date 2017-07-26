@@ -24,12 +24,12 @@
 </template>
 
 <script>
-import auth from '../../auth.js';
+
 
 export default {
-    data() {
-        return {
-            usuario: auth.user.profile.usuario
+    props: {
+        usuario: {
+            required: true
         }
     }
 }

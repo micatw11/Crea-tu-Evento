@@ -31,26 +31,29 @@ class UsuarioController extends Controller
     public function index(Request $request)
     {
 
-        $query = User::where('id', '!=', Auth::user()->id)
-                        ->where('roles_id', '!=', Rol::roleId('Proveedor'))
+
+        $queryUser = User::where('id', '!=', Auth::user()->id)
                             ->with('usuario', 'rol');
 
         if($request->filter){
             $like = '%'.$request->filter.'%';
-            $usuario = Usuario::where('nombre', 'like', $like)
-                            ->orWhere('apellido', 'like', $like)
-                            ->where('id', '!=', Auth::user()->id)->get()->pluck('user_id');
-                
-            $query=$query->where('email', 'like', $like);
+            
 
-            if (!$usuario->isEmpty())
-                $query=$query->orWhereIn('id',$usuario)->where('id', '!=', Auth::user()->id);
+            $usuario = Usuario::where(function($query) use ($like){
+                    $query->where('nombre', 'like', $like)
+                        ->orWhere('apellido', 'like', $like);
+                })->get()->pluck('user_id');
+
+
+            if (!$usuario->isEmpty()){
+                $queryUser = $queryUser->whereIn('id', $usuario);
+                //->orWhere('email', 'like', $like);
+            }
         }
 
 
 
-        $users = $query->paginate(10);
-
+        $users = $queryUser->where('id', '!=', Auth::user()->id)->where('roles_id', '!=', Rol::roleId('Proveedor'))->paginate(10);
         return response()->json($users);
     }
 
