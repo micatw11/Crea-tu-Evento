@@ -37,7 +37,7 @@
 
                                     <a
                                         class="btn link"
-                                        @click="showUserProfil(actividad.registro_id)">
+                                        @click="showUserProfil(actividad.id)">
                                             Ver Usuario
                                      </a>
 
