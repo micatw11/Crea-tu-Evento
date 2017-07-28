@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\UsuarioRequest;
@@ -53,7 +54,9 @@ class UsuarioController extends Controller
 
 
 
-        $users = $queryUser->where('id', '!=', Auth::user()->id)->where('roles_id', '!=', Rol::roleId('Proveedor'))->paginate(10);
+        $users = $queryUser->where('id', '!=', Auth::user()->id)
+                        ->where('roles_id', '!=', Rol::roleId('Proveedor'))
+                        ->where('roles_id', '!=', Rol::roleId('Administrador'))->paginate(10);
         return response()->json($users);
     }
 
@@ -86,12 +89,16 @@ class UsuarioController extends Controller
      */
     public function show($id)
     {
-
+       
         $usuario = Usuario::where('user_id', $id)
             ->with('localidad.provincia', 'user.rol', 'user.proveedor.rubro.domicilio', 'user.proveedor.domicilio','user.proveedor.rubro.publicaciones', 'user.proveedor.rubro.categoria')
                 ->firstOrFail();
 
-        return response()->json(['data' =>  $usuario]);
+        if (Gate::allows('show-profile', $usuario)) {
+            return response()->json(['data' =>  $usuario]);
+        } else {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
     }
 
     /**
@@ -267,18 +274,18 @@ class UsuarioController extends Controller
 
     public function activity(Request $request, $id){
 
-        $query = DB::table('logs')
-                            ->select('*', DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as fecha'))
-                                ->where('user_id', $id);
-        //if(Auth::user()->roles_id == Rol::roleId('Administrador')){
-        //    $query->whereIn('tabla', ['users', 'proveedores']);
-        //}
+        if (Gate::allows('show-activity', $id)) {
+            $query = DB::table('logs')
+                                ->select('*', DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as fecha'))
+                                    ->where('user_id', $id);
 
-        $actividades = $query->orderBy('created_at', 'desc')
-                                ->get();
-                                
+            $actividades = $query->orderBy('created_at', 'desc')->get();
 
-        return response()->json($actividades);
+            return response()->json($actividades);
+
+        } else {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
     }
 
     public function buscarUsuarios(Request $request)

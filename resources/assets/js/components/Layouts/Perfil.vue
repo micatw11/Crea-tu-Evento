@@ -121,7 +121,11 @@
                     </div>
                     <!-- /.nav-tabs-custom -->
                 </div>
-                <box-proveedor v-if="perfil !== null && (perfil.user.roles_id == 4)" :perfil="perfil"></box-proveedor>
+                <box-proveedor 
+                    v-if="(perfil !== null) && (perfil.user.roles_id == role.PROVEEDOR) &&
+                            (perfil.user.id == auth.user.profile.id)" 
+                    :perfil="perfil">    
+                </box-proveedor>
             </div>
         </section>
     </div>
