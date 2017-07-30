@@ -24,6 +24,13 @@ use App\Rubro;
 
 class UsuarioController extends Controller
 {  
+
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -33,30 +40,29 @@ class UsuarioController extends Controller
     {
 
 
-        $queryUser = User::where('id', '!=', Auth::user()->id)
-                            ->with('usuario', 'rol');
+        $queryUser = User::where(function($query){
+                        $query->where('id', '!=', Auth::id())
+                            ->where('roles_id', '!=', Rol::roleId('Proveedor'))
+                            ->where('roles_id', '!=', Rol::roleId('Administrador'));
+                        });
 
         if($request->filter){
             $like = '%'.$request->filter.'%';
             
+            $usuario = Usuario::join('users', 'users.id', '=', 'usuarios.user_id')
 
-            $usuario = Usuario::where(function($query) use ($like){
-                    $query->where('nombre', 'like', $like)
-                        ->orWhere('apellido', 'like', $like);
-                })->get()->pluck('user_id');
+                    ->where(function($query) use ($like){
+                        $query->where('usuarios.nombre', 'like', $like)
+                            ->orWhere('usuarios.apellido', 'like', $like)
+                            ->orwhere('users.email', 'like', $like);
+                        })
+                    ->get()->pluck('user_id');
 
-
-            if (!$usuario->isEmpty()){
-                $queryUser = $queryUser->whereIn('id', $usuario);
-                //->orWhere('email', 'like', $like);
-            }
+            $queryUser = $queryUser->whereIn('id', $usuario);
         }
 
-
-
-        $users = $queryUser->where('id', '!=', Auth::user()->id)
-                        ->where('roles_id', '!=', Rol::roleId('Proveedor'))
-                        ->where('roles_id', '!=', Rol::roleId('Administrador'))->paginate(10);
+        $users = $queryUser->with('usuario', 'rol')
+                        ->paginate(10);
         return response()->json($users);
     }
 
@@ -298,7 +304,7 @@ class UsuarioController extends Controller
                 //->whereNotIn('users.id', $proveedores)
                 ->where([
                     ['users.roles_id', Rol::roleId('Usuario')],
-                    ['users.id','!=', Auth::user()->id]
+                    ['users.id','!=', Auth::id()]
                 ])
                 ->where(function($query) use ($like){
                     $query->where('usuarios.nombre','like' ,$like)

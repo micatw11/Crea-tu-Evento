@@ -17,6 +17,7 @@ Route::get('/', function () {
 
 
 Route::group(['prefix' => 'api'], function () {
+
     // Rutas del Login
     Route::post('login', 'Auth\AuthController@login');
     Route::post('logout', 'Auth\AuthController@logout');
@@ -35,6 +36,7 @@ Route::group(['prefix' => 'api'], function () {
     [ 
         'except' => ['destroy', 'edit', 'create', 'store']
 	]);
+
     Route::post('user/{id}/perfil/avatar', 'UsuarioController@updateAvatar');
     Route::patch('user/{id}/password', 'UsuarioController@changePassword');
     Route::delete('user/{id}/account', 'UsuarioController@destroy');
@@ -62,7 +64,7 @@ Route::group(['prefix' => 'api'], function () {
 
     Route::get('busqueda/usuarios', 'UsuarioController@buscarUsuarios');
 
-    Route::get('user/actividad/{id}', 'UsuarioController@activity');
+    Route::get('user/{id}/actividad', 'UsuarioController@activity');
     Route::get('actividad/{id}', 'LogController@show');
 
     Route::post('publicacion/', 'PublicacionController@store')

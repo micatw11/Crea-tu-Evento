@@ -142,7 +142,7 @@
         components: { IconsTime },
         methods:{
             getUserlog: function(){
-                this.$http.get('api/user/actividad/'+ this.$route.params.userId )
+                this.$http.get('api/user/'+ this.$route.params.userId+'/actividad' )
                     .then(response => {
                         this.actividades = response.data
                     }, response => {
