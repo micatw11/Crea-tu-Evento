@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCategoriasTable extends Migration
+class CreateRubrosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateCategoriasTable extends Migration
      */
     public function up()
     {
-        Schema::create('categorias', function (Blueprint $table) {
+         Schema::create('rubros', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nombre');
-            $table->enum('tipo_rubro', ['Producto', 'Servicio', 'Salon']);
+            $table->integer('subcategoria_id')->unsigned();
+            $table->foreign('subcategoria_id')->references('id')->on('subcategorias');
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreateCategoriasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('categorias');
+        Schema::dropIfExists('rubros');
     }
 }

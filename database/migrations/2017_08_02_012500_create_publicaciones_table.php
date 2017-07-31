@@ -27,9 +27,9 @@ class CreatePublicacionesTable extends Migration
         Schema::create('publicacion_rubro', function (Blueprint $table){
             $table->increments('id');
             $table->integer('publicacion_id')->unsigned();
-            $table->integer('rubro_id')->unsigned();
+            $table->integer('rubros_detalle_id')->unsigned();
             $table->foreign('publicacion_id')->references('id')->on('publicaciones');
-            $table->foreign('rubro_id')->references('id')->on('rubros');
+            $table->foreign('rubros_detalle_id')->references('id')->on('rubros_detalle');
         });
     }
 
