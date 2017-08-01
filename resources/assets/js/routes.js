@@ -19,7 +19,7 @@ var Perfil = require('./components/Layouts/Perfil');
 var IndexUsuarios = require('./components/Usuarios/Index');
 var IndexProveedor = require('./components/Proveedores/Index');
 var NewProveedor = require('./components/Proveedores/New');
-var EditRubro = require('./components/Proveedores/Rubros/EditRubro');
+var EditRubro = require('./components/Proveedores/RubrosDetalle/EditRubro');
 var Form = require('./components/Proveedores/Form');
 
 var NewPublicacion = require('./components/Proveedores/Publicaciones/NewPublicacion');

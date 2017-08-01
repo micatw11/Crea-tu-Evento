@@ -22,10 +22,10 @@ class CategoriaController extends Controller
             $query = $query->where('nombre','like',$like)->orWhere('descripcion','like',$like);
         }
 
-        $categorias = $query->get();
+        $categorias = $query->paginate(10);
 
         if ($categorias) {
-            return response()->json(['data' => $categorias], 200);
+            return response()->json($categorias);
         } else {
             return response()->json(['error' =>  'Internal Server Error'], 500);
         }

@@ -85,4 +85,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('categoria/', 'CategoriaController@index');
     Route::get('categoria/{id}', 'CategoriaController@show');
 
+    Route::get('subcategorias', function(){
+        return App\Subcategoria::paginate(10);
+    });
 });

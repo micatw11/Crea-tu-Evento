@@ -46,7 +46,7 @@
 
 <script>
 
-import ShowRubros from './Rubros/Show.vue';
+import ShowRubros from './RubrosDetalle/Show.vue';
 import ShowPublicaciones from './Publicaciones/Show.vue';
 
 export default {
