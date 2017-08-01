@@ -17,7 +17,7 @@ class PublicacionController extends Controller
     }
 
     public function show(Request $request, $id){
-        $publicaciones = Publicacion::with('rubros')->where('id', $id)->where('estado', 1)->firstOrFail();
+        $publicaciones = Publicacion::with('rubrosDetalle')->where('id', $id)->where('estado', 1)->firstOrFail();
 
         return response()->json($publicaciones);
     }

@@ -27,7 +27,7 @@
                         <v-select 
                             :debounce="250"
                             v-validate="'required'" 
-                            v-model="publicacion.rubros"
+                            v-model="publicacion.rubros_detalle"
                             name= "rubros"
                             data-vv-name="rubros"
                             :on-search="getOptions" 

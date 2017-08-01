@@ -24,26 +24,17 @@ Estas Habilitado a Ser Proveedor con Habilitación de ingresos brutos: {{perfil.
             </div>    
         </div>
     </div> 
-    <div v-for="item in perfil.user.proveedor.rubro">
+    <div v-for="item in perfil.user.proveedor.rubrosDetalle">
         <div class="content">
             <div class="content" style="border-style: double;">
                 <div class="col-sm-8">
                     <p>
-                        <b>Tipo de Rubro: </b>
-                        {{item.tipo_rubro}}
+                        <b>Tipo de Proveedor: </b>
+                        {{item.tipo_proveedor}}
                     </p>
                     <p>
                         <b>Nro Habilitación: </b>
                         {{item.habilitacion}}
-                    </p>
-                
-                    <p>
-                        <b>Denominacion: </b>
-                       {{item.denominacion}}
-                    </p>
-                    <p>
-                        <b>Descripcion: </b>
-                       {{item.descripcion}}
                     </p>
                 
                     <p>
@@ -52,11 +43,11 @@ Estas Habilitado a Ser Proveedor con Habilitación de ingresos brutos: {{perfil.
                         {{item.fecha_habilitacion}}
                     </p>
 
-                    <p>
+                   <!-- <p>
                         <b>Categoria: </b>
                     
                         {{item.categoria.nombre}}
-                    </p>
+                    </p>-->
 
                     <p if= "item.domicilio">
                         <b>Domicilio: </b>

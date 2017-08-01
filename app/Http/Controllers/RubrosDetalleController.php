@@ -7,10 +7,10 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Services\ProveedorService;
 use App\Proveedor;
 use App\Domicilio;
-use App\Rubro;
+use App\RubrosDetalle;
 use App\Log;
 
-class RubroController extends Controller
+class RubrosDetalleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -32,9 +32,7 @@ class RubroController extends Controller
         return Rubro::create([
                     'tipo_rubro'=> $request->tipo_rubro,
                     'proveedor_id'=> $proveedor->id,
-                    'categoria_id'=> $request->categoria_id,
-                    'denominacion'=> $request->denominacion,
-                    'descripcion'=> $request->descripcion,
+                    'rubro_id'=> $request->rubro_id,
                     'habilitacion'=> $request->habilitacion,
                     'domicilio_id'=> $domicilio->id,
             ]);
@@ -114,7 +112,7 @@ class RubroController extends Controller
      */
     public function show($id)
     {
-        $rubro= Rubro::where('id', $id)->with('domicilio.localidad.provincia','categoria')->firstOrFail();
+        $rubro= RubrosDetalle::where('id', $id)->with('domicilio.localidad.provincia')->firstOrFail();
 
         if ($rubro) {
             return response()->json(['data' => $rubro], 200);

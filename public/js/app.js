@@ -34028,6 +34028,32 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -34060,7 +34086,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             error: false,
             Comercio: null,
             optionsCategorias: [],
-            categoria_id: null
+            categoria_id: null,
+            optionsSubcategorias: [],
+            subcategoria_id: null
         };
     },
 
@@ -34131,6 +34159,39 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     } finally {
                         if (_didIteratorError) {
                             throw _iteratorError;
+                        }
+                    }
+                }
+            });
+        },
+        getOptionsSubcategorias: function getOptionsSubcategorias(categoria) {
+            var _this5 = this;
+
+            loading(true);
+            this.$http.get('api/subcategoria/?q=' + categoria).then(function (response) {
+                var options = response.data.data;
+                loading(false);
+                var _iteratorNormalCompletion2 = true;
+                var _didIteratorError2 = false;
+                var _iteratorError2 = undefined;
+
+                try {
+                    for (var _iterator2 = options[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                        var subcategoria = _step2.value;
+
+                        _this5.optionsSubcategoria.push({ text: subcategoria.nombre, value: subcategoria.id });
+                    }
+                } catch (err) {
+                    _didIteratorError2 = true;
+                    _iteratorError2 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                            _iterator2.return();
+                        }
+                    } finally {
+                        if (_didIteratorError2) {
+                            throw _iteratorError2;
                         }
                     }
                 }
@@ -34289,15 +34350,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__EditRubro_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__EditRubro_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__NewRubro_vue__ = __webpack_require__(558);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__NewRubro_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__NewRubro_vue__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -45617,7 +45669,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("×")]), _vm._v(" "), _c('h4', {
     staticClass: "modal-title"
-  }, [_vm._v("Crear Rubro")])]), _vm._v(" "), _c('new-rubro')], 1)])]) : _vm._e()]), _vm._v(" "), _vm._l((_vm.perfil.user.proveedor.rubro), function(item) {
+  }, [_vm._v("Crear Rubro")])]), _vm._v(" "), _c('new-rubro')], 1)])]) : _vm._e()]), _vm._v(" "), _vm._l((_vm.perfil.user.proveedor.rubrosDetalle), function(item) {
     return _c('div', [_c('div', {
       staticClass: "content"
     }, [_c('div', {
@@ -45627,7 +45679,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }, [_c('div', {
       staticClass: "col-sm-8"
-    }, [_c('p', [_c('b', [_vm._v("Tipo de Rubro: ")]), _vm._v("\n                        " + _vm._s(item.tipo_rubro) + "\n                    ")]), _vm._v(" "), _c('p', [_c('b', [_vm._v("Nro Habilitación: ")]), _vm._v("\n                        " + _vm._s(item.habilitacion) + "\n                    ")]), _vm._v(" "), _c('p', [_c('b', [_vm._v("Denominacion: ")]), _vm._v("\n                       " + _vm._s(item.denominacion) + "\n                    ")]), _vm._v(" "), _c('p', [_c('b', [_vm._v("Descripcion: ")]), _vm._v("\n                       " + _vm._s(item.descripcion) + "\n                    ")]), _vm._v(" "), _c('p', [_c('b', [_vm._v("Fecha de habilitacion: ")]), _vm._v("\n                    \n                        " + _vm._s(item.fecha_habilitacion) + "\n                    ")]), _vm._v(" "), _c('p', [_c('b', [_vm._v("Categoria: ")]), _vm._v("\n                    \n                        " + _vm._s(item.categoria.nombre) + "\n                    ")]), _vm._v(" "), _c('p', {
+    }, [_c('p', [_c('b', [_vm._v("Tipo de Proveedor: ")]), _vm._v("\n                        " + _vm._s(item.tipo_proveedor) + "\n                    ")]), _vm._v(" "), _c('p', [_c('b', [_vm._v("Nro Habilitación: ")]), _vm._v("\n                        " + _vm._s(item.habilitacion) + "\n                    ")]), _vm._v(" "), _c('p', [_c('b', [_vm._v("Fecha de habilitacion: ")]), _vm._v("\n                    \n                        " + _vm._s(item.fecha_habilitacion) + "\n                    ")]), _vm._v(" "), _c('p', {
       attrs: {
         "if": "item.domicilio"
       }
@@ -46194,6 +46246,59 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, _vm._l((_vm.errorsApi.categoria), function(msj) {
     return _c('div', [_c('p', [_vm._v(_vm._s(msj))])])
   })) : _vm._e()])]), _vm._v(" "), _c('div', {
+    class: {
+      'form-group has-feedback': true, 'form-group has-error': _vm.errors.has('subcategoria') && _vm.validarRubro
+    }
+  }, [(_vm.categoria_id != null) ? _c('div', {
+    staticClass: "col-sm-12"
+  }, [_c('label', {
+    staticClass: "control-label",
+    attrs: {
+      "for": "inputSubcategoria"
+    }
+  }, [_vm._v("Subcategoria")]), _c('br'), _vm._v(" "), _c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.subcategoria_id),
+      expression: "subcategoria_id"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "placeholder": "Seleccione una subCategoria"
+    },
+    on: {
+      "change": [function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.subcategoria_id = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }, function($event) {
+        _vm.cambiarSubcategoria(_vm.categoria_id)
+      }]
+    }
+  }, _vm._l((_vm.optionsSubcategorias), function(option) {
+    return _c('option', {
+      domProps: {
+        "value": option.value
+      }
+    }, [_vm._v("\n                            " + _vm._s(option.text) + "\n                        ")])
+  })), _vm._v(" "), _c('span', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.errors.has('subcategoria') && _vm.validarRubro),
+      expression: "errors.has('subcategoria')&&validarRubro"
+    }],
+    staticClass: "help-block"
+  }, [_vm._v(_vm._s(_vm.errors.first('subcategoria')))]), _vm._v(" "), (_vm.errorsApi.subcategoria) ? _c('div', {
+    staticClass: "text-red"
+  }, _vm._l((_vm.errorsApi.subcategoria), function(msj) {
+    return _c('div', [_c('p', [_vm._v(_vm._s(msj))])])
+  })) : _vm._e()]) : _vm._e()]), _vm._v(" "), _c('div', {
     class: {
       'form-group has-feedback': true, 'form-group has-error': _vm.errors.has('denominacion') && _vm.validarRubro
     }
@@ -48859,11 +48964,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "placeholder": "Seleccione un Rubro"
     },
     model: {
-      value: (_vm.publicacion.rubros),
+      value: (_vm.publicacion.rubros_detalle),
       callback: function($$v) {
-        _vm.publicacion.rubros = $$v
+        _vm.publicacion.rubros_detalle = $$v
       },
-      expression: "publicacion.rubros"
+      expression: "publicacion.rubros_detalle"
     }
   }), _vm._v(" "), _c('span', {
     directives: [{

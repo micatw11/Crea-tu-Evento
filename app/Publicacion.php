@@ -21,8 +21,8 @@ class Publicacion extends Model
         return $this->hasMany('App\Foto');
     }
 
-    public function rubrosDetalles()
+    public function rubrosDetalle()
     {
-        return $this->belongsTo('App\Rubrodetalle');
+        return $this->belongsTo('App\RubrosDetalle');
     }
 }
