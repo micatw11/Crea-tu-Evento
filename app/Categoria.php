@@ -8,15 +8,15 @@ class Categoria extends Model
 {
     protected $table = 'categorias';
 
-    protected $fillable = [ 'nombre',
-    						'descripcion',
-    						'observacion',
-    						'estado'
+    protected $fillable = [ 
+                            'nombre',
+    						'tipo_proveedor'
     					  ];
 
-        public function rubro()
+    
+    public function subcategorias()
     {
-        return $this->hasMany('App\Rubro');
+        return $this->hasMany('App\Subcategoria');
     }
 
 }
