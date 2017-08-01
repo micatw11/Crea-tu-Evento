@@ -13,7 +13,7 @@ class Publicacion extends Model
      * @var array
      */
     protected $fillable = [
-        'titulo', 'oferta', 'descripcion', 'estado', 'created_at', 'updated_at'
+        'titulo', 'oferta', 'descripcion', 'estado','rubros_detalle_id',  'created_at', 'updated_at'
     ];
 
     public function fotos()
@@ -21,13 +21,8 @@ class Publicacion extends Model
         return $this->hasMany('App\Foto');
     }
 
-    public function rubros()
+    public function rubrosDetalles()
     {
-        return $this->belongsToMany('App\Rubro');
-    }
-
-    public function updateRubros($rubros){
-        $this->rubros()->detach();
-        return $this->rubros()->attach($rubros);
+        return $this->belongsTo('App\Rubrodetalle');
     }
 }

@@ -16,7 +16,7 @@ class CreateCategoriasTable extends Migration
         Schema::create('categorias', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nombre');
-            $table->enum('tipo_rubro', ['Producto', 'Servicio', 'Salon']);
+            $table->enum('tipo_proveedor', ['Producto', 'Servicio']);
             $table->timestamps();
         });
     }

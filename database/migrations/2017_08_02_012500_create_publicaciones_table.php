@@ -20,17 +20,12 @@ class CreatePublicacionesTable extends Migration
             $table->string('oferta')->nullable();
             $table->string('descripcion');
             $table->integer('estado')->default(1);
+            $table->integer('rubros_detalle_id')->unsigned();
+            $table->foreign('rubros_detalle_id')->references('id')->on('rubros_detalle');
+
             $table->timestamps();
         });
 
-        //Publicaciones & rubos = publicaciones_rubros
-        Schema::create('publicacion_rubro', function (Blueprint $table){
-            $table->increments('id');
-            $table->integer('publicacion_id')->unsigned();
-            $table->integer('rubros_detalle_id')->unsigned();
-            $table->foreign('publicacion_id')->references('id')->on('publicaciones');
-            $table->foreign('rubros_detalle_id')->references('id')->on('rubros_detalle');
-        });
     }
 
     /**
@@ -41,6 +36,5 @@ class CreatePublicacionesTable extends Migration
     public function down()
     {
         Schema::dropIfExists('publicaciones');
-        Schema::dropIfExists('publicaciones_rubros');
     }
 }

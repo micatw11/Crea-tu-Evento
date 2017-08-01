@@ -8,34 +8,17 @@ class Rubro extends Model
 {
     protected $table = 'rubros';
 
-    protected $fillable = [ 'proveedor_id',
-    						'tipo_rubro', 
-    						'categoria_id',
-    						'denominacion',
-    						'descripcion',
-    						'habilitacion',
-                            'fecha_habilitacion',
-    						'domicilio_id'
+    protected $fillable = [ 
+                            'nombre',
+    						'subcategoria_id',
     					  ];
     					      ///RELACIONES//
-    public function proveedor()
+    public function subcategoria()
     {
-        return $this->belongsTo('App\Proveedor');
+        return $this->belongsTo('App\Subcategoria');
     }
-
-    public function domicilio()
-    {     
-        return $this->belongsTo('App\Domicilio');    
-    }
-
-    public function publicaciones()
-    {
-        return $this->belongsToMany('App\Publicacion');
-    }
-
-      public function categoria()
-    {     
-        return $this->belongsTo('App\Categoria');    
+    public function rubrosDetalles(){
+        return $this->hasMany('App\RubrosDetalle');
     }
 
 }
