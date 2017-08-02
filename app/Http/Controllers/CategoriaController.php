@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Categoria;
 use App\Log;
@@ -130,5 +131,16 @@ class CategoriaController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function searchCategoria(Request $request)
+    {
+        $categorias = DB::table('categorias')
+            ->select('categorias.id as value', DB::raw('categorias.nombre as label'))
+                ->where('categorias.nombre','like' ,'%'.$request->q.'%')
+                ->orderBy('categorias.nombre', 'asc')
+                ->get();
+
+        return response()->json($categorias);
     }
 }

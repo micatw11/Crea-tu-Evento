@@ -56,7 +56,8 @@ export default {
                 'api/subcategoria/'+ this.subcategoria.id, 
                 {
                     _method: 'PATCH',
-                    nombre: this.subcategoria.nombre
+                    nombre: this.subcategoria.nombre,
+                    categoria_id: this.subcategoria.id
                 })
                 .then(response => {
                     this.$events.fire('reloadIndexSubcategoria')

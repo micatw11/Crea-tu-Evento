@@ -81,7 +81,7 @@ export default {
         validateBeforeSubmit: function() {
                     this.$events.fire('validarFormRubro')
         },
-        getSubcategoria: function(){
+        getRubro: function(){
             this.$http.get('api/rubro/'+ this.idRubro)
                 .then(response => {
                     this.datos = response.data.data

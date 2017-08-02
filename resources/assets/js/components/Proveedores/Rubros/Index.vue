@@ -122,7 +122,7 @@
                          dataClass: 'center aligned'
                     },
                 ],
-                url: '/api/rubros',
+                url: '/api/rubro',
                 idRubro: null,
                 showModificarRubro: false,
                 showNewRubro: false,

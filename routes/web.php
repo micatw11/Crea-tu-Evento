@@ -82,10 +82,17 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('categoria','CategoriaController@index')
         ->middleware('role:administrador,supervisor,operador,usuario,proveedor');
     Route::patch('categoria/{id}', 'CategoriaController@update')->middleware('role:administrador,supervisor');
+    Route::get('categoria/search', 'CategoriaController@searchCategoria');
     Route::get('categoria/{id}', 'CategoriaController@show');
+
 
     Route::get('subcategoria', 'SubcategoriaController@index');
     Route::get('subcategoria/{id}', 'SubcategoriaController@show');
     Route::post('subcategoria', 'SubcategoriaController@store');
     Route::patch('subcategoria/{id}','SubcategoriaController@update');
+
+    Route::get('rubro', 'RubroController@index');
+    Route::get('rubro/{id}', 'RubroController@show');
+    Route::post('rubro', 'RubroController@store');
+    Route::patch('rubro/{id}','RubroController@update');
 });
