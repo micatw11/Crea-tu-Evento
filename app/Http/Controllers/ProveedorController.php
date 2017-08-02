@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Proveedor;
 use App\Rol;
 use App\Domicilio;
+use App\RubrosDetalle;
 use App\Rubro;
 use App\Log;
 

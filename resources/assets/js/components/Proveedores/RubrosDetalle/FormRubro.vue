@@ -51,6 +51,32 @@
                 </div>
             </div>
 
+            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('subcategoria')&&validarRubro}">
+                <div v-if="categoria_id != null" class="col-sm-12">
+                    <label for="inputSubcategoria" class="control-label">Subcategoria</label><br>
+                    <select
+                        class="form-control"
+                        v-model="subcategoria_id"
+                        @change="cambiarSubcategoria(categoria_id)"
+                        placeholder="Seleccione una subCategoria" >
+                        <option 
+                            v-for="option in optionsSubcategorias" 
+                            v-bind:value="option.value">
+                            {{ option.text }}
+                        </option>
+
+                    </select>
+                    <!-- validacion vee-validation -->
+                    <span v-show="errors.has('subcategoria')&&validarRubro" class="help-block">{{ errors.first('subcategoria') }}</span>
+                    <!-- validacion api-->
+                    <div class="text-red" v-if="errorsApi.subcategoria">
+                        <div v-for="msj in errorsApi.subcategoria">
+                            <p>{{ msj }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('denominacion')&&validarRubro}">
                 <div class="col-sm-12">
                     <label for="inputDenominacion" class="control-label">Denominacion del rubro: </label><br>
@@ -248,7 +274,9 @@ export default {
             error: false,
             Comercio: null,
             optionsCategorias: [],
-            categoria_id: null
+            categoria_id: null,
+            optionsSubcategorias: [],
+            subcategoria_id: null
         }
     },
     components: {
@@ -291,6 +319,18 @@ export default {
                     let options = response.data.data
                     for (let categoria of options){
                         this.optionsCategorias.push({ text: categoria.nombre, value: categoria.id })
+                    }
+                })
+
+        },
+        getOptionsSubcategorias: function(categoria) {
+            loading(true)
+            this.$http.get('api/subcategoria/?q='+categoria
+                ).then(response => {
+                    let options = response.data.data
+                    loading(false)
+                    for (let subcategoria of options){
+                        this.optionsSubcategoria.push({ text: subcategoria.nombre, value: subcategoria.id })
                     }
                 })
 

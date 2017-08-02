@@ -35,7 +35,7 @@ export default {
     },
     data() {
         return {
-            rubros: { type: Object, default: null},//Peticion de datos
+            datos: { type: Object, default: null},//Peticion de datos
             rubro: { type: Object, default: null}, 
             errorsApi: {}
         }
@@ -84,7 +84,7 @@ export default {
         getSubcategoria: function(){
             this.$http.get('api/rubro/'+ this.idRubro)
                 .then(response => {
-                    this.rubros = response.data.data
+                    this.datos = response.data.data
                     this.cargarRubro()
 
                 }, response => {
@@ -94,7 +94,7 @@ export default {
                 })
         },
         cargarRubro: function(){
-            this.rubro = this.rubros
+            this.rubro = this.datos
         },
 
         closeModal: function(){
