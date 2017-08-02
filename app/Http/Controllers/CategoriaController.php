@@ -19,16 +19,13 @@ class CategoriaController extends Controller
 
         if ($request->filter) {
             $like = '%'.$request->filter.'%';
-            $query = $query->where('nombre','like',$like)->orWhere('descripcion','like',$like);
+            $query = $query->where('nombre','like',$like);
         }
 
         $categorias = $query->paginate(10);
 
-        if ($categorias) {
-            return response()->json($categorias);
-        } else {
-            return response()->json(['error' =>  'Internal Server Error'], 500);
-        }
+        return response()->json($categorias);
+
     }
 
     /**
@@ -40,8 +37,7 @@ class CategoriaController extends Controller
     public function create(Request $request)
     {
         return Categoria::create([
-                    'nombre'=> $request->nombre,
-                    'descripcion'=> $request->descripcion,
+                    'nombre'=> $request->nombre
             ]);
     }
 
@@ -60,20 +56,18 @@ class CategoriaController extends Controller
             return response()->json(['data' => 'OK'], 200);
         
         } else {
-            return response()->json([
-                'error' => 'Unauthorized'], 401);
+            return response()->json(['error' =>  'Internal Server Error'], 500);
         }
     }
 
-        /**
+    /**
      * @param $request
      */
     protected function validatorCategoria(Request $request)
     {
       return $this->validate($request, 
         [
-            'nombre'=>'required|min:4|max:55',
-            'descripcion'=> 'max:200'
+            'nombre'=>'required|min:4|max:55'
         ]);
     }
 

@@ -96,7 +96,7 @@
             
             </div>
             <div class="col-lg-4">
-                
+                <index-rubros></index-rubros>
             </div>
         </div>
 	</div>
@@ -115,7 +115,7 @@
     import EditCategoria from './Edit';
 
     import IndexSubcategorias from './../Subcategorias/Index.vue';
-
+   import IndexRubros from './../Rubros/Index.vue';
 
     Vue.component('filter-bar-categoria', FilterBar);
 
@@ -156,7 +156,7 @@
             }
         },
         components: {
-            VuetableP, VuetablePaginationP, VuetablePaginationInfoP, PathContent, NewCategoria, EditCategoria, IndexSubcategorias
+            VuetableP, VuetablePaginationP, VuetablePaginationInfoP, PathContent, NewCategoria, EditCategoria, IndexSubcategorias, IndexRubros
         },
         mounted() {
             this.$events.$on('filter-set', eventData => this.onFilterSet(eventData));

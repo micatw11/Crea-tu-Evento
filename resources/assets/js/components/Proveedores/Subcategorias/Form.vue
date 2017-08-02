@@ -2,12 +2,13 @@
 <div>
     <form role="form">
         <div class="col-sm-6">
-            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('tipo_rubro')&&validarCategoria}">
+            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('nombre')&&validarSubcategoria}">
                 <div class="col-sm-12">
-                    <label for="inputCategoria" class="control-label">Nombre</label><br>
-                       <input name="nombre" v-validate="'required'" type="text" v-model="categoria.nombre" class="form-control" placeholder="Nombre Categoria">
+                    <label for="inputSubcategoria" class="control-label">Nombre</label><br>
+                       <input name="nombre" v-validate="'required'" type="text" v-model="subcategoria.nombre" 
+                        class="form-control" placeholder="Nombre">
                             <!-- validacion vee-validation -->
-                    <span v-show="errors.has('nombre')&&validarCategoria" class="help-block">{{ errors.first('nombre') }}</span>
+                    <span v-show="errors.has('nombre')&&validarSubcategoria" class="help-block">{{ errors.first('nombre') }}</span>
                     <!-- validacion api-->
                     <div class="text-red" v-if="errorsApi.nombre">
                         <div v-for="msj in errorsApi.nombre">
@@ -30,7 +31,7 @@ import vSelect from "vue-select";
 
 export default {
     props: {
-            categoria: {
+            subcategoria: {
                 type: Object,
                 required: true
             },
@@ -45,28 +46,27 @@ export default {
     },
     data() {
         return {
-            localidades: [],
-            validarCategoria: false
+            validarSubcategoria: false
         }
     },
     components: {
         vSelect
     },
    mounted() {
-        this.$events.$on('validarFormCategoria', () =>this.validateBeforeSubmit());
+        this.$events.$on('validarFormSubcategoria', () => this.validateBeforeSubmit());
     },
     methods: {
         //form validation
         validateBeforeSubmit: function() {
          this.$validator.validateAll().then(() => {
-                    this.validarCategoria = false; 
+                    this.validarSubcategoria = false; 
                     if (this.nuevo){
-                        this.$emit('validadoNewCategoria')
+                        this.$emit('validadoNewSubcategoria')
                     }else{
-                        this.$emit('validadoEditCategoria')
+                        this.$emit('validadoEditSubcategoria')
                     }
                 }).catch(() => {
-                    this.validarCategoria = true;
+                    this.validarSubcategoria = true;
                 });
         }
     }

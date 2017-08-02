@@ -4,20 +4,20 @@
 	        <div class="box-header">
 	            <div class="col-sm-2">
 	                <button class="btn btn-primary btn-sm"
-	                @click="showNewSubcategoria = true">
-	                Crear Subcategoria
+	                @click="showNewRubro = true">
+	                Crear Rubro
 	                </button>
 	            </div>
 	        </div>
-	        <div v-if="showNewSubcategoria" class="modal" role="dialog" :style="{ display : showNewSubcategoria  ? 'block' : 'none' }">
+	        <div v-if="showNewRubro" class="modal" role="dialog" :style="{ display : showNewRubro  ? 'block' : 'none' }">
 	            <div class="modal-dialog">
 	            <!-- Modal content-->
 	                <div class="modal-content">
 	                    <div class="modal-header">
 	                        <button type="button" class="close" @click="closeModal()">&times;</button>
-	                        <h4 class="modal-title">Crear Subcategoria</h4>
+	                        <h4 class="modal-title">Crear Rubro</h4>
 	                    </div>
-	                    <new-subcategoria></new-subcategoria>
+	                    <new-rubro></new-rubro>
 	                </div>
 	            </div>    
 	        </div>
@@ -26,11 +26,11 @@
 	        <div class="col-xs-12">
 	            <div class="box box-primary">
 	                <div class="box-header">
-	                    <filter-bar-subcategoria></filter-bar-subcategoria>
+	                    <filter-bar-rubro></filter-bar-rubro>
 	                </div>
 	                <!-- /.box-header -->
 	                <div class="box-body table-responsive no-padding">
-	                    <vuetable-s
+	                    <vuetable-r
 	                        :fields="tableColumns"
 	                        tableClass="table table-bordered"
 	                        :noDataTemplate="noDataTemplate"
@@ -47,27 +47,27 @@
 
 	                                    <!-- Modificar Categoria -->
 	                                    <button class="btn-xs btn-default"
-	                                        @click="showModificarSubcategoria = true, idSubcategoria = props.rowData.id">
+	                                        @click="showModificarRubro = true, idRubro = props.rowData.id">
 	                                        <i class="glyphicon glyphicon-pencil"></i> Modificar
 	                                    </button>
 	                                </div>
 	                            </template>
-	                    </vuetable-s>
+	                    </vuetable-r>
 	                </div>
 
 	                <div class="box-footer clearfix">
 
-	                    <vuetable-pagination-info-s
+	                    <vuetable-pagination-info-r
 	                        ref="paginationInfo"
 	                        :info-template='info'
 	                        :no-data-template='noData'>
-	                    </vuetable-pagination-info-s>
+	                    </vuetable-pagination-info-r>
 
-	                    <vuetable-pagination-s 
+	                    <vuetable-pagination-r 
 	                        ref="pagination"
 	                        :css="css.pagination"
 	                        @vuetable-pagination:change-page="onChangePage">
-	                    </vuetable-pagination-s>
+	                    </vuetable-pagination-r>
 
 	                </div>
 
@@ -75,31 +75,31 @@
 	        </div>
 	    </div>
 	    <!-- Modal Modificar-->
-	    <div v-if="showModificarSubcategoria" id="modificar" class="modal" role="dialog" :style="{ display : showModificarSubcategoria  ? 'block' : 'none' }">
+	    <div v-if="showModificarRubro" id="modificar" class="modal" role="dialog" :style="{ display : showModificarRubro  ? 'block' : 'none' }">
 	        <div class="modal-dialog">
 	          <!-- Modal content-->
 	            <div class="modal-content">
 	                <div class="modal-header">
 	                    <button type="button" class="close" @click="closeModal()">&times;</button>
-	                    <h4 class="modal-title">Modificar Subcategoria</h4>
+	                    <h4 class="modal-title">Modificar Rubro</h4>
 	                </div>
-	                <edit-subcategoria :idSubcategoria="idSubcategoria"></edit-subcategoria>
+	                <edit-rubro :idRubro="idRubro"></edit-rubro>
 	            </div>
 	        </div>
 	    </div>
 	</div>
 </template>
 <script>
-	import VuetableS from 'vuetable-2/src/components/Vuetable';
-    import VuetablePaginationS from 'vuetable-2/src/components/VuetablePagination';
-    import VuetablePaginationInfoS from 'vuetable-2/src/components/VuetablePaginationInfo';
+	import VuetableR from 'vuetable-2/src/components/Vuetable';
+    import VuetablePaginationR from 'vuetable-2/src/components/VuetablePagination';
+    import VuetablePaginationInfoR from 'vuetable-2/src/components/VuetablePaginationInfo';
 
     import Style from './../../Layouts/Style-css.js';
-    import FilterBar from './FilterBarSubcategoria';
-    import NewSubcategoria from './New';
-    import EditSubcategoria from './Edit';
+    import FilterBar from './FilterBarRubro';
+    import NewRubro from './New';
+    import EditRubro from './Edit';
 
-    Vue.component('filter-bar-subcategoria', FilterBar);
+    Vue.component('filter-bar-rubro', FilterBar);
     export default	{
     	data(){
             return {
@@ -122,21 +122,21 @@
                          dataClass: 'center aligned'
                     },
                 ],
-                url: '/api/subcategoria',
-                idSubcategoria: null,
-                showModificarSubcategoria: false,
-                showNewSubcategoria: false,
+                url: '/api/rubros',
+                idRubro: null,
+                showModificarRubro: false,
+                showNewRubro: false,
                 validar: false
 
             }
     	},
         components: {
-            VuetableS, VuetablePaginationS, VuetablePaginationInfoS, NewSubcategoria, EditSubcategoria
+            VuetableR, VuetablePaginationR, VuetablePaginationInfoR, NewRubro, EditRubro
         },
         mounted() {
-            this.$events.$on('filter-setSub', eventData => this.onFilterSet(eventData));
+            this.$events.$on('filter-setRubro', eventData => this.onFilterSet(eventData));
             this.$events.on('cerrar', () => this.closeModal());
-            this.$events.on('reloadIndexSubcategoria', () => Vue.nextTick( () => this.$refs.vuetable.refresh()) );
+            this.$events.on('reloadIndexRubro', () => Vue.nextTick( () => this.$refs.vuetable.refresh()) );
 
         },
         methods: {
@@ -156,17 +156,17 @@
                 this.$nextTick( () => this.$refs.vuetable.refresh() )
             },
             onActionModificar(data, index){
-                this.showModificarSubcategoria = true, 
-                this.idSubcategoria=data.id
+                this.showModificarRubro = true, 
+                this.idRubro=data.id
             },
             closeModal: function(){
-                this.showModificarSubcategoria = false;
-                this.showNewSubcategoria= false;
-                this.idSubcategoria = null;
+                this.showModificarRubro = false;
+                this.showNewRubro= false;
+                this.idRubro = null;
             },
             clearForm(){
-                this.showModificarSubcategoria= false;
-                this.showNewSubcategoria= false;
+                this.showModificarRubro= false;
+                this.showNewRubro= false;
                 this.validar = false;
             }
         },

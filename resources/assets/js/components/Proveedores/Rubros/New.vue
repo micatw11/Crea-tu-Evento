@@ -1,12 +1,12 @@
 <template>
     <div class="modal-body">
         <div class="box-body">
-        	<form-categoria 
-                :categoria="categoria"  
-                :nuevo= "true"
+        	<form-rubro 
+                :rubro="rubro"  
+                :nuevo="true"
                 :errorsApi="errorsApi"
-                @validadoNewCategoria="sendForm()">
-            </form-categoria>
+                @validadoNewRubro="sendForm()">
+            </form-rubro>
         </div>
         <div class="modal-footer" style="text-align:center;">
             <button class="btn btn-default" @click="closeModal()">
@@ -22,30 +22,30 @@
 
 <script>
 import auth from '../../../auth.js';
-import FormCategoria from './Form.vue';
+import FormRubro from './Form.vue';
 
 export default {
     data() {
         return {
-            categoria:{
+            rubro:{
                 nombre: null
             },
             errorsApi: {}
         }
     },
     components: {
-        FormCategoria
+        FormRubro
     },
     methods: {
         //envio de formulario de nueva Categoria
         sendForm: function() {
             this.$http.post(
-                'api/categoria', 
+                'api/rubro', 
                 {
-                    nombre: this.categoria.nombre
+                    nombre: this.rubro.nombre
                 })
                 .then(response => {
-                    this.$events.fire('reloadIndexCategoria')
+                    this.$events.fire('reloadIndexRubro')
                     this.closeModal(),
                     this.errorsApi= {},
                     this.$toast.success({
@@ -66,11 +66,11 @@ export default {
         },
         //form validation
         validateBeforeSubmit: function() {                 
-                    this.$events.fire('validarFormCategoria')
+                    this.$events.fire('validarFormRubro')
 
         },
         resetForm() {
-            this.categoria={
+            this.rubro={
                 nombre: null
             }
         },

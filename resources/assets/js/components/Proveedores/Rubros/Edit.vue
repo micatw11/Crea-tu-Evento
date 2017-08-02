@@ -1,12 +1,12 @@
 <template>
     <div>
         <div class="modal-body">
-        	<form-categoria 
-                :categoria="categoria" 
+        	<form-rubro
+                :rubro="rubro" 
                 :nuevo="false"
-                @validadoEditCategoria="sendFormEdit()"  
+                @validadoEditRubro="sendFormEdit()"  
                 :errorsApi="errorsApi" >
-            </form-categoria>
+            </form-rubro>
         </div>
         <div class="modal-footer">
             <div class="col-sm-12 box-footer clearfix" style="text-align:center;">
@@ -24,41 +24,41 @@
 
 <script>
 import auth from '../../../auth.js';
-import FormCategoria from './Form.vue';
+import FormRubro from './Form.vue';
 
 export default {
     props: {
-            idCategoria: {
+            idRubro: {
                 type: Number,
                 required: true
             },
     },
     data() {
         return {
-            categorias: { type: Object, default: null},//Peticion de datos
-            categoria: { type: Object, default: null}, 
+            rubros: { type: Object, default: null},//Peticion de datos
+            rubro: { type: Object, default: null}, 
             errorsApi: {}
         }
     },
     components: {
-        FormCategoria
+        FormRubro
     },
     beforeMount: function(){
         //selected data
-        this.getCategoria();
+        this.getRubro();
         
     },
     methods: {
-        //envio de formulario de modificación de informacion de usuario
+        //envio de formulario de modificación
         sendFormEdit: function() {
             this.$http.post(
-                'api/categoria/'+ this.categoria.id, 
+                'api/rubro/'+ this.rubro.id, 
                 {
                     _method: 'PATCH',
-                    nombre: this.categoria.nombre
+                    nombre: this.rubro.nombre
                 })
                 .then(response => {
-                    this.$events.fire('reloadIndexCategoria')
+                    this.$events.fire('reloadIndexRubro')
                     this.closeModal();
                     this.errorsApi= {},
                     this.$toast.success({
@@ -79,13 +79,13 @@ export default {
 
         //form validation
         validateBeforeSubmit: function() {
-                    this.$events.fire('validarFormCategoria')
+                    this.$events.fire('validarFormRubro')
         },
-        getCategoria: function(){
-            this.$http.get('api/categoria/'+ this.idCategoria)
+        getSubcategoria: function(){
+            this.$http.get('api/rubro/'+ this.idRubro)
                 .then(response => {
-                    this.categorias = response.data.data
-                    this.cargarCategoria()
+                    this.rubros = response.data.data
+                    this.cargarRubro()
 
                 }, response => {
                     if(response.status === 404){
@@ -93,8 +93,8 @@ export default {
                     }
                 })
         },
-        cargarCategoria: function(){
-            this.categoria = this.categorias
+        cargarRubro: function(){
+            this.rubro = this.rubros
         },
 
         closeModal: function(){

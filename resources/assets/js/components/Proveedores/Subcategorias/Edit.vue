@@ -1,12 +1,12 @@
 <template>
     <div>
         <div class="modal-body">
-        	<form-categoria 
-                :categoria="categoria" 
+        	<form-subcategoria 
+                :subcategoria="subcategoria" 
                 :nuevo="false"
-                @validadoEditCategoria="sendFormEdit()"  
+                @validadoEditSubcategoria="sendFormEdit()"  
                 :errorsApi="errorsApi" >
-            </form-categoria>
+            </form-subcategoria>
         </div>
         <div class="modal-footer">
             <div class="col-sm-12 box-footer clearfix" style="text-align:center;">
@@ -24,41 +24,42 @@
 
 <script>
 import auth from '../../../auth.js';
-import FormCategoria from './Form.vue';
+import FormSubcategoria from './Form.vue';
 
 export default {
     props: {
-            idCategoria: {
+            idSubcategoria: {
                 type: Number,
                 required: true
             },
     },
     data() {
         return {
-            categorias: { type: Object, default: null},//Peticion de datos
-            categoria: { type: Object, default: null}, 
-            errorsApi: {}
+            subcategorias: { type: Object, default: null},//Peticion de datos
+            subcategoria: { type: Object, default: null}, 
+            errorsApi: {},
+            error: false
         }
     },
     components: {
-        FormCategoria
+        FormSubcategoria
     },
     beforeMount: function(){
         //selected data
-        this.getCategoria();
+        this.getSubcategoria();
         
     },
     methods: {
-        //envio de formulario de modificación de informacion de usuario
+        //envio de formulario de modificación
         sendFormEdit: function() {
             this.$http.post(
-                'api/categoria/'+ this.categoria.id, 
+                'api/subcategoria/'+ this.subcategoria.id, 
                 {
                     _method: 'PATCH',
-                    nombre: this.categoria.nombre
+                    nombre: this.subcategoria.nombre
                 })
                 .then(response => {
-                    this.$events.fire('reloadIndexCategoria')
+                    this.$events.fire('reloadIndexSubcategoria')
                     this.closeModal();
                     this.errorsApi= {},
                     this.$toast.success({
@@ -66,6 +67,7 @@ export default {
                         message:'Se han realizado correctamente los cambios. :D'
                     });
                 }, response => {
+                    this.validarCategoria= false;
                     this.$toast.error({
                         title:'¡Error!',
                         message:'No se han podido guardar los cambios. :('
@@ -78,14 +80,15 @@ export default {
         },
 
         //form validation
-        validateBeforeSubmit: function() {
-                    this.$events.fire('validarFormCategoria')
+        validateBeforeSubmit: function() {                 
+                    this.validarSubcategoria = true;
+                    this.$events.fire('validarFormSubcategoria')
         },
-        getCategoria: function(){
-            this.$http.get('api/categoria/'+ this.idCategoria)
+        getSubcategoria: function(){
+            this.$http.get('api/subcategoria/'+ this.idSubcategoria)
                 .then(response => {
-                    this.categorias = response.data.data
-                    this.cargarCategoria()
+                    this.subcategorias = response.data.data
+                    this.cargarSubcategoria()
 
                 }, response => {
                     if(response.status === 404){
@@ -93,8 +96,8 @@ export default {
                     }
                 })
         },
-        cargarCategoria: function(){
-            this.categoria = this.categorias
+        cargarSubcategoria: function(){
+            this.subcategoria = this.subcategorias
         },
 
         closeModal: function(){

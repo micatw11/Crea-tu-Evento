@@ -1,12 +1,12 @@
 <template>
     <div class="modal-body">
         <div class="box-body">
-        	<form-categoria 
-                :categoria="categoria"  
-                :nuevo= "true"
+        	<form-subcategoria 
+                :subcategoria="subcategoria"  
+                :nuevo="true"
                 :errorsApi="errorsApi"
-                @validadoNewCategoria="sendForm()">
-            </form-categoria>
+                @validadoNewSubcategoria="sendForm()">
+            </form-subcategoria>
         </div>
         <div class="modal-footer" style="text-align:center;">
             <button class="btn btn-default" @click="closeModal()">
@@ -22,30 +22,30 @@
 
 <script>
 import auth from '../../../auth.js';
-import FormCategoria from './Form.vue';
+import FormSubcategoria from './Form.vue';
 
 export default {
     data() {
         return {
-            categoria:{
+            subcategoria:{
                 nombre: null
             },
             errorsApi: {}
         }
     },
     components: {
-        FormCategoria
+        FormSubcategoria
     },
     methods: {
-        //envio de formulario de nueva Categoria
+        //envio de formulario de nueva
         sendForm: function() {
             this.$http.post(
-                'api/categoria', 
+                'api/subcategoria', 
                 {
-                    nombre: this.categoria.nombre
+                    nombre: this.subcategoria.nombre
                 })
                 .then(response => {
-                    this.$events.fire('reloadIndexCategoria')
+                    this.$events.fire('reloadIndexSubcategoria')
                     this.closeModal(),
                     this.errorsApi= {},
                     this.$toast.success({
@@ -66,11 +66,12 @@ export default {
         },
         //form validation
         validateBeforeSubmit: function() {                 
-                    this.$events.fire('validarFormCategoria')
+                    this.validarSubcategoria = true;
+                    this.$events.fire('validarFormSubcategoria')
 
         },
         resetForm() {
-            this.categoria={
+            this.subcategoria={
                 nombre: null
             }
         },
