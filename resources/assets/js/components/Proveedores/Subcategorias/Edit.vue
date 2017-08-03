@@ -4,21 +4,22 @@
         	<form-subcategoria 
                 :subcategoria="subcategoria" 
                 :nuevo="false"
+                :categorias="categorias"
                 @validadoEditSubcategoria="sendFormEdit()"  
                 :errorsApi="errorsApi" >
             </form-subcategoria>
         </div>
-        <div class="modal-footer">
-            <div class="col-sm-12 box-footer clearfix" style="text-align:center;">
-                <button class="btn btn-default" @click="closeModal()">
-                    <i class="glyphicon glyphicon-chevron-left"></i>
-                    Atras
-                </button>
-                <button @click="validateBeforeSubmit()" type="button" class="btn btn-primary">
-                    Guargar
-                </button>
-            </div>
+
+        <div class="col-sm-12 box-footer clearfix" style="text-align:center;">
+            <button class="btn btn-default" @click="closeModal()">
+                <i class="glyphicon glyphicon-chevron-left"></i>
+                Atras
+            </button>
+            <button @click="validateBeforeSubmit()" type="button" class="btn btn-primary">
+                Guargar
+            </button>
         </div>
+
     </div>   
 </template>
 
@@ -35,9 +36,10 @@ export default {
     },
     data() {
         return {
-            subcategorias: { type: Object, default: null},//Peticion de datos
+            data: { type: Object, default: null},//Peticion de datos
             subcategoria: { type: Object, default: null}, 
             errorsApi: {},
+            categorias: [],
             error: false
         }
     },
@@ -47,7 +49,7 @@ export default {
     beforeMount: function(){
         //selected data
         this.getSubcategoria();
-        
+        this.getOptionsCategories();
     },
     methods: {
         //envio de formulario de modificación
@@ -57,7 +59,7 @@ export default {
                 {
                     _method: 'PATCH',
                     nombre: this.subcategoria.nombre,
-                    categoria_id: this.subcategoria.id
+                    categoria_id: this.subcategoria.categoria_id
                 })
                 .then(response => {
                     this.$events.fire('reloadIndexSubcategoria')
@@ -79,7 +81,16 @@ export default {
                     }
                 })
         },
-
+        //obtiene lista de categorias 
+        getOptionsCategories: function() {
+            this.$http.get('api/categoria/'
+                ).then(response => {
+                    let data = response.data.data
+                    for (let categoria of data){
+                        this.categorias.push({ text: categoria.nombre, value: categoria.id });
+                    }
+                })
+        },
         //form validation
         validateBeforeSubmit: function() {                 
                     this.validarSubcategoria = true;
@@ -88,7 +99,7 @@ export default {
         getSubcategoria: function(){
             this.$http.get('api/subcategoria/'+ this.idSubcategoria)
                 .then(response => {
-                    this.subcategorias = response.data.data
+                    this.data = response.data.data
                     this.cargarSubcategoria()
 
                 }, response => {
@@ -98,9 +109,8 @@ export default {
                 })
         },
         cargarSubcategoria: function(){
-            this.subcategoria = this.subcategorias
+            this.subcategoria = this.data
         },
-
         closeModal: function(){
             this.$events.fire('cerrar');
         }

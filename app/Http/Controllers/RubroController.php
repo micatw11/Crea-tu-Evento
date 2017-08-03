@@ -14,7 +14,7 @@ class RubroController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Rubro::orderBy('nombre', 'asc');
+        $query = Rubro::with('subcategoria')->orderBy('nombre', 'asc');
 
         if ($request->filter) {
             $like = '%'.$request->filter.'%';

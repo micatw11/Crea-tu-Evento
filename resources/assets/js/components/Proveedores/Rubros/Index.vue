@@ -1,6 +1,7 @@
 <template>
 	<div>
 	    <div>
+	    <!--
 	        <div class="box-header">
 	            <div class="col-sm-2">
 	                <button class="btn btn-primary btn-sm"
@@ -9,6 +10,7 @@
 	                </button>
 	            </div>
 	        </div>
+	    -->
 	        <div v-if="showNewRubro" class="modal" role="dialog" :style="{ display : showNewRubro  ? 'block' : 'none' }">
 	            <div class="modal-dialog">
 	            <!-- Modal content-->
@@ -112,6 +114,12 @@
                     {
                         name: 'nombre',
                         title: 'Nombre',
+                        titleClass: 'text-center',
+                        dataClass: 'text-center'           
+                    },
+                    {
+                        name: 'subcategoria.nombre',
+                        title: 'Subcategoria',
                         titleClass: 'text-center',
                         dataClass: 'text-center'           
                     },

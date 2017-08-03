@@ -1,7 +1,7 @@
 <template>
 <div>
     <form role="form">
-        <div class="col-sm-6">
+        <div class="col-sm-12">
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('nombre')&&validarSubcategoria}">
                 <div class="col-sm-12">
                     <label for="inputSubcategoria" class="control-label">Nombre</label><br>
@@ -22,22 +22,21 @@
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('categoria')&&validarSubcategoria}">
                 <div class="col-sm-12">
                     <label class="control-label">Categoria</label><br>
-                    <label class="control-label">Crear Categoria</label> 
-                     <input type="checkbox" name="newCategoria" v-model="newCategoria">{{ formatNewCategory() }}
-                    <template  v-if="!newCategoria">
-                        <v-select
-                            :debounce="250"
-                            v-validate="'required'" 
-                            data-vv-name="categoria"
-                            v-model="categoriaSelect"
-                            :on-search="getOptions" 
-                            :options="categorias"
-                            placeholder="Seleccione una categoria">
-                        </v-select>
-                    </template>
-                    <template v-else>
-                        <input type="text" name="categoria" placeholder="Nombre">
-                    </template>
+
+                    <select 
+                        nombre="categoria" 
+                        @change="changeCategory()"
+                        v-model="categoria_id" 
+                        class="form-control" 
+                        placeholder="Seleccione una categoria">
+                        <option 
+                            v-for="option in categorias" 
+                            v-bind:value="option.value" 
+                            v-bind:selected="option.value == subcategoria.categoria_id">
+                            {{option.text}}
+                        </option>
+                    </select>
+
                     
                     <!-- validacion vee-validation -->
                     <span v-show="errors.has('categoria')&&validarSubcategoria" class="help-block">{{ errors.first('categoria') }}</span>
@@ -58,10 +57,12 @@
 
 <script>
 import auth from '../../../auth.js';
-import vSelect from "vue-select";
 
 export default {
     props: {
+            categorias:{
+                required: true
+            },
             subcategoria: {
                 type: Object,
                 required: true
@@ -78,24 +79,19 @@ export default {
     data() {
         return {
             validarSubcategoria: false,
-            crearCategoria: false,
-            categorias: [],
-            categoriaSelect: null,
-            newCategoria: false
+            categoria_id: null
         }
     },
-    components: {
-        vSelect
-    },
-   mounted() {
+    mounted() {
         this.$events.$on('validarFormSubcategoria', () => this.validateBeforeSubmit());
+        //this.loadDefaultOption();  
     },
     methods: {
         //form validation
         validateBeforeSubmit: function() {
          this.$validator.validateAll().then(() => {
-                    this.validarSubcategoria = false; 
-                    this.subcategoria.categoria_id = this.categoriaSelect.value
+                    this.validarSubcategoria = false;
+
                     if (this.nuevo){
                         this.$emit('validadoNewSubcategoria')
                     }else{
@@ -105,17 +101,8 @@ export default {
                     this.validarSubcategoria = true;
                 });
         },
-        //obtiene lista de categorias segun correponda
-        getOptions: function(search, loading) {
-            loading(true)
-            this.$http.get('api/categoria/search/?q='+ search
-                ).then(response => {
-                    this.categorias = response.data
-                    loading(false)
-                })
-        },
-        formatNewCategory(){
-            return this.newCategoria ? 'Si' : 'No';
+        changeCategory: function(){
+            this.subcategoria.categoria_id = this.categoria_id;
         }
     }
 }

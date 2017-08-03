@@ -7,7 +7,7 @@
                         <div class="col-sm-2">
                             <button class="btn btn-primary btn-sm"
                             @click="showNewCategoria = true">
-                            Crear Categoria
+                            Agregar
                             </button>
                         </div>
                     </div>

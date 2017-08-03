@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Categoria;
 use App\Subcategoria;
 
 
@@ -15,7 +16,7 @@ class SubcategoriaController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Subcategoria::orderBy('nombre', 'asc');
+        $query = Subcategoria::with('categoria')->orderBy('nombre', 'asc');
 
         if ($request->filter) {
             $like = '%'.$request->filter.'%';
@@ -29,13 +30,8 @@ class SubcategoriaController extends Controller
 
     public function store(Request $request){
         $this->validatorSubcategoria($request);
-        $categoria= $this->create($request);
-        
-        if ($categoria){
-            return response()->json(['data' => 'OK'], 200);
-        } else {
-            return response()->json(['error' =>  'Internal Server Error'], 500);
-        }
+        $subcategoria= $this->create($request);
+        return response()->json(['data' => 'OK'], 200);
     }
 
     /**
@@ -58,7 +54,8 @@ class SubcategoriaController extends Controller
     protected function create(Request $request)
     {
         return Subcategoria::create([
-                    'nombre'=> $request->nombre
+                    'nombre'=> $request->nombre,
+                    'categoria_id' => $request->categoria_id
             ]);
     }
 
