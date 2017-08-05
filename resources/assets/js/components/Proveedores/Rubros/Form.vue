@@ -25,11 +25,12 @@
                     <label class="control-label">Categoria</label><br>
 
                     <select 
-                        nombre="categoria" 
+                        name="categoria" 
                         @change="changeCategory()"
                         v-model="categoria_id" 
                         class="form-control" 
                         placeholder="Seleccione una categoria">
+                        <option disabled value="">Seleccione una categoria</option>
                         <option v-for="option in categorias" v-bind:value="option.value">{{option.text}}</option>
                     </select>
 
@@ -47,16 +48,17 @@
         </div>
 
         <div class="col-sm-6">
-            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('categoria')&&validarRubro}">
+            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('subcategoria')&&validarRubro}">
                 <div class="col-sm-12">
                     <label class="control-label">Subcategoria</label><br>
 
                     <select 
-                        nombre="subcategoria" 
+                        name="subcategoria" 
                         @change="changeSubcategory()"
                         v-model="subcategoria_id" 
                         class="form-control" 
-                        placeholder="Seleccione una subcategoria">
+                        v-validate data-vv-rules="required">
+                        <option disabled value="">Seleccione una subcategoria</option>
                         <option v-for="option in subcategorias" v-bind:value="option.value">{{option.text}}</option>
                     </select>
 
@@ -80,6 +82,7 @@
 
 <script>
 import auth from '../../../auth.js';
+import vSelect from "vue-select";
 
 export default {
     props: {
@@ -100,8 +103,8 @@ export default {
         return {
             validarRubro: false,
             subcategorias: [],
-            subcategoria_id: null,
-            categoria_id: null,
+            subcategoria_id: '',
+            categoria_id: '',
             categorias: []
         }
     },
@@ -109,8 +112,14 @@ export default {
         this.getOptionsSubcategory();
         this.getOptionsCategory();
     },
+    components: {
+        vSelect
+    },
     mounted() {
         this.$events.$on('validarFormRubro', () => this.validateBeforeSubmit());
+    },
+    created(){
+        this.loadDefaultOptions()
     },
     methods: {
         //form validation
@@ -132,6 +141,7 @@ export default {
                 ).then(response => {
                     let data = response.data.data
                     for (let subcategoria of data){
+                        if(subcategoria.categoria_id == this.categoria_id)
                         this.subcategorias.push({ text: subcategoria.nombre, value: subcategoria.id });
                     }
                 })
@@ -150,8 +160,21 @@ export default {
                 })
         },
         changeCategory: function(){
-            this.subcategoria.categoria_id = this.categoria_id;
+            //this.subcategoria.categoria_id = this.categoria_id;
+            this.subcategorias = [];
+            this.subcategoria_id = null;
+            this.$http.get('api/categoria/' +this.categoria_id
+                ).then(response => {
+                    let data = response.data.data
+                    for (let subcategoria of data.subcategorias){
+                        this.subcategorias.push({ text: subcategoria.nombre, value: subcategoria.id });
+                    }
+                })
         },
+        loadDefaultOptions: function(){
+            this.categoria_id = this.rubro.subcategoria.categoria.id
+            this.subcategoria_id = this.rubro.subcategoria.id
+        }
     }
 }
 </script>

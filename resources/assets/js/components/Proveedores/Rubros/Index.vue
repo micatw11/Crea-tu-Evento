@@ -124,6 +124,12 @@
                         dataClass: 'text-center'           
                     },
                     {
+                        name: 'subcategoria.categoria.nombre',
+                        title: 'Categoria',
+                        titleClass: 'text-center',
+                        dataClass: 'text-center'           
+                    },
+                    {
                          name: '__slot:actions',   // <----
                          title: 'Acciones',
                          titleClass: 'center aligned',

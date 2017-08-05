@@ -41,7 +41,8 @@ class SubcategoriaController extends Controller
     {
       return $this->validate($request, 
         [
-            'nombre'=>'required|min:4|max:55'
+            'nombre'=>'required|min:4|max:55',
+            'categoria_id'=>'required|exists:categorias,id'
         ]);
     }
 
@@ -67,7 +68,7 @@ class SubcategoriaController extends Controller
      */
     public function show($id)
     {
-          $subcategoria= Subcategoria::where('id', $id)->firstOrFail();
+          $subcategoria= Subcategoria::where('id', $id)->with('categoria')->firstOrFail();
 
         if ($subcategoria) {
             return response()->json(['data' => $subcategoria], 200);

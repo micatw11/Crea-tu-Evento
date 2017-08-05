@@ -14,7 +14,7 @@ class RubroController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Rubro::with('subcategoria')->orderBy('nombre', 'asc');
+        $query = Rubro::with('subcategoria.categoria')->orderBy('nombre', 'asc');
 
         if ($request->filter) {
             $like = '%'.$request->filter.'%';
@@ -44,7 +44,8 @@ class RubroController extends Controller
     {
       return $this->validate($request, 
         [
-            'nombre'=>'required|min:4|max:55'
+            'nombre'=>'required|min:4|max:55',
+            'subcategoria_id' => 'required|exists:subcategorias,id'
         ]);
     }
 
@@ -69,7 +70,7 @@ class RubroController extends Controller
      */
     public function show($id)
     {
-          $rubros= Rubro::where('id', $id)->firstOrFail();
+          $rubros= Rubro::where('id', $id)->with('subcategoria.categoria')->firstOrFail();
 
         if ($rubros) {
             return response()->json(['data' => $rubros], 200);

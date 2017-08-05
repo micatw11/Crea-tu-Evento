@@ -80,7 +80,7 @@ class CategoriaController extends Controller
      */
     public function show($id)
     {
-          $categoria= Categoria::where('id', $id)->firstOrFail();
+          $categoria= Categoria::where('id', $id)->with('subcategorias')->firstOrFail();
 
         if ($categoria) {
             return response()->json(['data' => $categoria], 200);

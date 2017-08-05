@@ -18,25 +18,22 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-12">
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('categoria')&&validarSubcategoria}">
                 <div class="col-sm-12">
                     <label class="control-label">Categoria</label><br>
 
                     <select 
-                        nombre="categoria" 
+                        name="categoria" 
                         @change="changeCategory()"
                         v-model="categoria_id" 
                         class="form-control" 
-                        placeholder="Seleccione una categoria">
-                        <option 
-                            v-for="option in categorias" 
-                            v-bind:value="option.value" 
-                            v-bind:selected="option.value == subcategoria.categoria_id">
-                            {{option.text}}
-                        </option>
+                        v-validate="'required'">
+                            <option disabled value="">Seleccione una categoria</option>
+                            <option v-for="option in categorias" v-bind:value="option.value">
+                                {{option.text}}
+                            </option>
                     </select>
-
                     
                     <!-- validacion vee-validation -->
                     <span v-show="errors.has('categoria')&&validarSubcategoria" class="help-block">{{ errors.first('categoria') }}</span>
@@ -57,41 +54,47 @@
 
 <script>
 import auth from '../../../auth.js';
+import vSelect from "vue-select";
 
 export default {
     props: {
-            categorias:{
-                required: true
-            },
-            subcategoria: {
-                type: Object,
-                required: true
-            },
-            nuevo: {
-                type: Boolean,
-                required: true
-            },
-            errorsApi: {
-                type: Object,
-                required: true
-            }
+        subcategoria: {
+            type: Object,
+            required: true
+        },
+        nuevo: {
+            type: Boolean,
+            required: true
+        },
+        errorsApi: {
+            type: Object,
+            required: true
+        }
     },
     data() {
         return {
             validarSubcategoria: false,
-            categoria_id: null
+            categoria_id: null,
+            categorias: []
         }
+    },
+    beforeMount(){
+        this.getOptionsCategories();
     },
     mounted() {
         this.$events.$on('validarFormSubcategoria', () => this.validateBeforeSubmit());
-        //this.loadDefaultOption();  
+    },
+    created(){
+        this.loadDefaultOption();  
+    },
+    components: {
+        vSelect
     },
     methods: {
         //form validation
         validateBeforeSubmit: function() {
          this.$validator.validateAll().then(() => {
                     this.validarSubcategoria = false;
-
                     if (this.nuevo){
                         this.$emit('validadoNewSubcategoria')
                     }else{
@@ -103,6 +106,19 @@ export default {
         },
         changeCategory: function(){
             this.subcategoria.categoria_id = this.categoria_id;
+        },
+        //obtiene lista de categorias 
+        getOptionsCategories: function() {
+            this.$http.get('api/categoria/'
+                ).then(response => {
+                    let data = response.data.data
+                    for (let categoria of data){
+                        this.categorias.push({ value: categoria.id, text: categoria.nombre });
+                    }
+                })
+        },
+        loadDefaultOption: function(){
+            this.categoria_id = this.subcategoria.categoria_id
         }
     }
 }
