@@ -98,4 +98,13 @@ class SubcategoriaController extends Controller
         }
     }
 
+    public function searchSubcategoria(Request $request, $categoria)
+    {
+        $subcategorias = Subcategoria::where('categoria_id',$categoria)
+                ->orderBy('nombre', 'asc')->get();
+
+
+        return response()->json($subcategorias);
+    }
+
 }

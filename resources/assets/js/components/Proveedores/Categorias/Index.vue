@@ -39,7 +39,7 @@
                                         :noDataTemplate="noDataTemplate"
                                         :css="css"
                                         :append-params="moreParams"
-                                        ref="vuetable"
+                                        ref="vuetableC"
                                         :api-url="url"
                                         pagination-path=""
                                         @vuetable:pagination-data="onPaginationData"
@@ -165,7 +165,7 @@
 
             this.$events.fire('changePath', this.listPath, this.titlePath);
             this.$events.on('cerrar', () => this.closeModal());
-            this.$events.on('reloadIndexCategoria', () => Vue.nextTick( () => this.$refs.vuetable.refresh()) );
+            this.$events.on('reloadIndexCategoria', () => Vue.nextTick( () => this.$refs.vuetableC.refresh()) );
 
         },
         methods: {
@@ -174,17 +174,17 @@
                 this.$refs.paginationInfo.setPaginationData(paginationData)
             },
             onChangePage (page) {
-                this.$refs.vuetable.changePage(page)
+                this.$refs.vuetableC.changePage(page)
             },
             onCellClicked (data, field, event) {
-                this.$refs.vuetable.toggleDetailRow(data.id)
+                this.$refs.vuetableC.toggleDetailRow(data.id)
             },
 
             //filtros de busqueda
             onFilterSet (filterText) {
                 this.moreParams.filter = filterText
 
-                this.$nextTick( () => this.$refs.vuetable.refresh() )
+                this.$nextTick( () => this.$refs.vuetableC.refresh() )
             },
             onActionModificar(data, index){
                 this.showModificarCategoria = true, 

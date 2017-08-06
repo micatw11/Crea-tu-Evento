@@ -162,7 +162,7 @@ export default {
         changeCategory: function(){
             //this.subcategoria.categoria_id = this.categoria_id;
             this.subcategorias = [];
-            this.subcategoria_id = null;
+            this.subcategoria_id = '';
             this.$http.get('api/categoria/' +this.categoria_id
                 ).then(response => {
                     let data = response.data.data

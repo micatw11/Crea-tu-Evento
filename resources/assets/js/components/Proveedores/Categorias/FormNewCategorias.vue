@@ -147,6 +147,44 @@ export default {
     methods: {
         //envio de formulario de modificación de informacion de usuario
         sendFormEdit: function() {
+            var formData = new FormData();
+            formData.append("nombre", nombre);
+            if(!newSubcategoria){
+                formData.append("subcategoria_id", this.subcategoria_id);
+            } else {
+                formData.append("subcategoria_nombre", this.newSubcategoriaName);
+                if(!newCategoria){
+                    formData.append("categoria_id", this.categoria_id);
+                } else {
+                    formData.append("categoria_nombre", this.newCategoriaName);
+                }
+            }
+
+
+            this.$http.post(
+                'api/rubro/', 
+                formData
+                ).then(response => {
+                    this.$events.fire('reloadIndexCategoria')
+                    this.$events.fire('reloadIndexSubcategoria')
+                    this.$events.fire('reloadIndexRubro')
+                    this.closeModal(),
+                    this.errorsApi= {},
+                    this.$toast.success({
+                        title:'¡Cambios realizados!',
+                        message:'Se han realizado correctamente los cambios. :D'
+                    });
+                    this.resetForm()
+                }, response => {
+                    this.$toast.error({
+                        title:'¡Error!',
+                        message:'No se han podido guardar los cambios. :('
+                    });
+                    if(response.status === 422)
+                    {
+                        this.errorsApi = response.body;
+                    }
+                })
         },
 
         //form validation
@@ -166,6 +204,11 @@ export default {
                         this.categorias.push({ value: categoria.id, text: categoria.nombre });
                     }
                 }, response => {
+                    this.$toast.error({
+                        title:'¡Error!',
+                        message:'No se han podido cargar las opciones. :('
+                    });
+                    this.closeModal();
                 })
         },
         changeCategory: function(){

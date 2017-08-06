@@ -9,7 +9,7 @@
                 @validado="sendForm()">
             </form-rubro>
         </div>
-        <div class="modal-footer" style="text-align:center;">
+        <div class="modal-footer" style="text-align">
             <button class="btn btn-default" @click="closeModal()">
                 <i class="glyphicon glyphicon-chevron-left"></i>
                 Atras
@@ -51,9 +51,6 @@ export default {
             Comercio: null,
             estado: true
         }
-    },
-    mounted(){
-        this.getOptionsCategorias();
     },
     components: {
         FormRubro

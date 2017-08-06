@@ -90,9 +90,11 @@ export default {
                     this.cargarRubro()
 
                 }, response => {
-                    if(response.status === 404){
-                        router.push('/404');
-                    }
+                    this.$toast.error({
+                        title:'¡Error!',
+                        message:'No se han podido cargar las opciones. :('
+                    });
+                    this.closeModal();
                 })
         },
         cargarRubro: function(){

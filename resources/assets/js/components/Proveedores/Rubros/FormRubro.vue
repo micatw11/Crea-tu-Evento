@@ -2,7 +2,7 @@
 <div>
     <form role="form"><br><br>
         <div class="col-sm-6">
-            <!--<div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('tipo_rubro')&&validarRubro}">
+           <!-- <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('tipo_rubro')&&validarRubro}">
                 <div class="col-sm-12">
                     <label for="inputTipoRubro" class="control-label">Tipo de Proveedor</label><br>
                     <select 
@@ -31,6 +31,7 @@
                     <select
                         class="form-control"
                         v-model="categoria_id"
+                        :on-search="getOptions" 
                         @change="cambiarCategoria()"
                         placeholder="Seleccione la Categoria" >
                         <option 
@@ -57,8 +58,9 @@
                     <select
                         class="form-control"
                         v-model="subcategoria_id"
-                        @change="cambiarSubcategoria()"
-                        placeholder="Seleccione una subCategoria" >
+
+                        @change="cambiarSubcategoria(categoria_id)"
+                        placeholder="Seleccione una Subcategoria" >
                         <option 
                             v-for="option in optionsSubcategorias" 
                             v-bind:value="option.value">
@@ -77,38 +79,42 @@
                 </div>
             </div>
 
-            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('rubro')&&validarRubro}">
-                <div v-if="subcategoria_id != null" class="col-sm-12">
-                    <label for="inputRubro" class="control-label">Rubro</label><br>
-                    <select
-                        class="form-control"
-                        v-model="rubro_id"
-                        @change="cambiarRubro()"
-                        placeholder="Seleccione un Rubro" >
-                        <option 
-                            v-for="option in optionsSubcategorias" 
-                            v-bind:value="option.value">
-                            {{ option.text }}
-                        </option>
-
-                    </select>
+            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('denominacion')&&validarRubro}">
+                <div class="col-sm-12">
+                    <label for="inputDenominacion" class="control-label">Denominacion del rubro: </label><br>
+                    <input name="denominacion"  v-validate:rubro.denominacion="'required|min:4'" type="text" class="form-control" v-model="rubro.denominacion" placeholder="Nombre">
                     <!-- validacion vee-validation -->
-                    <span v-show="errors.has('rubro')&&validarRubro" class="help-block">{{ errors.first('rubro') }}</span>
+                    <span v-show="errors.has('denominacion')&&validarRubro" class="help-block">{{ errors.first('denominacion') }}</span>
                     <!-- validacion api-->
-                    <div class="text-red" v-if="errorsApi.rubro">
-                        <div v-for="msj in errorsApi.rubro">
+                    <div class="text-red" v-if="errorsApi.denominacion">
+                        <div v-for="msj in errorsApi.denominacion">
                             <p>{{ msj }}</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!--Datos de Habilitación y dirección del comercio-->
+            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('descripcion')&&validarRubro}">
+                <div class="col-sm-12">
+                    <label for="inputDescripcion" class="control-label">Descripcion: </label><br>
+                    <textarea name="descripcion"  v-validate:rubro.descripcion="'required|min:4'" type="text" class="form-control" v-model="rubro.descripcion" placeholder="Descripcion"></textarea>
+                    <!-- validacion vee-validation -->
+                    <span v-show="errors.has('descripcion')&&validarRubro" class="help-block">{{ errors.first('descripcion') }}</span>
+                    <!-- validacion api-->
+                    <div class="text-red" v-if="errorsApi.descripcion">
+                        <div v-for="msj in errorsApi.descripcion">
+                            <p>{{ msj }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Datos de Habilitación y dirección del comercio
             <label class="control-label">Cuenta con Comercio de atención. </label> <br>  
             <input type="checkbox" id="checkbox" v-model="Comercio" style="text-align:center;">
             <label for="checkbox">{{ Comercio == true ? "Si" : "No" }}</label>
-            
-             <div v-if="Comercio == true" :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('facha')&&validarRubro}">
+            v-if="Comercio == true"-->
+             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('facha')&&validarRubro}">
                 <div class="col-sm-12"><br/>
                     <label for="inputNombre" class="control-label">Fecha de habilitación</label><br>
                     <input 
@@ -131,7 +137,7 @@
      
         </div>
         
-        <div v-if="Comercio == true" class="col-sm-6">
+        <div class="col-sm-6">
           <div>
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('habilitacion')&&validarRubro}">
                 <div class="col-sm-12">
@@ -155,7 +161,7 @@
                             <label class="control-label">Localidad</label><br>
                             <v-select
                                 :debounce="250" 
-                                :on-search="getOptions" 
+                                :search="getOptions" 
                                 :options="localidades"
                                 data-vv-name="localidad"
                                 v-model="domicilio.localidad_id" 
@@ -278,13 +284,12 @@ export default {
     components: {
         vSelect
     },
-    created: function() {
-        this.getOptionsCategoria();
+    beforeMount(){
+        this.getOptionsCategorias()
     },
     mounted() {
         this.$events.$on('validarForm', () =>this.validateBeforeSubmit());
         if(!this.nuevo) this.categoria_id = this.rubro.categoria_id;
-     
     },
     methods: {
         //form validation
@@ -309,36 +314,31 @@ export default {
                     loading(false)
                 })
         },
-        getOptionsCategoria: function() {
+        getOptionsCategorias: function() {
+
             this.$http.get('api/categoria'
                 ).then(response => {
-                    let optionscat = response.data.data
-                    for (let categoria of optionscat){
+                    let optionsCategorias = response.data.data
+                    for (let categoria of optionsCategorias){
                         this.optionsCategorias.push({ text: categoria.nombre, value: categoria.id })
                     }
                 })
 
         },
         getOptionsSubcategorias: function(categoria) {
-            var _this = this
-            this.$http.get('api/subcategorias/'+ categoria
+            loading(true)
+            this.$http.get('api/subcategoria/?q='+categoria
                 ).then(response => {
-                    let options = response.data
-                    for (let subcategoria of options){
-                        _this.optionsSubcategorias.push({ text: subcategoria.nombre, value: subcategoria.id })
+                    let optionsSubcategoria = response.data.data
+                    loading(false)
+                    for (let subcategoria of optionsSubcategoria){
+                        this.optionsSubcategoria.push({ text: subcategoria.nombre, value: subcategoria.id })
                     }
-                    console.log(_this.optionsSubcategorias)
                 })
 
         },
         cambiarCategoria(){
             this.rubro.categoria_id = this.categoria_id;
-               if (this.categoria_id!=null){
-                 this.getOptionsSubcategorias(this.categoria_id);
-                }
-        },
-         cambiarSubcategoria(){
-            this.rubro.subcategoria_id = this.subcategoria_id;
         }
 
     }
