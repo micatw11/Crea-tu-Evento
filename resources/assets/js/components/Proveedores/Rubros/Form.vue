@@ -5,7 +5,7 @@
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('nombre')&&validarRubro}">
                 <div class="col-sm-12">
                     <label for="inputRubro" class="control-label">Nombre</label><br>
-                       <input name="nombre" v-validate="'required'" type="text" v-model="rubro.nombre" 
+                       <input name="nombre" v-validate="'required|min:4|max:22'" type="text" v-model="rubro.nombre" 
                         class="form-control" placeholder="Nombre">
                             <!-- validacion vee-validation -->
                     <span v-show="errors.has('nombre')&&validarRubro" class="help-block">{{ errors.first('nombre') }}</span>

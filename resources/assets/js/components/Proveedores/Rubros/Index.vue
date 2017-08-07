@@ -113,13 +113,13 @@
                 tableColumns:  [
                     {
                         name: 'nombre',
-                        title: 'Nombre',
+                        title: 'Nombre ->',
                         titleClass: 'text-center',
                         dataClass: 'text-center'           
                     },
                     {
                         name: 'subcategoria.nombre',
-                        title: 'Subcategoria',
+                        title: 'Subcategoria ->',
                         titleClass: 'text-center',
                         dataClass: 'text-center'           
                     },

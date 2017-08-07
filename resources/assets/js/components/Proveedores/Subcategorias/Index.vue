@@ -113,7 +113,7 @@
                 tableColumns:  [
                     {
                         name: 'nombre',
-                        title: 'Nombre',
+                        title: 'Nombre ->',
                         titleClass: 'text-center',
                         dataClass: 'text-center'           
                     },

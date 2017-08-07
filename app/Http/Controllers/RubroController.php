@@ -30,43 +30,49 @@ class RubroController extends Controller
 
     public function store(Request $request){
 
-        $this->validatorRubro($request);
+        //$this->validatorRubro($request);
 
         $categoria = null;
         $subcategoria = null;
         $newCategoria = false;
         $rubro = null;
 
-        if($request->has('categoria_nombre'))
-        {
-                $this->validate($request, [
-                        'categoria_nombre'=>'required|unique:categorias,nombre|min:4|max:55'
-                    ]);
-            $categoria = $this->createCategoria($request);
-            $newCategoria = true;
-        }
-
         if($request->has('subcategoria_nombre'))
         {
+            if($request->has('categoria_nombre'))
+            {
+                $newCategoria = true;
+            }
+            
             if($newCategoria)
             {
                 $this->validate($request, [
-                        'subcategoria_nombre'=>'required|unique:subcategorias,nombre|min:4|max:55'
+                        'subcategoria_nombre' => 'required|unique:subcategorias,nombre|min:4|max:55',
+                        'categoria_nombre' => 'required|unique:categorias,nombre|min:4|max:55',
+                        'tipo_proveedor' => 'required',
+                        'nombre' => 'required|unique:rubros,nombre|min:4|max:55'
                     ]);
+                $categoria = $this->createCategoria($request);
                 $subcategoria = $this->createSubcategoria($request, $categoria->id);
             }
             else
             {
                 $this->validate($request, [
-                    'subcategoria_nombre'=>'required|unique:subcategorias,nombre|min:4|max:55',
-                    'categoria_id'=>'required|exists:categorias,id'
+                        'subcategoria_nombre' => 'required|unique:subcategorias,nombre|min:4|max:55',
+                        'categoria_id' => 'required|exists:categorias,id',
+                        'nombre' => 'required|unique:rubros,nombre|min:4|max:55'
                     ]);
                 $subcategoria = $this->createSubcategoria($request, $request->categoria_id);
             }
+
             $rubro = $this->createRubro($request, $subcategoria->id);
         }
         else 
         {
+            $this->validate($request, [
+                    'subcategoria_id'=> 'required|exists:subcategorias,id',
+                    'nombre'=>'required|unique:rubros,nombre|min:4|max:55'
+                ]);
             $rubro = $this->createRubro($request, $request->subcategoria_id);
         }
         
@@ -85,9 +91,7 @@ class RubroController extends Controller
      */
     protected function validatorRubro(Request $request)
     {
-        return $this->validate($request, [
-                        'nombre'=>'required|unique:rubros,nombre|min:4|max:55'
-                    ]);
+        return $this->validate($request, ['nombre'=>'required|unique:rubros,nombre|min:4|max:55']);
     }
 
     /**
@@ -127,7 +131,8 @@ class RubroController extends Controller
     protected function createCategoria(Request $request)
     {
         return Categoria::create([
-                    'nombre'=> $request->categoria_nombre
+                    'nombre'=> $request->categoria_nombre,
+                    'tipo_proveedor' => $request->tipo_proveedor
                 ]);
     }
 

@@ -55,7 +55,8 @@ export default {
                 'api/categoria/'+ this.categoria.id, 
                 {
                     _method: 'PATCH',
-                    nombre: this.categoria.nombre
+                    nombre: this.categoria.nombre,
+                    tipo_proveedor: this.categoria.tipo_proveedor
                 })
                 .then(response => {
                     this.$events.fire('reloadIndexCategoria')

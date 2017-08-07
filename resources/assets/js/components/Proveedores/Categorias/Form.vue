@@ -2,10 +2,34 @@
 <div>
     <form role="form">
         <div class="col-sm-6">
-            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('tipo_rubro')&&validarCategoria}">
+            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('proveedor')&&validarCategoria}">
+                <div class="col-sm-12">
+                    <label  class="control-label">Tipo de Proveedor</label><br>
+                    <select       
+                        name="proveedor"                  
+                        v-model="categoria.tipo_proveedor"
+                        class="form-control" 
+                        v-validate="'required'">
+                        <option v-for="option in opcionesTipo" v-bind:value="option.value">
+                            {{ option.text }}
+                        </option>
+                    </select>
+                    <!-- validacion vee-validation -->
+                    <span v-show="errors.has('proveedor')&&validarCategoria" class="help-block">{{ errors.first('proveedor') }}</span>
+                    <!-- validacion api-->
+                    <div class="text-red" v-if="errorsApi.tipo_proveedor">
+                        <div v-for="msj in errorsApi.tipo_proveedor">
+                            <p>{{ msj }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('nombre')&&validarCategoria}">
                 <div class="col-sm-12">
                     <label for="inputCategoria" class="control-label">Nombre</label><br>
-                       <input name="nombre" v-validate="'required'" type="text" v-model="categoria.nombre" class="form-control" placeholder="Nombre Categoria">
+                       <input name="nombre" v-validate="'required|min:4|max:22'" type="text" v-model="categoria.nombre" class="form-control" placeholder="Nombre Categoria">
                             <!-- validacion vee-validation -->
                     <span v-show="errors.has('nombre')&&validarCategoria" class="help-block">{{ errors.first('nombre') }}</span>
                     <!-- validacion api-->
@@ -16,7 +40,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </form> 
 </div>
@@ -25,8 +48,6 @@
 
 
 <script>
-import auth from '../../../auth.js';
-import vSelect from "vue-select";
 
 export default {
     props: {
@@ -46,13 +67,14 @@ export default {
     data() {
         return {
             localidades: [],
-            validarCategoria: false
+            validarCategoria: false,
+            opcionesTipo: [
+                  { text: 'Servicios', value: 'Servicio' },
+                  { text: 'Productos', value: 'Producto' }
+                ]
         }
     },
-    components: {
-        vSelect
-    },
-   mounted() {
+    mounted() {
         this.$events.$on('validarFormCategoria', () =>this.validateBeforeSubmit());
     },
     methods: {

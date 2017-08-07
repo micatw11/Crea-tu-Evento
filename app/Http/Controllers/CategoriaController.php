@@ -38,7 +38,8 @@ class CategoriaController extends Controller
     public function create(Request $request)
     {
         return Categoria::create([
-                    'nombre'=> $request->nombre
+                    'nombre'=> $request->nombre,
+                    'tipo_proveedor' => $request->tipo_proveedor
             ]);
     }
 
@@ -68,7 +69,8 @@ class CategoriaController extends Controller
     {
       return $this->validate($request, 
         [
-            'nombre'=>'required|min:4|max:55'
+            'nombre'=>'required|min:4|max:55',
+            'tipo_proveedor'=>'required'
         ]);
     }
 

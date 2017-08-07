@@ -7,7 +7,7 @@
                     <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('nombre')&&validarCategorias}">
                         <div class="col-sm-12">
                             <label for="inputCategoria" class="control-label">Rubro</label><br>
-                               <input name="nombre" v-validate="'required'" type="text" v-model="nombre" class="form-control" placeholder="Nombre Categoria">
+                               <input name="nombre" v-validate="'required|min:4|max:22'" type="text" v-model="nombre" class="form-control" placeholder="Nombre Categoria">
                                     <!-- validacion vee-validation -->
                             <span v-show="errors.has('nombre')&&validarCategorias" class="help-block">{{ errors.first('nombre') }}</span>
                             <!-- validacion api-->
@@ -30,7 +30,7 @@
                             <template v-if="newCategoria">
                                 <input 
                                     name="categoria" 
-                                    v-validate="'required'" 
+                                    v-validate="'required|min:4|max:22'" 
                                     type="text" 
                                     v-model="newCategoriaName" 
                                     class="form-control" 
@@ -54,8 +54,38 @@
                             <!-- validacion vee-validation -->
                             <span v-show="errors.has('categoria')&&validarCategorias" class="help-block">{{ errors.first('categoria') }}</span>
                             <!-- validacion api-->
-                            <div class="text-red" v-if="errorsApi.categoria">
-                                <div v-for="msj in errorsApi.categoria">
+                            <div class="text-red" v-if="errorsApi.categoria_nombre">
+                                <div v-for="msj in errorsApi.categoria_nombre">
+                                    <p>{{ msj }}</p>
+                                </div>
+                            </div>
+                            <div class="text-red" v-if="errorsApi.categoria_id">
+                                <div v-for="msj in errorsApi.categoria_id">
+                                    <p>{{ msj }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="newCategoria" class="col-sm-12">
+                    <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('proveedor')&&validarCategorias}">
+                        <div class="col-sm-12">
+                            <label  class="control-label">Tipo de Categoria</label><br>
+                            <select       
+                                name="proveedor"                  
+                                v-model="tipo_proveedor"
+                                class="form-control" 
+                                v-validate="'required'">
+                                <option disabled value="">Seleccione</option>
+                                <option v-for="option in opcionesTipo" v-bind:value="option.value">
+                                    {{ option.text }}
+                                </option>
+                            </select>
+                            <!-- validacion vee-validation -->
+                            <span v-show="errors.has('proveedor')&&validarCategorias" class="help-block">{{ errors.first('proveedor') }}</span>
+                            <!-- validacion api-->
+                            <div class="text-red" v-if="errorsApi.tipo_proveedor">
+                                <div v-for="msj in errorsApi.tipo_proveedor">
                                     <p>{{ msj }}</p>
                                 </div>
                             </div>
@@ -73,7 +103,7 @@
                             <template v-if="newSubcategoria">
                                 <input 
                                     name="subcategoria" 
-                                    v-validate="'required'" 
+                                    v-validate="'required|min:4|max:22'" 
                                     type="text" 
                                     v-model="newSubcategoriaName" 
                                     class="form-control" 
@@ -93,8 +123,13 @@
                             <!-- validacion vee-validation -->
                             <span v-show="errors.has('subcategoria')&&validarCategorias" class="help-block">{{ errors.first('subcategoria') }}</span>
                             <!-- validacion api-->
-                            <div class="text-red" v-if="errorsApi.subcategoria">
-                                <div v-for="msj in errorsApi.subcategoria">
+                            <div class="text-red" v-if="errorsApi.subcategoria_nombre">
+                                <div v-for="msj in errorsApi.subcategoria_nombre">
+                                    <p>{{ msj }}</p>
+                                </div>
+                            </div>
+                            <div class="text-red" v-if="errorsApi.subcategoria_id">
+                                <div v-for="msj in errorsApi.subcategoria_id">
                                     <p>{{ msj }}</p>
                                 </div>
                             </div>
@@ -132,10 +167,15 @@ export default {
             newSubcategoriaName: '',
             categoria_id: '',
             subcategoria_id: '',
+            tipo_proveedor: '',
             newCategoria: true,
             newSubcategoria: true,
             errorsApi: {},
-            validarCategorias: false
+            validarCategorias: false,
+            opcionesTipo: [
+                  { text: 'Servicios', value: 'Servicio' },
+                  { text: 'Productos', value: 'Producto' }
+                ]
         }
     },
 
@@ -151,12 +191,14 @@ export default {
             formData.append("nombre", this.nombre);
             if(!this.newSubcategoria){
                 formData.append("subcategoria_id", this.subcategoria_id);
+
             } else {
                 formData.append("subcategoria_nombre", this.newSubcategoriaName);
                 if(!this.newCategoria){
                     formData.append("categoria_id", this.categoria_id);
                 } else {
                     formData.append("categoria_nombre", this.newCategoriaName);
+                    formData.append("tipo_proveedor", this.tipo_proveedor);
                 }
             }
 
