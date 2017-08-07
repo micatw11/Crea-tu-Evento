@@ -3,12 +3,29 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Services\CheckCategoriesService;
+
 use App\Subcategoria;
 use App\Categoria;
 use App\Rubro;
 
 class RubroController extends Controller
 {
+
+    /**
+     * @var CheckCategoriesService
+     */
+    private $categoriesService;
+
+    /**
+     *  constructor.
+     * @param CheckCategoriesService $categoriesService
+     */
+    public function __construct(CheckCategoriesService $categoriesService)
+    {
+        $this->categoriesService = $categoriesService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -162,10 +179,13 @@ class RubroController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validatorRubro($request);
-        $rubros= Rubro::where('id', $id)->firstOrFail();
+        $this->validate($request, ['nombre'=>'required|min:4|max:55']);
 
+        $rubros= Rubro::where('id', $id)->firstOrFail();
+        $subcategoria_id = $rubros->subcategoria_id;
         $rubros->update($request->all());
+
+        //$this->categoriesService->checkCategories($subcategoria_id, null);
 
         if($rubros->save()){
             return response()->json(['data' =>  'OK'], 200);
