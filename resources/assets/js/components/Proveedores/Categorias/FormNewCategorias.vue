@@ -146,14 +146,14 @@ export default {
     },
     methods: {
         //envio de formulario de modificación de informacion de usuario
-        sendFormEdit: function() {
+        sendForm: function() {
             var formData = new FormData();
-            formData.append("nombre", nombre);
-            if(!newSubcategoria){
+            formData.append("nombre", this.nombre);
+            if(!this.newSubcategoria){
                 formData.append("subcategoria_id", this.subcategoria_id);
             } else {
                 formData.append("subcategoria_nombre", this.newSubcategoriaName);
-                if(!newCategoria){
+                if(!this.newCategoria){
                     formData.append("categoria_id", this.categoria_id);
                 } else {
                     formData.append("categoria_nombre", this.newCategoriaName);
@@ -163,7 +163,7 @@ export default {
 
             this.$http.post(
                 'api/rubro/', 
-                formData
+                    formData
                 ).then(response => {
                     this.$events.fire('reloadIndexCategoria')
                     this.$events.fire('reloadIndexSubcategoria')
@@ -191,7 +191,7 @@ export default {
         validateBeforeSubmit: function() {
             this.$validator.validateAll().then(() => {
                     this.validarCategorias = false;
-                    this.sendFormEdit();
+                    this.sendForm();
                 }).catch(() => {
                     this.validarCategorias = true;
                 });
