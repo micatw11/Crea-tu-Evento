@@ -35,10 +35,8 @@ export default {
                 localidad_id: null
             },
             rubro:{
-                tipo_rubro: null,
-                categoria_id: null,
-                denominacion: null,
-                descripcion: null,
+                rubro_id: null,
+                comercio: false,
                 habilitacion: null,
                 fecha_habilitacion: null
             },
@@ -61,10 +59,8 @@ export default {
             this.$http.post(
                 'api/proveedor/rubro/'+ this.$route.params.userId, 
                 {
-                    tipo_rubro: this.rubro.tipo_rubro,
-                    categoria_id: this.rubro.categoria_id,
-                    denominacion: this.rubro.denominacion,
-                    descripcion: this.rubro.descripcion,
+                    rubro_id: this.rubro.rubro_id,
+                    comercio: this.rubro.comercio,
                     habilitacion: this.rubro.habilitacion,
                     fecha_habilitacion: this.rubro.fecha_habilitacion,
                     calle: this.domicilio.calle,
@@ -104,9 +100,8 @@ export default {
         resetForm() {
             this.rubro={
                 tipo_rubro: null,
-                categoria_id: null,
-                denominacion: null,
-                descripcion: null,
+                rubro_id: null,
+                comercio: false,
                 habilitacion: null,
                 fecha_habilitacion: null
             },

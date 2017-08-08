@@ -47,23 +47,20 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('proveedor', 'ProveedorController@index');
     Route::patch('proveedor/{id}/estado', 'ProveedorController@cambiarEstado')->middleware('role:administrador,supervisor');
     Route::post('proveedor', 'ProveedorController@store')->middleware('role:administrador,supervisor,operador');
-
     Route::patch('proveedor/{id}/edit', 'ProveedorController@update')->middleware('role:administrador,supervisor,operador');
     Route::get('proveedor/{id}', 'ProveedorController@proveedor');
 
-     //rubros
-    Route::post('proveedor/rubro/{id}', 'RubroController@store')->middleware('role:administrador,supervisor,operador,proveedor');
-   
-    Route::patch('proveedor/rubro/{id}/edit', 'RubroController@update')->middleware('role:administrador,supervisor,operador,proveedor');
-    
-    Route::get('proveedor/{id}/rubro', 'RubroController@show');
+
+    Route::post('proveedor/rubro/{id}', 'RubrosDetalleController@store')->middleware('role:administrador,supervisor,operador,proveedor');
+    Route::patch('proveedor/rubro/{id}/edit', 'RubrosDetalleController@update')->middleware('role:administrador,supervisor,operador,proveedor');
+    Route::get('proveedor/{id}/rubro', 'RubrosDetalleController@show');
+
 
     Route::get('localidades', 'LocalidadController@index');
     Route::get('localidades/{id}', 'LocalidadController@show');
     Route::get('roles', 'UsuarioController@roles');
 
     Route::get('busqueda/usuarios', 'UsuarioController@buscarUsuarios');
-
     Route::get('user/{id}/actividad', 'UsuarioController@activity');
     Route::get('actividad/{id}', 'LogController@show');
 
@@ -94,6 +91,7 @@ Route::group(['prefix' => 'api'], function () {
 
     Route::get('rubro', 'RubroController@index');
     Route::get('rubro/{id}', 'RubroController@show');
+    Route::get('rubros/{subcategoria}','RubroController@searchRubros');
     Route::post('rubro', 'RubroController@store');
     Route::patch('rubro/{id}','RubroController@update');
 });

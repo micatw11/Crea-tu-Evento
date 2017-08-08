@@ -98,4 +98,13 @@ class RubroController extends Controller
             return response()->json(['error' => 'Internal Server Error'], 500 );
         }
     }
+
+      public function searchRubros(Request $request, $subcategoria)
+    {
+        $rubros = Rubro::where('subcategoria_id',$subcategoria)
+                ->orderBy('nombre', 'asc')->get();
+
+
+        return response()->json($rubros);
+    }
 }

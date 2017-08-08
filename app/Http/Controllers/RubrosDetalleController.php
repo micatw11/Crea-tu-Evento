@@ -29,7 +29,7 @@ class RubrosDetalleController extends Controller
      */
     public function create(Request $request,$proveedor,$domicilio)
     {
-        return Rubro::create([
+        return RubrosDetalle::create([
                     'tipo_rubro'=> $request->tipo_rubro,
                     'proveedor_id'=> $proveedor->id,
                     'rubro_id'=> $request->rubro_id,
@@ -46,13 +46,24 @@ class RubrosDetalleController extends Controller
      */
     public function store(Request $request, $id)
     {
+        $datosCargados= false;
         $proveedor = Proveedor::where('user_id', $id)->firstOrFail();
-        $this->validatorDomicilio($request);
         $this->validatorRubro($request);
-        $domicilio= $this->createDomicilio($request);
-        $rubro= $this->create($request,$proveedor, $domicilio);
-        
-        if (($rubro)&&($domicilio)){
+        if ($request->comercio){
+            $this->validatorDomicilio($request);
+            $domicilio= $this->createDomicilio($request);
+            $rubro= $this->create($request,$proveedor, $domicilio);
+            if (($rubro)&&($domicilio)){
+                $datosCargados= true
+            }
+        }
+        else{
+            $rubro= $this->create($request,$proveedor, $domicilio);
+            if ($rubro){
+                $datosCargados= true
+            }
+        }
+        if ($datosCargados){
             return response()->json(['data' => 'OK'], 200);
         
         } else {
@@ -96,11 +107,9 @@ class RubrosDetalleController extends Controller
     {
       return $this->validate($request, 
         [
-            'categoria_id' =>'required',
-            'denominacion'=>'required|min:4|max:55',
-            'descripcion'=>'required|min:4|max:200',
-            'fecha_habilitacion'=>'required|date',
-            'habilitacion'=>'required|min:4|max:55',
+            'rubro_id' =>'required',
+            'fecha_habilitacion'=>'date',
+            'habilitacion'=>'min:4|max:55',
         ]);
     }
 
@@ -145,7 +154,7 @@ class RubrosDetalleController extends Controller
         $this->validatorRubro($request);
         //$table_name= "rubro";
         //$accion = "update";
-        $rubro = Rubro::where('id', $id)->firstOrFail();
+        $rubro = RubrosDetalle::where('id', $id)->firstOrFail();
         $domicilio= Domicilio::where('id', $rubro->domicilio_id)->firstOrFail();
         //Log::logs($id, $table_name, $accion , $rubro, 'Ha actualizado informacion personal');
         $rubro->update($request->all());
