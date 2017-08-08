@@ -16,7 +16,7 @@
                                 :noDataTemplate="noDataTemplate"
                                 :css="css"
                                 :append-params="moreParams"
-                                ref="vuetable"
+                                ref="vuetableU"
                                 api-url="/api/usuario"
                                 pagination-path=""
                                 @vuetable:pagination-data="onPaginationData"
@@ -148,7 +148,7 @@
                 this.$refs.paginationInfo.setPaginationData(paginationData)
             },
             onChangePage (page) {
-                this.$refs.vuetable.changePage(page)
+                this.$refs.vuetableU.changePage(page)
             },
             onActionShow(action, data, index) {
                 this.listPath.push({route: '/usuario/'+data.id+'/perfil', name: 'Perfil'})
@@ -178,12 +178,12 @@
                     })
             },
             onCellClicked (data, field, event) {
-                this.$refs.vuetable.toggleDetailRow(data.id)
+                this.$refs.vuetableU.toggleDetailRow(data.id)
             },
             //filtros de busqueda
             onFilterSet (filterText) {
                 this.moreParams.filter = filterText
-                this.$nextTick( () => this.$refs.vuetable.refresh() )
+                this.$nextTick( () => this.$refs.vuetableU.refresh() )
             },
             //cambiar rol
             changeItemRol(action, data, index) {

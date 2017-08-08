@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="modal-body">
+        <div v-if="showForm" class="modal-body">
         	<form-rubro
                 :rubro="rubro" 
                 :nuevo="false"
@@ -37,7 +37,8 @@ export default {
         return {
             datos: { type: Object, default: null},//Peticion de datos
             rubro: { type: Object, default: null}, 
-            errorsApi: {}
+            errorsApi: {},
+            showForm: false
         }
     },
     components: {
@@ -55,7 +56,8 @@ export default {
                 'api/rubro/'+ this.rubro.id, 
                 {
                     _method: 'PATCH',
-                    nombre: this.rubro.nombre
+                    nombre: this.rubro.nombre,
+                    subcategoria_id : this.rubro.subcategoria_id
                 })
                 .then(response => {
                     this.$events.fire('reloadIndexRubro')
@@ -88,13 +90,16 @@ export default {
                     this.cargarRubro()
 
                 }, response => {
-                    if(response.status === 404){
-                        router.push('/404');
-                    }
+                    this.$toast.error({
+                        title:'¡Error!',
+                        message:'No se han podido cargar las opciones. :('
+                    });
+                    this.closeModal();
                 })
         },
         cargarRubro: function(){
             this.rubro = this.datos
+            this.showForm = true;
         },
 
         closeModal: function(){

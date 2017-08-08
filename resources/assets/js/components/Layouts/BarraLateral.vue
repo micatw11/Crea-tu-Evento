@@ -68,16 +68,17 @@
                                 <i class="fa fa-circle-o"></i> Proveedores
                             </a>
                     </router-link>
-                     <router-link
-                        v-if="auth.user.profile.roles_id == role.ADMINISTRADOR ||
-                            auth.user.profile.roles_id == role.SUPERVISOR"
-                            tag="li"
-                            to="/categorias">
-                            <a>
-                                <i class="fa fa-circle-o"></i> Categorias
-                            </a>
-                    </router-link>
                 </ul>
+            </li>
+            <li>
+                <router-link
+                    v-if="auth.user.profile.roles_id == role.ADMINISTRADOR ||
+                        auth.user.profile.roles_id == role.SUPERVISOR"
+                        to="/categorias">
+                        <a>
+                            <i class="fa fa-th-list"></i> Categorias
+                        </a>
+                </router-link>
             </li>
             <!--
             <li class="treeview">

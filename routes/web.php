@@ -44,7 +44,8 @@ Route::group(['prefix' => 'api'], function () {
     Route::patch('user/{id}/rol', 'UsuarioController@cambiarRol')->middleware('role:administrador,supervisor');
 
     //proveedores
-    Route::get('proveedor', 'ProveedorController@index');
+    Route::get('proveedor', 'ProveedorController@index')->middleware('role:administrador,supervisor,operador');
+
     Route::patch('proveedor/{id}/estado', 'ProveedorController@cambiarEstado')->middleware('role:administrador,supervisor');
     Route::post('proveedor', 'ProveedorController@store')->middleware('role:administrador,supervisor,operador');
     Route::patch('proveedor/{id}/edit', 'ProveedorController@update')->middleware('role:administrador,supervisor,operador');
@@ -79,7 +80,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('categoria','CategoriaController@index')
         ->middleware('role:administrador,supervisor,operador,usuario,proveedor');
     Route::patch('categoria/{id}', 'CategoriaController@update')->middleware('role:administrador,supervisor');
-    Route::get('categoria/search', 'CategoriaController@searchCategoria');
+    Route::get('categoria/all', 'CategoriaController@searchCategoria');
     Route::get('categoria/{id}', 'CategoriaController@show');
 
 

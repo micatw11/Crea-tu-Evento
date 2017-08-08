@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Middleware;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
 use App\Rol;
 
@@ -17,16 +18,23 @@ class CheckRole
      */
     public function handle($request, Closure $next)
     {
-        $roles = array_slice(func_get_args(), 2);
-        $idRole = null;
-        foreach ($roles as $role) {
+        if(Auth::check())
+        {
+            $roles = array_slice(func_get_args(), 2);
+            $idRole = null;
+            foreach ($roles as $role) {
 
-            $idRole = Rol::roleId($role);
-            $bool =  ($request->user()->roles_id == $idRole) ? true : false;
-            if($bool) return $next($request);
+                $idRole = Rol::roleId($role);
+                $bool =  ($request->user()->roles_id == $idRole) ? true : false;
+                if($bool) return $next($request);
+            }
+
+            return response()->json(['error' => 'Forbidden'], 403);
         }
-
-        return response()->json(['error' => 'Forbidden'], 403);
+        else
+        {
+            return response()->json(['error' =>  'Unauthorized'], 401);
+        }
 
     }
 }

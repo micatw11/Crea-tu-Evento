@@ -20,7 +20,7 @@ class CategoriaController extends Controller
 
         if ($request->filter) {
             $like = '%'.$request->filter.'%';
-            $query = $query->where('nombre','like',$like);
+            $query = $query->where('categorias.nombre','like',$like);
         }
 
         $categorias = $query->paginate(10);
@@ -38,7 +38,8 @@ class CategoriaController extends Controller
     public function create(Request $request)
     {
         return Categoria::create([
-                    'nombre'=> $request->nombre
+                    'nombre'=> $request->nombre,
+                    'tipo_proveedor' => $request->tipo_proveedor
             ]);
     }
 
@@ -68,7 +69,8 @@ class CategoriaController extends Controller
     {
       return $this->validate($request, 
         [
-            'nombre'=>'required|min:4|max:55'
+            'nombre'=>'required|min:4|max:55',
+            'tipo_proveedor'=>'required'
         ]);
     }
 
@@ -80,7 +82,7 @@ class CategoriaController extends Controller
      */
     public function show($id)
     {
-          $categoria= Categoria::where('id', $id)->firstOrFail();
+          $categoria= Categoria::where('id', $id)->with('subcategorias')->firstOrFail();
 
         if ($categoria) {
             return response()->json(['data' => $categoria], 200);
@@ -133,13 +135,9 @@ class CategoriaController extends Controller
         //
     }
 
-    public function searchCategoria(Request $request)
+    public function allCategoria(Request $request)
     {
-        $categorias = DB::table('categorias')
-            ->select('categorias.id as value', DB::raw('categorias.nombre as label'))
-                ->where('categorias.nombre','like' ,'%'.$request->q.'%')
-                ->orderBy('categorias.nombre', 'asc')
-                ->get();
+        $categorias = Categoria::orderBy('nombre', 'asc')->get();
 
         return response()->json($categorias);
     }

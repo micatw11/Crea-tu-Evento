@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="modal-body">
-        	<form-subcategoria 
+        	<form-subcategoria v-if="showNow"
                 :subcategoria="subcategoria" 
                 :nuevo="false"
                 @validadoEditSubcategoria="sendFormEdit()"  
@@ -19,6 +19,7 @@
                 </button>
             </div>
         </div>
+
     </div>   
 </template>
 
@@ -35,10 +36,11 @@ export default {
     },
     data() {
         return {
-            subcategorias: { type: Object, default: null},//Peticion de datos
+            data: { type: Object, default: null},//Peticion de datos
             subcategoria: { type: Object, default: null}, 
             errorsApi: {},
-            error: false
+            error: false,
+            showNow: false
         }
     },
     components: {
@@ -47,7 +49,6 @@ export default {
     beforeMount: function(){
         //selected data
         this.getSubcategoria();
-        
     },
     methods: {
         //envio de formulario de modificación
@@ -57,7 +58,7 @@ export default {
                 {
                     _method: 'PATCH',
                     nombre: this.subcategoria.nombre,
-                    categoria_id: this.subcategoria.id
+                    categoria_id: this.subcategoria.categoria_id
                 })
                 .then(response => {
                     this.$events.fire('reloadIndexSubcategoria')
@@ -88,7 +89,7 @@ export default {
         getSubcategoria: function(){
             this.$http.get('api/subcategoria/'+ this.idSubcategoria)
                 .then(response => {
-                    this.subcategorias = response.data.data
+                    this.data = response.data.data
                     this.cargarSubcategoria()
 
                 }, response => {
@@ -98,9 +99,9 @@ export default {
                 })
         },
         cargarSubcategoria: function(){
-            this.subcategoria = this.subcategorias
+            this.subcategoria = this.data;
+            this.showNow = true
         },
-
         closeModal: function(){
             this.$events.fire('cerrar');
         }

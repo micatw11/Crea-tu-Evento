@@ -1,6 +1,7 @@
 <template>
 	<div>
 	    <div>
+	    <!--
 	        <div class="box-header">
 	            <div class="col-sm-2">
 	                <button class="btn btn-primary btn-sm"
@@ -9,6 +10,7 @@
 	                </button>
 	            </div>
 	        </div>
+	    -->
 	        <div v-if="showNewRubro" class="modal" role="dialog" :style="{ display : showNewRubro  ? 'block' : 'none' }">
 	            <div class="modal-dialog">
 	            <!-- Modal content-->
@@ -36,7 +38,7 @@
 	                        :noDataTemplate="noDataTemplate"
 	                        :css="css"
 	                        :append-params="moreParams"
-	                        ref="vuetable"
+	                        ref="vuetableR"
 	                        :api-url="url"
 	                        pagination-path=""
 	                        @vuetable:pagination-data="onPaginationData"
@@ -111,7 +113,19 @@
                 tableColumns:  [
                     {
                         name: 'nombre',
-                        title: 'Nombre',
+                        title: 'Nombre ->',
+                        titleClass: 'text-center',
+                        dataClass: 'text-center'           
+                    },
+                    {
+                        name: 'subcategoria.nombre',
+                        title: 'Subcategoria ->',
+                        titleClass: 'text-center',
+                        dataClass: 'text-center'           
+                    },
+                    {
+                        name: 'subcategoria.categoria.nombre',
+                        title: 'Categoria',
                         titleClass: 'text-center',
                         dataClass: 'text-center'           
                     },
@@ -136,7 +150,7 @@
         mounted() {
             this.$events.$on('filter-setRubro', eventData => this.onFilterSet(eventData));
             this.$events.on('cerrar', () => this.closeModal());
-            this.$events.on('reloadIndexRubro', () => Vue.nextTick( () => this.$refs.vuetable.refresh()) );
+            this.$events.on('reloadIndexRubro', () => Vue.nextTick( () => this.$refs.vuetableR.refresh()) );
 
         },
         methods: {
@@ -145,15 +159,15 @@
                 this.$refs.paginationInfo.setPaginationData(paginationData)
             },
             onChangePage (page) {
-                this.$refs.vuetable.changePage(page)
+                this.$refs.vuetableR.changePage(page)
             },
             onCellClicked (data, field, event) {
-                this.$refs.vuetable.toggleDetailRow(data.id)
+                this.$refs.vuetableR.toggleDetailRow(data.id)
             },
             //filtros de busqueda
             onFilterSet (filterText) {
                 this.moreParams.filter = filterText;
-                this.$nextTick( () => this.$refs.vuetable.refresh() )
+                this.$nextTick( () => this.$refs.vuetableR.refresh() )
             },
             onActionModificar(data, index){
                 this.showModificarRubro = true, 
