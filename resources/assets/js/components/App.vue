@@ -13,6 +13,7 @@
 </template>
 <script>
 import auth from './../auth.js'
+import routes from './../routes.js'
 import Bar from './Layouts/Barra.vue'
 import BarraLateral from './Layouts/BarraLateral.vue'
 import Foo from './Layouts/Footer.vue'
@@ -22,12 +23,30 @@ export default {
     data() {
         return {
             auth: auth,
+            routes: routes,
             showComponent: true,
+            interval: null
         }
     },
     mounted() {
         this.$events.listen('reloadComponents', this.reloadComponents);
         $(this).ajaxStart(function() { Pace.restart(); });
+        /*
+        this.interval = setInterval(function () {
+            if(auth.user.authenticated)
+            {
+                Vue.http.get('api/user').then(response => {
+                        return ;
+                    }, response => {
+                        auth.user.authenticated=false;
+                        routes.push('/login');
+                    })
+            }
+        }.bind(this), 60000); 
+        */
+    },
+    beforeDestroy() {
+        clearInterval(this.interval);
     },
     computed: {
         classContentWrapper: function () {

@@ -2,13 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\CheckCategoriesService;
 use Illuminate\Http\Request;
-use App\Categoria;
 use App\Subcategoria;
-
+use App\Categoria;
 
 class SubcategoriaController extends Controller
 {
+
+    /**
+     * @var CheckCategoriesService
+     */
+    private $categoriesService;
+
+    /**
+     *  constructor.
+     * @param CheckCategoriesService $categoriesService
+     */
+    public function __construct(CheckCategoriesService $categoriesService)
+    {
+        $this->categoriesService = $categoriesService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -87,10 +102,22 @@ class SubcategoriaController extends Controller
     public function update(Request $request, $id)
     {
         $this->validatorSubcategoria($request);
-        $subcategoria= Subcategoria::where('id', $id)->firstOrFail();
+
+        $subcategoria = Subcategoria::where('id', $id)->firstOrFail();
+        $categoria_id = null;
+
+        if($request->categoria_id != $subcategoria->categoria_id)
+        {
+            $categoria_id = $subcategoria->categoria_id;
+        }
 
         $subcategoria->update($request->all());
 
+        if($categoria_id != null)
+        {
+            $this->categoriesService->checkCategories($categoria_id);
+        }
+        
         if($subcategoria->save()){
             return response()->json(['data' =>  'OK'], 200);
         } else {

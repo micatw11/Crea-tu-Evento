@@ -179,15 +179,28 @@ class RubroController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, ['nombre'=>'required|min:4|max:55']);
+        $this->validate($request, [
+                'nombre'=>'required|min:4|max:55',
+                'subcategoria_id'=>'required|exists:subcategorias,id'
+                ]);
 
-        $rubros= Rubro::where('id', $id)->firstOrFail();
-        $subcategoria_id = $rubros->subcategoria_id;
-        $rubros->update($request->all());
+        $rubro = Rubro::where('id', $id)->firstOrFail();
+        $subcategoria_id = null;
 
-        //$this->categoriesService->checkCategories($subcategoria_id, null);
+        if($request->subcategoria_id != $rubro->subcategoria_id)
+        {
+            $subcategoria_id = $rubro->subcategoria_id;
+        }
 
-        if($rubros->save()){
+        $rubro->update($request->all());
+
+        if($subcategoria_id != null)
+        {
+            $this->categoriesService->checkSubcategories($subcategoria_id);
+        }
+
+        if($rubro->save())
+        {
             return response()->json(['data' =>  'OK'], 200);
         } else {
             return response()->json(['error' => 'Internal Server Error'], 500 );
