@@ -74,7 +74,7 @@ export default {
     data() {
         return {
             validarSubcategoria: false,
-            categoria_id: null,
+            categoria_id: '',
             categorias: []
         }
     },

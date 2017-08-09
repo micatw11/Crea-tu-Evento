@@ -70,7 +70,7 @@ class RegisterUserController extends Controller
         $this->createUsuario($request, $user->id);
         $user->usuario->localidad->provincia;
         $user->rol;
-        return response()->json(['data' =>  $user, 'csrfToken', csrf_token()]);
+        return response()->json(['data' =>  $user, 'csrfToken' => csrf_token()], 200);
     }
 
 

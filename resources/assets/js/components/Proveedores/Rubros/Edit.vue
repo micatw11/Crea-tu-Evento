@@ -60,6 +60,8 @@ export default {
                     subcategoria_id : this.rubro.subcategoria_id
                 })
                 .then(response => {
+                    this.$events.fire('reloadIndexCategoria')
+                    this.$events.fire('reloadIndexSubcategoria')
                     this.$events.fire('reloadIndexRubro')
                     this.closeModal();
                     this.errorsApi= {},

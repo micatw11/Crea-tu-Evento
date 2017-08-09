@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Categoria;
 use App\Log;
@@ -10,14 +11,15 @@ use App\Log;
 class CategoriaController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @param \Illuminate\Http\Request $request
      *
-     * @return \Illuminate\Http\Response
+     * @return Retorna una lista del recurso Categoria
      */
     public function index(Request $request)
     {
         $query = Categoria::orderBy('nombre', 'asc');
 
+        //filtro
         if ($request->filter) {
             $like = '%'.$request->filter.'%';
             $query = $query->where('categorias.nombre','like',$like);
@@ -25,17 +27,17 @@ class CategoriaController extends Controller
 
         $categorias = $query->paginate(10);
 
-        return response()->json($categorias);
+        return response()->json($categorias, 200);
 
     }
 
     /**
-    * @param  \Illuminate\Http\Request  $request
-     * Show the form for creating a new resource.
+     * @param  \Illuminate\Http\Request  $request
+     * Crear un recurso Categoria
      *
-     * @return \Illuminate\Http\Response
+     * @return \App\Categoria
      */
-    public function create(Request $request)
+    protected function create(Request $request)
     {
         return Categoria::create([
                     'nombre'=> $request->nombre,
@@ -44,26 +46,28 @@ class CategoriaController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created resource Categoria in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
+        //validacion de datos
         $this->validatorCategoria($request);
-        $categoria= $this->create($request);
+        //se crea el recurso categoria
+        $categoria = $this->create($request);
         
         if ($categoria){
-            return response()->json(['data' => 'OK'], 200);
-        
+            return response(null, Response::HTTP_OK);
         } else {
-            return response()->json(['error' =>  'Internal Server Error'], 500);
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     /**
      * @param $request
+     * valida los datos para un recurso Categoria
      */
     protected function validatorCategoria(Request $request)
     {
@@ -87,7 +91,7 @@ class CategoriaController extends Controller
         if ($categoria) {
             return response()->json(['data' => $categoria], 200);
         } else {
-            return response()->json(['error' =>  'Internal Server Error'], 500);
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -118,9 +122,9 @@ class CategoriaController extends Controller
         //Log::logs($id, $table_name, $accion , $rubro, 'Ha actualizado informacion personal');
         $categoria->update($request->all());
         if($categoria->save()){
-            return response()->json(['data' =>  'OK'], 200);
+            return response(null, Response::HTTP_OK);
         } else {
-            return response()->json(['error' => 'Internal Server Error'], 500 );
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -139,6 +143,6 @@ class CategoriaController extends Controller
     {
         $categorias = Categoria::orderBy('nombre', 'asc')->get();
 
-        return response()->json($categorias);
+        return response()->json($categorias, 200);
     }
 }

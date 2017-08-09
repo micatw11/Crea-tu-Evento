@@ -13,6 +13,7 @@
 </template>
 <script>
 import auth from './../auth.js'
+import routes from './../routes.js'
 import Bar from './Layouts/Barra.vue'
 import BarraLateral from './Layouts/BarraLateral.vue'
 import Foo from './Layouts/Footer.vue'
@@ -22,7 +23,8 @@ export default {
     data() {
         return {
             auth: auth,
-            showComponent: true,
+            routes: routes,
+            showComponent: true
         }
     },
     mounted() {

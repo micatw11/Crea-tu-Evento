@@ -2,13 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\CheckCategoriesService;
+use Illuminate\Http\Response;
 use Illuminate\Http\Request;
-use App\Categoria;
 use App\Subcategoria;
-
+use App\Categoria;
 
 class SubcategoriaController extends Controller
 {
+
+    /**
+     * @var CheckCategoriesService
+     */
+    private $categoriesService;
+
+    /**
+     *  constructor.
+     * @param CheckCategoriesService $categoriesService
+     */
+    public function __construct(CheckCategoriesService $categoriesService)
+    {
+        $this->categoriesService = $categoriesService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -29,9 +45,11 @@ class SubcategoriaController extends Controller
     }
 
     public function store(Request $request){
+
         $this->validatorSubcategoria($request);
-        $subcategoria= $this->create($request);
-        return response()->json(['data' => 'OK'], 200);
+        $subcategoria = $this->create($request);
+
+        return response(null, Response::HTTP_OK);
     }
 
     /**
@@ -73,7 +91,7 @@ class SubcategoriaController extends Controller
         if ($subcategoria) {
             return response()->json(['data' => $subcategoria], 200);
         } else {
-            return response()->json(['error' =>  'Internal Server Error'], 500);
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -87,14 +105,26 @@ class SubcategoriaController extends Controller
     public function update(Request $request, $id)
     {
         $this->validatorSubcategoria($request);
-        $subcategoria= Subcategoria::where('id', $id)->firstOrFail();
+
+        $subcategoria = Subcategoria::where('id', $id)->firstOrFail();
+        $categoria_id = null;
+
+        if($request->categoria_id != $subcategoria->categoria_id)
+        {
+            $categoria_id = $subcategoria->categoria_id;
+        }
 
         $subcategoria->update($request->all());
 
+        if($categoria_id != null)
+        {
+            $this->categoriesService->checkCategories($categoria_id);
+        }
+        
         if($subcategoria->save()){
-            return response()->json(['data' =>  'OK'], 200);
+            return response(null, Response::HTTP_OK);
         } else {
-            return response()->json(['error' => 'Internal Server Error'], 500 );
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -23,7 +23,7 @@ class LogController extends Controller
 	    	else
 	    		return response()->json(['data' => $actividad], 200);
 	    } else {
-	    	return response()->json(['error' => 'Forbidden'], 403);
+	    	return response(null, Response::HTTP_FORBIDDEN);
 	    }
     }
 }

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Services\CheckCategoriesService;
-
+use Illuminate\Http\Response;
+use Illuminate\Http\Request;
 use App\Subcategoria;
 use App\Categoria;
 use App\Rubro;
@@ -95,11 +95,11 @@ class RubroController extends Controller
         
         if ($rubro)
         {
-            return response()->json(['data' => 'OK'], 200);
+            return response(null, Response::HTTP_OK);
         } 
         else 
         {
-            return response()->json(['error' =>  'Internal Server Error'], 500);
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -161,12 +161,12 @@ class RubroController extends Controller
      */
     public function show($id)
     {
-          $rubros= Rubro::where('id', $id)->with('subcategoria.categoria')->firstOrFail();
+        $rubros= Rubro::where('id', $id)->with('subcategoria.categoria')->firstOrFail();
 
         if ($rubros) {
             return response()->json(['data' => $rubros], 200);
         } else {
-            return response()->json(['error' =>  'Internal Server Error'], 500);
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -179,18 +179,31 @@ class RubroController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, ['nombre'=>'required|min:4|max:55']);
+        $this->validate($request, [
+                'nombre'=>'required|min:4|max:55',
+                'subcategoria_id'=>'required|exists:subcategorias,id'
+                ]);
 
-        $rubros= Rubro::where('id', $id)->firstOrFail();
-        $subcategoria_id = $rubros->subcategoria_id;
-        $rubros->update($request->all());
+        $rubro = Rubro::where('id', $id)->firstOrFail();
+        $subcategoria_id = null;
 
-        //$this->categoriesService->checkCategories($subcategoria_id, null);
+        if($request->subcategoria_id != $rubro->subcategoria_id)
+        {
+            $subcategoria_id = $rubro->subcategoria_id;
+        }
 
-        if($rubros->save()){
-            return response()->json(['data' =>  'OK'], 200);
+        $rubro->update($request->all());
+
+        if($subcategoria_id != null)
+        {
+            $this->categoriesService->checkSubcategories($subcategoria_id);
+        }
+
+        if($rubro->save())
+        {
+            return response(null, Response::HTTP_OK);
         } else {
-            return response()->json(['error' => 'Internal Server Error'], 500 );
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -60,6 +60,8 @@ export default {
                 })
                 .then(response => {
                     this.$events.fire('reloadIndexCategoria')
+                    this.$events.fire('reloadIndexSubcategoria')
+                    this.$events.fire('reloadIndexRubro')
                     this.closeModal();
                     this.errorsApi= {},
                     this.$toast.success({

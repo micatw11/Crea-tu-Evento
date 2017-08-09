@@ -11,7 +11,6 @@ window.Vue = Vue;
 
 Vue.use(VueRouter);
 
-
 window.axios = axios;
 require('vue-resource');
 require('vue-events');
