@@ -1,15 +1,18 @@
 <template>
 <div>
-    <form role="form"><br><br>
-        <div class="col-sm-6">
+    <form role="form">
+
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('categoria')&&validarRubro}">
                 <div class="col-sm-12">
                     <label for="inputCategoria" class="control-label">Categoria</label><br>
                     <select
                         class="form-control"
+                        name='categoria'
                         v-model="categoria_id"
                         @change="cambiarCategoria()"
+                        v-validate="'required'"
                         placeholder="Seleccione la Categoria" >
+                        <option disabled value="">Seleccione una categoria</option>
                         <option 
                             v-for="option in optionsCategorias" 
                             v-bind:value="option.value">
@@ -33,9 +36,12 @@
                     <label for="inputSubcategoria" class="control-label">Subcategoria</label><br>
                     <select
                         class="form-control"
+                        name='subcategoria'
                         v-model="subcategoria_id"
                         @change="cambiarSubcategoria()"
+                        v-validate="'required'"
                         placeholder="Seleccione una subCategoria" >
+                        <option disabled value="">Seleccione una Subcategoria</option>
                         <option 
                             v-for="option in optionsSubcategorias" 
                             v-bind:value="option.value">
@@ -60,8 +66,11 @@
                     <select
                         class="form-control"
                         v-model="rubro_id"
+                        name='rubro'
                         @change="cambiarRubro()"
+                        v-validate="'required'"
                         placeholder="Seleccione un Rubro" >
+                        <option disabled value="">Seleccione un Rubro</option>
                         <option 
                             v-for="option in optionsRubros" 
                             v-bind:value="option.value">
@@ -78,130 +87,125 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <!--Datos de Habilitación y dirección del comercio-->
+            </div></br>
+        <!--Datos de Habilitación y dirección del comercio-->
+        <div v-if="rubro_id != null" class="col-sm-12">
             <label class="control-label">Cuenta con Comercio de atención. </label> <br>  
             <input type="checkbox" id="checkbox" v-model="rubro.comercio" style="text-align:center;">
             <label for="checkbox">{{ rubro.comercio == true ? "Si" : "No" }}</label>
-
         </div>
-        
-        <div v-if="rubro.comercio == true" class="col-sm-6">
-        <label for="Comercio" class="control-label">Datos de Comercio</label><br>
-          <div>
-            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('habilitacion')&&validarRubro}">
-                <div class="col-sm-12">
-                    <label for="inputHabilitacion" class="control-label">Habilitación</label><br>
-                     <input name="habilitacion" v-validate="'required'" type="number" v-model="rubro.habilitacion" value="habilitacion" class="form-control">
-                    <!-- validacion vee-validation -->
-                    <span v-show="errors.has('habilitacion')&&validarRubro" class="help-block">{{ errors.first('habilitacion') }}</span>
-                    <!-- validacion api-->
-                    <div class="text-red" v-if="errorsApi.habilitacion">
-                        <div v-for="msj in errorsApi.habilitacion">
-                            <p>{{ msj }}</p>
+        <div v-if="rubro.comercio == true">
+            <div>
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('habilitacion')&&validarRubro}">
+                    <div class="col-sm-6">
+                        <label for="inputHabilitacion" class="control-label">Habilitación</label><br>
+                         <input name="habilitacion" v-validate="'numeric'" type="text" v-model="rubro.habilitacion" value="habilitacion" class="form-control">
+                        <!-- validacion vee-validation -->
+                        <span v-show="errors.has('habilitacion')&&validarRubro" class="help-block">{{ errors.first('habilitacion') }}</span>
+                        <!-- validacion api-->
+                        <div class="text-red" v-if="errorsApi.habilitacion">
+                            <div v-for="msj in errorsApi.habilitacion">
+                                <p>{{ msj }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-          </div>
-          <div v-if="rubro.comercio == true" :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('facha')&&validarRubro}">
-
-                <div class="col-sm-12"><br/>
-                    <label for="inputNombre" class="control-label">Fecha de habilitación</label><br>
-                    <input 
-                        v-model="rubro.fecha_habilitacion" 
-                        type="date" 
-                        v-validate="'required'"
-                        name="facha"
-                        v-validate:rubro.fecha_habilitacion="'required'"
-                        >
-                    <!-- validacion vee-validation -->
-                    <span v-show="errors.has('facha')&&validarRubro" class="help-block">{{ errors.first('facha') }}</span>
-                    <!-- validacion api-->
-                    <div class="text-red" v-if="errorsApi.fecha_habilitacion">
-                        <div v-for="msj in errorsApi.fecha_habilitacion">
-                            <p>{{ msj }}</p>
+              
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('fecha')&&validarRubro}">
+                    <div class="col-sm-6">
+                        <label for="inputNombre" class="control-label">Fecha de habilitación</label><br>
+                        <input 
+                            v-model="rubro.fecha_habilitacion" 
+                            type="date"
+                            value="fecha"
+                            name="fecha"
+                            class="form-control"
+                            >
+                        <!-- validacion vee-validation -->
+                        <span v-show="errors.has('fecha')&&validarRubro" class="help-block">{{ errors.first('fecha') }}</span>
+                        <!-- validacion api-->
+                        <div class="text-red" v-if="errorsApi.fecha_habilitacion">
+                            <div v-for="msj in errorsApi.fecha_habilitacion">
+                                <p>{{ msj }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div>
-                 <div>
-                     <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('localidad')&&validarRubro}">
-                        <div class="col-sm-12">
-                            <label class="control-label">Localidad</label><br>
-                            <v-select
-                                :debounce="250" 
-                                :on-search="getOptions" 
-                                :options="localidades"
-                                data-vv-name="localidad"
-                                v-model="domicilio.localidad_id" 
-                                v-validate="'required'" 
-                                placeholder="Seleccione una localidad">
-                            </v-select>
-                           
-                            <!-- validacion vee-validation -->
-                            <span v-show="errors.has('localidad')&&validarRubro" class="help-block">{{ errors.first('localidad') }}</span>
-                            <!-- validacion api-->
-                            <div class="text-red" v-if="errorsApi.localidad_id">
-                                <div v-for="msj in errorsApi.localidad_id">
-                                    <p>{{ msj }}</p>
-                                </div>
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('localidad')&&validarRubro}">
+                    <div class="col-sm-12">
+                        <label class="control-label">Localidad</label><br>
+                        <v-select
+                            :debounce="250" 
+                            :on-search="getOptions" 
+                            :options="localidades"
+                            data-vv-name="localidad"
+                            v-validate="'required'"
+                            v-model="domicilio.localidad_id" 
+                            placeholder="Seleccione una localidad">
+                        </v-select>
+                       
+                        <!-- validacion vee-validation -->
+                        <span v-show="errors.has('localidad')&&validarRubro" class="help-block">{{ errors.first('localidad') }}</span>
+                        <!-- validacion api-->
+                        <div class="text-red" v-if="errorsApi.localidad_id">
+                            <div v-for="msj in errorsApi.localidad_id">
+                                <p>{{ msj }}</p>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('calle')&&validarRubro}">
-                        <div class="col-sm-12">
-                            <label for="inputCalle" class="control-label">Direccion </label><br>
-                            <input name="calle"  v-validate:domicilio.calle="'required|min:4'" type="text" class="form-control" v-model="domicilio.calle" placeholder="calle">
-                            <!-- validacion vee-validation -->
-                            <span v-show="errors.has('calle')&&validarRubro" class="help-block">{{ errors.first('calle') }}</span>
-                            <!-- validacion api-->
-                            <div class="text-red" v-if="errorsApi.calle">
-                                <div v-for="msj in errorsApi.calle">
-                                    <p>{{ msj }}</p>
-                                </div>
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('calle')&&validarRubro}">
+                    <div class="col-sm-8">
+                        <label for="inputCalle" class="control-label">Direccion </label><br>
+                        <input name="calle"  v-validate:domicilio.calle="'required|min:4'" type="text" class="form-control" v-model="domicilio.calle" placeholder="calle">
+                        <!-- validacion vee-validation -->
+                        <span v-show="errors.has('calle')&&validarRubro" class="help-block">{{ errors.first('calle') }}</span>
+                        <!-- validacion api-->
+                        <div class="text-red" v-if="errorsApi.calle">
+                            <div v-for="msj in errorsApi.calle">
+                                <p>{{ msj }}</p>
                             </div>
                         </div>
                     </div>
-                    
-                    <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has(('numero')||('piso'))&&validarRubro}">
-                        <div class="col-sm-6">
-                                <label for="inputNro" class="control-label">N° </label><br>
-                                <input 
-                                    name="numero" 
-                                    v-validate="'required'" 
-                                    type="number" v-model="domicilio.numero" 
-                                    value="numero" 
-                                    class="form-control">
-
-                                <!-- validacion vee-validation -->
-                                <span v-show="errors.has('numero')&&validarRubro" class="help-block">{{ errors.first('numero') }}</span>
-                                <!-- validacion api-->
-                                <div class="text-red">
-                                    <div v-if="errorsApi.numero" v-for="msj in errorsApi.numero">
-                                        <p>{{ msj }}</p>
-                                    </div>
-                                </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            
-                            <label for="inputPiso" class="control-label">Dpto. </label><br>
-                            <input name="piso" v-validate="'required'" type="number" v-model="domicilio.piso" value="piso" class="form-control">
+                </div>
+                
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has(('numero')||('piso'))&&validarRubro}">
+                    <div class="col-sm-2">
+                            <label for="inputNro" class="control-label col-sm-12">N° </label><br>
+                            <input 
+                                name="numero" 
+                                v-validate="'numeric'" 
+                                type="text" v-model="domicilio.numero" 
+                                value="numero" 
+                                class="form-control">
 
                             <!-- validacion vee-validation -->
-                            <span v-show="errors.has('piso')&&validarRubro" class="help-block">{{ errors.first('piso') }}</span>
+                            <span v-show="errors.has('numero')&&validarRubro" class="help-block">{{ errors.first('numero') }}</span>
+                            <!-- validacion api-->
                             <div class="text-red">
-                                <div v-if="errorsApi.piso" v-for="msj in errorsApi.piso">
+                                <div v-if="errorsApi.numero" v-for="msj in errorsApi.numero">
                                     <p>{{ msj }}</p>
                                 </div>
                             </div>
-                        </div>
-
                     </div>
+
+                    <div class="col-sm-2">
+                        
+                        <label for="inputPiso" class="control-label">Dpto. </label><br>
+                        <input name="piso" type="text" v-model="domicilio.piso" value="piso" class="form-control col-sm-12">
+
+                        <!-- validacion vee-validation -->
+                        <span v-show="errors.has('piso')&&validarRubro" class="help-block">{{ errors.first('piso') }}</span>
+                        <div class="text-red">
+                            <div v-if="errorsApi.piso" v-for="msj in errorsApi.piso">
+                                <p>{{ msj }}</p>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -231,7 +235,6 @@ export default {
                 required: true
             },
             errorsApi: {
-                type: Object,
                 required: true
             }
     },
@@ -266,8 +269,10 @@ export default {
             this.$validator.validateAll().then(() => {
                     this.validarRubro = false; 
                     if (this.nuevo){
+                        console.log('valido nuevo')
                         this.$emit('validado')
                     }else{
+                         console.log('valido nuevo')
                         this.$emit('validadoEdit')
                     }
                 }).catch(() => {

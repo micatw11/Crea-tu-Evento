@@ -24,7 +24,7 @@
                         <div class="tab-content">
                             
                             <div class="active tab-pane" id="publicaciones">
-                               <!-- <show-publicaciones :proveedorId="perfil.user.proveedor.id"></show-publicaciones>-->
+                               <show-publicaciones :proveedorId="perfil.user.proveedor.id"></show-publicaciones>
                             </div>
                             <div class="tab-pane" id="rubro">
 

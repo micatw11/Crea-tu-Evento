@@ -44,10 +44,11 @@ export default {
             nuevo: true,
             validarRubro: false,
             validarDomicilio: false,
-            errorsApi: {},
+            errorsApi: [],
             error: false,
             Comercio: null,
-            estado: true
+            estado: true,
+            params: {}
         }
     },
     components: {
@@ -56,29 +57,34 @@ export default {
     methods: {
         //envio de formulario de modificación de informacion de usuario
         sendForm: function() {
-            this.$http.post(
-                'api/proveedor/rubro/'+ this.$route.params.userId, 
-                {
+            this.params= {
                     rubro_id: this.rubro.rubro_id,
-                    comercio: this.rubro.comercio,
-                    habilitacion: this.rubro.habilitacion,
-                    fecha_habilitacion: this.rubro.fecha_habilitacion,
-                    calle: this.domicilio.calle,
-                    numero: this.domicilio.numero,
-                    piso: this.domicilio.piso,
-                    localidad_id: this.domicilio.localidad_id.value
-                })
+                    comercio: this.rubro.comercio
+                    };
+            if (this.rubro.comercio){
+                    this.params= {
+                            habilitacion: this.rubro.habilitacion,
+                            fecha_habilitacion: this.rubro.fecha_habilitacion,
+                            calle: this.domicilio.calle,
+                            numero: this.domicilio.numero,
+                            piso: this.domicilio.piso,
+                            localidad_id: this.domicilio.localidad_id.value
+                    }
+            };
+            this.$http.post(
+                'api/proveedor/rubro/'+ this.$route.params.userId, this.params
+                )
                 .then(response => {
-                    this.$emit('reload')
-                    this.closeModal(),
-                    this.errorsApi= {},
+                    console.log("respuesta ok");
                     this.$toast.success({
-                        title:'¡Cambios realizados!',
-                        message:'Se han realizado correctamente los cambios. :D'
+                         title:'¡Detalle de Rubro Creada!',
+                         message:'Se creado correctamente el Detalle de Rubro. :D'
                     });
                     this.resetForm();
-                    this.errorsApi= {};
+                    this.closeModal();
+                    this.errorsApi= [];
                 }, response => {
+                    console.log("resp. fallo");
                     this.validar= false;
                     this.validarRubro= false;
                     this.$toast.error({
@@ -101,7 +107,7 @@ export default {
             this.rubro={
                 tipo_rubro: null,
                 rubro_id: null,
-                comercio: false,
+                comercio: true,
                 habilitacion: null,
                 fecha_habilitacion: null
             },

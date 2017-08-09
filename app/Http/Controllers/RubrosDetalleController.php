@@ -30,7 +30,6 @@ class RubrosDetalleController extends Controller
     public function create(Request $request,$proveedor,$domicilio)
     {
         return RubrosDetalle::create([
-                    'tipo_rubro'=> $request->tipo_rubro,
                     'proveedor_id'=> $proveedor->id,
                     'rubro_id'=> $request->rubro_id,
                     'habilitacion'=> $request->habilitacion,
@@ -46,22 +45,23 @@ class RubrosDetalleController extends Controller
      */
     public function store(Request $request, $id)
     {
-        $datosCargados= false;
+        $datosCargados= true;
         $proveedor = Proveedor::where('user_id', $id)->firstOrFail();
         $this->validatorRubro($request);
         if ($request->comercio){
             $this->validatorDomicilio($request);
             $domicilio= $this->createDomicilio($request);
             $rubro= $this->create($request,$proveedor, $domicilio);
-            if (($rubro)&&($domicilio)){
-                $datosCargados= true
-            }
         }
         else{
+            $domicilio= Domicilio::where('id', $proveedor->domicilio_id)->firstOrFail();
             $rubro= $this->create($request,$proveedor, $domicilio);
-            if ($rubro){
-                $datosCargados= true
-            }
+        }
+        if (($rubro)&&($domicilio)){
+                $datosCargados= true;
+        }
+        if ($rubro){
+                $datosCargados= true;
         }
         if ($datosCargados){
             return response()->json(['data' => 'OK'], 200);
@@ -80,9 +80,9 @@ class RubrosDetalleController extends Controller
     {
       return $this->validate($request, 
         [
-            'calle'=>'min:4|max:55',
-            'numero'=> 'min:1|max:10',
-            'piso'=> 'min:1|max:10',
+            'calle'=>'max:55',
+            'numero'=> 'max:10',
+            'piso'=> 'max:10',
             'localidad_id'=> 'exists:localidades,id'
         ]);
     }
@@ -109,7 +109,7 @@ class RubrosDetalleController extends Controller
         [
             'rubro_id' =>'required',
             'fecha_habilitacion'=>'date',
-            'habilitacion'=>'min:4|max:55',
+            'habilitacion'=>'max:55',
         ]);
     }
 
