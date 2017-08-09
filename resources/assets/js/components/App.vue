@@ -24,29 +24,12 @@ export default {
         return {
             auth: auth,
             routes: routes,
-            showComponent: true,
-            interval: null
+            showComponent: true
         }
     },
     mounted() {
         this.$events.listen('reloadComponents', this.reloadComponents);
         $(this).ajaxStart(function() { Pace.restart(); });
-        /*
-        this.interval = setInterval(function () {
-            if(auth.user.authenticated)
-            {
-                Vue.http.get('api/user').then(response => {
-                        return ;
-                    }, response => {
-                        auth.user.authenticated=false;
-                        routes.push('/login');
-                    })
-            }
-        }.bind(this), 60000); 
-        */
-    },
-    beforeDestroy() {
-        clearInterval(this.interval);
     },
     computed: {
         classContentWrapper: function () {

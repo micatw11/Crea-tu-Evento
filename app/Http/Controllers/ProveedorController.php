@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Response;
+use Illuminate\Http\Request;
 use App\Proveedor;
 use App\Rol;
 use App\Domicilio;
@@ -58,12 +59,10 @@ class ProveedorController extends Controller
         $proveedor= $this->createProveedor($request,$domicilio);
         
         if (($proveedor)&&($domicilio)){
-            return response()->json(['data' => 'OK'], 200);
+            return response(null, Response::HTTP_OK);
         
         } else {
-            return response()->json([
-                'error' => 'Unauthorized', 'proveedor' => $proveedor
-            ], 401);
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -136,9 +135,9 @@ class ProveedorController extends Controller
                     'dni' => $filename]);
 
         if($proveedor->save() && $domicilio->save()){
-            return response()->json(['data' =>  'OK'], 200);
+            return response(null, Response::HTTP_OK);
         } else {
-            return response()->json(['error' => 'Internal Server Error'], 500 );
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -202,9 +201,9 @@ class ProveedorController extends Controller
 
 
         if($proveedor->user->save() && $proveedor->save()){
-            return response()->json(['data' =>  'OK', 'proveedor' => $proveedor], 200);
+            return response(null, Response::HTTP_OK);
         } else {
-            return response()->json(['error' =>  'Internal Server Error'], 500);
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -216,7 +215,7 @@ class ProveedorController extends Controller
         if ($proveedor) {
             return response()->json(['data' => $proveedor], 200);
         } else {
-            return response()->json(['error' =>  'Internal Server Error'], 500);
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 

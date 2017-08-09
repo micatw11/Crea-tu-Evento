@@ -124,7 +124,7 @@ export default {
                 
             }, response => {
                 this.validar = false;
-                if(response.body.error) {
+                if(response.status === 401) {
                     this.error = true
                 } else if (response.status === 500) {
                     this.internalServerError = true;

@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Response;
+use Illuminate\Http\Request;
 use App\User;
 
 class AuthController extends Controller
@@ -20,7 +21,7 @@ class AuthController extends Controller
             if ($user->estado!=2){
                 if(!$user->estado) $user->alta();
                 $user->usuario->localidad->provincia;
-                return response()->json(['data' =>  $user, 'csrfToken', csrf_token()]);
+                return response()->json(['data' =>  $user, 'csrfToken' => csrf_token()]);
             } else {
                     Auth::logout();
                     return response()->json([
@@ -28,9 +29,7 @@ class AuthController extends Controller
                     ], 403);
             }
         } else {
-            return response()->json([
-                'error' => 'Unauthorized',
-            ], 401);
+            return response(null, Response::HTTP_UNAUTHORIZED);
         }
     }
 
@@ -40,9 +39,7 @@ class AuthController extends Controller
             Auth::logout();
             return response()->json(['data' => 'OK'], 200);
         } else {
-            return response()->json([
-                'error' => 'Unauthorized',
-            ], 401);
+            return response(null, Response::HTTP_UNAUTHORIZED);
         }
         
     }
@@ -60,11 +57,9 @@ class AuthController extends Controller
         if(!Auth::guest()){
             $user = Auth::user();
             $user->usuario->localidad->provincia;
-            return response()->json(['data' =>  $user, 'csrfToken', csrf_token()]);
+            return response()->json(['data' =>  $user, 'csrfToken' => csrf_token()]);
         } else {
-            return response()->json([
-                'error' => 'Unauthorized',
-            ], 401);
+            return response(null, Response::HTTP_UNAUTHORIZED);
         }
     }
 

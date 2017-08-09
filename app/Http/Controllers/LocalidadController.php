@@ -22,7 +22,7 @@ class LocalidadController extends Controller
                 ->orderBy('localidades.nombre', 'asc')
                 ->get();
 
-        return response()->json(['data' =>  $localidades->toArray()]);
+        return response()->json(['data' =>  $localidades->toArray()], 200);
     }
 
     /**

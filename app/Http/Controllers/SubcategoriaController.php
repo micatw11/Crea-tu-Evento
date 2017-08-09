@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Services\CheckCategoriesService;
+use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Subcategoria;
 use App\Categoria;
@@ -44,9 +45,11 @@ class SubcategoriaController extends Controller
     }
 
     public function store(Request $request){
+
         $this->validatorSubcategoria($request);
-        $subcategoria= $this->create($request);
-        return response()->json(['data' => 'OK'], 200);
+        $subcategoria = $this->create($request);
+
+        return response(null, Response::HTTP_OK);
     }
 
     /**
@@ -88,7 +91,7 @@ class SubcategoriaController extends Controller
         if ($subcategoria) {
             return response()->json(['data' => $subcategoria], 200);
         } else {
-            return response()->json(['error' =>  'Internal Server Error'], 500);
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -119,9 +122,9 @@ class SubcategoriaController extends Controller
         }
         
         if($subcategoria->save()){
-            return response()->json(['data' =>  'OK'], 200);
+            return response(null, Response::HTTP_OK);
         } else {
-            return response()->json(['error' => 'Internal Server Error'], 500 );
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 

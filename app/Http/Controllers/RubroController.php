@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Services\CheckCategoriesService;
-
+use Illuminate\Http\Response;
+use Illuminate\Http\Request;
 use App\Subcategoria;
 use App\Categoria;
 use App\Rubro;
@@ -95,11 +95,11 @@ class RubroController extends Controller
         
         if ($rubro)
         {
-            return response()->json(['data' => 'OK'], 200);
+            return response(null, Response::HTTP_OK);
         } 
         else 
         {
-            return response()->json(['error' =>  'Internal Server Error'], 500);
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -161,12 +161,12 @@ class RubroController extends Controller
      */
     public function show($id)
     {
-          $rubros= Rubro::where('id', $id)->with('subcategoria.categoria')->firstOrFail();
+        $rubros= Rubro::where('id', $id)->with('subcategoria.categoria')->firstOrFail();
 
         if ($rubros) {
             return response()->json(['data' => $rubros], 200);
         } else {
-            return response()->json(['error' =>  'Internal Server Error'], 500);
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -201,9 +201,9 @@ class RubroController extends Controller
 
         if($rubro->save())
         {
-            return response()->json(['data' =>  'OK'], 200);
+            return response(null, Response::HTTP_OK);
         } else {
-            return response()->json(['error' => 'Internal Server Error'], 500 );
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

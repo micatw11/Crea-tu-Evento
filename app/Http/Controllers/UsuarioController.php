@@ -102,9 +102,9 @@ class UsuarioController extends Controller
                 ->firstOrFail();
 
         if (Gate::allows('show-profile', $usuario)) {
-            return response()->json(['data' =>  $usuario]);
+            return response()->json(['data' =>  $usuario], 200);
         } else {
-            return response()->json(['error' => 'Forbidden'], 403);
+            return response(null, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -134,9 +134,9 @@ class UsuarioController extends Controller
         Log::logs($id, $table_name, $accion , $usuario, 'Ha actualizado informacion personal');
         $usuario->update($request->all());
         if($usuario->save()){
-            return response()->json(['data' =>  'OK'], 200);
+            return response(null, Response::HTTP_OK);
         } else {
-            return response()->json(['error' => 'Internal Server Error'], 500 );
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -156,9 +156,9 @@ class UsuarioController extends Controller
             if($request->logout){
                  Auth::logout();
             }
-            return response()->json(['data' =>  'OK'], 200);
+            return response(null, Response::HTTP_OK);
         } else {
-            return response()->json(['error' =>  'Internal Server Error'], 500);
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -181,9 +181,9 @@ class UsuarioController extends Controller
 
         if($user->save()){
             Log::logs($id, $table_name, $accion , $user, $descripcion);
-            return response()->json(['data' =>  'OK'], 200);
+            return response(null, Response::HTTP_OK);
         } else {
-            return response()->json(['error' =>  'Internal Server Error' , 'request' => $request ], 500);
+            return response()->json(['request' => $request ], 500);
         }
 
     }
@@ -204,7 +204,7 @@ class UsuarioController extends Controller
         if($usuario->save()){
             return response()->json(['data' => $filename ], 200);
         } else {
-            return response()->json(['error' => 'Internal Server Error'], 500);
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -221,11 +221,10 @@ class UsuarioController extends Controller
             Log::logs($id, $table_name, $accion, 'Ha cambiado su contraseña');
             $user->password =  Hash::make($request->password);
             $user->save();
-            return response()->json(['data' =>  'OK'], 200);
+            return response(null, Response::HTTP_OK);
         } else {
-            $error = array(
-                'oldPassword' => 'La contraseña ingresada no coincide con nuestros registros.');
-            return response()->json(['error' =>  'Unauthorized', 'oldPassword'=> $error], 401);
+            $error = array('oldPassword' => 'La contraseña ingresada no coincide con nuestros registros.');
+            return response()->json(['oldPassword' => $error], 403);
         }
     }
 
@@ -239,9 +238,9 @@ class UsuarioController extends Controller
         $user->roles_id = $request->roles_id;
 
         if($user->save()){
-            return response()->json(['data' =>  'OK' ], 200);
+            return response(null, Response::HTTP_OK);
         } else {
-            return response()->json(['error' => 'Internal Server Error'], 500);
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -291,7 +290,7 @@ class UsuarioController extends Controller
             return response()->json($actividades);
 
         } else {
-            return response()->json(['error' => 'Forbidden'], 403);
+            return response(null, Response::HTTP_FORBIDDEN);
         }
     }
 

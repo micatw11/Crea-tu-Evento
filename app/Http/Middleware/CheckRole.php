@@ -29,11 +29,11 @@ class CheckRole
                 if($bool) return $next($request);
             }
 
-            return response()->json(['error' => 'Forbidden'], 403);
+            return response(null, Response::HTTP_FORBIDDEN);
         }
         else
         {
-            return response()->json(['error' =>  'Unauthorized'], 401);
+            return response(null, Response::HTTP_UNAUTHORIZED);
         }
 
     }
