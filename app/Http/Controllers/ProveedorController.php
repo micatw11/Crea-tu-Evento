@@ -32,7 +32,7 @@ class ProveedorController extends Controller
         }
 
         $proveedores = $query->paginate(10);
-        return response()->json($proveedores);
+        return response()->json($proveedores, 200);
     }
 
     /**

@@ -27,7 +27,7 @@ class CategoriaController extends Controller
 
         $categorias = $query->paginate(10);
 
-        return response()->json($categorias);
+        return response()->json($categorias, 200);
 
     }
 
@@ -143,6 +143,6 @@ class CategoriaController extends Controller
     {
         $categorias = Categoria::orderBy('nombre', 'asc')->get();
 
-        return response()->json($categorias);
+        return response()->json($categorias, 200);
     }
 }

@@ -98,9 +98,11 @@
                         <div class="col-sm-12">
                             <label for="inputCategoria" class="control-label">Subcategoria</label><br>
 
-                            <input type="checkbox" v-model="newSubcategoria"> Nueva Subcategiria
+                            <template v-if="!newCategoria">
+                                <input newCategoria type="checkbox" v-model="newSubcategoria"> Nueva Subcategiria
+                            </template>
 
-                            <template v-if="newSubcategoria">
+                            <template v-if="newCategoria || newSubcategoria ">
                                 <input 
                                     name="subcategoria" 
                                     v-validate="'required|min:4|max:22'" 
@@ -109,7 +111,7 @@
                                     class="form-control" 
                                     placeholder="Nombre Subcategoria">
                             </template>
-                            <template v-else>
+                            <template v-if="!newCategoria && !newSubcategoria">
                                 <select 
                                     name="subcategoria" 
                                     v-model="subcategoria_id" 
@@ -216,7 +218,6 @@ export default {
                         title:'¡Cambios realizados!',
                         message:'Se han realizado correctamente los cambios. :D'
                     });
-                    this.resetForm()
                 }, response => {
                     this.$toast.error({
                         title:'¡Error!',
@@ -255,7 +256,7 @@ export default {
         },
         changeCategory: function(){
             this.subcategorias = [];
-            this.subcategoria_id = null;
+            this.subcategoria_id = "";
             this.$http.get('api/categoria/' +this.categoria_id
                 ).then(response => {
                     let data = response.data.data
@@ -268,7 +269,15 @@ export default {
             this.$events.fire('cerrar');
         }
 
-    }
+    },
+    watch: {
+        'newCategoria' (){
+            if(this.newCategoria)
+            {
+                this.newSubcategoria = true;
+            }
+        }
+    },
 }
 
 </script>
