@@ -21,9 +21,20 @@
                     </div>
                 </div>
 
-                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('rubros')&&validarPublicacion}">
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('rubro')&&validarPublicacion}">
                     <div class="col-sm-12">
-                        <label class="control-label">Rubros</label><br>
+                        <label class="control-label">Rubro (*)</label><br>
+                        <select
+                            name="rubro"                  
+                            v-model="publicacion.rubros_detalle_id"
+                            class="form-control" 
+                            v-validate="'required'">
+                            <option value="" disabled="">Seleccione un rubro</option>
+                            <option v-for="option in rubros" v-bind:value="option.value">
+                                {{ option.text }}
+                            </option>
+                        </select>
+                        <!--
                         <v-select 
                             :debounce="250"
                             v-validate="'required'" 
@@ -35,11 +46,12 @@
                             multiple
                             placeholder="Seleccione un Rubro">
                         </v-select>
+                        -->
                         <!-- validacion vee-validation -->
-                        <span v-show="errors.has('rubros')&&validarPublicacion" class="help-block">{{ errors.first('rubros') }}</span>
+                        <span v-show="errors.has('rubro')&&validarPublicacion" class="help-block">{{ errors.first('rubro') }}</span>
                         <!-- validacion api-->
-                        <div class="text-red" v-if="errorsApi.user_id">
-                            <div v-for="msj in errorsApi.user_id">
+                        <div class="text-red" v-if="errorsApi.rubros_detalle_id">
+                            <div v-for="msj in errorsApi.rubros_detalle_id">
                                 <p>{{ msj }}</p>
                             </div>
                         </div>
@@ -77,7 +89,7 @@
                         	name="descripcion"  
                         	v-validate="'required|min:15'" 
                         	class="form-control" 
-                        	style="min-height:100px;" 
+                        	style="min-height:150px;" 
                         	v-model="publicacion.descripcion" placeholder="Ingrese una Descripcion">
                         </textarea>
 
@@ -150,17 +162,22 @@
 				rubros: []
 			}
 		},
+        beforeMount(){
+            this.getOptions();
+        },
 		mounted(){
 			this.$events.on("validarFormPublicacion", () => this.validateSubmit())
 		},
 		components: {vSelect},
 		methods: {
-			getOptions: function(search, loading) {
-	            loading(true)
-	            this.$http.get('api/proveedor/'+this.auth.user.profile.id+'/rubros/search/?q='+ search
+			getOptions: function() {
+	            this.$http.get('api/proveedor/'+this.auth.user.profile.id+'/rubro/'
 	                ).then(response => {
-	                    this.rubros = response.data.data
-	                    loading(false)
+                        var data = response.data;
+                        console.log(data);
+                        for (let rubro of data.rubros){
+                            this.rubros.push({ text: rubro.rubro.nombre, value: rubro.id });
+                        }
 	                })
 	        },
 	        onFilesChange(e) {
@@ -182,7 +199,6 @@
 	        validateSubmit: function() {
 	        	console.log('validator form producto: ')
                 this.$validator.validateAll().then(() => {
-                    this.setValueRubro();
                     if(this.nuevo){
                         console.log('valido nuevo')
                         this.$emit('validadoNewPublicacion'); 
@@ -195,15 +211,9 @@
 
                     this.$emit('update:validarPublicacion', false);             
                 }).catch(() => {
+                    console.log('no valido')
                 	this.$emit('update:validarPublicacion', true);
                 });
-	        },
-	        setValueRubro: function(){
-	        	var values = [];
-	        	for(let i = 0; i < this.publicacion.rubros.length; i++){
-	        		values.push(this.publicacion.rubros[i].value)
-	        	}
-	        	this.publicacion.rubros = values;
 	        }
 	    }
 	}

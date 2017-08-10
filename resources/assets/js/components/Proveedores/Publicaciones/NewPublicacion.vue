@@ -42,6 +42,7 @@
 			}
 		},
 		mounted(){
+			this.resetForm();
 			//this.$events.on("validadoFormPublicacion", () => this.sendNewForm());
 		},
 		components: {
@@ -58,7 +59,7 @@
 	                {
 	                    titulo: this.publicacion.titulo,
 	                    descripcion: this.publicacion.descripcion,
-	                    rubros: this.publicacion.rubros,
+	                    rubros_detalle_id: this.publicacion.rubros_detalle_id,
 	                    oferta: this.publicacion.oferta,
 	                    fecha_finalizacion: this.fecha_finalizacion,
 	                    fotos: this.publicacion.fotos
@@ -89,7 +90,7 @@
 	        		'descripcion': '',
 	        		'oferta': '',
 	        		'fotos': null,
-	        		'rubros': null,
+	        		'rubros_detalle_id': '',
 	        		'fecha_finalizacion': null
 
 	        	}

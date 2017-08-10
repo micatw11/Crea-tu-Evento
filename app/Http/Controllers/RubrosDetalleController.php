@@ -177,4 +177,14 @@ class RubrosDetalleController extends Controller
     {
         //
     }
+
+    public function getAll(Request $request, $id){
+        $proveedor = Proveedor::where('user_id', $id)->firstOrFail();
+
+        $rubros = RubrosDetalle::where('proveedor_id', $proveedor->id)
+            ->with('domicilio.localidad.provincia', 'rubro.subcategoria.categoria')->get();
+        return response()->json(['rubros' => $rubros], 200);
+    }
+
+
 }

@@ -12,12 +12,13 @@ class Rubro extends Model
                             'nombre',
     						'subcategoria_id',
     					  ];
-    					      ///RELACIONES//
+    
+    ///RELACIONES//
     public function subcategoria()
     {
         return $this->belongsTo('App\Subcategoria');
     }
-    public function rubrosDetalles(){
+    public function rubros_detalles(){
         return $this->hasMany('App\RubrosDetalle');
     }
 

@@ -207,7 +207,7 @@ class RubroController extends Controller
         }
     }
 
-      public function searchRubros(Request $request, $subcategoria)
+    public function searchRubros(Request $request, $subcategoria)
     {
         $rubros = Rubro::where('subcategoria_id',$subcategoria)
                 ->orderBy('nombre', 'asc')->get();

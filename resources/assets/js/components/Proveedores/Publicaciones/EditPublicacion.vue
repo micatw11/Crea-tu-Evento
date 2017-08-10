@@ -6,7 +6,7 @@
         			<h3 class="box-title">Editar Publicaci&oacute;n</h3>
         		</div>
         		<div class="box box-body">
-		        	<form-publicacion 
+		        	<form-publicacion v-if="showForm"
 		        		:publicacion="publicacion" 
 		        		:nuevo="false"
 		        		:validarPublicacion="validarPublicacion"
@@ -39,7 +39,8 @@
 					type: Object
 				},
 				validarPublicacion: false,
-				errorsApi:[]
+				errorsApi:[],
+				showForm: false
 			}
 		},
 		beforeMount: function(){
@@ -62,7 +63,7 @@
 	                {
 	                    titulo: this.publicacion.titulo,
 	                    descripcion: this.publicacion.descripcion,
-	                    rubros: this.publicacion.rubros,
+	                    rubros_detalle_id: this.publicacion.rubros_detalle_id,
 	                    oferta: this.publicacion.oferta,
 	                    fotos: this.publicacion.fotos
 
@@ -88,26 +89,20 @@
 	        getPublicacion: function(){
 	        	this.$http.get('api/publicacion/'+this.$route.params.publicacionId)
 	        	.then(response =>{
-		        		this.publicacion = response.data
-		        		this.setDafaultRubros();
+		        		this.publicacion = response.data.publicacion
+		        		this.showForm = true;
 		        	}, response => {
 	                    if(response.status === 404){
-	                        router.push('/404');
+	                        router.go(-1)
+		                    this.$toast.error({
+		                        title:'¡Error!',
+		                        message:'No se han obtener sus rubros. :('
+		                    });
 	                    }
 		        	});
 	        },
 	        goBack: function(){
 	            router.go(-1)
-	        },
-	        setDafaultRubros: function(){
-	        	let rubros=[];
-	        	for (var i = 0; i < this.publicacion.rubros.length; i++) {
-	        		rubros.push({
-	        			'value':this.publicacion.rubros[i].id,
-	        			'label':this.publicacion.rubros[i].denominacion
-	        		});
-	        	}
-	        	this.publicacion.rubros = rubros;
 	        }
 		}
 	}

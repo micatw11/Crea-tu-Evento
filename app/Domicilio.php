@@ -20,7 +20,7 @@ class Domicilio extends Model
         return $this->hasOne('App\Proveedor');
     }
 
-      public function rubrosDetalle()
+      public function rubros_detalle()
     {
         return $this->hasOne('App\RubrosDetalle');
     }
