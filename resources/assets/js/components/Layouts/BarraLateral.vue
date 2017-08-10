@@ -21,11 +21,12 @@
             </div>
 
             <!-- search form -->
-            <form action="#" method="get" class="sidebar-form">
+            <form v-on:submit.prevent class="sidebar-form">
                 <div class="input-group">
-                <input type="text" name="q" class="form-control" placeholder="Search...">
+                <input type="text" name="q" class="form-control" v-model="q" placeholder="Busqueda" @change="searchPublicacion()">
                     <span class="input-group-btn">
-                        <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                        <button  id="search-btn" class="btn btn-flat" @click="searchPublicacion()">
+                            <i class="fa fa-search"></i>
                         </button>
                     </span>
                 </div>
@@ -70,13 +71,13 @@
                     </router-link>
                 </ul>
             </li>
-            <li>
+            <li class="treeview">
                 <router-link
                     v-if="auth.user.profile.roles_id == role.ADMINISTRADOR ||
                         auth.user.profile.roles_id == role.SUPERVISOR"
                         to="/categorias">
                         <a>
-                            <i class="fa fa-th-list"></i> Categorias
+                            <i class="fa fa-th-list"></i> <span>Categorias</span>
                         </a>
                 </router-link>
             </li>
@@ -106,11 +107,22 @@ export default {
         return {
             auth: auth,
             srcUrl: '',
-            role: Role
+            role: Role,
+            q: ''
         }
     },
     mounted: function(){
         this.srcUrl = '/storage/avatars/'+ this.auth.user.profile.usuario.avatar
+    },
+    methods: {
+        searchPublicacion: function(){
+            this.$events.fire('search', this.q);
+        }
+    },
+    watch: {
+        'q' (newValue, oldValue){
+            this.searchPublicacion();
+        }
     }
 }
 </script>

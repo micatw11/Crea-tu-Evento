@@ -14,7 +14,16 @@ use App\Rol;
 class PublicacionController extends Controller
 {
     public function index(Request $request){
+        $query = Publicacion::with('rubros_detalle.proveedor', 'rubros_detalle.rubro.subcategoria.categoria');
 
+        if($request->filter){
+            $like = '%'.$request->filter.'%';
+            $query->where('titulo','like', $like )
+                    ->orWhere('descripcion', 'like', $like);
+        }
+
+        $publicaciones = $query->paginate(10);
+        return response()->json(['publicaciones' => $publicaciones], 200);
     }
 
     public function show(Request $request, $id){

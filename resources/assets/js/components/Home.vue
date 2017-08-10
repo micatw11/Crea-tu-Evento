@@ -7,7 +7,7 @@
                         <div class="panel-heading">Example Component</div>
 
                         <div class="panel-body">
-                            I'm an example Home!
+                            I'm an example Home!<br>
                         </div>
                     </div>
                 </div>
@@ -21,11 +21,24 @@
         data(){
             return {
                 titlePath: 'Home',
-                listaPath: [{route: '/', name: 'Home'}]
+                listaPath: [{route: '/', name: 'Home'}],
+                publicaciones : []
             }
         },
         mounted() {
             this.$events.fire('changePath', this.listaPath, this.titlePath);
+            this.$events.on('search', value => this.searchPublication(value));
+        }, 
+        methods: {
+            searchPublication(filter){
+                console.log(filter)
+                this.$http.get('api/publicacion?filter='+filter, 
+                ).then(response => {
+                    this.publicaciones = response.data.publicaciones;
+                }, response => {
+
+                })
+            }
         }
     }
 </script>
