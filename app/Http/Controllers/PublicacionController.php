@@ -125,13 +125,13 @@ class PublicacionController extends Controller
     public function publicacionesProveedor(Request $request, $idProveedor){
         $publicacionesId = DB::table('publicaciones')
             ->join('publicacion_rubro', 'publicacion_rubro.publicacion_id', '=', 'publicaciones.id')
-            ->join('rubros', 'rubros.id', '=', 'publicacion_rubro.rubro_id')
+            ->join('rubros_detalle', 'rubros_detalle.id', '=', 'publicacion_rubro.rubros_detalle_id')
                 ->select('publicaciones.id')
-                ->where('rubros.proveedor_id', $idProveedor)
+                ->where('rubros_detalle.proveedor_id', $idProveedor)
                 ->where('publicaciones.estado', 1)
                 ->groupby('publicaciones.id')->distinct()->get()->pluck('id');
 
-        $publicaciones = Publicacion::with('rubros', 'fotos')->whereIn('id', $publicacionesId)->get();
+        $publicaciones = Publicacion::with('rubros_detalle', 'fotos')->whereIn('id', $publicacionesId)->get();
 
         return response()->json($publicaciones);
     }

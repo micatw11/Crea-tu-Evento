@@ -22,19 +22,25 @@
                 </div>
 
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('rubros')&&validarPublicacion}">
-                    <div class="col-sm-12">
+                    <div class="col-sm-8">
                         <label class="control-label">Rubros</label><br>
-                        <v-select 
-                            :debounce="250"
-                            v-validate="'required'" 
-                            v-model="publicacion.rubros_detalle"
+                        <select
+                            class="form-control"
+                            v-model="publicacion.rubros"
                             name= "rubros"
                             data-vv-name="rubros"
-                            :on-search="getOptions" 
-                            :options="rubros"
-                            multiple
-                            placeholder="Seleccione un Rubro">
-                        </v-select>
+                            @change="setValueRubro" 
+                            v-validate="'required'"
+                            placeholder="Seleccione un Rubro" >
+                            <option disabled value="">Seleccione un Rubro</option>
+                            <option 
+                                v-for="option in rubros" 
+                                v-bind:value="option.value">
+                                {{ option.text }}
+                            </option>
+
+                        </select>
+
                         <!-- validacion vee-validation -->
                         <span v-show="errors.has('rubros')&&validarPublicacion" class="help-block">{{ errors.first('rubros') }}</span>
                         <!-- validacion api-->
@@ -44,6 +50,37 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="box-header">
+                        <div>
+                            <button class="btn btn-block btn-primary btn-sm"
+                                @click="showNew = true">
+                                Agregar Nueva Actividad
+                            </button>
+                        </div>
+                    </div>
+
+                    <div v-if="showNew" class="modal" role="dialog" :style="{ display : showNew  ? 'block' : 'none' }">
+                        <div class="modal-dialog">
+                        <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" @click="closeModal()">&times;</button>
+                                    <h4 class="modal-title">Crear Rubro</h4>
+                                </div>
+                                <new-rubro></new-rubro>
+                            </div>
+                        </div>    
+                    </div>
+                </div> 
+                <div v-if="publicacion.rubros">
+                    <div v-for="etiqueta in publicacion.rubros">
+                        <span class="tag is-primary">
+                        {{etiqueta}}
+                          <button class="delete is-small"></button>
+                        </span>
+                     </div>
                 </div>
 
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('oferta')&&validarPublicacion}">
@@ -125,6 +162,7 @@
 <script>
 	import auth from '../../../auth.js'
 	import vSelect from "vue-select";
+    import NewRubro from '../RubrosDetalle/NewRubro.vue';
 
 	export default {
 		props: {
@@ -147,20 +185,25 @@
 		data() {
 			return {
 				auth: auth,
-				rubros: []
+				rubros: [],
+                showNew: false
 			}
 		},
+        created: function() {
+            this.getOptions();
+        },
 		mounted(){
 			this.$events.on("validarFormPublicacion", () => this.validateSubmit())
 		},
-		components: {vSelect},
+		components: {vSelect, NewRubro},
 		methods: {
-			getOptions: function(search, loading) {
-	            loading(true)
-	            this.$http.get('api/proveedor/'+this.auth.user.profile.id+'/rubros/search/?q='+ search
+			getOptions: function() {
+	            this.$http.get('api/proveedor/'+this.auth.user.profile.id+'/rubros/search'
 	                ).then(response => {
-	                    this.rubros = response.data.data
-	                    loading(false)
+	                    let options = response.data
+	                    for (let option of options){
+                        this.rubros.push({ text: option.rubro.nombre, value: option.id })
+                         }
 	                })
 	        },
 	        onFilesChange(e) {
@@ -200,10 +243,13 @@
 	        },
 	        setValueRubro: function(){
 	        	var values = [];
+                console.log(values);
 	        	for(let i = 0; i < this.publicacion.rubros.length; i++){
 	        		values.push(this.publicacion.rubros[i].value)
 	        	}
 	        	this.publicacion.rubros = values;
+                console.log(this.publicacion.rubros);
+                console.log(this.publicacion.rubros.length);
 	        }
 	    }
 	}

@@ -177,4 +177,14 @@ class RubrosDetalleController extends Controller
     {
         //
     }
+
+      public function searchRubros(Request $request, $id)
+    {
+        $rubros = RubrosDetalle::where('proveedor_id',$id)
+            ->with('rubro', 'proveedor.domicilio', 'domicilio')
+                ->get();
+
+
+        return response()->json($rubros);
+    }
 }

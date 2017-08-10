@@ -58,7 +58,7 @@
 	                {
 	                    titulo: this.publicacion.titulo,
 	                    descripcion: this.publicacion.descripcion,
-	                    rubros: this.publicacion.rubros,
+	                    rubros_detalle: this.publicacion.rubros,
 	                    oferta: this.publicacion.oferta,
 	                    fecha_finalizacion: this.fecha_finalizacion,
 	                    fotos: this.publicacion.fotos
