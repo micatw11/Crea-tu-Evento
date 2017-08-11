@@ -14,6 +14,12 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </a>
+                        <!-- search form -->
+            <form v-on:submit.prevent="searchPublicacion()" class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <input type="text" name="q" class="form-control" v-model="q" placeholder="Busqueda" @change="searchPublicacion()">
+                </div>
+            </form>
 
             <div v-if="auth.user.authenticated" class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
@@ -43,9 +49,20 @@ import Notificaciones from './Notificaciones.vue';
 export default {
     data() {
         return {
-            auth: auth
+            auth: auth,
+            q: ''
         }
     },
-    components:{ MenuUser, Notificaciones}
+    methods: {
+        searchPublicacion: function(){
+            this.$events.fire('search', this.q);
+        }
+    },
+    components:{ MenuUser, Notificaciones },
+    watch: {
+        'q' (newValue, oldValue){
+            this.searchPublicacion();
+        }
+    }
 }
 </script>

@@ -19,18 +19,6 @@
                     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                 </div>
             </div>
-
-            <!-- search form -->
-            <form v-on:submit.prevent class="sidebar-form">
-                <div class="input-group">
-                <input type="text" name="q" class="form-control" v-model="q" placeholder="Busqueda" @change="searchPublicacion()">
-                    <span class="input-group-btn">
-                        <button  id="search-btn" class="btn btn-flat" @click="searchPublicacion()">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </span>
-                </div>
-            </form>
             <!-- /.search form -->
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu">
@@ -71,14 +59,12 @@
                     </router-link>
                 </ul>
             </li>
-            <li class="treeview">
+            <li>
                 <router-link
                     v-if="auth.user.profile.roles_id == role.ADMINISTRADOR ||
                         auth.user.profile.roles_id == role.SUPERVISOR"
                         to="/categorias">
-                        <a>
-                            <i class="fa fa-th-list"></i> <span>Categorias</span>
-                        </a>
+                            <i class="fa fa-th-list"></i> <span> Categorias</span>
                 </router-link>
             </li>
             <!--
@@ -107,23 +93,13 @@ export default {
         return {
             auth: auth,
             srcUrl: '',
-            role: Role,
-            q: ''
+            role: Role
         }
     },
     mounted: function(){
         this.srcUrl = '/storage/avatars/'+ this.auth.user.profile.usuario.avatar
-    },
-    methods: {
-        searchPublicacion: function(){
-            this.$events.fire('search', this.q);
-        }
-    },
-    watch: {
-        'q' (newValue, oldValue){
-            this.searchPublicacion();
-        }
     }
+
 }
 </script>
 

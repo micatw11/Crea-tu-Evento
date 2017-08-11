@@ -42,8 +42,3 @@
         }
     }
 </script>
-<style>
-    .default-content {
-        min-height: 570px;
-    }
-</style>
