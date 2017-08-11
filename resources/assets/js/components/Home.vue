@@ -35,7 +35,7 @@
         methods: {
             searchPublication(filter){
                 console.log(filter)
-                this.$http.get('api/publicacion?filter='+filter)
+                this.$http.get('api/publicacion?filter='+ filter)
                 .then(response => {
                     this.publicaciones = response.data.publicaciones;
                 }, response => {

@@ -60,7 +60,7 @@ export default {
     },
     methods: {
         searchPublicacion: function(){
-            if(router.path !== '/')
+            if(router.path !== '/' && this.q !== '' )
                 router.push('/')
             this.$events.fire('search', this.q);
         }

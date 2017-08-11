@@ -35,6 +35,7 @@
 <script>
 	import FormPublicacion from './Form';
 	import route from './../../../routes.js';
+
 	export default {
 		data() {
 			return {

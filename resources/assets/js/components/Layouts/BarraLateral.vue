@@ -67,6 +67,11 @@
                             <i class="fa fa-th-list"></i> <span> Categorias</span>
                 </router-link>
             </li>
+            <li>
+                <a v-if="auth.user.profile.roles_id == role.PROVEEDOR" @click="goToNewPublicacion()">
+                    <i class="fa fa-plus"></i> <span> Publicaci&oacute;n</span>
+                </a>
+            </li>
             <!--
             <li class="treeview">
                 <a href="/calendario">
@@ -86,6 +91,7 @@
 </template>
 <script>
 import auth from '../../auth.js';
+import route from '../../routes.js';
 import Role from '../../config.js';
 
 export default {
@@ -98,6 +104,12 @@ export default {
     },
     mounted: function(){
         this.srcUrl = '/storage/avatars/'+ this.auth.user.profile.usuario.avatar
+    },
+    methods: {
+        goToNewPublicacion(){
+            this.$events.fire('changePath', this.listPath, 'Nueva Publicacion');
+            route.push('/publicacion/new');
+        }
     }
 
 }
