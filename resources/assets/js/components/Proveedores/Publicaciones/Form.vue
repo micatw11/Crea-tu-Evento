@@ -72,13 +72,20 @@
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('descripcion')&&validarPublicacion}">
                     <div class="col-sm-12">
                         <label for="descripcion" class="control-label">Descripci&oacute;n (*)</label>
-                        <textarea 
+                        <!--<textarea 
                         	name="descripcion"  
                         	v-validate="'required|min:15'" 
                         	class="form-control" 
                         	style="min-height:150px;" 
                         	v-model="publicacion.descripcion" placeholder="Ingrese una Descripcion">
-                        </textarea>
+                        </textarea>-->
+                        <vue-editor 
+                            data-vv-name="descripcion"  
+                            v-model="publicacion.descripcion" 
+                            v-validate="'required|min:15'" 
+                            :editorToolbar="customToolbar">
+                            
+                        </vue-editor>
 
                         <!-- validacion vee-validation -->
                         <span v-show="errors.has('descripcion')&&validarPublicacion" class="help-block">{{ errors.first('descripcion') }}</span>
@@ -124,6 +131,7 @@
 <script>
 	import auth from '../../../auth.js'
 	import vSelect from "vue-select";
+    import { VueEditor } from 'vue2-editor'
 
 	export default {
 		props: {
@@ -146,7 +154,16 @@
 		data() {
 			return {
 				auth: auth,
-				rubros: []
+				rubros: [],
+                customToolbar: [
+                      ['bold', 'italic', 'underline'],
+                      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                      [{ 'color': [] }],
+                      [{ 'font': [] }],
+                      [{ 'align': [] }],
+                      ['clean']
+                  ]
 			}
 		},
         beforeMount(){
@@ -155,7 +172,7 @@
 		mounted(){
 			this.$events.on("validarFormPublicacion", () => this.validateSubmit())
 		},
-		components: {vSelect},
+		components: {vSelect, VueEditor},
 		methods: {
 			getOptions: function() {
 	            this.$http.get('api/proveedor/'+this.auth.user.profile.id+'/rubro/'
