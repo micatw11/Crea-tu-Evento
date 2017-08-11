@@ -3,7 +3,7 @@
     <head>
         @include('layouts.header')
     </head>
-    <body class="hold-transition skin-blue sidebar-mini">
+    <body class="skin-blue layout-boxed sidebar-mini" style="height: auto;">
 
         <div id="app"></div>
         

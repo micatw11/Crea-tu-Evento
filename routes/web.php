@@ -54,7 +54,8 @@ Route::group(['prefix' => 'api'], function () {
 
     Route::post('proveedor/rubro/{id}', 'RubrosDetalleController@store')->middleware('role:administrador,supervisor,operador,proveedor');
     Route::patch('proveedor/rubro/{id}/edit', 'RubrosDetalleController@update')->middleware('role:administrador,supervisor,operador,proveedor');
-    Route::get('proveedor/{id}/rubro', 'RubrosDetalleController@show');
+    //Route::get('proveedor/{idProveedor}/rubro/{idRubro}', 'RubrosDetalleController@show');
+    Route::get('proveedor/{id}/rubro', 'RubrosDetalleController@getAll');
 
 
     Route::get('localidades', 'LocalidadController@index');
@@ -72,8 +73,7 @@ Route::group(['prefix' => 'api'], function () {
         ->middleware('role:proveedor');
     Route::delete('/publicacion/{id}', 'PublicacionController@destroy')
         ->middleware('role:proveedor');
-        
-    Route::get('proveedor/{proveedorId}/rubros/search', 'RubrosDetalleController@searchRubros');
+
     Route::get('proveedor/{proveedorId}/publicacion','PublicacionController@publicacionesProveedor');
 
     Route::post('categoria', 'CategoriaController@store')->middleware('role:administrador,supervisor');

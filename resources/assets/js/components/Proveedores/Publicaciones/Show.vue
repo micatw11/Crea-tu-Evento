@@ -3,7 +3,7 @@
 		<div class="box-header">
             <button type="button" @click="goToNewPublicacion()" class="btn  btn-primary btn-sm">Crear Publicaci&oacute;n</button>
         </div>
-	    <div class="content" v-for="item in productos">
+	    <div class="content" v-for="item in publicaciones">
 	        <!--<div class="content">
 	            <div class="content" style="border-style: double;">-->
 	            <div class="box-body">
@@ -49,7 +49,7 @@
 		},
 		data() {
 			return {
-				productos: [],
+				publicaciones: [],
 				productoId: null,
 				listPath : [{route: '/', name: 'Home'}, {route: '/usuario/'+auth.user.profile.id +'/perfil', name: 'Perfil'}],
 				auth: auth
@@ -62,7 +62,7 @@
 			getProductos: function(){
 	            this.$http.get('api/proveedor/'+this.proveedorId+'/publicacion' )
 	                .then(response => {
-	                    this.productos = response.data
+	                    this.publicaciones = response.data.publicaciones
 	                }, response => {
 	                    this.$toast.error({
 	                        title:'¡Error!',

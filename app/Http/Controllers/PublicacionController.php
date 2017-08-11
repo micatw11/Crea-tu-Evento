@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Publicacion;
 use App\Foto;
@@ -17,9 +18,11 @@ class PublicacionController extends Controller
     }
 
     public function show(Request $request, $id){
-        $publicaciones = Publicacion::with('rubrosDetalle')->where('id', $id)->where('estado', 1)->firstOrFail();
+        $publicacion = Publicacion::with('rubros_detalle')
+                        ->where('id', $id)
+                        ->where('estado', 1)->firstOrFail();
 
-        return response()->json($publicaciones);
+        return response()->json(['publicacion' => $publicacion], 200);
     }
 
     public function store(Request $request){
@@ -27,10 +30,9 @@ class PublicacionController extends Controller
     	$publicacion = Publicacion::create([
             'titulo' => $request->titulo,
             'oferta' => $request->oferta,
-            'descripcion' => $request->descripcion
+            'descripcion' => $request->descripcion,
+            'rubros_detalle_id' => $request->rubros_detalle_id
         ]);
-
-    	$publicacion->rubros()->attach($request->rubros);
 
     	if($publicacion->save()){
             for ($i=0; $i < sizeof($request->fotos); $i++) { 
@@ -41,9 +43,9 @@ class PublicacionController extends Controller
                 $foto->save();
             }
  
-			return response()->json(['data' => 'OK'], 200);
+			return response(null, Response::HTTP_OK);
     	} else {
-			return response()->json(['error' => 'Internal Server Error'], 500);
+			return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     	}
 
     }
@@ -54,9 +56,8 @@ class PublicacionController extends Controller
 
     	$publicacion = Publicacion::where('id', $id)->firstOrFail();
 
-    	$publicacion->update($request->except(['fotos', 'rubros']));
-        $publicacion->rubros()->detach();
-        $publicacion->rubros()->attach($request->rubros);
+    	$publicacion->update($request->except(['fotos']));
+
         if($request->fotos){
             for ($i=0; $i < sizeof($publicacion->fotos); $i++) { 
                 $file = "public/avatars/{$publicacion->fotos[$i]}";
@@ -76,9 +77,9 @@ class PublicacionController extends Controller
         }
 
     	if($publicacion->save()){
-			return response()->json(['data' => 'OK'], 200);
+			return response(null, Response::HTTP_OK);
     	} else {
-			return response()->json(['error' => 'Internal Server Error'], 500);
+			return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     	}
 
     }
@@ -89,7 +90,7 @@ class PublicacionController extends Controller
 	        [
 	        	'titulo' => 'required|min:5', 
 	        	'descripcion' => 'required|min:15',
-	        	'rubros' => 'required|exists:rubros,id'
+	        	'rubros_detalle_id' => 'required|exists:rubros_detalle,id'
 	        ]);
     }
 
@@ -122,35 +123,31 @@ class PublicacionController extends Controller
         
     }
 
+  
     public function publicacionesProveedor(Request $request, $idProveedor){
         $publicacionesId = DB::table('publicaciones')
-            ->join('publicacion_rubro', 'publicacion_rubro.publicacion_id', '=', 'publicaciones.id')
-            ->join('rubros_detalle', 'rubros_detalle.id', '=', 'publicacion_rubro.rubros_detalle_id')
+            ->join('rubros_detalle', 'rubros_detalle.id', '=', 'publicaciones.rubros_detalle_id')
+            ->join('rubros', 'rubros.id', '=', 'rubros_detalle.rubro_id')
                 ->select('publicaciones.id')
                 ->where('rubros_detalle.proveedor_id', $idProveedor)
                 ->where('publicaciones.estado', 1)
                 ->groupby('publicaciones.id')->distinct()->get()->pluck('id');
-
-        $publicaciones = Publicacion::with('rubros_detalle', 'fotos')->whereIn('id', $publicacionesId)->get();
-
-        return response()->json($publicaciones);
+        $publicaciones = Publicacion::with('rubros_detalle.rubro.subcategoria.categoria', 'fotos')->whereIn('id', $publicacionesId)->get();
+        return response()->json(['publicaciones' => $publicaciones], 200);
     }
-
     public function destroy($id){
         if(Auth::user()->roles_id == Rol::roleId('Proveedor'))
         {
-            $publicacion = Publicacion::with('rubros')->where('id', $id)->where('estado', 1)->firstOrFail();
-            if($publicacion->rubros->first()->proveedor_id == Auth::user()->proveedor->id)
+            $publicacion = Publicacion::with('rubros_detalle')->where('id', $id)->where('estado', 1)->firstOrFail();
+            if($publicacion->rubros_detalle->proveedor_id == Auth::user()->proveedor->id)
             {
                 $publicacion->estado = 0;
                 if($publicacion->save())
-                    return response()->json(['data' => 'OK'], 200);
+                    return response(null, Response::HTTP_OK);
                 else
-                    return response()->json(['error' => 'Internal Server Error'], 500);
+                    return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         }
-
-        return response()->json(['error' =>  'Unauthorized'], 401);
+        return response(null, Response::HTTP_UNAUTHORIZED);;
     }
-
 }
