@@ -19,17 +19,6 @@
                     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                 </div>
             </div>
-
-            <!-- search form -->
-            <form action="#" method="get" class="sidebar-form">
-                <div class="input-group">
-                <input type="text" name="q" class="form-control" placeholder="Search...">
-                    <span class="input-group-btn">
-                        <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
-                        </button>
-                    </span>
-                </div>
-            </form>
             <!-- /.search form -->
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu">
@@ -75,10 +64,13 @@
                     v-if="auth.user.profile.roles_id == role.ADMINISTRADOR ||
                         auth.user.profile.roles_id == role.SUPERVISOR"
                         to="/categorias">
-                        <a>
-                            <i class="fa fa-th-list"></i> Categorias
-                        </a>
+                            <i class="fa fa-th-list"></i> <span> Categorias</span>
                 </router-link>
+            </li>
+            <li>
+                <a v-if="auth.user.profile.roles_id == role.PROVEEDOR" @click="goToNewPublicacion()">
+                    <i class="fa fa-plus"></i> <span> Publicaci&oacute;n</span>
+                </a>
             </li>
             <!--
             <li class="treeview">
@@ -99,6 +91,7 @@
 </template>
 <script>
 import auth from '../../auth.js';
+import route from '../../routes.js';
 import Role from '../../config.js';
 
 export default {
@@ -111,7 +104,14 @@ export default {
     },
     mounted: function(){
         this.srcUrl = '/storage/avatars/'+ this.auth.user.profile.usuario.avatar
+    },
+    methods: {
+        goToNewPublicacion(){
+            this.$events.fire('changePath', this.listPath, 'Nueva Publicacion');
+            route.push('/publicacion/new');
+        }
     }
+
 }
 </script>
 

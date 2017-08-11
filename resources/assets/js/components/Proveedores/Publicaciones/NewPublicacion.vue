@@ -1,36 +1,41 @@
 <template>
 	<div class="default-content">
-        <div class="content">
-        	<div class="box box-primary">
-        		<div class="box-header with-border">
-        			<h3 class="box-title">Crear Publicaci&oacute;n</h3>
-        		</div>
-        		<div class="box box-body">
-		        	<form-publicacion 
-		        		:publicacion="publicacion"
-		        		:nuevo="true"
-		        		:validarPublicacion="validarPublicacion"
-		        		@validadoNewPublicacion="sendNewForm()"
-		        		@update:validarPublicacion="val => validarPublicacion = val"
-		        		:errorsApi="errorsApi">
-		        	</form-publicacion>
-		        </div>
-		        <div class="box box-footer">
-		        	<div style="text-align:center;">
-			            <button @click="goBack()" class="btn btn-default">
-	                        <i class="glyphicon glyphicon-chevron-left"></i>
-	                        Atras
-	                    </button>
-		        		<button class="btn btn-primary" @click="validateBeforeSubmit()">Crear Publicaci&oacute;n</button>
+        <section class="content">
+            <div class="row">
+        		<div class="col-xs-12">
+		        	<div class="box box-primary">
+		        		<div class="box-header with-border">
+		        			<h3 class="box-title">Crear Publicaci&oacute;n</h3>
+		        		</div>
+		        		<div class="box box-body">
+				        	<form-publicacion 
+				        		:publicacion="publicacion"
+				        		:nuevo="true"
+				        		:validarPublicacion="validarPublicacion"
+				        		@validadoNewPublicacion="sendNewForm()"
+				        		@update:validarPublicacion="val => validarPublicacion = val"
+				        		:errorsApi="errorsApi">
+				        	</form-publicacion>
+				        </div>
+				        <div class="box box-footer">
+				        	<div style="text-align:center;">
+					            <button @click="goBack()" class="btn btn-default">
+			                        <i class="glyphicon glyphicon-chevron-left"></i>
+			                        Atras
+			                    </button>
+				        		<button class="btn btn-primary" @click="validateBeforeSubmit()">Crear Publicaci&oacute;n</button>
+				        	</div>
+				        </div>
 		        	</div>
 		        </div>
-        	</div>
-        </div>
+		    </div>
+        </section>
     </div>
 </template>
 <script>
 	import FormPublicacion from './Form';
 	import route from './../../../routes.js';
+
 	export default {
 		data() {
 			return {

@@ -34,19 +34,6 @@
                                 {{ option.text }}
                             </option>
                         </select>
-                        <!--
-                        <v-select 
-                            :debounce="250"
-                            v-validate="'required'" 
-                            v-model="publicacion.rubros_detalle"
-                            name= "rubros"
-                            data-vv-name="rubros"
-                            :on-search="getOptions" 
-                            :options="rubros"
-                            multiple
-                            placeholder="Seleccione un Rubro">
-                        </v-select>
-                        -->
                         <!-- validacion vee-validation -->
                         <span v-show="errors.has('rubro')&&validarPublicacion" class="help-block">{{ errors.first('rubro') }}</span>
                         <!-- validacion api-->

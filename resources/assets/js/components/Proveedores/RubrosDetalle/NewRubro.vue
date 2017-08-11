@@ -72,7 +72,7 @@ export default {
                     }
             };
             this.$http.post(
-                'api/proveedor/rubro/'+ this.$route.params.userId, this.params
+                'api/proveedor/rubro/'+ auth.user.profile.id, this.params
                 )
                 .then(response => {
                     console.log("respuesta ok");

@@ -66,6 +66,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('user/{id}/actividad', 'UsuarioController@activity');
     Route::get('actividad/{id}', 'LogController@show');
 
+    Route::get('publicacion/', 'PublicacionController@index');
     Route::post('publicacion/', 'PublicacionController@store')
         ->middleware('role:proveedor');
     Route::get('publicacion/{id}', 'PublicacionController@show');

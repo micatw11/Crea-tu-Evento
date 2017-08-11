@@ -14,6 +14,17 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </a>
+                        <!-- search form -->
+            <form v-on:submit.prevent="searchPublicacion()" class="navbar-form navbar-left" role="search">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" v-model="q" placeholder="Busqueda">
+                    <span class="input-group-btn">
+                        <button type="submit" name="search" id="search-btn" class="btn btn-primary">
+                        <i class="fa fa-search"></i>
+                        </button>
+                    </span>
+                </div>
+            </form>
 
             <div v-if="auth.user.authenticated" class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
@@ -43,9 +54,17 @@ import Notificaciones from './Notificaciones.vue';
 export default {
     data() {
         return {
-            auth: auth
+            auth: auth,
+            q: ''
         }
     },
-    components:{ MenuUser, Notificaciones}
+    methods: {
+        searchPublicacion: function(){
+            if(router.path !== '/' && this.q !== '' )
+                router.push('/')
+            this.$events.fire('search', this.q);
+        }
+    },
+    components:{ MenuUser, Notificaciones }
 }
 </script>
