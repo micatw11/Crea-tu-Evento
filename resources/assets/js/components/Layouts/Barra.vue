@@ -16,8 +16,13 @@
             </a>
                         <!-- search form -->
             <form v-on:submit.prevent="searchPublicacion()" class="navbar-form navbar-left" role="search">
-                <div class="form-group">
-                    <input type="text" name="q" class="form-control" v-model="q" placeholder="Busqueda" @change="searchPublicacion()">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" v-model="q" placeholder="Busqueda">
+                    <span class="input-group-btn">
+                        <button type="submit" name="search" id="search-btn" class="btn btn-primary">
+                        <i class="fa fa-search"></i>
+                        </button>
+                    </span>
                 </div>
             </form>
 
@@ -55,14 +60,11 @@ export default {
     },
     methods: {
         searchPublicacion: function(){
+            if(router.path !== '/')
+                router.push('/')
             this.$events.fire('search', this.q);
         }
     },
-    components:{ MenuUser, Notificaciones },
-    watch: {
-        'q' (newValue, oldValue){
-            this.searchPublicacion();
-        }
-    }
+    components:{ MenuUser, Notificaciones }
 }
 </script>

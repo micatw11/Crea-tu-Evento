@@ -28,12 +28,15 @@
         mounted() {
             this.$events.fire('changePath', this.listaPath, this.titlePath);
             this.$events.on('search', value => this.searchPublication(value));
-        }, 
+        },
+        beforeMount() {
+            this.searchPublication('');
+        },
         methods: {
             searchPublication(filter){
                 console.log(filter)
-                this.$http.get('api/publicacion?filter='+filter, 
-                ).then(response => {
+                this.$http.get('api/publicacion?filter='+filter)
+                .then(response => {
                     this.publicaciones = response.data.publicaciones;
                 }, response => {
 
