@@ -47,7 +47,8 @@ export default {
             error: false,
             Comercio: null,
             fecha: null,
-            nuevo: false
+            nuevo: false,
+            params: {}
         }
     },
     components: {
@@ -62,21 +63,23 @@ export default {
     methods: {
         //envio de formulario de modificación de informacion de usuario
         sendFormEdit: function() {
-            this.$http.post(
-                'api/proveedor/rubro/'+ this.rubros.id+'/edit', 
-                {
+            this.params= {
                     _method: 'PATCH',
-                    tipo_rubro: this.rubro.tipo_rubro,
-                    categoria_id: this.rubro.categoria_id,
-                    denominacion: this.rubro.denominacion,
-                    descripcion: this.rubro.descripcion,
-                    habilitacion: this.rubro.habilitacion,
-                    fecha_habilitacion: this.rubro.fecha_habilitacion,
-                    calle: this.domicilio.calle,
-                    numero: this.domicilio.numero,
-                    piso: this.domicilio.piso,
-                    localidad_id: this.domicilio.localidad_id.value
-                })
+                    rubro_id: this.rubro.rubro_id,
+                    comercio: this.rubro.comercio
+                    };
+            if (this.rubro.comercio){
+                    this.params= {
+                            habilitacion: this.rubro.habilitacion,
+                            fecha_habilitacion: this.rubro.fecha_habilitacion,
+                            calle: this.domicilio.calle,
+                            numero: this.domicilio.numero,
+                            piso: this.domicilio.piso,
+                            localidad_id: this.domicilio.localidad_id.value
+                    }
+            };
+            this.$http.post(
+                'api/proveedor/rubro/'+ this.rubros.id+'/edit', this.params)
                 .then(response => {
                     this.$emit('reload')
                     this.atras();

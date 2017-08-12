@@ -6,8 +6,8 @@
         <!-- /.login-logo -->
         <div class="login-box-body">
             <p class="login-box-msg">Restablecer Contraseña</p>
-            <div class="text-center" v-if="error">
-                <p class="text-red">Estas credenciales no coinciden con nuestros registros.</p>
+            <div class="callout callout-danger" v-if="error">
+                <p>Estas credenciales no coinciden con nuestros registros.</p>
             </div>
 
             <form  @submit.prevent="validateBeforeSubmit">

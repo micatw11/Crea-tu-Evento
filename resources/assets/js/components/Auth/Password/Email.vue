@@ -1,12 +1,13 @@
 <template>
-    <div class="login-box">
+    <div class="login-box layout-boxed" style="margin: 0% auto; height: 680px;">
+        <br><br><br>
         <div class="login-logo">
             <a href="#"><b>Crea tu Evento</b></a>
         </div>
         <!-- /.login-logo -->
         <div class="login-box-body">
             <div class="callout callout-success" v-if="showMessage">
-                <p class="text-center">Se ha enviado a su correo electronico un enlace para cambiar su contraseña</p>
+                <p>Se ha enviado a su correo electronico un enlace para cambiar su contraseña</p>
             </div>
             <p class="login-box-msg">Restablecer Contraseña</p>
 
@@ -26,7 +27,7 @@
                     </div>
                 </div>
 
-                <div class="form-group has-feedback text-center row">
+                <div class="form-group has-feedback text-center row" style="margin-top: 0px">
                     <button type="submit" class="btn btn-primary btn-flat">
                         Restablecer Contraseña
                     </button>

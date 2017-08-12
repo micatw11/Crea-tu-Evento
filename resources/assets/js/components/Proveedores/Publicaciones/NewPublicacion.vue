@@ -68,7 +68,6 @@
 	                    oferta: this.publicacion.oferta,
 	                    fecha_finalizacion: this.fecha_finalizacion,
 	                    fotos: this.publicacion.fotos
-
 	                })
 	                .then(response => {
 	                    this.$toast.success({
@@ -97,7 +96,6 @@
 	        		'fotos': null,
 	        		'rubros_detalle_id': '',
 	        		'fecha_finalizacion': null
-
 	        	}
 	        },
 	        goBack(){

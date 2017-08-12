@@ -132,6 +132,7 @@ class PublicacionController extends Controller
         
     }
 
+  
     public function publicacionesProveedor(Request $request, $idProveedor){
         $publicacionesId = DB::table('publicaciones')
             ->join('rubros_detalle', 'rubros_detalle.id', '=', 'publicaciones.rubros_detalle_id')
@@ -140,12 +141,9 @@ class PublicacionController extends Controller
                 ->where('rubros_detalle.proveedor_id', $idProveedor)
                 ->where('publicaciones.estado', 1)
                 ->groupby('publicaciones.id')->distinct()->get()->pluck('id');
-
         $publicaciones = Publicacion::with('rubros_detalle.rubro.subcategoria.categoria', 'fotos')->whereIn('id', $publicacionesId)->get();
-
         return response()->json(['publicaciones' => $publicaciones], 200);
     }
-
     public function destroy($id){
         if(Auth::user()->roles_id == Rol::roleId('Proveedor'))
         {
@@ -159,8 +157,6 @@ class PublicacionController extends Controller
                     return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         }
-
         return response(null, Response::HTTP_UNAUTHORIZED);;
     }
-
 }

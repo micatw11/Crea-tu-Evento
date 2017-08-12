@@ -1,5 +1,6 @@
 <template>
-    <div class="register-box container row">
+    <div class="register-box container row" style="margin: 0% auto;">
+        <br><br><br>
         <div class="register-box-body">
             <h3 class="login-box-msg">Registrar una nueva cuenta</h3><br>
             <div class="help-block" v-if="error">
@@ -114,8 +115,8 @@
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('sexo')&&validar}">
                     <label for="inputSexo" class="col-sm-2 control-label">Sexo</label>
                     <div class="col-sm-10">
-                        <input name="sexo" v-validate="'required'" type="radio" v-model="usuario.sexo" value="M">Masculino</input><br>
-                        <input name="sexo" type="radio" v-model="usuario.sexo" value="F">Femenino</input>
+                        <input name="sexo" v-validate="'required'" type="radio" v-model="usuario.sexo" value="M">Masculino<br>
+                        <input name="sexo" type="radio" v-model="usuario.sexo" value="F">Femenino
                     </div>
                     <!-- validacion vee-validation -->
                     <span v-show="errors.has('sexo')&&validar" class="help-block">{{ errors.first('sexo') }}</span>
@@ -128,9 +129,6 @@
                     </div>
 
                 </div>
-                <br>
-                <br>
-                <br>
                 <div class="form-group has-feedback text-center row">
                     <p>
                         Al crear una cuenta acepta el <a href="#">Contrato de servicios de Eventos.</a>
@@ -143,11 +141,12 @@
                     <!-- /.col -->
                 </div>
             </form>
-            <div class="social-auth-links text-center">
+            <div class="text-center" style="margin-top: 0px">
                 <p>- O -</p>
             </div>
             ¿Ya tienes una cuenta?<router-link tag="a" to="/login" class="text-center"> Iniciar sesión</router-link>
       </div>
+      <br><br><br>
       <!-- /.form-box -->
     </div>
     <!-- /.register-box -->

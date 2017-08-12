@@ -257,7 +257,7 @@ class ProveedorController extends Controller
     }
 
     public function buscarRubro(Request $request, $proveedorId){
-        $query = DB::table('rubros')
+        $query = DB::table('rubros_detalle')
             ->select('id as value', 'denominacion as label')
             ->where('proveedor_id', $proveedorId);
         if($request->q){

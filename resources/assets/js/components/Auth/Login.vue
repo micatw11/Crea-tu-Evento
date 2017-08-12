@@ -1,11 +1,11 @@
 <template>
-    <div class="login-box">
+    <div class="login-box layout-boxed" style="margin: 0% auto; height: 680px;">
+        <br><br><br>
         <div class="login-logo">
             <a href="#"><b>Crea tu Evento</b></a>
         </div>
         <!-- /.login-logo -->
         <div class="login-box-body">
-            <p class="login-box-msg">Iniciar su sesión</p>
             <div v-if="deactivated" class="callout callout-danger">
                 <h4>Cuenta desactivada! :(</h4>
                 <p>Podras volver a activarla cuando desees introduciendo tu correo

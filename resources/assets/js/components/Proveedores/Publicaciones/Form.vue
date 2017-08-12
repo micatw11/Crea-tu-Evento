@@ -5,11 +5,11 @@
                     <div class="col-sm-12">
                         <label for="titulo" class="control-label">Titulo (*) </label>
                         <input 
-                        	name="titulo"  
-                        	v-validate:proveedor.nombre="'required|min:5'" 
-                        	type="text" class="form-control" 
-                        	v-model="publicacion.titulo" 
-                        	placeholder="Titulo">
+                            name="titulo"  
+                            v-validate:proveedor.nombre="'required|min:5'" 
+                            type="text" class="form-control" 
+                            v-model="publicacion.titulo" 
+                            placeholder="Titulo">
                         <!-- validacion vee-validation -->
                         <span v-show="errors.has('titulo')&&validarPublicacion" class="help-block">{{ errors.first('titulo') }}</span>
                         <!-- validacion api-->
@@ -49,11 +49,11 @@
                     <div class="col-sm-12">
                         <label for="oferta" class="control-label">Oferta (*) </label>
                         <textarea
-                        	name="oferta" 
-                        	type="text"
-                        	style="min-height:100px;" 
-                        	v-model="publicacion.oferta" 
-                        	class="form-control">
+                            name="oferta" 
+                            type="text"
+                            style="min-height:100px;" 
+                            v-model="publicacion.oferta" 
+                            class="form-control">
                         </textarea>
                     </div>
                 </div>
@@ -129,6 +129,7 @@
         </form>
 </template>
 <script>
+
 	import auth from '../../../auth.js'
 	import vSelect from "vue-select";
     import { VueEditor } from 'vue2-editor'
@@ -182,26 +183,26 @@
                         for (let rubro of data.rubros){
                             this.rubros.push({ text: rubro.rubro.nombre, value: rubro.id });
                         }
-	                })
-	        },
-	        onFilesChange(e) {
-	            var files = e.target.files || e.dataTransfer.files;
-	            let fotos = []
-	            if (!files.length){
-	                return;
-				}
-				for (var i = 0; i < files.length; i++) {
-					var file = files[i];
-					var reader = new FileReader();
-					reader.onload = (e) => {
-						fotos.push(e.target.result);
-					}
-					reader.readAsDataURL(file);
-				}
-				this.publicacion.fotos = fotos;
-	        },
-	        validateSubmit: function() {
-	        	console.log('validator form producto: ')
+                    })
+            },
+            onFilesChange(e) {
+                var files = e.target.files || e.dataTransfer.files;
+                let fotos = []
+                if (!files.length){
+                    return;
+                }
+                for (var i = 0; i < files.length; i++) {
+                    var file = files[i];
+                    var reader = new FileReader();
+                    reader.onload = (e) => {
+                        fotos.push(e.target.result);
+                    }
+                    reader.readAsDataURL(file);
+                }
+                this.publicacion.fotos = fotos;
+            },
+            validateSubmit: function() {
+                console.log('validator form producto: ')
                 this.$validator.validateAll().then(() => {
                     if(this.nuevo){
                         console.log('valido nuevo')
@@ -212,13 +213,12 @@
                         console.log('valido edita')
                         this.$emit('validadoEditPublicacion'); 
                     }
-
                     this.$emit('update:validarPublicacion', false);             
                 }).catch(() => {
                     console.log('no valido')
-                	this.$emit('update:validarPublicacion', true);
+                    this.$emit('update:validarPublicacion', true);
                 });
-	        }
-	    }
-	}
+            }
+        }
+    }
 </script>

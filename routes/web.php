@@ -74,8 +74,7 @@ Route::group(['prefix' => 'api'], function () {
         ->middleware('role:proveedor');
     Route::delete('/publicacion/{id}', 'PublicacionController@destroy')
         ->middleware('role:proveedor');
-        
-    //Route::get('proveedor/{proveedorId}/rubros/search', 'ProveedorController@buscarRubro');
+
     Route::get('proveedor/{proveedorId}/publicacion','PublicacionController@publicacionesProveedor');
 
     Route::post('categoria', 'CategoriaController@store')->middleware('role:administrador,supervisor');

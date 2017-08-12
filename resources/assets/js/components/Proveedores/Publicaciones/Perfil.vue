@@ -1,38 +1,35 @@
 <template>
-	<div>
-		<div class="row-header">
-            <button type="button" @click="goToNewPublicacion()" class="btn  btn-primary btn-sm">Crear Publicaci&oacute;n</button>
-        </div>
-	    <div class="content" v-for="item in publicaciones">
-	        <!--<div class="content">
-	            <div class="content" style="border-style: double;">-->
-	            <div class="body" >
-	            	<div class="col-sm-12">
-		                	<div class="col-sm-2" v-for="img in item.fotos">
-		                    	<img 
-		                    		:src="'/storage/proveedores/publicaciones/'+img.nombre" 
-		                    		class="img-responsive" 
-		                    		style="max-width:130px;">
-		                    </div>
-		                  <div class="col-sm-10">
-			                <div class="col-sm-6">
-			                    <div class="col-sm-10">
-			                        <p><h3>{{item.titulo}}</h3></p>
-			                    </div>
-			                   	<div class="col-sm-10">
-			                    <p v-html="item.descripcion"></p>
-			                   </div>
-			                </div>
-			                <div class="col-sm-4" style="text-align: center;">
-			                    <button type="button" class="btn-block" @click="modificar(item.id)" >Modificar</button>
-			                    <button type="button" class="btn-block" @click="baja(item.id)" >Eliminar</button>
-			                </div>
-			            </div>
-		            </div>
+	<div class="box">
+	            
+        	<div class="col-sm-12">
+            	<div class="col-sm-12">
+	                <div class="col-sm-8">
+	                    <p>
+	                        <h3>{{item.titulo}}</h3>
+	                    </p>
+	                   	<p>
+	                        {{item.descripcion}}
+	                    </p>
+	                </div>
+	                <div class="col-sm-4" style="text-align: center;">
+	                    <button type="button" class="btn-block" @click="modificar(item.id)" >Modificar</button>
+	                    <button type="button" class="btn-block" @click="baja(item.id)" >Eliminar</button>
+	                </div>
 	            </div>
+	            <div class="col-sm-12">
+
+                	<div class="col-sm-2" v-for="img in item.fotos">
+                    	<img 
+                    		:src="'/storage/proveedores/publicaciones/'+img.nombre" 
+                    		class="img-responsive" 
+                    		style="max-width:130px;">
+                    </div>
+                </div>
+            </div>
+	        
 	        <!--</div>-->
 	        <hr>
-	    </div>
+	
 	</div>
 </template>
 <script>
@@ -63,7 +60,7 @@
 	                }, response => {
 	                    this.$toast.error({
 	                        title:'¡Error!',
-	                        message:'No se han podido cargar los productos. :('
+	                        message:'No se han podido cargar las publicaciones. :('
 	                    });
 
 	                })
