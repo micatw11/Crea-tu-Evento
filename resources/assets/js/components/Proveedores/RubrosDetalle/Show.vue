@@ -1,58 +1,39 @@
 <template >
 <div>
-Estas Habilitado a Ser Proveedor con Habilitación de ingresos brutos: {{perfil.user.proveedor.ingresos_brutos}}
-    <div>
-        <div class="box-header">
-            <div class="col-xs-2">
-                <button class="btn btn-block btn-primary btn-sm"
-                    @click="showNew = true">
-                    Crear Rubro
-                </button>
-            </div>
-        </div>
-
-        <div v-if="showNew" class="modal" role="dialog" :style="{ display : showNew  ? 'block' : 'none' }">
-            <div class="modal-dialog">
-            <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" @click="closeModal()">&times;</button>
-                        <h4 class="modal-title">Crear Rubro</h4>
-                    </div>
-                    <new-rubro></new-rubro>
-                </div>
-            </div>    
-        </div>
-    </div> 
-    <div v-for="item in perfil.user.proveedor.rubrosDetalle">
+    Habilitación de ingresos brutos: {{perfil.user.proveedor.ingresos_brutos}}
+    <div v-if="rubrosRegistrados.length > 0" v-for="item in rubrosRegistrados">
         <div class="content">
             <div class="content" style="border-style: double;">
                 <div class="col-sm-8">
                     <p>
                         <b>Tipo de Proveedor: </b>
-                        {{item.tipo_proveedor}}
+                        {{item.rubro.subcategoria.categoria.tipo_proveedor}}
                     </p>
-                    <p>
-                        <b>Nro Habilitación: </b>
-                        {{item.habilitacion}}
-                    </p>
-                
-                    <p>
-                        <b>Fecha de habilitacion: </b>
+                    <div v-if="item.habilitacion != null">
+                        <p>
+                            <b>Nro Habilitación: </b>
+                            {{item.habilitacion}}
+                        </p>
                     
-                        {{item.fecha_habilitacion}}
-                    </p>
-
-                   <!-- <p>
+                        <p>
+                            <b>Fecha de habilitacion: </b>
+                        
+                            {{item.fecha_habilitacion}}
+                        </p>
+                    </div>
+                    <div v-else>
+                        <p><b>Habilitación: </b>Sin habilitación</p>
+                    </div>
+                    <p>
                         <b>Categoria: </b>
                     
-                        {{item.categoria.nombre}}
-                    </p>-->
+                        {{item.rubro.subcategoria.categoria.nombre}} / {{ item.rubro.subcategoria.nombre }} / {{item.rubro.nombre}}
+                    </p>
 
                     <p if= "item.domicilio">
-                        <b>Domicilio: </b>
-                        calle: {{item.domicilio.calle}}
-                        numero: {{item.domicilio.numero}}
+                        <b>Domicilio: </b><br>
+                        calle: {{item.domicilio.calle}}<br>
+                        numero: {{item.domicilio.numero}}<br>
                         piso: {{item.domicilio.piso}}
                     </p>
                 </div>
@@ -63,8 +44,15 @@ Estas Habilitado a Ser Proveedor con Habilitación de ingresos brutos: {{perfil.
             </div>
         </div>
     </div>
+    <div v-else class="content">
+        <div class="col-sm-12">
+            <h3 class="text-center">No se ha registrado en ningun rubro</h3>
+            <p>¡Para realizar publicaciones debe de encontrarse registrado en un rubro!.</p>
+        </div>
+    </div>
     <!-- Modal Modificar-->
-    <div v-if="showModificar" id="modificar" class="modal" role="dialog" :style="{ display : showModificar  ? 'block' : 'none' }">
+    <div v-if="showModificar &&rubrosRegistrados.length > 0" 
+        id="modificar" class="modal" role="dialog" :style="{ display : showModificar  ? 'block' : 'none' }">
         <div class="modal-dialog">
           <!-- Modal content-->
             <div class="modal-content">
@@ -96,8 +84,12 @@ export default {
         return {
             idRubro: null,
             showModificar: false,
-            showNew: false
+            showNew: false,
+            rubrosRegistrados: []
         }
+    },
+    beforeMount(){
+        this.getRubrosRegistrados();
     },
     mounted() {
         this.$events.$on('cerrar', () =>this.closeModal());
@@ -111,9 +103,15 @@ export default {
             this.showNew = false;
         },
         modificar: function(id){
-            this.showModificar = true, 
             this.idRubro=id
-        }
+            this.showModificar = true
+        },
+        getRubrosRegistrados: function() {
+            this.$http.get('api/proveedor/'+auth.user.profile.id+'/rubro/'
+                ).then(response => {
+                    this.rubrosRegistrados = response.data.rubros
+                });
+        },
     }
 }
 </script>

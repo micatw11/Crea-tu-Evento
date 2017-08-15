@@ -54,12 +54,12 @@
                     <div class="col-xs-7 col-xs-offset-1">
                         <div class="checkbox icheck">
                             <label>
-                                <input v-model="remember" type="checkbox"> Remember Me
+                                <input v-model="remember" type="checkbox"> Mantener la sesión iniciada
                             </label>
                         </div>
                     </div>
                     <div class="col-xs-4">
-                        <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+                        <button type="submit" class="btn btn-primary btn-block btn-flat">Iniciar</button>
                     </div>
                     <!-- /.col -->
                 </div>

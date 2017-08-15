@@ -1,11 +1,12 @@
 <template>
     <div>
-        <div class="modal-body">
+        <div v-if="showForm && getRubros" class="modal-body">
         
         	<form-rubro 
                 :rubro="rubro"  
                 :domicilio="domicilio" 
                 :nuevo="nuevo"
+                :rubrosRegistrados="rubrosRegistrados"
                 @validadoEdit="sendFormEdit()"
                 :errorsApi="errorsApi" >
             </form-rubro>
@@ -38,16 +39,18 @@ export default {
     },
     data() {
         return {
-            rubros: { type: Object, default: null},//Peticion de datos
+            data: { type: Object, default: null},//Peticion de datos
             domicilio: { type: Object, default: null}, 
             rubro: { type: Object, default: null},
             validarRubro: false,
             validarDomicilio: false,
             errorsApi: {},
             error: false,
-            Comercio: null,
             fecha: null,
             nuevo: false,
+            showForm: false,
+            getRubros: false,
+            rubrosRegistrados: [],
             params: {}
         }
     },
@@ -57,30 +60,34 @@ export default {
     beforeMount: function(){
         //selected data
         this.getRubro();
+        this.getRubrosRegistrados();
         
     },
     
     methods: {
-        //envio de formulario de modificación de informacion de usuario
+        //envio de formulario de modificación 
         sendFormEdit: function() {
-            this.params= {
-                    _method: 'PATCH',
-                    rubro_id: this.rubro.rubro_id,
-                    comercio: this.rubro.comercio
-                    };
+
             if (this.rubro.comercio){
                     this.params= {
+                            rubro_id: this.rubro.rubro_id,
                             habilitacion: this.rubro.habilitacion,
                             fecha_habilitacion: this.rubro.fecha_habilitacion,
                             calle: this.domicilio.calle,
                             numero: this.domicilio.numero,
                             piso: this.domicilio.piso,
-                            localidad_id: this.domicilio.localidad_id.value
+                            localidad_id: this.domicilio.localidad_id.value,
+                            comercio: this.rubro.comercio
                     }
-            };
-            this.$http.post(
-                'api/proveedor/rubro/'+ this.rubros.id+'/edit', this.params)
-                .then(response => {
+            } else {
+                this.params= {
+                        rubro_id: this.rubro.rubro_id,
+                        comercio: this.rubro.comercio
+                }
+            }
+            this.$http.patch(
+                'api/proveedor/rubro/'+ this.idRubro, this.params
+                ).then(response => {
                     this.$emit('reload')
                     this.atras();
                     this.errorsApi= {},
@@ -108,12 +115,11 @@ export default {
                     this.$events.fire('validarForm')
         },
         getRubro: function(){
-            this.$http.get('api/proveedor/'+ this.idRubro +'/rubro' )
+            this.$http.get('api/proveedor/rubro/' + this.idRubro)
                 .then(response => {
-                    this.rubros = response.data.data
-                    console.log(response.data.data)
+                    this.data = response.data.rubro
                     this.cargarRubro()
-
+                   
                 }, response => {
                     if(response.status === 404){
                         router.push('/404');
@@ -121,19 +127,29 @@ export default {
                 })
         },
         cargarRubro:function(){
-            this.domicilio= this.rubros.domicilio,
-            this.domicilio.localidad_id = {
-               'value':this.domicilio.localidad_id,
-               'label':this.domicilio.localidad.nombre+' ('+this.domicilio.localidad.provincia.nombre+')'
+            this.domicilio = this.data.domicilio,
+            this.rubro = this.data
+            if(this.domicilio != null){
+                this.domicilio.localidad_id = {
+                   'value':this.domicilio.localidad_id,
+                   'label':this.domicilio.localidad.nombre+' ('+this.domicilio.localidad.provincia.nombre+')'
+                }
+                this.rubro.comercio = true;
             }
-            this.rubro= this.rubros
+            this.showForm = true;
 
         },
         atras: function(){
             this.$events.fire('cerrar');
             this.$events.fire('reloadComponentPerfil');
+        },
+        getRubrosRegistrados: function() {
+            this.$http.get('api/proveedor/'+auth.user.profile.id+'/rubro/'
+                ).then(response => {
+                    this.rubrosRegistrados = response.data.rubros
+                    this.getRubros = true;
+                });
         }
-
     }
 }
 

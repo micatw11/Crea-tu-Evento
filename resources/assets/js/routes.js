@@ -19,11 +19,14 @@ var Perfil = require('./components/Layouts/Perfil');
 var IndexUsuarios = require('./components/Usuarios/Index');
 var IndexProveedor = require('./components/Proveedores/Index');
 var NewProveedor = require('./components/Proveedores/New');
-var EditRubro = require('./components/Proveedores/RubrosDetalle/EditRubro');
+
 var Form = require('./components/Proveedores/Form');
 
 var NewPublicacion = require('./components/Proveedores/Publicaciones/NewPublicacion');
 var EditPublicacion = require('./components/Proveedores/Publicaciones/EditPublicacion');
+
+var NewRubro = require('./components/Proveedores/RubrosDetalle/NewRubro');
+var EditRubro = require('./components/Proveedores/RubrosDetalle/EditRubro');
 
 var IndexCategoria = require('./components/Proveedores/Categorias/Index');
 
@@ -84,11 +87,18 @@ let routes = [
 			meta: { Role: [role.ADMINISTRADOR, role.SUPERVISOR, role.OPERADOR]}	
 		},
 		{
-			path: '/proveedor/rubro/:idRubro',
+			path: '/rubro/:idRubro/edit',
 			name: 'EditRubro',
 			component: EditRubro,
 			beforeEnter: guardRoute,
-			meta: { Role: [role.ADMINISTRADOR, role.SUPERVISOR, role.OPERADOR, role.PROVEEDOR]}	
+			meta: { Role: [role.PROVEEDOR]}	
+		},
+		{
+			path: '/rubro/new',
+			name: 'NewRubro',
+			component: NewRubro,
+			beforeEnter: guardRoute,
+			meta: { Role: [role.PROVEEDOR]}	
 		},
 		{
 			path: '/form',

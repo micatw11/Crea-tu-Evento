@@ -55,3 +55,6 @@ html, body {
             .default-content {
                 min-height: 570px;
             }
+            .form-group.has-error .dropdown-toggle {
+                border-color: #dd4b39;
+            }

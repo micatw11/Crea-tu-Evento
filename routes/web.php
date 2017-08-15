@@ -52,9 +52,9 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('proveedor/{id}', 'ProveedorController@proveedor');
 
 
-    Route::post('proveedor/rubro/{id}', 'RubrosDetalleController@store')->middleware('role:administrador,supervisor,operador,proveedor');
-    Route::patch('proveedor/rubro/{id}/edit', 'RubrosDetalleController@update')->middleware('role:administrador,supervisor,operador,proveedor');
-    //Route::get('proveedor/{idProveedor}/rubro/{idRubro}', 'RubrosDetalleController@show');
+    Route::post('proveedor/rubro/', 'RubrosDetalleController@store')->middleware('role:administrador,supervisor,operador,proveedor');
+    Route::patch('proveedor/rubro/{id}', 'RubrosDetalleController@update')->middleware('role:administrador,supervisor,operador,proveedor');
+    Route::get('proveedor/rubro/{id}', 'RubrosDetalleController@show');
     Route::get('proveedor/{id}/rubro', 'RubrosDetalleController@getAll');
 
 

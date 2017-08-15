@@ -1,28 +1,43 @@
 <template>
-    <div class="modal-body">
-        <div class="box-body">
-        	<form-rubro 
-                :rubro="rubro" 
-                :domicilio= "domicilio" 
-                :nuevo= "nuevo"
-                :errorsApi="errorsApi"
-                @validado="sendForm()">
-            </form-rubro>
-        </div>
-        <div class="modal-footer" style="text-align">
-            <button class="btn btn-default" @click="closeModal()">
-                <i class="glyphicon glyphicon-chevron-left"></i>
-                Atras
-            </button>
-            <button @click="validateBeforeSubmit()" type="button" class="btn btn-primary">
-                Guargar
-            </button>
-        </div>
+    <div class="default-content">
+        <section class="content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Registrar un rubro</h3>
+                        </div>
+                        <div class="box box-body">
+                        	<form-rubro v-if="getRubros"
+                                :rubro="rubro" 
+                                :domicilio= "domicilio"
+                                :rubrosRegistrados="rubrosRegistrados"
+                                :nuevo= "true"
+                                :errorsApi="errorsApi"
+                                @validado="sendForm()">
+                            </form-rubro>
+                        </div>
+                        <div class="box box-footer">
+                            <div style="text-align:center;">
+                                <button @click="goBack()" class="btn btn-default">
+                                    <i class="glyphicon glyphicon-chevron-left"></i>
+                                    Atras
+                                </button>
+                                <button @click="validateBeforeSubmit()" type="button" class="btn btn-primary">
+                                    Guargar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 </template>
 
 <script>
 import auth from '../../../auth.js';
+import route from '../../../routes.js';
 import FormRubro from './FormRubro.vue';
 
 export default {
@@ -41,15 +56,17 @@ export default {
                 fecha_habilitacion: null
             },
             showNew: false,
-            nuevo: true,
             validarRubro: false,
-            validarDomicilio: false,
             errorsApi: [],
             error: false,
-            Comercio: null,
             estado: true,
-            params: {}
+            getRubros: false,
+            rubrosRegistrados: [],
+            param: {}
         }
+    },
+    beforeMount: function(){
+        this.getRubrosRegistrados(); 
     },
     components: {
         FormRubro
@@ -57,22 +74,26 @@ export default {
     methods: {
         //envio de formulario de modificación de informacion de usuario
         sendForm: function() {
-            this.params= {
-                    rubro_id: this.rubro.rubro_id,
-                    comercio: this.rubro.comercio
-                    };
+
             if (this.rubro.comercio){
                     this.params= {
+                            rubro_id: this.rubro.rubro_id,
                             habilitacion: this.rubro.habilitacion,
                             fecha_habilitacion: this.rubro.fecha_habilitacion,
                             calle: this.domicilio.calle,
                             numero: this.domicilio.numero,
                             piso: this.domicilio.piso,
-                            localidad_id: this.domicilio.localidad_id.value
+                            localidad_id: this.domicilio.localidad_id.value,
+                            comercio: this.rubro.comercio
                     }
-            };
+            } else {
+                this.params= {
+                        rubro_id: this.rubro.rubro_id,
+                        comercio: this.rubro.comercio
+                }
+            }
             this.$http.post(
-                'api/proveedor/rubro/'+ auth.user.profile.id, this.params
+                'api/proveedor/rubro/', this.params
                 )
                 .then(response => {
                     console.log("respuesta ok");
@@ -81,7 +102,7 @@ export default {
                          message:'Se creado correctamente el Detalle de Rubro. :D'
                     });
                     this.resetForm();
-                    this.closeModal();
+                    this.goBack();
                     this.errorsApi= [];
                 }, response => {
                     console.log("resp. fallo");
@@ -119,10 +140,16 @@ export default {
                 localidad_id: null
             }
         },
-        closeModal: function(){
-            this.$events.fire('cerrar')
-            this.$events.fire('reloadComponentPerfil');
-        }
+        goBack(){
+            route.go(-1)
+        },
+        getRubrosRegistrados: function() {
+            this.$http.get('api/proveedor/'+auth.user.profile.id+'/rubro/'
+                ).then(response => {
+                    this.rubrosRegistrados = response.data.rubros
+                    this.getRubros = true;
+                });
+        },
     }
 }
 </script>
