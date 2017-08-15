@@ -1,24 +1,20 @@
 <template>
-	<div class="box">
-	            
-        	<div class="col-sm-12">
+	<div class="default-content">
+	       <div class="col-sm-12">
             	<div class="col-sm-12">
 	                <div class="col-sm-8">
 	                    <p>
-	                        <h3>{{item.titulo}}</h3>
+	                        <h3>{{publicacion.titulo}}</h3>
 	                    </p>
 	                   	<p>
-	                        {{item.descripcion}}
+	                        {{publicacion.descripcion}}
 	                    </p>
 	                </div>
-	                <div class="col-sm-4" style="text-align: center;">
-	                    <button type="button" class="btn-block" @click="modificar(item.id)" >Modificar</button>
-	                    <button type="button" class="btn-block" @click="baja(item.id)" >Eliminar</button>
-	                </div>
+	                
 	            </div>
 	            <div class="col-sm-12">
 
-                	<div class="col-sm-2" v-for="img in item.fotos">
+                	<div class="col-sm-2" v-for="img in publicacion.fotos">
                     	<img 
                     		:src="'/storage/proveedores/publicaciones/'+img.nombre" 
                     		class="img-responsive" 
@@ -36,14 +32,10 @@
 	import route from './../../../routes.js'
 	import auth from './../../../auth.js'
 	export default {
-		props: {
-			proveedorId: {
-				required: true
-			}
-		},
+		
 		data() {
 			return {
-				publicaciones: [],
+				publicacion: [],
 				productoId: null,
 				listPath : [{route: '/', name: 'Home'}, {route: '/usuario/'+auth.user.profile.id +'/perfil', name: 'Perfil'}],
 				auth: auth
@@ -54,9 +46,9 @@
 		},
 		methods: {
 			getProductos: function(){
-	            this.$http.get('api/proveedor/'+this.proveedorId+'/publicacion' )
+	            this.$http.get('api/publicacion/'+this.$route.params.publicacionId )
 	                .then(response => {
-	                    this.publicaciones = response.data.publicaciones
+	                    this.publicacion = response.data.publicaciones
 	                }, response => {
 	                    this.$toast.error({
 	                        title:'¡Error!',
@@ -64,30 +56,6 @@
 	                    });
 
 	                })
-			},
-			modificar(id){
-				this.$events.fire('changePath', this.listPath, 'Modificar Publicacion');
-				route.push('/publicacion/'+id+'/edit');
-			},
-			baja(id){
-	            this.$http.delete('api/publicacion/'+id )
-	                .then(response => {
-	                    this.$toast.success({
-	                        title:'Acción realizada!',
-	                        message:'La acción se han realizado correctamente. :D'
-	                    });
-	                    this.getProductos()
-	                }, response => {
-	                    this.$toast.error({
-	                        title:'¡Error!',
-	                        message:'No se han podido realizar la acción. :('
-	                    });
-
-	                })
-			},
-			goToNewPublicacion(){
-				this.$events.fire('changePath', this.listPath, 'Nueva Publicacion');
-				route.push('/publicacion/new');
 			}
 		}
 	}
