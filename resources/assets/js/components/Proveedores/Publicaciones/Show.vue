@@ -1,44 +1,41 @@
 <template>
 	<div>
-		<div class="row-header">
-            <button type="button" @click="goToNewPublicacion()" class="btn  btn-primary btn-sm">Crear Publicaci&oacute;n</button>
-        </div>
-	    <div class="content" v-for="item in publicaciones">
-	        <!--<div class="content">
-	            <div class="content" style="border-style: double;">-->
-	            <div class="body" >
-	            	<div class="col-sm-12">
-		                	<div class="col-sm-2" v-for="img in item.fotos">
-		                    	<img 
-		                    		:src="'/storage/proveedores/publicaciones/'+img.nombre" 
-		                    		class="img-responsive" 
-		                    		style="max-width:130px;">
+	    <div class="default-content" >
+            <div class="body" >
+            	<div v-if="publicaciones.length > 0" v-for="item in publicaciones" class="col-sm-12">
+                	<div class="col-sm-2" v-for="img in item.fotos">
+                    	<img 
+                    		:src="'/storage/proveedores/publicaciones/'+img.nombre" 
+                    		class="img-responsive" 
+                    		style="max-width:130px;">
+                    </div>
+	                 <div class="col-sm-10">
+		                <div class="col-sm-6">
+		                    <div class="col-sm-10">
+		                        <p><h3>{{item.titulo}}</h3></p>
 		                    </div>
-		                  <div class="col-sm-10">
-			                <div class="col-sm-6">
-			                    <div class="col-sm-10">
-			                        <p><h3>{{item.titulo}}</h3></p>
-			                    </div>
-			                   	<div class="col-sm-10">
-			                    <p v-html="item.descripcion"></p>
-			                   </div>
-			                </div>
-			                <div class="col-sm-4" style="text-align: center;">
-			                <button type="button" class="btn-block" @click="ver(item.id)" >Ver</button>
-			                    <button type="button" class="btn-block" @click="modificar(item.id)" >Modificar</button>
-			                    <button type="button" class="btn-block" @click="baja(item.id)" >Eliminar</button>
-			                </div>
-			            </div>
+		                   	<div class="col-sm-10">
+		                    	<p ref="descripcion" v-html="item.descripcion" v-truncate="40"></p>
+		                   	</div>
+		                </div>
+		                <div class="col-sm-4" style="text-align: center;">
+		                 	<button type="button" class="btn-block" @click="ver(item.id)" >Ver</button>
+		                    <button type="button" class="btn-block" @click="modificar(item.id)" >Modificar</button>
+		                    <button type="button" class="btn-block" @click="baja(item.id)" >Eliminar</button>
+		                </div>
 		            </div>
 	            </div>
-	        <!--</div>-->
-	        <hr>
+	            <div  class="col-sm-12">
+	            	<h3 class="text-center">No posee publicaciones realizadas!</h3>
+	            </div>
+            </div>
 	    </div>
 	</div>
 </template>
 <script>
 	import route from './../../../routes.js'
 	import auth from './../../../auth.js'
+
 	export default {
 		props: {
 			proveedorId: {
@@ -96,6 +93,13 @@
 			goToNewPublicacion(){
 				this.$events.fire('changePath', this.listPath, 'Nueva Publicacion');
 				route.push('/publicacion/new');
+			}
+		},
+		directives: {
+			truncate: {
+			  	bind: function(el, binding) {
+				    el.textContent = el.textContent.substring(0, binding.value) + '...';
+				}
 			}
 		}
 	}

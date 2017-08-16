@@ -83,6 +83,11 @@
                         <i class="fa fa-plus"></i> <span> Publicaci&oacute;n</span>
                     </a>
                 </li>
+                <li>
+                    <a v-if="auth.user.profile.roles_id == role.PROVEEDOR" @click="goToNewRubro()">
+                        <i class="fa fa-plus"></i> <span> Rubro</span>
+                    </a>
+                </li>
                 <!--
                 <li class="treeview">
                     <a href="/calendario">
@@ -118,6 +123,10 @@ export default {
         this.srcUrl = '/storage/avatars/'+ this.auth.user.profile.usuario.avatar
     },
     methods: {
+        goToNewRubro(){
+            this.$events.fire('changePath', this.listPath, 'Registrar Rubro');
+            route.push('/rubro/new');
+        },
         goToNewPublicacion(){
             this.$events.fire('changePath', this.listPath, 'Nueva Publicacion');
             route.push('/publicacion/new');

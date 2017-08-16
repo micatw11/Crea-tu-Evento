@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Services\ProveedorService;
+use Illuminate\Support\Facades\Auth;
 use App\Proveedor;
 use App\Domicilio;
 use App\RubrosDetalle;
@@ -33,6 +35,7 @@ class RubrosDetalleController extends Controller
                     'proveedor_id'=> $proveedor->id,
                     'rubro_id'=> $request->rubro_id,
                     'habilitacion'=> $request->habilitacion,
+                    'fecha_habilitacion' => $request->fecha_habilitacion,
                     'domicilio_id'=> $domicilio->id,
             ]);
     }
@@ -43,12 +46,12 @@ class RubrosDetalleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $id)
+    public function store(Request $request)
     {
         $datosCargados= true;
-        $proveedor = Proveedor::where('user_id', $id)->firstOrFail();
+        $proveedor = Proveedor::where('user_id', Auth::id())->firstOrFail();
         $this->validatorRubro($request);
-        if ($request->comercio){
+        if ($request->comercio == true){
             $this->validatorDomicilio($request);
             $domicilio= $this->createDomicilio($request);
             $rubro= $this->create($request,$proveedor, $domicilio);
@@ -64,12 +67,10 @@ class RubrosDetalleController extends Controller
                 $datosCargados= true;
         }
         if ($datosCargados){
-            return response()->json(['data' => 'OK'], 200);
+            return response(null, Response::HTTP_OK);
         
         } else {
-            return response()->json([
-                'error' => 'Unauthorized', 'rubro' => $rubro
-            ], 401);
+           return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -107,9 +108,9 @@ class RubrosDetalleController extends Controller
     {
       return $this->validate($request, 
         [
-            'rubro_id' =>'required',
-            'fecha_habilitacion'=>'date',
+            'rubro_id' => 'required|exists:rubros,id',
             'habilitacion'=>'max:55',
+            'fecha_habilitacion' => 'required_with:habilitacion|date',
         ]);
     }
 
@@ -121,12 +122,12 @@ class RubrosDetalleController extends Controller
      */
     public function show($id)
     {
-        $rubro= RubrosDetalle::where('id', $id)->with('domicilio.localidad.provincia')->firstOrFail();
+        $rubro= RubrosDetalle::where('id', $id)->with('rubro.subcategoria.categoria','domicilio.localidad.provincia')->firstOrFail();
 
         if ($rubro) {
-            return response()->json(['data' => $rubro], 200);
+            return response()->json(['rubro' => $rubro], 200);
         } else {
-            return response()->json(['error' =>  'Internal Server Error'], 500);
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -150,19 +151,31 @@ class RubrosDetalleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validatorDomicilio($request);
-        $this->validatorRubro($request);
-        //$table_name= "rubro";
-        //$accion = "update";
         $rubro = RubrosDetalle::where('id', $id)->firstOrFail();
-        $domicilio= Domicilio::where('id', $rubro->domicilio_id)->firstOrFail();
-        //Log::logs($id, $table_name, $accion , $rubro, 'Ha actualizado informacion personal');
+        $saveDomicilio = true;
+
+        $this->validatorRubro($request);
+        if ($request->comercio){
+            $this->validatorDomicilio($request);
+            $domicilio= Domicilio::where('id', $rubro->domicilio_id)->first(); 
+            if($domicilio)
+            {
+                $domicilio->update($request->all());
+                $saveDomicilio = $domicilio->save();
+            }
+            else
+            {
+                $domicilio= $this->createDomicilio($request);
+                $saveDomicilio = true;
+            }
+        }
+        
         $rubro->update($request->all());
-        $domicilio->update($request->all());
-        if($rubro->save()&& $domicilio->save()){
-            return response()->json(['data' =>  'OK'], 200);
+        
+        if($rubro->save()&& $saveDomicilio){
+            return response(null, Response::HTTP_OK);
         } else {
-            return response()->json(['error' => 'Internal Server Error'], 500 );
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     
     }

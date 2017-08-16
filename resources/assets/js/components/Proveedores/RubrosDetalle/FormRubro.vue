@@ -81,8 +81,8 @@
                     <!-- validacion vee-validation -->
                     <span v-show="errors.has('rubro')&&validarRubro" class="help-block">{{ errors.first('rubro') }}</span>
                     <!-- validacion api-->
-                    <div class="text-red" v-if="errorsApi.rubro">
-                        <div v-for="msj in errorsApi.rubro">
+                    <div class="text-red" v-if="errorsApi.rubro_id">
+                        <div v-for="msj in errorsApi.rubro_id">
                             <p>{{ msj }}</p>
                         </div>
                     </div>
@@ -236,6 +236,10 @@ export default {
             },
             errorsApi: {
                 required: true
+            },
+            rubrosRegistrados: {
+                type: Array,
+                required: true
             }
     },
     data() {
@@ -255,17 +259,19 @@ export default {
     components: {
         vSelect
     },
-    created: function() {
+    beforeMount() {
         this.getOptionsCategoria();
     },
+    created: function() {
+        this.loadDefaultOptions();
+    },
     mounted() {
-        this.$events.$on('validarForm', () =>this.validateBeforeSubmit());
-        if(!this.nuevo) this.categoria_id = this.rubro.categoria_id;
-     
+        this.$events.$on('validarForm', () =>this.validateBeforeSubmit());     
     },
     methods: {
         //form validation
         validateBeforeSubmit: function() {
+            console.log('fallecio');
             this.$validator.validateAll().then(() => {
                     this.validarRubro = false; 
                     if (this.nuevo){
@@ -276,6 +282,7 @@ export default {
                         this.$emit('validadoEdit')
                     }
                 }).catch(() => {
+                    console.log('fallecio - 2');
                     this.validarRubro = true;
                 });
         },
@@ -299,11 +306,13 @@ export default {
 
         },
         getOptionsSubcategorias: function(categoria) {
-            this.$http.get('api/subcategorias/'+ categoria
+            this.$http.get('api/subcategoria/'
                 ).then(response => {
-                    let options = response.data
+                    let options = response.data.data
                     for (let subcategoria of options){
-                        this.optionsSubcategorias.push({ text: subcategoria.nombre, value: subcategoria.id })
+                        if(categoria == subcategoria.categoria_id){
+                            this.optionsSubcategorias.push({ text: subcategoria.nombre, value: subcategoria.id })
+                        }
                     }
                 })
 
@@ -313,7 +322,25 @@ export default {
                 ).then(response => {
                     let options = response.data
                     for (let rubros of options){
-                        this.optionsRubros.push({ text: rubros.nombre, value: rubros.id })
+                        console.log(this.rubrosRegistrados.length)
+                        if(this.rubrosRegistrados.length > 0)
+                        {
+                            for (var i = 0; i < this.rubrosRegistrados.length; i++) {
+                                if(this.rubrosRegistrados[i].rubro_id == rubros.id && this.nuevo){break;}
+                                if((i+1) == this.rubrosRegistrados.length)
+                                {
+                                    this.optionsRubros.push({ text: rubros.nombre, value: rubros.id })
+                                }
+                            }
+                        } else {
+                            this.optionsRubros.push({ text: rubros.nombre, value: rubros.id })
+                        }
+                    }
+                    if(this.optionsRubros.length == 0){
+                        this.$toast.error({
+                            title:'¡Vaya!',
+                            message:'Se encuentra registrado en estos rubros. Elija otra subcategoria o categoria'
+                        })
                     }
                 })
 
@@ -333,13 +360,22 @@ export default {
             if (this.subcategoria_id!=null){
                   this.optionsRubros = []
                   this.rubro_id = null
-                 this.getOptionsRubros(this.subcategoria_id);
+                  this.getOptionsRubros(this.subcategoria_id);
              }
         },
-         cambiarRubro(){
+        cambiarRubro(){
             this.rubro.rubro_id = this.rubro_id;
-        }
+        },
+        loadDefaultOptions: function(){
+            if(!this.nuevo){
+                this.categoria_id = this.rubro.rubro.subcategoria.categoria_id;
+                this.subcategoria_id = this.rubro.rubro.subcategoria_id;
+                this.rubro_id = this.rubro.rubro_id;
+                this.getOptionsSubcategorias(this.categoria_id);
+                this.getOptionsRubros(this.rubro.rubro.subcategoria_id);
 
+            }
+        }
     }
 
 }
