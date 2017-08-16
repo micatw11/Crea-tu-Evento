@@ -90,7 +90,7 @@
         <!--Datos de Habilitación y dirección del comercio-->
         <div v-if="rubro_id != null" class="col-sm-12">
             <label class="control-label">Cuenta con Comercio de atención. </label> <br>  
-            <input type="checkbox" id="checkbox" v-model="rubro.comercio" @click="changeCheckBox($event)" style="text-align:center;">
+            <input type="checkbox" id="checkbox" v-model="rubro.comercio" @click="$forceUpdate()" style="text-align:center;">
             <label for="checkbox">{{ rubro.comercio == true ? "Si" : "No" }}</label>
         </div>
         <div v-if="rubro.comercio == true">
@@ -383,6 +383,7 @@ export default {
         },
         changeCheckBox: function(e){
             console.log(this.rubro)
+            this.$forceUpdate();
             if(!this.nuevo){
                 this.$nextTick(() => this.rubro.comercio = e.toElement.checked);
             }
