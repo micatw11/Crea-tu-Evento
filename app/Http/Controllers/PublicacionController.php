@@ -27,7 +27,7 @@ class PublicacionController extends Controller
     }
 
     public function show(Request $request, $id){
-        $publicacion = Publicacion::with('rubros_detalle')
+        $publicacion = Publicacion::with('rubros_detalle','fotos')
                         ->where('id', $id)
                         ->where('estado', 1)->firstOrFail();
 

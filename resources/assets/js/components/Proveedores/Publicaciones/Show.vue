@@ -19,6 +19,7 @@
 		                   	</div>
 		                </div>
 		                <div class="col-sm-4" style="text-align: center;">
+		                 	<button type="button" class="btn-block" @click="ver(item.id)" >Ver</button>
 		                    <button type="button" class="btn-block" @click="modificar(item.id)" >Modificar</button>
 		                    <button type="button" class="btn-block" @click="baja(item.id)" >Eliminar</button>
 		                </div>
@@ -84,6 +85,10 @@
 	                    });
 
 	                })
+			},
+			ver(id){
+				this.$events.fire('changePath', this.listPath, 'Ver Publicacion');
+				route.push('/publicacion/'+id);
 			},
 			goToNewPublicacion(){
 				this.$events.fire('changePath', this.listPath, 'Nueva Publicacion');
