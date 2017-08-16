@@ -19,10 +19,6 @@
                         </div>
                         <div class="box box-footer">
                             <div style="text-align:center;">
-                                <button @click="goBack()" class="btn btn-default">
-                                    <i class="glyphicon glyphicon-chevron-left"></i>
-                                    Atras
-                                </button>
                                 <button @click="validateBeforeSubmit()" type="button" class="btn btn-primary">
                                     Guargar
                                 </button>
@@ -102,7 +98,6 @@ export default {
                          message:'Se creado correctamente el Detalle de Rubro. :D'
                     });
                     this.resetForm();
-                    this.goBack();
                     this.errorsApi= [];
                 }, response => {
                     console.log("resp. fallo");
@@ -139,9 +134,6 @@ export default {
                 piso: null,
                 localidad_id: null
             }
-        },
-        goBack(){
-            route.go(-1)
         },
         getRubrosRegistrados: function() {
             this.$http.get('api/proveedor/'+auth.user.profile.id+'/rubro/'

@@ -106,12 +106,14 @@ class RubrosDetalleController extends Controller
 
     protected function validatorRubro(Request $request)
     {
-      return $this->validate($request, 
-        [
-            'rubro_id' => 'required|exists:rubros,id',
-            'habilitacion'=>'max:55',
-            'fecha_habilitacion' => 'required_with:habilitacion|date',
-        ]);
+        $rules = array("rubro_id" => 'required|exists:rubros,id');
+
+        if($request->comercio == true && $request->habilitacion !== "")
+        {
+            $rules["habilitacion"] ='max:55';
+            $rules["fecha_habilitacion"] = 'required_with:habilitacion|date';
+        }
+          return $this->validate($request, $rules);
     }
 
     /**

@@ -1,6 +1,6 @@
 <template >
 <div>
-    Habilitación de ingresos brutos: {{perfil.user.proveedor.ingresos_brutos}}
+    <p class="text-center" style="margin-top:0px;">Habilitación de ingresos brutos: {{perfil.user.proveedor.ingresos_brutos}}</p>
     <div v-if="rubrosRegistrados.length > 0" v-for="item in rubrosRegistrados">
         <div class="content">
             <div class="content" style="border-style: double;">
@@ -84,7 +84,6 @@ export default {
         return {
             idRubro: null,
             showModificar: false,
-            showNew: false,
             rubrosRegistrados: []
         }
     },
@@ -100,7 +99,8 @@ export default {
     methods: {
         closeModal: function(){
             this.showModificar = false;
-            this.showNew = false;
+            this.getRubrosRegistrados();
+
         },
         modificar: function(id){
             this.idRubro=id
