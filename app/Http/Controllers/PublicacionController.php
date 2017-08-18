@@ -27,7 +27,7 @@ class PublicacionController extends Controller
     }
 
     public function show(Request $request, $id){
-        $publicacion = Publicacion::with('rubros_detalle','fotos')
+        $publicacion = Publicacion::with('rubros_detalle.proveedor.user.usuario','rubros_detalle.rubro.subcategoria.categoria','fotos')
                         ->where('id', $id)
                         ->where('estado', 1)->firstOrFail();
 
