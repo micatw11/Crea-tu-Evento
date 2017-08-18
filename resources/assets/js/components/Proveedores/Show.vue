@@ -1,64 +1,39 @@
-<!--<template>
-    <div class="col-sm-12">
-        <div class="col-sm-3">
-            <img :src="'/storage/avatars/'+ rowData.user.usuario.avatar" width="150" height="150" class="img-responsive">
+<template>
+    <div class="col-sm-12" >
+        <div  class="col-sm-2"></div>
+        <div class="col-sm-2"  style="text-align: center;">
+             <img 
+             :src="'/storage/avatars/'+ proveedor.user.usuario.avatar" 
+             max-width="80" 
+             max-height="80" 
+             class="img-responsive">
         </div>
-        <div class="col-sm-5">
+        <div class="col-sm-6">
+        <br><br>
             <p class="inline-block">
-                <label>Nombre: </label>
-                <span>{{rowData.nombre}}</span>
-            </p>
-            <p class="inline-block">
-                <label>Email: </label>
-                <span>{{rowData.email}}</span>
+                <label>Apellido y Nombre: </label>
+                <span>{{proveedor.user.usuario.apellido}}, {{proveedor.user.usuario.nombre}} </span>
             </p>
             <p class="inline-block">
                 <label>N° de Cuit: </label>
-                <span>{{rowData.cuit}}</span>
-            </p>
-            <p class="inline-block">
-                <label>Estado: </label>
-                <span>{{rowData.estado}}</span>
+                <span>{{proveedor.cuit}}</span>
             </p>
             <p class="inline-block">
                 <label>IIBB: </label>
-                <span>{{rowData.ingresos_brutos}}</span>
-            </p>
-            <p class="inline-block">
-                <label>DNI: </label>
-                <a :href="'/storage/proveedores/'+ rowData.dni" target="_blank">
-                    {{rowData.dni}}
-                </a>
+                <span>{{proveedor.ingresos_brutos}}</span>
             </p>
         </div>
-        <div class="col-sm-4">
-            <p><label>DATOS DE USUARIO</label></p>
-            <p class="inline-block">
-                <label>Nombre: </label>
-                <span>{{rowData.user.usuario.nombre}} {{rowData.user.usuario.apellido}}</span>
-            </p>
-            <p class="inline-block">
-                <label>Email: </label>
-                <span>{{rowData.user.email}}</span>
-            </p>
-            <p class="inline-block">
-                <label>Genero: </label>
-                <span>{{rowData.user.usuario.sexo == 'F' ? 'Femenino' : 'Masculino'}}</span>
-            </p>
-        </div>
+        <div  class="col-sm-2"></div>
     </div>
 </template>
 
 <script>
     export default {
         props: {
-          rowData: {
+          proveedor: {
             type: Object,
             required: true
-          },
-          rowIndex: {
-            type: Number
           }
         }
-    }
+ }
 </script>

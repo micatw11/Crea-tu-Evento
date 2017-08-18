@@ -4,7 +4,7 @@
             <div class="body">
 	            <template v-if="publicaciones.length > 0">
 	            	<div  v-for="item in publicaciones" class="col-sm-12">
-	                	<div class="col-sm-2" v-for="img in item.fotos">
+	                	<div class="col-sm-2" v-for="(img, index) in item.fotos" v-if="index==0">
 	                    	<img 
 	                    		:src="'/storage/proveedores/publicaciones/'+img.nombre" 
 	                    		class="img-responsive" 

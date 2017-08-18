@@ -58,6 +58,7 @@
 	            this.$events.fire('validarFormPublicacion')
 	        },
 	        sendEditForm(){
+	        	console.log(this.publicacion);
 	            this.$http.patch(
 	                	'api/publicacion/'+this.$route.params.publicacionId,
 	                {

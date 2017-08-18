@@ -27,7 +27,7 @@ class PublicacionController extends Controller
     }
 
     public function show(Request $request, $id){
-        $publicacion = Publicacion::with('rubros_detalle','fotos')
+        $publicacion = Publicacion::with('rubros_detalle.proveedor.user.usuario','rubros_detalle.rubro.subcategoria.categoria','fotos')
                         ->where('id', $id)
                         ->where('estado', 1)->firstOrFail();
 
@@ -67,7 +67,7 @@ class PublicacionController extends Controller
 
     	$publicacion->update($request->except(['fotos']));
 
-        if($request->fotos){
+        if($request->has('fotos')){
             for ($i=0; $i < sizeof($publicacion->fotos); $i++) { 
                 $file = "public/avatars/{$publicacion->fotos[$i]}";
                 if(Storage::exists($file)) {
@@ -144,6 +144,7 @@ class PublicacionController extends Controller
         $publicaciones = Publicacion::with('rubros_detalle.rubro.subcategoria.categoria', 'fotos')->whereIn('id', $publicacionesId)->get();
         return response()->json(['publicaciones' => $publicaciones], 200);
     }
+
     public function destroy($id){
         if(Auth::user()->roles_id == Rol::roleId('Proveedor'))
         {
@@ -159,4 +160,5 @@ class PublicacionController extends Controller
         }
         return response(null, Response::HTTP_UNAUTHORIZED);;
     }
+    
 }
