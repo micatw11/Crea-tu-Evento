@@ -1,97 +1,96 @@
 <template>
 <div>
     <form role="form">
+        <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('categoria')&&validarRubro}">
+            <div class="col-sm-12">
+                <label for="inputCategoria" class="control-label">Categoria</label><br>
+                <select
+                    class="form-control"
+                    name='categoria'
+                    v-model="categoria_id"
+                    @change="cambiarCategoria()"
+                    v-validate="'required'"
+                    placeholder="Seleccione la Categoria" >
+                    <option disabled value="">Seleccione una categoria</option>
+                    <option 
+                        v-for="option in optionsCategorias" 
+                        v-bind:value="option.value">
+                        {{ option.text }}
+                    </option>
 
-            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('categoria')&&validarRubro}">
-                <div class="col-sm-12">
-                    <label for="inputCategoria" class="control-label">Categoria</label><br>
-                    <select
-                        class="form-control"
-                        name='categoria'
-                        v-model="categoria_id"
-                        @change="cambiarCategoria()"
-                        v-validate="'required'"
-                        placeholder="Seleccione la Categoria" >
-                        <option disabled value="">Seleccione una categoria</option>
-                        <option 
-                            v-for="option in optionsCategorias" 
-                            v-bind:value="option.value">
-                            {{ option.text }}
-                        </option>
-
-                    </select>
-                    <!-- validacion vee-validation -->
-                    <span v-show="errors.has('categoria')&&validarRubro" class="help-block">{{ errors.first('categoria') }}</span>
-                    <!-- validacion api-->
-                    <div class="text-red" v-if="errorsApi.categoria">
-                        <div v-for="msj in errorsApi.categoria">
-                            <p>{{ msj }}</p>
-                        </div>
+                </select>
+                <!-- validacion vee-validation -->
+                <span v-show="errors.has('categoria')&&validarRubro" class="help-block">{{ errors.first('categoria') }}</span>
+                <!-- validacion api-->
+                <div class="text-red" v-if="errorsApi.categoria">
+                    <div v-for="msj in errorsApi.categoria">
+                        <p>{{ msj }}</p>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('subcategoria')&&validarRubro}">
-                <div v-if="categoria_id != null" class="col-sm-12">
-                    <label for="inputSubcategoria" class="control-label">Subcategoria</label><br>
-                    <select
-                        class="form-control"
-                        name='subcategoria'
-                        v-model="subcategoria_id"
-                        @change="cambiarSubcategoria()"
-                        v-validate="'required'"
-                        placeholder="Seleccione una subCategoria" >
-                        <option disabled value="">Seleccione una Subcategoria</option>
-                        <option 
-                            v-for="option in optionsSubcategorias" 
-                            v-bind:value="option.value">
-                            {{ option.text }}
-                        </option>
+        <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('subcategoria')&&validarRubro}">
+            <div v-if="categoria_id != null" class="col-sm-12">
+                <label for="inputSubcategoria" class="control-label">Subcategoria</label><br>
+                <select
+                    class="form-control"
+                    name='subcategoria'
+                    v-model="subcategoria_id"
+                    @change="cambiarSubcategoria()"
+                    v-validate="'required'"
+                    placeholder="Seleccione una subCategoria" >
+                    <option disabled value="">Seleccione una Subcategoria</option>
+                    <option 
+                        v-for="option in optionsSubcategorias" 
+                        v-bind:value="option.value">
+                        {{ option.text }}
+                    </option>
 
-                    </select>
-                    <!-- validacion vee-validation -->
-                    <span v-show="errors.has('subcategoria')&&validarRubro" class="help-block">{{ errors.first('subcategoria') }}</span>
-                    <!-- validacion api-->
-                    <div class="text-red" v-if="errorsApi.subcategoria">
-                        <div v-for="msj in errorsApi.subcategoria">
-                            <p>{{ msj }}</p>
-                        </div>
+                </select>
+                <!-- validacion vee-validation -->
+                <span v-show="errors.has('subcategoria')&&validarRubro" class="help-block">{{ errors.first('subcategoria') }}</span>
+                <!-- validacion api-->
+                <div class="text-red" v-if="errorsApi.subcategoria">
+                    <div v-for="msj in errorsApi.subcategoria">
+                        <p>{{ msj }}</p>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('rubro')&&validarRubro}">
-                <div v-if="subcategoria_id != null" class="col-sm-12">
-                    <label for="inputRubro" class="control-label">Denominación</label><br>
-                    <select
-                        class="form-control"
-                        v-model="rubro_id"
-                        name='rubro'
-                        @change="cambiarRubro()"
-                        v-validate="'required'"
-                        placeholder="Seleccione un Rubro" >
-                        <option disabled value="">Seleccione un Rubro</option>
-                        <option 
-                            v-for="option in optionsRubros" 
-                            v-bind:value="option.value">
-                            {{ option.text }}
-                        </option>
+        <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('rubro')&&validarRubro}">
+            <div v-if="subcategoria_id != null" class="col-sm-12">
+                <label for="inputRubro" class="control-label">Denominación</label><br>
+                <select
+                    class="form-control"
+                    v-model="rubro_id"
+                    name='rubro'
+                    @change="cambiarRubro()"
+                    v-validate="'required'"
+                    placeholder="Seleccione un Rubro" >
+                    <option disabled value="">Seleccione un Rubro</option>
+                    <option 
+                        v-for="option in optionsRubros" 
+                        v-bind:value="option.value">
+                        {{ option.text }}
+                    </option>
 
-                    </select>
-                    <!-- validacion vee-validation -->
-                    <span v-show="errors.has('rubro')&&validarRubro" class="help-block">{{ errors.first('rubro') }}</span>
-                    <!-- validacion api-->
-                    <div class="text-red" v-if="errorsApi.rubro_id">
-                        <div v-for="msj in errorsApi.rubro_id">
-                            <p>{{ msj }}</p>
-                        </div>
+                </select>
+                <!-- validacion vee-validation -->
+                <span v-show="errors.has('rubro')&&validarRubro" class="help-block">{{ errors.first('rubro') }}</span>
+                <!-- validacion api-->
+                <div class="text-red" v-if="errorsApi.rubro_id">
+                    <div v-for="msj in errorsApi.rubro_id">
+                        <p>{{ msj }}</p>
                     </div>
                 </div>
-            </div></br>
+            </div>
+        </div></br>
         <!--Datos de Habilitación y dirección del comercio-->
         <div v-if="rubro_id != null" class="col-sm-12">
             <label class="control-label">Cuenta con Comercio de atención. </label> <br>  
-            <input type="checkbox" id="checkbox" v-model="rubro.comercio" style="text-align:center;">
+            <input type="checkbox" id="checkbox" v-model="rubro.comercio" @click="$forceUpdate()" style="text-align:center;">
             <label for="checkbox">{{ rubro.comercio == true ? "Si" : "No" }}</label>
         </div>
         <div v-if="rubro.comercio == true">
@@ -115,12 +114,20 @@
                     <div class="col-sm-6">
                         <label for="inputNombre" class="control-label">Fecha de habilitación</label><br>
                         <input 
+                            v-if="rubro.habilitacion != null && rubro.habilitacion != ''"
+                            v-model="rubro.fecha_habilitacion" 
+                            type="date"
+                            v-validate="'required'"
+                            value="fecha"
+                            name="fecha"
+                            class="form-control">
+                        <input 
+                            v-else
                             v-model="rubro.fecha_habilitacion" 
                             type="date"
                             value="fecha"
                             name="fecha"
-                            class="form-control"
-                            >
+                            class="form-control">
                         <!-- validacion vee-validation -->
                         <span v-show="errors.has('fecha')&&validarRubro" class="help-block">{{ errors.first('fecha') }}</span>
                         <!-- validacion api-->
@@ -210,7 +217,6 @@
             </div>
         </div>
     </form>
-     
 </div>
 </template>
 
@@ -271,18 +277,18 @@ export default {
     methods: {
         //form validation
         validateBeforeSubmit: function() {
-            console.log('fallecio');
+
             this.$validator.validateAll().then(() => {
                     this.validarRubro = false; 
                     if (this.nuevo){
-                        console.log('valido nuevo')
+
                         this.$emit('validado')
                     }else{
-                         console.log('valido nuevo')
+
                         this.$emit('validadoEdit')
                     }
                 }).catch(() => {
-                    console.log('fallecio - 2');
+
                     this.validarRubro = true;
                 });
         },
@@ -373,10 +379,16 @@ export default {
                 this.rubro_id = this.rubro.rubro_id;
                 this.getOptionsSubcategorias(this.categoria_id);
                 this.getOptionsRubros(this.rubro.rubro.subcategoria_id);
-
             }
+        },
+        changeCheckBox: function(e){
+            console.log(this.rubro)
+            this.$forceUpdate();
+            if(!this.nuevo){
+                this.$nextTick(() => this.rubro.comercio = e.toElement.checked);
+            }
+            
         }
     }
-
 }
 </script>

@@ -3,7 +3,7 @@
         <div v-if="showForm && getRubros" class="modal-body">
         
         	<form-rubro 
-                :rubro="rubro"  
+                :rubro="rubro"
                 :domicilio="domicilio" 
                 :nuevo="nuevo"
                 :rubrosRegistrados="rubrosRegistrados"
@@ -41,7 +41,12 @@ export default {
         return {
             data: { type: Object, default: null},//Peticion de datos
             domicilio: { type: Object, default: null}, 
-            rubro: { type: Object, default: null},
+            rubro:{
+                rubro_id: null,
+                comercio: false,
+                habilitacion: null,
+                fecha_habilitacion: null
+            },
             validarRubro: false,
             validarDomicilio: false,
             errorsApi: {},
@@ -135,6 +140,8 @@ export default {
                    'label':this.domicilio.localidad.nombre+' ('+this.domicilio.localidad.provincia.nombre+')'
                 }
                 this.rubro.comercio = true;
+            } else {
+                this.rubro.comercio = false;
             }
             this.showForm = true;
 
@@ -151,9 +158,5 @@ export default {
                 });
         }
     }
-}
-
-
-
-        
+} 
 </script>

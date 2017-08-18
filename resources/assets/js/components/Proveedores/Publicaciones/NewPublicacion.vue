@@ -19,10 +19,6 @@
 				        </div>
 				        <div class="box box-footer">
 				        	<div style="text-align:center;">
-					            <button @click="goBack()" class="btn btn-default">
-			                        <i class="glyphicon glyphicon-chevron-left"></i>
-			                        Atras
-			                    </button>
 				        		<button class="btn btn-primary" @click="validateBeforeSubmit()">Crear Publicaci&oacute;n</button>
 				        	</div>
 				        </div>
@@ -75,7 +71,6 @@
 	                        message:'Se creado correctamente su publicación. :D'
 	                    });
 	                    this.resetForm();
-	                    this.goBack();
 	                }, response => {
 	                    this.validarPublicacion= false;
 	                    this.$toast.error({
@@ -97,9 +92,6 @@
 	        		'rubros_detalle_id': '',
 	        		'fecha_finalizacion': null
 	        	}
-	        },
-	        goBack(){
-	            route.go(-1)
 	        }
 		}
 	}
