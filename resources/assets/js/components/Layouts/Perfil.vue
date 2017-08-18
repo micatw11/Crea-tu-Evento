@@ -6,7 +6,7 @@
                     <!-- Profile Image -->
                     <div class="box box-primary">
                         <div class="box-body box-profile">
-                            <img class="profile-user-img img-responsive img-circle" :src="srcUrl" alt="User profile picture">
+                            <img class="profile-user-img img-responsive img-circle" :src="srcUrl" alt="avatar">
 
                             <h3 v-if="perfil !== null" class="profile-username">
                                 {{perfil.nombre}} {{perfil.apellido}}
@@ -17,6 +17,9 @@
                                 v-if="perfil !== null && perfil.user_id == auth.user.profile.id">
                             </image-input>
 
+                        </div>
+                        <div v-if="loading" class="overlay">
+                            <i class="fa fa-refresh fa-spin"></i>
                         </div>
                         <!-- /.box-body -->
                     </div>
@@ -159,6 +162,7 @@ export default {
                       { text: 'Operador', value: '3' },
                       { text: 'Usuario', value: '5' }
                   ],
+            loading: true
         }
     },
     beforeMount: function() {
@@ -184,6 +188,7 @@ export default {
                 .then(response => {
                     this.perfil = response.data.data,
                     this.srcUrl = '/storage/avatars/'+this.perfil.avatar
+                    this.loading = false
                 }, response => {
                     if(response.status === 404){
                         router.push('/404');

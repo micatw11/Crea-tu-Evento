@@ -1,7 +1,6 @@
 <template>
     <div>
         <div v-if="showForm && getRubros" class="modal-body">
-        
         	<form-rubro 
                 :rubro="rubro"
                 :domicilio="domicilio" 
@@ -11,6 +10,9 @@
                 :errorsApi="errorsApi" >
             </form-rubro>
 
+        </div>
+        <div v-if="loading" class="overlay">
+            <i class="fa fa-refresh fa-spin"></i>
         </div>
         <div class="modal-footer">
             <div class="col-sm-12 box-footer clearfix" style="text-align:center;">
@@ -42,7 +44,7 @@ export default {
             data: { type: Object, default: null},//Peticion de datos
             domicilio: { type: Object, default: null}, 
             rubro:{
-                rubro_id: null,
+                rubro_id: '',
                 comercio: false,
                 habilitacion: null,
                 fecha_habilitacion: null

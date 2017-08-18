@@ -39,11 +39,13 @@
 					type: Object
 				},
 				validarPublicacion: false,
-				errorsApi:[]
+				errorsApi:[],
+				listPath : [{route: '/', name: 'Home'}, {route: '/publicacion/new', name: 'Nueva Publicación'}],
 			}
 		},
 		mounted(){
 			this.resetForm();
+			this.$events.fire('changePath', this.listPath, 'Nueva Publicación');
 			//this.$events.on("validadoFormPublicacion", () => this.sendNewForm());
 		},
 		components: {

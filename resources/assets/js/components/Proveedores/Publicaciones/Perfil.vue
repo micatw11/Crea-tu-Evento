@@ -12,19 +12,33 @@
 	              <i class="fa fa-times"></i></button>
 	          </div>
 	        </div>
-
-             <div class="col-sm-2 box-tools" v-for="img in publicacion.fotos">
-            	<img 
-            		:src="'/storage/proveedores/publicaciones/'+img.nombre" 
-            		class="img-responsive" 
-            		style="max-width:130px;"></img>
-            </div>
 	        <div class="box-body">
-	        	  <br><br>
+
 			      <hr>
 			      <h4>{{publicacion.oferta}}</h4>
 		          <br>
 		          <div class="row">
+		          		<div class="col-xs-12">
+<div id="myCarousel" class="carousel slide" data-ride="carousel" style="max-width:400px;max-height:400;">
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner">
+
+    <div v-for="(img, index) in publicacion.fotos" class="item" v-bind:class="{'active': (activeId==index)}">
+      <img :src="'/storage/proveedores/publicaciones/'+img.nombre" class="img-responsive" style="max-width:400px;max-height:400px;">
+    </div>
+  </div>
+
+  <!-- Left and right controls -->
+  <a @click="setActiveItem('prev')" class="left carousel-control">
+    <span class="glyphicon glyphicon-chevron-left"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a @click="setActiveItem('next')" class="right carousel-control">
+    <span class="glyphicon glyphicon-chevron-right"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+		          		</div>
 				       <div class="col-xs-12 text-center box-group" id="accordion">
 				          		<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
 			                        Ver Datos Proveedor
@@ -63,7 +77,8 @@
 				publicacion: [],
 				productoId: null,
 				listPath : [{route: '/', name: 'Home'}, {route: '/usuario/'+auth.user.profile.id +'/perfil', name: 'Perfil'}],
-				auth: auth
+				auth: auth,
+				activeId: 0
 			}
 		},
 		mounted(){
@@ -85,7 +100,31 @@
 			verProveedor(id){
 				this.$events.fire('changePath', this.listPath, 'Ver Proveedor');
 				route.push('/proveedor/'+id);
-			}
+			},
+		    setActiveItem(action) {
+		    	if(this.publicacion.fotos != 'undefined')
+		    	{
+			        if(action === 'next'){
+			        	if(this.activeId < (this.publicacion.fotos.length - 1)){
+	 						this.activeId = this.activeId + 1
+			        	}
+	 					else
+	 					{
+	 						this.activeId = 0
+	 					}
+			        }
+			        if(action === 'prev'){
+			        	if(this.activeId > 0){
+	 						this.activeId = this.activeId - 1;
+			        	}
+			        	else
+			        	{
+			        		this.activeId = (this.publicacion.fotos.length - 1)
+			        	}
+			        }
+			    }
+			    
+		    }
 		}
 	}
 </script>

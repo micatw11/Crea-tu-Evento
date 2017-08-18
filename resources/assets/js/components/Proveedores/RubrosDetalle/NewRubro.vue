@@ -17,6 +17,9 @@
                                 @validado="sendForm()">
                             </form-rubro>
                         </div>
+                        <div v-if="!getRubros" class="overlay">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
                         <div class="box box-footer">
                             <div style="text-align:center;">
                                 <button @click="validateBeforeSubmit()" type="button" class="btn btn-primary">
@@ -46,7 +49,7 @@ export default {
                 localidad_id: null
             },
             rubro:{
-                rubro_id: null,
+                rubro_id: '',
                 comercio: false,
                 habilitacion: null,
                 fecha_habilitacion: null
@@ -58,11 +61,15 @@ export default {
             estado: true,
             getRubros: false,
             rubrosRegistrados: [],
-            param: {}
+            param: {},
+            listPath : [{route: '/', name: 'Home'}, {route: '/rubro/new', name: 'Registrar Rubro'}]
         }
     },
     beforeMount: function(){
         this.getRubrosRegistrados(); 
+    },
+    mounted(){
+        this.$events.fire('changePath', this.listPath, 'Registrar Rubro');
     },
     components: {
         FormRubro
@@ -97,6 +104,7 @@ export default {
                          title:'¡Detalle de Rubro Creada!',
                          message:'Se creado correctamente el Detalle de Rubro. :D'
                     });
+                    this.getRubros = false;
                     this.resetForm();
                     this.errorsApi= [];
                 }, response => {
@@ -122,18 +130,18 @@ export default {
         resetForm() {
             this.rubro={
                 tipo_rubro: null,
-                rubro_id: null,
+                rubro_id: '',
                 comercio: true,
                 habilitacion: null,
                 fecha_habilitacion: null
             },
             this.domicilio= {
-                habilitacion: null,
                 calle: null,
                 numero: null,
                 piso: null,
                 localidad_id: null
             }
+            this.getRubrosRegistrados();
         },
         getRubrosRegistrados: function() {
             this.$http.get('api/proveedor/'+auth.user.profile.id+'/rubro/'

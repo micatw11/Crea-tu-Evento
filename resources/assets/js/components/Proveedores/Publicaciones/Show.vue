@@ -1,33 +1,37 @@
 <template>
 	<div>
 	    <div class="default-content" >
-            <div class="body" >
-            	<div v-if="publicaciones.length > 0" v-for="item in publicaciones" class="col-sm-12">
-                	<div class="col-sm-2" v-for="img in item.fotos">
-                    	<img 
-                    		:src="'/storage/proveedores/publicaciones/'+img.nombre" 
-                    		class="img-responsive" 
-                    		style="max-width:130px;">
-                    </div>
-	                 <div class="col-sm-10">
-		                <div class="col-sm-6">
-		                    <div class="col-sm-10">
-		                        <p><h3>{{item.titulo}}</h3></p>
-		                    </div>
-		                   	<div class="col-sm-10">
-		                    	<p ref="descripcion" v-html="item.descripcion" v-truncate="40"></p>
-		                   	</div>
-		                </div>
-		                <div class="col-sm-4" style="text-align: center;">
-		                 	<button type="button" class="btn-block" @click="ver(item.id)" >Ver</button>
-		                    <button type="button" class="btn-block" @click="modificar(item.id)" >Modificar</button>
-		                    <button type="button" class="btn-block" @click="baja(item.id)" >Eliminar</button>
-		                </div>
+            <div class="body">
+	            <template v-if="publicaciones.length > 0">
+	            	<div  v-for="item in publicaciones" class="col-sm-12">
+	                	<div class="col-sm-2" v-for="img in item.fotos">
+	                    	<img 
+	                    		:src="'/storage/proveedores/publicaciones/'+img.nombre" 
+	                    		class="img-responsive" 
+	                    		style="max-width:130px;">
+	                    </div>
+		                 <div class="col-sm-10">
+			                <div class="col-sm-6">
+			                    <div class="col-sm-10">
+			                        <p><h3>{{item.titulo}}</h3></p>
+			                    </div>
+			                   	<div class="col-sm-10">
+			                    	<p ref="descripcion" v-html="item.descripcion" v-truncate="40"></p>
+			                   	</div>
+			                </div>
+			                <div class="col-sm-4" style="text-align: center;">
+			                 	<button type="button" class="btn-block" @click="ver(item.id)" >Ver</button>
+			                    <button type="button" class="btn-block" @click="modificar(item.id)" >Modificar</button>
+			                    <button type="button" class="btn-block" @click="baja(item.id)" >Eliminar</button>
+			                </div>
+			            </div>
 		            </div>
-	            </div>
-	            <div  class="col-sm-12">
-	            	<h3 class="text-center">No posee publicaciones realizadas!</h3>
-	            </div>
+	            </template>
+	            <template v-else>
+		            <div class="col-sm-12">
+		            	<h3 class="text-center">No posee publicaciones realizadas!</h3>
+		            </div>
+	            </template>
             </div>
 	    </div>
 	</div>

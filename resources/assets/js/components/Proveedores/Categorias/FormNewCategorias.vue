@@ -116,6 +116,7 @@
                                     name="subcategoria" 
                                     v-model="subcategoria_id" 
                                     class="form-control" 
+                                    v-bind:disabled="categoria_id == ''"
                                     v-validate data-vv-rules="required">
                                     <option disabled value="">Seleccione una subcategoria</option>
                                     <option v-for="option in subcategorias" v-bind:value="option.value">{{option.text}}</option>

@@ -2,14 +2,28 @@
     <div class="default-content">
         <section class="content">
             <div class="row">
-                <div class="col-md-8 col-md-offset-2">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">Example Component</div>
-
-                        <div class="panel-body">
-                            I'm an example Home!<br>
+                <div class="col-xs-12">
+                    <div class="box box-primary">
+                        <div class="box-header">
+                            <h3 class="box-title">Busqueda</h3>
                         </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <div class="row margin">
+                                <div class="col-sm-4">
+                                    <v-select
+                                        :on-search="getLocalidades" 
+                                        :options="localidades"
+                                        v-model="localidad_id" 
+                                        placeholder="Ubicación">
+                                    </v-select>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- /.box-body -->
                     </div>
+                    <!-- /.box -->
                 </div>
             </div>
         </section>
@@ -17,12 +31,15 @@
 </template>
 
 <script>
+    import VSelect from "vue-select";
     export default {
         data(){
             return {
                 titlePath: 'Home',
                 listaPath: [{route: '/', name: 'Home'}],
-                publicaciones : []
+                publicaciones : [],
+                localidades: [],
+                localidad_id: null
             }
         },
         mounted() {
@@ -41,7 +58,18 @@
                 }, response => {
 
                 })
+            },
+            getLocalidades: function(search, loading) {
+                loading(true)
+                this.$http.get('api/localidades/?q='+ search
+                    ).then(response => {
+                        this.localidades = response.data.data
+                        loading(false)
+                    })
             }
+        },
+        components: {
+            VSelect
         }
     }
 </script>

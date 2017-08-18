@@ -1,69 +1,75 @@
 <template >
 <div>
-    <p class="text-center" style="margin-top:0px;">Habilitación de ingresos brutos: {{perfil.user.proveedor.ingresos_brutos}}</p>
-    <div v-if="rubrosRegistrados.length > 0" v-for="item in rubrosRegistrados">
-        <div class="content">
-            <div class="content" style="border-style: double;">
-                <div class="col-sm-8">
-                    <p>
-                        <b>Tipo de Proveedor: </b>
-                        {{item.rubro.subcategoria.categoria.tipo_proveedor}}
-                    </p>
-                    <div v-if="item.habilitacion != null">
+    <section class="content">
+        <p class="text-center" style="margin-top:0px;">Habilitación de ingresos brutos: {{perfil.user.proveedor.ingresos_brutos}}</p>
+        <div v-if="rubrosRegistrados.length > 0" class="row">
+            <div v-for="item in rubrosRegistrados" class="col-sm-6">
+                <div class="box box-default" style="height: 275px;">
+                    <div class="box-header">
+
+                        <div class="box-tools pull-right">
+                            <button class="btn btn-box-tool" data-toggle="tooltip" @click="modificar(item.id)" >
+                                <i class="fa fa-pencil"></i>
+                            </button>
+                        </div><!-- /.box-tools -->
+                    </div><!-- /.box-header -->
+                    <div class="box-body">
                         <p>
-                            <b>Nro Habilitación: </b>
-                            {{item.habilitacion}}
+                            <b>Tipo de Proveedor: </b>
+                            {{item.rubro.subcategoria.categoria.tipo_proveedor}}
                         </p>
-                    
-                        <p>
-                            <b>Fecha de habilitacion: </b>
+                        <div v-if="item.habilitacion != null">
+                            <p>
+                                <b>Nro Habilitación: </b>
+                                {{item.habilitacion}}
+                            </p>
                         
-                            {{item.fecha_habilitacion}}
+                            <p>
+                                <b>Fecha de habilitacion: </b>
+                            
+                                {{item.fecha_habilitacion}}
+                            </p>
+                        </div>
+                        <div v-else>
+                            <p><b>Habilitación: </b>Sin habilitación</p>
+                        </div>
+                        <p>
+                            <b>Categoria: </b>
+                        
+                            {{item.rubro.subcategoria.categoria.nombre}} / {{ item.rubro.subcategoria.nombre }} / {{item.rubro.nombre}}
                         </p>
-                    </div>
-                    <div v-else>
-                        <p><b>Habilitación: </b>Sin habilitación</p>
-                    </div>
-                    <p>
-                        <b>Categoria: </b>
-                    
-                        {{item.rubro.subcategoria.categoria.nombre}} / {{ item.rubro.subcategoria.nombre }} / {{item.rubro.nombre}}
-                    </p>
 
-                    <p if= "item.domicilio">
-                        <b>Domicilio: </b><br>
-                        calle: {{item.domicilio.calle}}<br>
-                        numero: {{item.domicilio.numero}}<br>
-                        piso: {{item.domicilio.piso}}
-                    </p>
-                </div>
-                <div class="col-sm-4" style="text-align: center;">
-                    <button type="button" class="btn-block" @click="modificar(item.id)" >Modificar Rubro</button>
-                </div>
-
+                        <p if= "item.domicilio">
+                            <b>Domicilio: </b><br>
+                            calle: {{item.domicilio.calle}}<br>
+                            numero: {{item.domicilio.numero}}<br>
+                            piso: {{item.domicilio.piso}}
+                        </p>
+                    </div><!-- /.box-body -->
+                </div><!-- /.box -->
             </div>
         </div>
-    </div>
-    <div v-else class="content">
-        <div class="col-sm-12">
-            <h3 class="text-center">No se ha registrado en ningun rubro</h3>
-            <p>¡Para realizar publicaciones debe de encontrarse registrado en un rubro!.</p>
-        </div>
-    </div>
-    <!-- Modal Modificar-->
-    <div v-if="showModificar &&rubrosRegistrados.length > 0" 
-        id="modificar" class="modal" role="dialog" :style="{ display : showModificar  ? 'block' : 'none' }">
-        <div class="modal-dialog">
-          <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" @click="closeModal()">&times;</button>
-                    <h4 class="modal-title">Modificar datos de Rubro</h4>
-                </div>
-                <edit-rubro :idRubro="idRubro"></edit-rubro>
+        <div v-else class="content">
+            <div class="col-sm-12">
+                <h3 class="text-center">No se ha registrado en ningun rubro</h3>
+                <p>¡Para realizar publicaciones debe de encontrarse registrado en un rubro!.</p>
             </div>
         </div>
-    </div>
+        <!-- Modal Modificar-->
+        <div v-if="showModificar &&rubrosRegistrados.length > 0" 
+            id="modificar" class="modal" role="dialog" :style="{ display : showModificar  ? 'block' : 'none' }">
+            <div class="modal-dialog">
+              <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" @click="closeModal()">&times;</button>
+                        <h4 class="modal-title">Modificar datos de Rubro</h4>
+                    </div>
+                    <edit-rubro :idRubro="idRubro"></edit-rubro>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>
         
 </template>

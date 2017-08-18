@@ -39,7 +39,7 @@
                     v-model="subcategoria_id"
                     @change="cambiarSubcategoria()"
                     v-validate="'required'"
-                    placeholder="Seleccione una subCategoria" >
+                    placeholder="Seleccione una subCategoria" v-bind:disabled="categoria_id == '' && optionsSubcategorias.length == 0">
                     <option disabled value="">Seleccione una Subcategoria</option>
                     <option 
                         v-for="option in optionsSubcategorias" 
@@ -67,6 +67,7 @@
                     v-model="rubro_id"
                     name='rubro'
                     @change="cambiarRubro()"
+                    v-bind:disabled="subcategoria_id == '' && optionsRubros.length == 0"
                     v-validate="'required'"
                     placeholder="Seleccione un Rubro" >
                     <option disabled value="">Seleccione un Rubro</option>
@@ -88,7 +89,7 @@
             </div>
         </div></br>
         <!--Datos de Habilitación y dirección del comercio-->
-        <div v-if="rubro_id != null" class="col-sm-12">
+        <div v-if="rubro_id != ''" class="col-sm-12">
             <label class="control-label">Cuenta con Comercio de atención. </label> <br>  
             <input type="checkbox" id="checkbox" v-model="rubro.comercio" @click="$forceUpdate()" style="text-align:center;">
             <label for="checkbox">{{ rubro.comercio == true ? "Si" : "No" }}</label>
@@ -255,11 +256,11 @@ export default {
             validarRubro: false,
             error: false,
             optionsCategorias: [],
-            categoria_id: null,
+            categoria_id: '',
             optionsSubcategorias: [],
-            subcategoria_id: null,
+            subcategoria_id: '',
             optionsRubros: [],
-            rubro_id: null
+            rubro_id: ''
         }
     },
     components: {
@@ -272,7 +273,7 @@ export default {
         this.loadDefaultOptions();
     },
     mounted() {
-        this.$events.$on('validarForm', () =>this.validateBeforeSubmit());     
+        this.$events.$on('validarForm', () => this.validateBeforeSubmit());     
     },
     methods: {
         //form validation
@@ -353,19 +354,19 @@ export default {
         },
         cambiarCategoria(){
             this.rubro.categoria_id = this.categoria_id;
-               if (this.categoria_id!=null){
+               if (this.categoria_id!=''){
                  this.optionsSubcategorias = []
                  this.optionsRubros = []
-                 this.subcategoria_id =  null
-                 this.rubro_id = null
+                 this.subcategoria_id =  ''
+                 this.rubro_id = ''
                  this.getOptionsSubcategorias(this.categoria_id);
                 }
         },
         cambiarSubcategoria(){
             this.rubro.subcategoria_id = this.subcategoria_id;
-            if (this.subcategoria_id!=null){
+            if (this.subcategoria_id!=''){
                   this.optionsRubros = []
-                  this.rubro_id = null
+                  this.rubro_id = ''
                   this.getOptionsRubros(this.subcategoria_id);
              }
         },
@@ -380,14 +381,6 @@ export default {
                 this.getOptionsSubcategorias(this.categoria_id);
                 this.getOptionsRubros(this.rubro.rubro.subcategoria_id);
             }
-        },
-        changeCheckBox: function(e){
-            console.log(this.rubro)
-            this.$forceUpdate();
-            if(!this.nuevo){
-                this.$nextTick(() => this.rubro.comercio = e.toElement.checked);
-            }
-            
         }
     }
 }

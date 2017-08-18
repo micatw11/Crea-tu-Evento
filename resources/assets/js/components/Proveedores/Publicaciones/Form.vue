@@ -47,7 +47,7 @@
 
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('oferta')&&validarPublicacion}">
                     <div class="col-sm-12">
-                        <label for="oferta" class="control-label">Oferta (*) </label>
+                        <label for="oferta" class="control-label">Oferta </label>
                         <textarea
                             name="oferta" 
                             type="text"
@@ -72,13 +72,7 @@
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('descripcion')&&validarPublicacion}">
                     <div class="col-sm-12">
                         <label for="descripcion" class="control-label">Descripci&oacute;n (*)</label>
-                        <!--<textarea 
-                        	name="descripcion"  
-                        	v-validate="'required|min:15'" 
-                        	class="form-control" 
-                        	style="min-height:150px;" 
-                        	v-model="publicacion.descripcion" placeholder="Ingrese una Descripcion">
-                        </textarea>-->
+
                         <vue-editor 
                             data-vv-name="descripcion"  
                             v-model="publicacion.descripcion" 
@@ -98,7 +92,7 @@
                     </div>
                 </div>
 
-                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('fotos')&&validarPublicacion}">
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('fotos[]')&&validarPublicacion}">
                     <div class="col-sm-12">
                         <label for="fotos" class="control-label">Fotos <i class="fa fa-file-image-o"></i></label><br>
                         <input v-if="nuevo"
@@ -116,7 +110,7 @@
                             multiple>
 
                         <!-- validacion vee-validation -->
-                        <span v-show="errors.has('fotos')&&validarPublicacion" class="help-block">{{ errors.first('fotos') }}</span>
+                        <span v-show="errors.has('fotos[]')&&validarPublicacion" class="help-block">{{ errors.first('fotos[]') }}</span>
                         <!-- validacion api-->
                         <div class="text-red" v-if="errorsApi.fotos">
                             <div v-for="msj in errorsApi.fotos">
