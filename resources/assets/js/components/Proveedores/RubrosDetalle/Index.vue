@@ -52,7 +52,7 @@
         <div v-else class="content">
             <div class="col-sm-12">
                 <h3 class="text-center">No se ha registrado en ningun rubro</h3>
-                <p>¡Para realizar publicaciones debe de encontrarse registrado en un rubro!.</p>
+                <h5 class="text-center">¡Para realizar publicaciones debe de encontrarse registrado en un rubro!.</h5>
             </div>
         </div>
         <!-- Modal Modificar-->

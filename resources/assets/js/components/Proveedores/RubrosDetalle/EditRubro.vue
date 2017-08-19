@@ -1,6 +1,8 @@
 <template>
     <div>
-        <div v-if="showForm && getRubros" class="modal-body">
+        <div class="box-body">  
+            <div v-if="showForm && getRubros" class="modal-body">
+
         	<form-rubro 
                 :rubro="rubro"
                 :domicilio="domicilio" 
@@ -9,13 +11,14 @@
                 @validadoEdit="sendFormEdit()"
                 :errorsApi="errorsApi" >
             </form-rubro>
+            </div>
 
         </div>
-        <div v-if="loading" class="overlay">
+        <div v-if="!showForm" class="overlay">
             <i class="fa fa-refresh fa-spin"></i>
         </div>
         <div class="modal-footer">
-            <div class="col-sm-12 box-footer clearfix" style="text-align:center;">
+            <div  style="text-align:center;">
                 <button class="btn btn-default" @click="atras()">
                     <i class="glyphicon glyphicon-chevron-left"></i>
                     Atras

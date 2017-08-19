@@ -3,27 +3,69 @@
         <section class="content">
             <div class="row">
                 <div class="col-xs-12">
-                    <div class="box box-primary">
-                        <div class="box-header">
-                            <h3 class="box-title">Busqueda</h3>
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Filtro</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                            <!-- /.box-tools -->
                         </div>
                         <!-- /.box-header -->
-                        <div class="box-body">
-                            <div class="row margin">
+                        <div class="box-body" style="display: block;">
+                            <div class="col-sm-4">
+                                <v-select
+                                    :on-search="getLocalidades" 
+                                    :options="localidades"
+                                    v-model="localidad_id" 
+                                    placeholder="Ubicación">
+                                </v-select>
+                            </div>
+                            <div class="col-sm-8">
                                 <div class="col-sm-4">
-                                    <v-select
-                                        :on-search="getLocalidades" 
-                                        :options="localidades"
-                                        v-model="localidad_id" 
-                                        placeholder="Ubicación">
-                                    </v-select>
+                                    <select 
+                                        class="form-control"
+                                        v-model="categoria_id"
+                                        @change="changeCategory()">
+
+                                        <option value="" disabled>Categoria</option>
+                                        <option v-for="option in categorias" v-bind:value="option.value">{{ option.text }}</option>
+
+                                    </select>
+                                </div>
+                                <div class="col-sm-4">
+                                    <select 
+                                        class="form-control" 
+                                        v-bind:disabled="categoria_id == '' || subcategorias.length == 0"
+                                        v-model="subcategoria_id" 
+                                        @change="changeSubcategory()">
+
+                                        <option value="" disabled>Subcategoria</option>
+                                        <option v-for="option in subcategorias" v-bind:value="option.value">{{ option.text }}</option>
+
+                                    </select>
+                                </div>
+                                <div class="col-sm-4">
+                                    <select 
+                                        class="form-control" 
+                                        v-bind:disabled="subcategoria_id == '' || rubros.length == 0"
+                                        v-model="rubro_id">
+                                        <option value="" disabled>Rubro</option>
+                                        <option v-for="option in rubros" v-bind:value="option.value">{{ option.text }}</option>
+                                    </select>
                                 </div>
                             </div>
-
                         </div>
                         <!-- /.box-body -->
+                        <div class="box-footer">
+                            <div class="pull-right">
+                                <button class="btn btn-primary">Aplicar Filtro</button>
+                            </div>
+                        </div>
                     </div>
-                    <!-- /.box -->
                 </div>
             </div>
         </section>
@@ -39,7 +81,13 @@
                 listaPath: [{route: '/', name: 'Home'}],
                 publicaciones : [],
                 localidades: [],
-                localidad_id: null
+                localidad_id: null,
+                categoria_id: '',
+                categorias: [],
+                subcategoria_id: '',
+                subcategorias: [],
+                rubro_id: '',
+                rubros: []
             }
         },
         mounted() {
@@ -48,6 +96,7 @@
         },
         beforeMount() {
             this.searchPublication('');
+            this.getCategorias();
         },
         methods: {
             searchPublication(filter){
@@ -66,6 +115,52 @@
                         this.localidades = response.data.data
                         loading(false)
                     })
+            },
+            getCategorias: function(){
+                this.$http.get('api/categoria/')
+                    .then(response => {
+                        let data = response.data.data
+                        for (let categoria of data){
+                            this.categorias.push({ value: categoria.id, text: categoria.nombre });
+                        }
+                    }, response => {
+                        this.$toast.error({
+                            title:'¡Error!',
+                            message:'No se han podido cargar opciones de filtrado. :('
+                        });
+                    })
+            },
+            changeCategory: function(){
+                this.subcategorias = [];
+                this.subcategoria_id = "";
+                this.$http.get('api/categoria/' +this.categoria_id
+                    ).then(response => {
+                        let data = response.data.data
+                        for (let subcategoria of data.subcategorias){
+                            this.subcategorias.push({ text: subcategoria.nombre, value: subcategoria.id });
+                        }
+                    }, response => {
+                        this.$toast.error({
+                            title:'¡Error!',
+                            message:'No se han podido cargar opciones de filtrado. :('
+                        });
+                    })
+            },
+            changeSubcategory: function(){
+                this.rubros = [];
+                this.rubro_id= '';
+                this.$http.get('api/rubros/'+ this.subcategoria_id)
+                .then(response => {
+                    let options = response.data
+                    for (let rubros of options){
+                        this.rubros.push({ text: rubros.nombre, value: rubros.id })
+                    }
+                }, response => {
+                    this.$toast.error({
+                        title:'¡Error!',
+                        message:'No se han podido cargar opciones de filtrado. :('
+                    });
+                })
             }
         },
         components: {

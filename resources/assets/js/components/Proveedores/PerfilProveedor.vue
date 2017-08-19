@@ -24,12 +24,12 @@
                         <div class="tab-content">
                             
                             <div class="active tab-pane" id="publicaciones">
-                               <show-publicaciones :proveedorId="perfil.user.proveedor.id"></show-publicaciones>
+                               <index-publicaciones :proveedorId="perfil.user.proveedor.id"></index-publicaciones>
                             </div>
                             <div class="tab-pane" id="rubro">
 
                                  <div v-if="perfil.user.proveedor">
-                                        <show-rubros :perfil="perfil"></show-rubros>
+                                        <index-rubros :perfil="perfil"></index-rubros>
                                 </div>
 
                             </div>
@@ -46,8 +46,8 @@
 
 <script>
 
-import ShowRubros from './RubrosDetalle/Show.vue';
-import ShowPublicaciones from './Publicaciones/Show.vue';
+import IndexRubros from './RubrosDetalle/Index.vue';
+import IndexPublicaciones from './Publicaciones/Index.vue';
 
 export default {
     props: {
@@ -62,7 +62,7 @@ export default {
         }
     },
     components: {
-        ShowRubros, ShowPublicaciones
+        IndexRubros, IndexPublicaciones
     }
 }
 </script>

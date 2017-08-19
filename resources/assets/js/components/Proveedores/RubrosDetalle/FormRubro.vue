@@ -39,7 +39,8 @@
                     v-model="subcategoria_id"
                     @change="cambiarSubcategoria()"
                     v-validate="'required'"
-                    placeholder="Seleccione una subCategoria" v-bind:disabled="categoria_id == '' && optionsSubcategorias.length == 0">
+                    placeholder="Seleccione una subCategoria" 
+                    v-bind:disabled="categoria_id == '' || optionsSubcategorias.length == 0">
                     <option disabled value="">Seleccione una Subcategoria</option>
                     <option 
                         v-for="option in optionsSubcategorias" 
@@ -67,7 +68,7 @@
                     v-model="rubro_id"
                     name='rubro'
                     @change="cambiarRubro()"
-                    v-bind:disabled="subcategoria_id == '' && optionsRubros.length == 0"
+                    v-bind:disabled="subcategoria_id == '' || optionsRubros.length == 0"
                     v-validate="'required'"
                     placeholder="Seleccione un Rubro" >
                     <option disabled value="">Seleccione un Rubro</option>

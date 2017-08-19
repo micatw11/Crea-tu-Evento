@@ -24,7 +24,7 @@ var Form = require('./components/Proveedores/Form');
 
 var NewPublicacion = require('./components/Proveedores/Publicaciones/NewPublicacion');
 var EditPublicacion = require('./components/Proveedores/Publicaciones/EditPublicacion');
-var PerfilPublicacion = require('./components/Proveedores/Publicaciones/Perfil');
+var ShowPublicacion = require('./components/Proveedores/Publicaciones/Show');
 
 var NewRubro = require('./components/Proveedores/RubrosDetalle/NewRubro');
 var EditRubro = require('./components/Proveedores/RubrosDetalle/EditRubro');
@@ -136,7 +136,7 @@ let routes = [
 		{
 			path: '/publicacion/:publicacionId',
 			name: 'perfil-publicacion',
-			component: PerfilPublicacion,
+			component: ShowPublicacion,
 			beforeEnter: guardRoute
 		},
 		{

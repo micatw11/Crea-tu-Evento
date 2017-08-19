@@ -67,9 +67,9 @@ class PublicacionController extends Controller
 
     	$publicacion->update($request->except(['fotos']));
 
-        if($request->has('fotos')){
+        if(sizeof($request->fotos) > 0){
             for ($i=0; $i < sizeof($publicacion->fotos); $i++) { 
-                $file = "public/avatars/{$publicacion->fotos[$i]}";
+                $file = "public/proveedores/publicaciones/{$publicacion->fotos[$i]}";
                 if(Storage::exists($file)) {
                     Storage::delete($file);
                 }
@@ -160,5 +160,5 @@ class PublicacionController extends Controller
         }
         return response(null, Response::HTTP_UNAUTHORIZED);;
     }
-    
+
 }

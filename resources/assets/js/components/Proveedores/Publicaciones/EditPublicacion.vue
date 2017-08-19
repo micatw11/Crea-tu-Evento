@@ -15,6 +15,9 @@
 		        		:errorsApi="errorsApi">
 		        	</form-publicacion>
 		        </div>
+                <div v-if="!showForm" class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
+                </div>
 		        <div class="box box-footer">
 		        	<div style="text-align:center;">
 			            <button @click="goBack()" class="btn btn-default">
