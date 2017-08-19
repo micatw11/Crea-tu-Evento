@@ -19,6 +19,10 @@
 				        </div>
 				        <div class="box box-footer">
 				        	<div style="text-align:center;">
+					        	<button @click="goBack()" class="btn btn-default">
+			                        <i class="glyphicon glyphicon-chevron-left"></i>
+			                        Atras
+			                    </button>
 				        		<button class="btn btn-primary" @click="validateBeforeSubmit()">Crear Publicaci&oacute;n</button>
 				        	</div>
 				        </div>
@@ -28,7 +32,7 @@
         </section>
     </div>
 </template>
-<script>
+<script> 
 	import FormPublicacion from './Form';
 	import route from './../../../routes.js';
 
@@ -40,6 +44,7 @@
 				},
 				validarPublicacion: false,
 				errorsApi:[],
+				id: null,
 				listPath : [{route: '/', name: 'Home'}, {route: '/publicacion/new', name: 'Nueva Publicación'}],
 			}
 		},
@@ -57,6 +62,7 @@
 	            this.$events.fire('validarFormPublicacion')
 	        },
 	        sendNewForm(){
+	        	console.log(this.publicacion)
 	            this.$http.post(
 	                'api/publicacion/', 
 	                {
@@ -72,7 +78,11 @@
 	                        title:'¡Publiacion Creada!',
 	                        message:'Se creado correctamente su publicación. :D'
 	                    });
-	                    this.resetForm();
+	                    console.log(response)
+	                    this.$events.fire('changePath', this.listPath, 'Ver Publicacion');
+	                    this.id = response.data.id;
+	                    console.log(response.data)
+						route.push('/publicacion/'+ this.id);
 	                }, response => {
 	                    this.validarPublicacion= false;
 	                    this.$toast.error({
@@ -94,6 +104,9 @@
 	        		'rubros_detalle_id': '',
 	        		'fecha_finalizacion': null
 	        	}
+	        },
+	        goBack: function(){
+	            route.go(-1)
 	        }
 		}
 	}

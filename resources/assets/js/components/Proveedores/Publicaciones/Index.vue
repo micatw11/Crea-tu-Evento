@@ -1,6 +1,11 @@
 <template>
 	<div>
 	    <div class="default-content" >
+			<br>
+			<div>
+				<button class="btn btn-primary" @click="goToNewPublicacion()">Nueva Publicaci&oacute;n</button>
+			</div>
+			<br><br>
             <div class="body">
 	            <template v-if="publicaciones.length > 0" class="row">
 	            	<div  v-for="item in publicaciones" class="col-sm-6">

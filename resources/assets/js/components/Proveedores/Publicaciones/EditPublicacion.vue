@@ -24,7 +24,7 @@
 	                        <i class="glyphicon glyphicon-chevron-left"></i>
 	                        Atras
 	                    </button>
-		        		<button class="btn btn-primary" @click="validateBeforeSubmit()">Ediat Publicaci&oacute;n</button>
+		        		<button class="btn btn-primary" @click="validateBeforeSubmit()">Editar Publicaci&oacute;n</button>
 		        	</div>
 		        </div>
         	</div>
@@ -43,7 +43,8 @@
 				},
 				validarPublicacion: false,
 				errorsApi:[],
-				showForm: false
+				showForm: false,
+				id: null
 			}
 		},
 		beforeMount: function(){
@@ -61,7 +62,6 @@
 	            this.$events.fire('validarFormPublicacion')
 	        },
 	        sendEditForm(){
-	        	console.log(this.publicacion);
 	            this.$http.patch(
 	                	'api/publicacion/'+this.$route.params.publicacionId,
 	                {
@@ -69,20 +69,24 @@
 	                    descripcion: this.publicacion.descripcion,
 	                    rubros_detalle_id: this.publicacion.rubros_detalle_id,
 	                    oferta: this.publicacion.oferta,
-	                    fotos: this.publicacion.fotos
+	                    fotos: this.publicacion.fotos,
+	                    fotosUpdate: this.publicacion.fotosUpdate
 
 	                })
 	                .then(response => {
 	                    this.$toast.success({
-	                        title:'¡Publiacion Creada!',
-	                        message:'Se editado correctamente su publicación. :D'
+	                        title:'¡Publiacion Editada!',
+	                        message:'Se edito correctamente su publicación. :D'
 	                    });
-	                    this.goBack();
+	                    console.log(response.data)
+	                    this.$events.fire('changePath', this.listPath, 'Ver Publicacion');
+	                    this.id =  response.data.id ; 
+						router.push('/publicacion/'+ this.id);
 	                }, response => {
 	                    this.validarPublicacion= false;
 	                    this.$toast.error({
 	                        title:'¡Error!',
-	                        message:'No se han podido edita su publicación. :('
+	                        message:'No se ha podido editar su publicación. :('
 	                    });
 	                    if(response.status === 422)
 	                    {
@@ -100,7 +104,7 @@
 	                        router.go(-1)
 		                    this.$toast.error({
 		                        title:'¡Error!',
-		                        message:'No se han obtener sus rubros. :('
+		                        message:'No se ha cargado su publicación. :('
 		                    });
 	                    }
 		        	});
