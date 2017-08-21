@@ -65,7 +65,7 @@
 
                 <div class="col-md-9">
                     <div class="box">
-                        <div class="box-header with-border">
+                        <div class="box-header">
                             <h3 class="box-title">Cuenta</h3>
                             <div class="box-tools pull-right">
                                 <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>

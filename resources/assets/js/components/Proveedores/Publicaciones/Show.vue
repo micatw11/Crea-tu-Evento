@@ -79,7 +79,7 @@
 		                 	<button type="button" class="btn-block" @click="" >Reservar</button>
 		            </div>
 
-		        	<div v-if="auth.user.profile.roles_id == role.PROVEEDOR" >
+		        	<div v-if="auth.user.profile.roles_id == role.PROVEEDOR && publicacion.rubros_detalle.proveedor.user_id == auth.user.profile.id" >
 			            <button @click="goBack()" class="btn btn-default">
 	                        <i class="glyphicon glyphicon-chevron-left"></i>
 	                        Atras

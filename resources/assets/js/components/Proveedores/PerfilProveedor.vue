@@ -2,7 +2,7 @@
     <div>
         <div class="col-md-12">
             <div class="box">
-                <div class="box-header with-border">
+                <div class="box-header">
                     <h3 class="box-title">Proveedor</h3>
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>

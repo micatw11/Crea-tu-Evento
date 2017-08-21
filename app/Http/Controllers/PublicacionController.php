@@ -13,6 +13,17 @@ use App\Rol;
 
 class PublicacionController extends Controller
 {
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function index(Request $request){
         $query = Publicacion::with('rubros_detalle.proveedor', 'rubros_detalle.rubro.subcategoria.categoria');
 
@@ -63,22 +74,26 @@ class PublicacionController extends Controller
 public function update(Request $request, $id){
         $this->validatorPublicacion($request);
         $ids = [];
-    	$publicacion = Publicacion::where('id', $id)->firstOrFail();
-    	$publicacion->update($request->except(['fotos']));
-        if($request->has('fotos')){
-            for ($i=0; $i < sizeof($publicacion->fotos); $i++) { 
-                array_push($ids, $publicacion->fotos[$i]->id);
-            }
+        $photo_delete = null;
+    	$publicacion = Publicacion::with('rubros_detalle')->where('id', $id)->firstOrFail();
+
+        if($publicacion->rubros_detalle->proveedor_id == Auth::user()->proveedor->id)
+        {    	   
+            $publicacion->update($request->except(['fotos']));
+
+            $ids = $request->fotos;
+
             $photo_delete=Foto::whereNotIn('id', $ids)->where('publicacion_id', $publicacion->id)->get();
-            foreach ($photo_delete as $fotos) {
-                $file = "public/avatars/{$fotos->nombre}";
+
+                
+            foreach ($photo_delete as $foto) {
+                $file = "public/proveedores/publicaciones/{$foto->nombre}";
                 if(Storage::exists($file)) {
                     Storage::delete($file);
                 }
             }
             Foto::whereNotIn('id', $ids)->where('publicacion_id', $publicacion->id)->delete();
-        }
-        if($request->has('fotosUpdate')){
+
             for ($i=0; $i < sizeof($request->fotosUpdate); $i++) { 
                 $filename = $this->createFoto($request->fotosUpdate[$i]);
                 $foto = new Foto;
@@ -86,12 +101,15 @@ public function update(Request $request, $id){
                 $foto->publicacion_id = $publicacion->id;
                 $foto->save();
             }
+  
+
+        	if($publicacion->save())
+            {
+    			return response(['id' => $publicacion->id] , Response::HTTP_OK);
+        	}
         }
-    	if($publicacion->save()){
-			return response(['id' => $publicacion->id] , Response::HTTP_OK);
-    	} else {
-			return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
-    	}
+
+		return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     protected function validatorPublicacion(Request $request)

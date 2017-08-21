@@ -3,64 +3,76 @@
         <section class="content">
             <div class="row">
                 <div class="col-xs-12">
-                    <div class="box box-default">
+                    <div class="box box-default collapsed-box">
                         <div class="box-header with-border">
                             <h3 class="box-title">Filtro</h3>
 
                             <div class="box-tools pull-right">
                                 <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                                    <i class="fa fa-minus"></i>
+                                    <i class="fa fa-plus"></i>
                                 </button>
                             </div>
                             <!-- /.box-tools -->
                         </div>
                         <!-- /.box-header -->
-                        <div class="box-body" style="display: block;">
-                            <div class="col-sm-4">
-                                <v-select
-                                    :on-search="getLocalidades" 
-                                    :options="localidades"
-                                    v-model="localidad_id" 
-                                    placeholder="Ubicación">
-                                </v-select>
-                            </div>
-                            <div class="col-sm-8">
-                                <div class="col-sm-4">
-                                    <select 
-                                        class="form-control"
-                                        v-model="categoria_id"
-                                        @change="changeCategory()">
+                        <div class="box-body" style="display: none;">
+                            <form role="form">
+                                <div class="col-sm-12">
+                                    <div class="col-sm-4">
+                                        <div class="form-group has-feedback">
+                                            <div class="col-sm-12">
+                                                <v-select
+                                                    :on-search="getLocalidades" 
+                                                    :options="localidades"
+                                                    v-model="localidad_id" 
+                                                    placeholder="Ubicación">
+                                                </v-select>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                        <option value="" disabled>Categoria</option>
-                                        <option v-for="option in categorias" v-bind:value="option.value">{{ option.text }}</option>
 
-                                    </select>
+                                    <div class="col-sm-8">
+                                        <div class="form-group has-feedback">
+                                            <div class="col-sm-4">
+                                                <select 
+                                                    class="form-control"
+                                                    v-model="categoria_id"
+                                                    @change="changeCategory()">
+
+                                                    <option value="" disabled>Categoria</option>
+                                                    <option v-for="option in categorias" v-bind:value="option.value">{{ option.text }}</option>
+
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <select 
+                                                    class="form-control" 
+                                                    v-bind:disabled="categoria_id == '' || subcategorias.length == 0"
+                                                    v-model="subcategoria_id" 
+                                                    @change="changeSubcategory()">
+
+                                                    <option value="" disabled>Subcategoria</option>
+                                                    <option v-for="option in subcategorias" v-bind:value="option.value">{{ option.text }}</option>
+
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <select 
+                                                    class="form-control" 
+                                                    v-bind:disabled="subcategoria_id == '' || rubros.length == 0"
+                                                    v-model="rubro_id">
+                                                    <option value="" disabled>Rubro</option>
+                                                    <option v-for="option in rubros" v-bind:value="option.value">{{ option.text }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-sm-4">
-                                    <select 
-                                        class="form-control" 
-                                        v-bind:disabled="categoria_id == '' || subcategorias.length == 0"
-                                        v-model="subcategoria_id" 
-                                        @change="changeSubcategory()">
-
-                                        <option value="" disabled>Subcategoria</option>
-                                        <option v-for="option in subcategorias" v-bind:value="option.value">{{ option.text }}</option>
-
-                                    </select>
-                                </div>
-                                <div class="col-sm-4">
-                                    <select 
-                                        class="form-control" 
-                                        v-bind:disabled="subcategoria_id == '' || rubros.length == 0"
-                                        v-model="rubro_id">
-                                        <option value="" disabled>Rubro</option>
-                                        <option v-for="option in rubros" v-bind:value="option.value">{{ option.text }}</option>
-                                    </select>
-                                </div>
-                            </div>
+                            </form>
                         </div>
                         <!-- /.box-body -->
-                        <div class="box-footer">
+                        <div class="box-footer" style="display: none;">
                             <div class="pull-right">
                                 <button class="btn btn-primary">Aplicar Filtro</button>
                             </div>

@@ -1,16 +1,6 @@
 <template>
 	<div>
 	    <div>
-	    <!--
-	        <div class="box-header">
-	            <div class="col-sm-2">
-	                <button class="btn btn-primary btn-sm"
-	                @click="showNewSubcategoria = true">
-	                Crear Subcategoria
-	                </button>
-	            </div>
-	        </div>
-	    -->
 	        <div v-if="showNewSubcategoria" class="modal" role="dialog" :style="{ display : showNewSubcategoria  ? 'block' : 'none' }">
 	            <div class="modal-dialog">
 	            <!-- Modal content-->

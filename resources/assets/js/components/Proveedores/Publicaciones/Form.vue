@@ -95,27 +95,37 @@
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('fotos[]')&&validarPublicacion}">
                     <div class="col-sm-12">
                         <label for="fotos" class="control-label" style="text-align: center;">Fotos <i class="fa fa-file-image-o"></i></label><br>
-                        <br><br>
                         <input v-if="nuevo"
-                            type="file" 
+                            type="file"
+                            ref="files"
                             v-validate.reject="'required|ext:jpg,png,jpeg|size:4096'" 
                             @change="onFilesChange" 
-                            name="fotos[]"
-                            >
+                            name="fotos[]">
 
                         <input v-else
-                            type="file" 
-                            v-validate.reject="'ext:jpg,png,jpeg|size:4096'" 
+                            type="file"
+                            ref="files"
+                            v-validate.reject="isRequiredInputFile ? 'required|ext:jpg,png,jpeg|size:4096' : 'ext:jpg,png,jpeg|size:4096'" 
                             @change="onFilesChange" 
-                            name="fotos[]"
-                            >
+                            name="fotos[]">
 
-                                  <br><br>
+                        <!-- validacion vee-validation -->
+                        <span v-show="errors.has('fotos[]')&&validarPublicacion" class="help-block">El campo fotos en requerido.</span>
+                        <!-- validacion api-->
+                        <div class="text-red" v-if="errorsApi.fotos">
+                            <div v-for="msj in errorsApi.fotos">
+                                <p>{{ msj }}</p>
+                            </div>
+                        </div>
+
+                        <br><br>
                         <div class="col-sm-3 with-border" v-if="publicacion.fotos" v-for="(fotos,index) in publicacion.fotos">
                             <div class="box" style="height: 120px; width: 100px;">
                                 <div v-if="fotos.nombre != 'undefined'" class="box-body" style="display: block;">
                                     <img :src="'/storage/proveedores/publicaciones/'+fotos.nombre" class="img-thumbnail" style="height: 80px; width: 80px;">
-                                    <button type="button" class="btn btn-box-tool pull-right" @click="deleteImage(index)"><i class="fa fa-close"></i></button>
+                                    <button type="button" class="btn btn-box-tool pull-right" @click="deleteImage(index)">
+                                        <i class="fa fa-close"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -123,18 +133,13 @@
                             <div class="box" style="height: 120px; width: 100px;">
                                  <div class="box-body" style="display: block;">
                                     <img :src="fotos" class="img-thumbnail" style="height: 80px; width: 80px;">
-                                     <button type="button" class="btn btn-box-tool pull-right" @click="deleteImage2(index)"><i class="fa fa-close"></i></button>
+                                    <button type="button" class="btn btn-box-tool pull-right" @click="deleteImageSrc(index)">
+                                        <i class="fa fa-close"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                        <!-- validacion vee-validation -->
-                        <span v-show="errors.has('fotos[]')&&validarPublicacion" class="help-block">{{ errors.first('fotos[]') }}</span>
-                        <!-- validacion api-->
-                        <div class="text-red" v-if="errorsApi.fotos">
-                            <div v-for="msj in errorsApi.fotos">
-                                <p>{{ msj }}</p>
-                            </div>
-                        </div>
+
                     </div>                    
                 </div>
             </div>
@@ -177,7 +182,8 @@
                       [{ 'font': [] }],
                       [{ 'align': [] }],
                       ['clean']
-                  ]
+                  ],
+                  isRequiredInputFile: false,
 			}
 		},
         beforeMount(){
@@ -192,7 +198,6 @@
 	            this.$http.get('api/proveedor/'+this.auth.user.profile.id+'/rubro/'
 	                ).then(response => {
                         var data = response.data;
-                        console.log(data);
                         for (let rubro of data.rubros){
                             this.rubros.push({ text: rubro.rubro.nombre, value: rubro.id });
                         }
@@ -212,20 +217,35 @@
                         this.src.push(reader.result);
                     }
                     reader.readAsDataURL(file);
+                    if(this.publicacion.fotos.length > 0 || this.src.length > 0){
+                        this.isRequiredInputFile = false;
+                    } 
                 }
             },
             deleteImage(index){
                 this.publicacion.fotos.splice(index,1),
                 this.$forceUpdate()
+                if(this.publicacion.fotos.length == 0 && this.src.length == 0){
+                    this.$refs.files.value = ''
+                    this.isRequiredInputFile = true;
+                } else {
+                    this.isRequiredInputFile = false;
+                }
             },
-              deleteImage2(index){
+            deleteImageSrc(index){
                 this.src.splice(index,1),
                 this.$forceUpdate()
+                if(this.src.length == 0 && this.publicacion.fotos.length == 0){
+                    this.$refs.files.value = '';
+                    this.isRequiredInputFile = true;
+                } else {
+                    this.isRequiredInputFile = false;
+                }
             },
             validateSubmit: function() {
                 this.$validator.validateAll().then(() => {
                     if(this.nuevo){
-                        console.log('src'+this.src)
+
                         this.publicacion.fotos = []
                         for (var i = 0; i < this.src.length; i++){
                             this.publicacion.fotos.push(this.src[i]);
@@ -239,7 +259,7 @@
                         for (var i = 0; i < this.src.length; i++){
                             this.publicacion.fotosUpdate.push(this.src[i]);
                         }
-                        this.src=[]
+                        this.src = []
                         this.$emit('validadoEditPublicacion'); 
                     }
                     this.$emit('update:validarPublicacion', false);             

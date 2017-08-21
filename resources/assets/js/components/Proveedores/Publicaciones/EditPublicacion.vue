@@ -62,14 +62,17 @@
 	            this.$events.fire('validarFormPublicacion')
 	        },
 	        sendEditForm(){
-	            this.$http.patch(
-	                	'api/publicacion/'+this.$route.params.publicacionId,
+	        	var fotosIds= []
+	        	for (var i = 0; i < this.publicacion.fotos.length; i++) {
+	        		fotosIds.push(this.publicacion.fotos[i].id);
+	        	}
+	            this.$http.patch('api/publicacion/'+this.$route.params.publicacionId,
 	                {
 	                    titulo: this.publicacion.titulo,
 	                    descripcion: this.publicacion.descripcion,
 	                    rubros_detalle_id: this.publicacion.rubros_detalle_id,
 	                    oferta: this.publicacion.oferta,
-	                    fotos: this.publicacion.fotos,
+	                    fotos: fotosIds,
 	                    fotosUpdate: this.publicacion.fotosUpdate
 
 	                })

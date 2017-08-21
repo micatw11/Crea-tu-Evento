@@ -11,6 +11,17 @@ use App\User;
 
 class LogController extends Controller
 {
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+	
     public function show(Request $request, $id){
     	
     	$actividad = Log::where('id', $id)->firstOrFail();

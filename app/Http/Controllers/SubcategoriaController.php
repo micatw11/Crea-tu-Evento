@@ -10,6 +10,7 @@ use App\Categoria;
 
 class SubcategoriaController extends Controller
 {
+  
 
     /**
      * @var CheckCategoriesService
@@ -23,6 +24,7 @@ class SubcategoriaController extends Controller
     public function __construct(CheckCategoriesService $categoriesService)
     {
         $this->categoriesService = $categoriesService;
+        $this->middleware('auth');
     }
 
     /**
