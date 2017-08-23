@@ -9,8 +9,8 @@
 	      <!-- Default box -->
 	      <div class="box">
 
-	        <div class="box-header with-border" style="text-align: center;">
-	          	<h3 class="box-title">{{publicacion.titulo}}</h3>
+	        <div class="box-header" style="text-align: center;">
+	          	<h3 class="text-uppercase">{{publicacion.titulo}}</h3>
 	        </div>
 	        <div class="box-body">
 		        <section>
