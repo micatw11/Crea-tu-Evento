@@ -217,7 +217,7 @@
                         this.src.push(reader.result);
                     }
                     reader.readAsDataURL(file);
-                    if(this.publicacion.fotos.length > 0 || this.src.length > 0){
+                    if(!this.nuevo&&(this.publicacion.fotos.length > 0 || this.src.length > 0)){
                         this.isRequiredInputFile = false;
                     } 
                 }
@@ -235,8 +235,8 @@
             deleteImageSrc(index){
                 this.src.splice(index,1),
                 this.$forceUpdate()
-                if(this.src.length == 0 && this.publicacion.fotos.length == 0){
-                    this.$refs.files.value = '';
+                this.$refs.files.value = '';
+                if(!this.nuevo&&(this.src.length == 0 && this.publicacion.fotos.length == 0)){
                     this.isRequiredInputFile = true;
                 } else {
                     this.isRequiredInputFile = false;

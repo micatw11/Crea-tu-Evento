@@ -4,6 +4,18 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="box box-default collapsed-box">
+                         <!-- search form -->
+                        <form v-on:submit.prevent="searchPublicacion()" class="sidebar-form" >
+                            <div class="input-group">
+                                <input type="text" name="q" class="form-control" v-model="q" placeholder="Busqueda">
+                                <span class="input-group-btn">
+                                    <button type="submit" name="search" id="search-btn" class="btn btn-flat">
+                                    <i class="fa fa-search"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </form>
+                        <!-- /.search form -->
                         <div class="box-header with-border">
                             <h3 class="box-title">Filtro</h3>
 
@@ -74,18 +86,25 @@
                         <!-- /.box-body -->
                         <div class="box-footer" style="display: none;">
                             <div class="pull-right">
-                                <button class="btn btn-primary">Aplicar Filtro</button>
+                                <button class="btn btn-primary" @click="searchPublicacion()">Aplicar Filtro</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <search
+            :publicaciones="publicaciones">
+            </search> 
         </section>
     </div>
 </template>
 
 <script>
     import VSelect from "vue-select";
+    import route from '../routes.js';
+    import Search from './Proveedores/Publicaciones/SearchPublicacion.vue';
+
+
     export default {
         data(){
             return {
@@ -99,12 +118,13 @@
                 subcategoria_id: '',
                 subcategorias: [],
                 rubro_id: '',
-                rubros: []
+                rubros: [],
+                q: ''
             }
         },
         mounted() {
             this.$events.fire('changePath', this.listaPath, this.titlePath);
-            this.$events.on('search', value => this.searchPublication(value));
+            //this.$events.on('search', value => this.searchPublication(value));
         },
         beforeMount() {
             this.searchPublication('');
@@ -112,10 +132,19 @@
         },
         methods: {
             searchPublication(filter){
-                console.log(filter)
-                this.$http.get('api/publicacion?filter='+ filter)
+                let filtro = ' '
+                if (filter!= ' '){
+                     let localidad= this.localidad_id==null? '':this.localidad_id.value  
+
+                    filtro = 'api/publicacion?filter='+ filter +'&with_category='+this.categoria_id+'&with_subcategory='+this.subcategoria_id+'&with_localidad='+localidad+'&with_denomination='+this.rubro_id
+                console.log(filtro)
+                }else{
+                    filtro = 'api/publicacion'
+                }
+                this.$http.get(filtro)
                 .then(response => {
-                    this.publicaciones = response.data.publicaciones;
+                    this.publicaciones = response.data.publicaciones.data;
+                    console.log(this.publicaciones)
                 }, response => {
 
                 })
@@ -173,10 +202,16 @@
                         message:'No se han podido cargar opciones de filtrado. :('
                     });
                 })
+            },
+            searchPublicacion: function(){
+            if(route.path !== '/' && this.q !== '' )
+                route.push('/')
+            //this.$events.fire('search', this.q);
+                this.searchPublication(this.q)
             }
         },
         components: {
-            VSelect
+            VSelect, Search
         }
     }
 </script>
