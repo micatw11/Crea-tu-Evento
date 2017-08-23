@@ -25,16 +25,55 @@ class PublicacionController extends Controller
     }
     
     public function index(Request $request){
-        $query = Publicacion::with('rubros_detalle.proveedor', 'rubros_detalle.rubro.subcategoria.categoria');
-
+        $query = Publicacion::where('publicaciones.estado', 1 )
+                            ->join('rubros_detalle', 'rubros_detalle.id', '=', 'publicaciones.rubros_detalle_id')
+                            ->join('proveedores', 'rubros_detalle.proveedor_id', '=', 'proveedores.id')
+                            ->join('rubros', 'rubros_detalle.rubro_id', '=', 'rubros.id')
+                            ->join('subcategorias', 'rubros.subcategoria_id', '=', 'subcategorias.id')
+                            ->join('categorias', 'subcategorias.categoria_id', '=', 'categorias.id')
+                            ->join('domicilios', 'rubros_detalle.domicilio_id', '=', 'domicilios.id')
+                            ->join('localidades', 'domicilios.localidad_id', '=', 'localidades.id')
+                            ->join('fotos', 'publicaciones.id', '=', 'fotos.publicacion_id');
+                           
         if($request->filter){
             $like = '%'.$request->filter.'%';
-            $query->where('titulo','like', $like )
-                    ->orWhere('descripcion', 'like', $like);
+
+            $query->where(function($query) use ($like){
+                $query->where('publicaciones.titulo','like', $like )
+                    ->orWhere('publicaciones.descripcion', 'like', $like);
+                });
+        }
+        if($request->with_category != ''){
+            $id = $request->with_category;
+            $query->where(function($query) use ($id){
+                $query->where('categorias.id', $id );
+            });
+        }
+        if($request->with_subcategory != ''){
+            $id = $request->with_subcategory;
+            $query->where(function($query) use ($id){
+                $query->where('subcategorias.id', $id );
+            });
         }
 
+        if($request->with_denomination != ''){
+            $id = $request->with_denomination;
+            $query->where(function($query) use ($id){
+                $query->where('rubros.id', $id );
+            });
+        }
+
+        if($request->localidad != ''){
+            $id = $request->localidad;
+            $query->where(function($query) use ($id){
+                $query->where('localidades.id', $id );
+            });
+        }
+        $query->with('rubros_detalle.proveedor', 'rubros_detalle.rubro.subcategoria.categoria', 'fotos');
         $publicaciones = $query->paginate(10);
+
         return response()->json(['publicaciones' => $publicaciones], 200);
+
     }
 
     public function show(Request $request, $id){

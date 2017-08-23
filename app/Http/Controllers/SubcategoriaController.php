@@ -117,7 +117,9 @@ class SubcategoriaController extends Controller
         }
 
         $subcategoria->update($request->all());
-
+        $table_name= "subcategoria";
+        $accion = "update";
+        Log::logs($id, $table_name, $accion , $subcategoria, 'Ha actualizado informacion de Categoria');
         if($categoria_id != null)
         {
             $this->categoriesService->checkCategories($categoria_id);
