@@ -35,7 +35,7 @@
 			                    	<img 
 			                    		:src="'/storage/proveedores/publicaciones/'+img.nombre" 
 			                    		class="img-responsive" 
-			                    		style="max-width:100px;">
+			                    		style="max-width:100px;margin: 0 auto;margin-top: 15%;">
 			                    </div>
 				                <div class="col-sm-8">
 				                    <div class="col-sm-12">

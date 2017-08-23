@@ -33,9 +33,11 @@ class PublicacionController extends Controller
                             ->join('categorias', 'subcategorias.categoria_id', '=', 'categorias.id')
                             ->join('domicilios', 'rubros_detalle.domicilio_id', '=', 'domicilios.id')
                             ->join('localidades', 'domicilios.localidad_id', '=', 'localidades.id')
-                            ->join('fotos', 'publicaciones.id', '=', 'fotos.publicacion_id');
+                            ->join('fotos', 'publicaciones.id', '=', 'fotos.publicacion_id')
+                            ->select('publicaciones.*')
+                            ->where('publicaciones.estado', 1);
                            
-        if($request->filter){
+        if($request->has('filter') && $request->filter != ''){
             $like = '%'.$request->filter.'%';
 
             $query->where(function($query) use ($like){
@@ -43,33 +45,43 @@ class PublicacionController extends Controller
                     ->orWhere('publicaciones.descripcion', 'like', $like);
                 });
         }
-        if($request->with_category != ''){
-            $id = $request->with_category;
-            $query->where(function($query) use ($id){
-                $query->where('categorias.id', $id );
-            });
-        }
-        if($request->with_subcategory != ''){
-            $id = $request->with_subcategory;
-            $query->where(function($query) use ($id){
-                $query->where('subcategorias.id', $id );
-            });
-        }
 
-        if($request->with_denomination != ''){
+
+        if($request->has('with_denomination') && $request->with_denomination != '')
+        {
             $id = $request->with_denomination;
             $query->where(function($query) use ($id){
                 $query->where('rubros.id', $id );
             });
+        } 
+        else 
+        {
+            if($request->has('with_subcategory') && $request->with_subcategory != '')
+            {
+                $id = $request->with_subcategory;
+                $query->where(function($query) use ($id){
+                    $query->where('subcategorias.id', $id );
+                });
+            } 
+            else 
+            {
+                if($request->has('with_category') && $request->with_category != '')
+                {
+                    $id = $request->with_category;
+                    $query->where(function($query) use ($id){
+                        $query->where('categorias.id', $id );
+                    });
+                }
+            }
         }
 
-        if($request->localidad != ''){
+        if($request->has('localidad') && $request->localidad != ''){
             $id = $request->localidad;
             $query->where(function($query) use ($id){
                 $query->where('localidades.id', $id );
             });
         }
-        $query->with('rubros_detalle.proveedor', 'rubros_detalle.rubro.subcategoria.categoria', 'fotos');
+        $query->with('rubros_detalle.proveedor', 'rubros_detalle.rubro.subcategoria.categoria', 'fotos')->distinct('publicaciones.id');
         $publicaciones = $query->paginate(10);
 
         return response()->json(['publicaciones' => $publicaciones], 200);

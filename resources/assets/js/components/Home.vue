@@ -93,7 +93,7 @@
                 </div>
             </div>
             <search
-            :publicaciones="publicaciones">
+                :publicaciones="publicaciones">
             </search> 
         </section>
     </div>

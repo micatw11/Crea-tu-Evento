@@ -2,7 +2,7 @@
 	<div class="default-content">
 
 		<section v-if= "publicacion != null " class="content">
-	    <div v-if="auth.user.profile.roles_id == role.PROVEEDOR" >
+	    <div v-if="auth.user.profile.roles_id == role.PROVEEDOR && publicacion.rubros_detalle.proveedor.user_id == auth.user.profile.id" >
 			<button class="btn btn-primary" @click="goToNewPublicacion()">Nueva Publicaci&oacute;n</button>
 		</div>
 		<br>
@@ -15,8 +15,8 @@
 	        <div class="box-body">
 		        <section>
 		        	<div >
-		        		<div class="col-sm-1"></div>
-					  	<div class="col-sm-5">
+
+					  	<div class="col-md-offset-1 col-sm-5">
 					  		
 			          		<div>
 				          		<carousel :perPage="1" :perPageCustom="[[480, 1], [768, 1]]" :autoplay="true">
@@ -173,12 +173,15 @@
 <style>
 
 .VueCarousel-slide {
-  position: relative;
-  color: #fff;
-  font-family: Arial;
-  font-size: 24px;
-  text-align: center;
-  min-height: 100px;
+	position: relative;
+	color: #fff;
+	font-family: Arial;
+	font-size: 24px;
+	text-align: center;
+	min-height: 100px;
+	border-style: solid;
+	border-color: rgba(241, 242, 243, 0.8);
+	background: rgba(241, 242, 243, 0.8);
 }
 .VueCarousel {
     max-width: 350px;

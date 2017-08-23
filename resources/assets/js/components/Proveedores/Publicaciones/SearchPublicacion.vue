@@ -23,7 +23,7 @@
                                 <img 
                                     :src="'/storage/proveedores/publicaciones/'+img.nombre" 
                                     class="img-responsive" 
-                                    style="max-width:130px;">
+                                    style="max-width: 75px; min-width: 75px; height:75px;">
                             </div>
                             <div class="col-sm-8">
                                 <div class="col-sm-12">
@@ -36,7 +36,7 @@
             </template>
             <template v-else>
                 <div class="col-sm-12">
-                    <h3 class="text-center">No posee publicaciones realizadas!</h3>
+                    <h3 class="text-center">No se encontraron resultados :(</h3>
                 </div>
             </template>
         </div>
