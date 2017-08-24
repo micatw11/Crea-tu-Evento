@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Proveedor;
+use App\Publicacion;
 use App\Rol;
 use App\Domicilio;
 use App\RubrosDetalle;

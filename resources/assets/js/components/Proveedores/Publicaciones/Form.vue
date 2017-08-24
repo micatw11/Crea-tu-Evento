@@ -195,7 +195,7 @@
 		mounted(){
 			this.$events.on("validarFormPublicacion", () => this.validateSubmit())
 		},
-		components: {vSelect, VueEditor},
+		components: { vSelect, VueEditor },
 		methods: {
 			getOptions: function() {
 	            this.$http.get('api/proveedor/'+this.auth.user.profile.id+'/rubro/'

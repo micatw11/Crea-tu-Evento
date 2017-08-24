@@ -21,31 +21,49 @@
 
 					    </div>
 						<div class="col-sm-5">
-							<div class="box">
+							<div class="box box-default">
+									<div class="box-header">
+										<h3 class="text-uppercase">{{publicacion.titulo}}</h3>
+				                        <div class="box-tools pull-right">
+				                            <button class="btn btn-box-tool" data-toggle="tooltip" @click.prevent >
+				                                <i class="fa fa-fw fa-heart-o"></i>
+				                            </button>
+				                        </div><!-- /.box-tools -->
+									</div>
 		        					<div class="box-body">
-									 	<h3 class="text-uppercase">{{publicacion.titulo}}</h3>
-										<!--<p>
-											<span>{{publicacion.rubros_detalle.proveedor.nombre}}</span>
-										</p>
-										<p>
-											<strong style="color: rgb(0, 41, 102);">
-												<u>Provedor de  {{publicacion.rubros_detalle.rubro.subcategoria.categoria.tipo_proveedor}}</u>
-											</strong>
-					        			</p>-->
 					        			<p>
-								      		<strong style="color: rgb(0, 41, 102);">
-								      			Rubro: {{publicacion.rubros_detalle.rubro.subcategoria.categoria.nombre}}
-								      		</strong>
+								      		<strong>Rubro:</strong> {{publicacion.rubros_detalle.rubro.subcategoria.categoria.nombre}}
 							      		</p>
-							      		<!--<p>
-								      		<strong style="color: rgb(0, 41, 102);"> 
-								      			{{publicacion.rubros_detalle.rubro.subcategoria.nombre}}
-								      		</strong>
-								      	</p>
-							 
-							       	<p class="inline-block">
-					                	<span>Email: {{publicacion.rubros_detalle.proveedor.email}}</span>
-						          	</p>-->
+							      		<p>
+							      			<strong>Proveedor:</strong> {{publicacion.rubros_detalle.proveedor.nombre}}
+							      		</p>
+							      		<p>
+							      			<strong>Fecha de publicaci&oacute;n:</strong> {{formatData(publicacion.created_at)}}
+							      		</p>
+								       	<p>
+						                	<span>Email: {{publicacion.rubros_detalle.proveedor.email}}</span>
+							          	</p>
+							          	<!--
+							          	<hr>
+										<div class="col-xs-12 box-group" id="accordion" style="text-align:center">
+							          		<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded= "false">
+							                    Ver Datos Proveedor
+							                </a>
+									    </div>
+									    <div id="collapseOne" class="panel-collapse collapse" aria-expanded= "false">
+							                <div class="box-body">
+							                    <!--vista proveedor
+							                    <show-proveedor :proveedor="publicacion.rubros_detalle.proveedor"></show-proveedor>
+							                </div>
+							            </div>
+							            -->
+						        </div>
+						        <div  class="box-footer" v-if="auth.user.profile.roles_id == role.USUARIO">
+						        	<div class="col-sm-6 col-sm-offset-3">
+						                <button type="button" class="btn btn-block btn-success" @click.prevent>
+						                	<i class="fa fa-calendar-check-o"></i> Reservar
+						                </button>
+						        	</div>
 						        </div>
 						    </div>
 					      
@@ -59,17 +77,6 @@
 			        <div class="nav-tabs-custom">
 		               	<div class="col-sm-12" v-html='publicacion.descripcion'></div>
 		            </div>
-					<div class="col-xs-12 text-center box-group" id="accordion">
-		          		<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded= "false">
-		                    Ver Datos Proveedor
-		                </a>
-				    </div>
-				    <div id="collapseOne" class="panel-collapse collapse" aria-expanded= "false">
-		                <div class="box-body">
-		                    <!--vista proveedor-->
-		                    <show-proveedor :proveedor="publicacion.rubros_detalle.proveedor"></show-proveedor>
-		                </div>
-		            </div>
 		        </div>
 		        <!-- /.box-body -->
 		        <div  class="box-footer">
@@ -81,9 +88,6 @@
 		          			<button @click="goBack()" class="btn btn-default">
 		                        <i class="glyphicon glyphicon-chevron-left"></i> Atras
 		                    </button>
-			                <button type="button" class="btn-succes" @click.prevent>
-			                	<i class="fa fa-calendar-check-o"></i> Reservar
-			                </button>
 			            </div>
 
 			        	<div v-if="auth.user.profile.roles_id == role.PROVEEDOR && publicacion.rubros_detalle.proveedor.user_id == auth.user.profile.id" >
@@ -112,6 +116,8 @@
 	import Role from '../../../config.js'
 	import ShowProveedor from './../Show.vue'
 	import { Carousel, Slide } from 'vue-carousel';
+	import moment from 'moment';
+
 	export default {
 		
 		data() {
@@ -172,7 +178,13 @@
 			},
 			goBack: function(){
 	            route.go(-1)
-	        }
+	        },
+            formatData: function(value){
+
+                return (value == null)
+                    ? ''
+                    : moment(value, 'YYYY-MM-DD').format('D MMM YYYY');
+            },
 		}
 	}
 </script>

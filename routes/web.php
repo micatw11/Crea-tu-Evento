@@ -96,4 +96,5 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('rubros/{subcategoria}','RubroController@searchRubros');
     Route::post('rubro', 'RubroController@store');
     Route::patch('rubro/{id}','RubroController@update');
+
 });
