@@ -14,6 +14,7 @@ use App\Domicilio;
 use App\RubrosDetalle;
 use App\Rubro;
 use App\Log;
+use App\Publicacion;
 
 class ProveedorController extends Controller
 {
@@ -199,6 +200,10 @@ class ProveedorController extends Controller
 
         if($request->action == 'Baja'){
             $proveedor->user->roles_id = Rol::roleId('Usuario');
+            $rubros = RubrosDetalle::where('proveedor_id', $id)->pluck('id');
+            $publicaciones = Publicacion::whereIn('rubros_detalle_id', $rubros)->update(['estado'=> 0]);
+
+            
         } 
         else if ( $request->action == 'Aprobado' && $proveedor->user->roles_id == Rol::roleId('Usuario') ) 
         {
