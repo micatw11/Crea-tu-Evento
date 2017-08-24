@@ -2,19 +2,22 @@
     <div class="default-content">
         <section class="content">
             <div class="row">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <form v-on:submit.prevent="searchPublicacion()" role="form" >
+                        <div class="input-group stylish-input-group">
+                            <input type="text" name="q" class="form-control" v-model="q" placeholder="Busqueda">
+                            <span class="input-group-addon">
+                                <button type="submit" name="search" id="search-btn">
+                                <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-xs-12">&nbsp;</div>
                 <div class="col-xs-12">
                     <div class="box box-default collapsed-box">
                          <!-- search form -->
-                        <form v-on:submit.prevent="searchPublicacion()" class="sidebar-form" >
-                            <div class="input-group">
-                                <input type="text" name="q" class="form-control" v-model="q" placeholder="Busqueda">
-                                <span class="input-group-btn">
-                                    <button type="submit" name="search" id="search-btn" class="btn btn-flat">
-                                    <i class="fa fa-search"></i>
-                                    </button>
-                                </span>
-                            </div>
-                        </form>
                         <!-- /.search form -->
                         <div class="box-header with-border">
                             <h3 class="box-title">Filtro</h3>
@@ -215,3 +218,19 @@
         }
     }
 </script>
+<style>
+.stylish-input-group .input-group-addon{
+    background: white !important; 
+        border-radius: 4px 25px 25px 4px;
+}
+.stylish-input-group .form-control{
+    border-right:0; 
+    box-shadow:0 0 0; 
+    border-color:#ccc;
+        border-radius: 25px 4px 4px 25px;
+}
+.stylish-input-group button{
+    border:0;
+    background:transparent;
+}
+</style>

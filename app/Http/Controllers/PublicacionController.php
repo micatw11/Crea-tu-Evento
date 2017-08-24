@@ -75,8 +75,8 @@ class PublicacionController extends Controller
             }
         }
 
-        if($request->has('localidad') && $request->localidad != ''){
-            $id = $request->localidad;
+        if($request->has('with_localidad') && $request->with_localidad != ''){
+            $id = $request->with_localidad;
             $query->where(function($query) use ($id){
                 $query->where('localidades.id', $id );
             });

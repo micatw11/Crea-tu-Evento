@@ -2,101 +2,107 @@
 	<div class="default-content">
 
 		<section v-if= "publicacion != null " class="content">
-	    <div v-if="auth.user.profile.roles_id == role.PROVEEDOR && publicacion.rubros_detalle.proveedor.user_id == auth.user.profile.id" >
-			<button class="btn btn-primary" @click="goToNewPublicacion()">Nueva Publicaci&oacute;n</button>
-		</div>
-		<br>
-	      <!-- Default box -->
-	      <div class="box">
-
-	        <div class="box-header" style="text-align: center;">
-	          	<h3 class="text-uppercase">{{publicacion.titulo}}</h3>
-	        </div>
-	        <div class="box-body">
-		        <section>
-		        	<div >
-
-					  	<div class="col-md-offset-1 col-sm-5">
+		    <div v-if="auth.user.profile.roles_id == role.PROVEEDOR && publicacion.rubros_detalle.proveedor.user_id == auth.user.profile.id" >
+				<button class="btn btn-primary" @click="goToNewPublicacion()">Nueva Publicaci&oacute;n</button>
+			</div>
+			<br>
+		    <!-- Default box -->
+		    <div class="box box-primary">
+		        <div class="box-body">
+			        <section>
+					  	<div class="col-md-offset-0.5 col-sm-7">
 					  		
-			          		<div>
-				          		<carousel :perPage="1" :perPageCustom="[[480, 1], [768, 1]]" :autoplay="true">
-				          			<slide v-for="item in publicacion.fotos" :key="item.nombre">
-				          				<img :src="'/storage/proveedores/publicaciones/'+item.nombre" class="img-responsive" style="max-height: 350px;">
-				          			</slide>
-				          		</carousel>
-			          		</div>
+			          		<carousel :perPage="1" :perPageCustom="[[480, 1], [768, 1]]" :autoplay="true">
+			          			<slide v-for="item in publicacion.fotos" :key="item.nombre">
+			          				<img :src="'/storage/proveedores/publicaciones/'+item.nombre" class="img-responsive" style="max-height: 350px;    position: absolute;top: 50%;left: 50%;transform: translateX(-50%) translateY(-50%); min-height:100%">
+
+			          			</slide>
+			          		</carousel>
+
 					    </div>
-						<div class="col-sm-6">
-							 <h4>
-			        	  <br><br>
-		        	      <p class="inline-block">
-			                <span>{{publicacion.rubros_detalle.proveedor.nombre}}</span>
-				          </p>
-			        	 <strong style="color: rgb(0, 41, 102);"><u>Provedor de  {{publicacion.rubros_detalle.rubro.subcategoria.categoria.tipo_proveedor}}</u></strong><br>
-					      <strong style="color: rgb(0, 41, 102);">{{publicacion.rubros_detalle.rubro.subcategoria.categoria.nombre}}</strong><br>
-					      <strong style="color: rgb(0, 41, 102);"> {{publicacion.rubros_detalle.rubro.subcategoria.nombre}}</strong><br></h4>
-					      <br>
-					       <p class="inline-block">
-			                	<span>Email: {{publicacion.rubros_detalle.proveedor.email}}</span>
-				          </p>
+						<div class="col-sm-5">
+							<div class="box">
+		        					<div class="box-body">
+									 	<h3 class="text-uppercase">{{publicacion.titulo}}</h3>
+										<!--<p>
+											<span>{{publicacion.rubros_detalle.proveedor.nombre}}</span>
+										</p>
+										<p>
+											<strong style="color: rgb(0, 41, 102);">
+												<u>Provedor de  {{publicacion.rubros_detalle.rubro.subcategoria.categoria.tipo_proveedor}}</u>
+											</strong>
+					        			</p>-->
+					        			<p>
+								      		<strong style="color: rgb(0, 41, 102);">
+								      			Rubro: {{publicacion.rubros_detalle.rubro.subcategoria.categoria.nombre}}
+								      		</strong>
+							      		</p>
+							      		<!--<p>
+								      		<strong style="color: rgb(0, 41, 102);"> 
+								      			{{publicacion.rubros_detalle.rubro.subcategoria.nombre}}
+								      		</strong>
+								      	</p>
+							 
+							       	<p class="inline-block">
+					                	<span>Email: {{publicacion.rubros_detalle.proveedor.email}}</span>
+						          	</p>-->
+						        </div>
+						    </div>
 					      
-				          </div>
+				        </div>
+
+				    </section>
+				    <hr>
+			        <div class="col-xs-12">
+			          	<h4>{{publicacion.oferta}}</h4>
 			        </div>
-			    </section>
-	          	<hr>
-		        <div class="row">
+			        <div class="nav-tabs-custom">
+		               	<div class="col-sm-12" v-html='publicacion.descripcion'></div>
+		            </div>
 					<div class="col-xs-12 text-center box-group" id="accordion">
 		          		<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded= "false">
 		                    Ver Datos Proveedor
-		                 </a>
-				      </div>
-				      <div id="collapseOne" class="panel-collapse collapse" aria-expanded= "false">
-		                   	 <div class="box-body">
-		                       <!--vista proveedor-->
-		                       <show-proveedor :proveedor="publicacion.rubros_detalle.proveedor"></show-proveedor>
-		                    </div>
-		              </div>
-		        </div>
-		        <hr>
-		        <div style="text-align: center;">
-		          	<h4>{{publicacion.oferta}}</h4>
-		        </div>
-		        <div class="nav-tabs-custom">
-	               	<div class="col-sm-12" style="text-align: center;" v-html= 'publicacion.descripcion'></div>
-	            </div>
-	        </div>
-	        <!-- /.box-body -->
-	        <div  class="box-footer">
-	          	<div v-if="publicacion.fecha_finalizacion">
-	          		Fecha Finalizacion: {{publicacion.fecha_finalizacion}}
-	         	</div>
-	          	<div style="text-align:center;">
-	          		<div v-if="auth.user.profile.roles_id == role.USUARIO" class="col-sm-4">
-	          				<button @click="goBack()" class="btn btn-default">
-	                        <i class="glyphicon glyphicon-chevron-left"></i>
-	                        Atras
-	                    </button>
-		                 	<button type="button" class="btn-block" @click="" >Reservar</button>
+		                </a>
+				    </div>
+				    <div id="collapseOne" class="panel-collapse collapse" aria-expanded= "false">
+		                <div class="box-body">
+		                    <!--vista proveedor-->
+		                    <show-proveedor :proveedor="publicacion.rubros_detalle.proveedor"></show-proveedor>
+		                </div>
 		            </div>
+		        </div>
+		        <!-- /.box-body -->
+		        <div  class="box-footer">
+		          	<div v-if="publicacion.fecha_finalizacion">
+		          		Fecha Finalizacion: {{publicacion.fecha_finalizacion}}
+		         	</div>
+		          	<div style="text-align:center;">
+		          		<div v-if="auth.user.profile.roles_id == role.USUARIO" class="col-sm-4">
+		          			<button @click="goBack()" class="btn btn-default">
+		                        <i class="glyphicon glyphicon-chevron-left"></i> Atras
+		                    </button>
+			                <button type="button" class="btn-succes" @click.prevent>
+			                	<i class="fa fa-calendar-check-o"></i> Reservar
+			                </button>
+			            </div>
 
-		        	<div v-if="auth.user.profile.roles_id == role.PROVEEDOR && publicacion.rubros_detalle.proveedor.user_id == auth.user.profile.id" >
-			            <button @click="goBack()" class="btn btn-default">
-	                        <i class="glyphicon glyphicon-chevron-left"></i>
-	                        Atras
-	                    </button>
-		        		<button class="btn btn-primary" @click="modificar(publicacion.id)">
-		        			<i class="glyphicon glyphicon-pencil"></i>
-		        			Editar Publicaci&oacute;n</button>
-		        		<button class="btn btn-danger" @click="baja(publicacion.id)">
-		        			<i class="glyphicon glyphicon-trash"></i>
-		        			Eliminar Publicaci&oacute;n</button>
-		        	</div>
-	          	</div>
-	        </div>
-	        <!-- /.box-footer-->
-	      </div>
-	      <!-- /.box -->
-
+			        	<div v-if="auth.user.profile.roles_id == role.PROVEEDOR && publicacion.rubros_detalle.proveedor.user_id == auth.user.profile.id" >
+				            <button @click="goBack()" class="btn btn-default">
+		                        <i class="glyphicon glyphicon-chevron-left"></i>
+		                        Atras
+		                    </button>
+			        		<button class="btn btn-primary" @click="modificar(publicacion.id)">
+			        			<i class="glyphicon glyphicon-pencil"></i>
+			        			Editar Publicaci&oacute;n</button>
+			        		<button class="btn btn-danger" @click="baja(publicacion.id)">
+			        			<i class="glyphicon glyphicon-trash"></i>
+			        			Eliminar Publicaci&oacute;n</button>
+			        	</div>
+		          	</div>
+		        </div>
+		        <!-- /.box-footer-->
+		    </div>
+		    <!-- /.box -->
 	    </section>
 	</div>
 </template>
@@ -178,14 +184,14 @@
 	font-family: Arial;
 	font-size: 24px;
 	text-align: center;
-	min-height: 100px;
+	min-height: 350px;
 	border-style: solid;
 	border-color: rgba(241, 242, 243, 0.8);
 	background: rgba(241, 242, 243, 0.8);
 }
 .VueCarousel {
-    max-width: 350px;
-    max-height: 350px;
+    max-width: 100%;
+    max-height: 100%;
 }
 
 </style>

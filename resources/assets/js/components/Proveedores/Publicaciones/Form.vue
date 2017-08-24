@@ -76,8 +76,9 @@
                         <vue-editor 
                             data-vv-name="descripcion"  
                             v-model="publicacion.descripcion" 
-                            v-validate="'required|min:15'" 
+                            v-validate="'required|min:15'"
                             :editorToolbar="customToolbar">
+
                             
                         </vue-editor>
 
@@ -119,13 +120,15 @@
                         </div>
 
                         <br><br>
-                        <div class="col-sm-3 with-border" v-if="publicacion.fotos" v-for="(fotos,index) in publicacion.fotos">
-                            <div class="box" style="height: 120px; width: 100px;">
-                                <div v-if="fotos.nombre != 'undefined'" class="box-body" style="display: block;">
-                                    <img :src="'/storage/proveedores/publicaciones/'+fotos.nombre" class="img-thumbnail" style="height: 80px; width: 80px;">
-                                    <button type="button" class="btn btn-box-tool pull-right" @click="deleteImage(index)">
-                                        <i class="fa fa-close"></i>
-                                    </button>
+                        <div v-if="publicacion.fotos" v-for="(fotos,index) in publicacion.fotos">
+                            <div v-if="fotos.nombre != null" class="col-sm-3">
+                                <div class="box" style="height: 120px; width: 100px;">
+                                    <div  class="box-body" style="display: block;">
+                                        <img :src="'/storage/proveedores/publicaciones/'+fotos.nombre" class="img-thumbnail" style="height: 80px; width: 80px;">
+                                        <button type="button" class="btn btn-box-tool pull-right" @click="deleteImage(index)">
+                                            <i class="fa fa-close"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -244,13 +247,14 @@
             },
             validateSubmit: function() {
                 this.$validator.validateAll().then(() => {
+                    this.remplaceStyle();
                     if(this.nuevo){
 
                         this.publicacion.fotos = []
                         for (var i = 0; i < this.src.length; i++){
                             this.publicacion.fotos.push(this.src[i]);
                         }
-                        this.src=[]
+                        //this.src=[]
                         this.$emit('validadoNewPublicacion'); 
                     }
                     else
@@ -259,13 +263,22 @@
                         for (var i = 0; i < this.src.length; i++){
                             this.publicacion.fotosUpdate.push(this.src[i]);
                         }
-                        this.src = []
+                        //this.src = []
                         this.$emit('validadoEditPublicacion'); 
                     }
                     this.$emit('update:validarPublicacion', false);             
                 }).catch(() => {
                     this.$emit('update:validarPublicacion', true);
                 });
+            },
+            //
+            remplaceStyle: function(){
+                this.publicacion.descripcion = this.publicacion.descripcion.split('class=\"ql-align-center\"')
+                    .join('style="text-align:center"');
+                this.publicacion.descripcion = this.publicacion.descripcion.split('class=\"ql-align-right\"')
+                    .join('style="text-align:right"');
+                this.publicacion.descripcion = this.publicacion.descripcion.split('class=\"ql-align-justify\"')
+                    .join('style="text-align:justify"')
             }
         }
     }
