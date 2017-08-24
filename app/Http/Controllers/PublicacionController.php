@@ -209,7 +209,6 @@ public function update(Request $request, $id){
             ->join('rubros', 'rubros.id', '=', 'rubros_detalle.rubro_id')
                 ->select('publicaciones.id')
                 ->where('rubros_detalle.proveedor_id', $idProveedor)
-                ->where('publicaciones.estado', 1)
                 ->groupby('publicaciones.id')->distinct()->get()->pluck('id');
         $publicaciones = Publicacion::with('rubros_detalle.rubro.subcategoria.categoria', 'fotos')->whereIn('id', $publicacionesId)->get();
         return response()->json(['publicaciones' => $publicaciones], 200);
@@ -218,10 +217,13 @@ public function update(Request $request, $id){
     public function destroy($id){
         if(Auth::user()->roles_id == Rol::roleId('Proveedor'))
         {
-            $publicacion = Publicacion::with('rubros_detalle')->where('id', $id)->where('estado', 1)->firstOrFail();
+            $publicacion = Publicacion::with('rubros_detalle')->where('id', $id)->firstOrFail();
             if($publicacion->rubros_detalle->proveedor_id == Auth::user()->proveedor->id)
             {
-                $publicacion->estado = 0;
+                if ($publicacion->estado == 1)
+                    $publicacion->estado = 0;
+                else
+                    $publicacion->estado = 1;
                 if($publicacion->save())
                     return response(null, Response::HTTP_OK);
                 else
