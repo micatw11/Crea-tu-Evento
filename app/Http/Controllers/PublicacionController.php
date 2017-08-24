@@ -81,7 +81,7 @@ class PublicacionController extends Controller
                 $query->where('localidades.id', $id );
             });
         }
-        $query->with('rubros_detalle.proveedor', 'rubros_detalle.rubro.subcategoria.categoria', 'fotos')->distinct('publicaciones.id');
+        $query->with('rubros_detalle.proveedor', 'rubros_detalle.rubro.subcategoria.categoria', 'rubros_detalle.domicilio.localidad.provincia', 'fotos')->distinct('publicaciones.id');
         $publicaciones = $query->paginate(10);
 
         return response()->json(['publicaciones' => $publicaciones], 200);
