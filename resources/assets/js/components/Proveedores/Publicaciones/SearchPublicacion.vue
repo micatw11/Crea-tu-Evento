@@ -23,10 +23,35 @@
                                 </div>
                             </div>
                             <div class="col-sm-12">
-                                <p><h6>{{item.rubros_detalle.domicilio.localidad.provincia.nombre}} - {{item.rubros_detalle.domicilio.localidad.nombre}}</h6></p>
+                                <div class="col-sm-8">
+                                    <p><h6>{{item.rubros_detalle.domicilio.localidad.provincia.nombre}} - {{item.rubros_detalle.domicilio.localidad.nombre}}</h6></p>
+                                </div>
+                                 <div class="col-sm-4">
+                                    <div>
+                                        <i class="fa fa-fw fa-star"></i>
+                                        <i class="fa fa-fw fa-star"></i>
+                                        <i class="fa fa-fw fa-star-half-o"></i>
+                                        <i class="fa fa-fw fa-star-o"></i>
+                                        <i class="fa fa-fw fa-star-o"></i>
+                                    </div> 
+                                </div>
                             </div>
                             <div class="col-sm-12">
-                                <p><h6>{{item.rubros_detalle.rubro.subcategoria.categoria.nombre}} - {{item.rubros_detalle.rubro.subcategoria.nombre}} - {{item.rubros_detalle.rubro.nombre}} </h6></p>
+                                <div class="col-sm-10">
+                                    <p><h6>{{item.rubros_detalle.rubro.subcategoria.categoria.nombre}} - {{item.rubros_detalle.rubro.subcategoria.nombre}} - {{item.rubros_detalle.rubro.nombre}} </h6></p>
+                                </div>
+                                <div class="col-sm-2">
+                                       <div v-if="favorite==false">
+                                            <div  @click="favorite_icon(item.id)">
+                                                <i class="fa fa-fw fa-heart-o"></i>
+                                            </div> 
+                                        </div>
+                                        <div v-else>
+                                            <div @click="favorite_icon(item.id)">
+                                                <i class="fa fa-fw fa-heart"></i>
+                                            </div>
+                                        </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -52,6 +77,11 @@ import moment from 'moment';
                 required: true
             }
         },
+        data(){
+            return {
+                favorite: false
+            }
+        },
         methods: {
             ver(id){
                 this.$events.fire('changePath', this.listPath, 'Ver Publicacion');
@@ -62,6 +92,15 @@ import moment from 'moment';
                 return (value == null)
                     ? ''
                     : moment(value, 'YYYY-MM-DD').format('D MMM YYYY');
+            },
+            favorite_icon(id){
+                //guardarlo en bbdd
+                if (this.favorite){
+                    this.favorite= false
+                }
+                else{
+                    this.favorite= true
+                }
             }
         },
         directives: {
