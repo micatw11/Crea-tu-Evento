@@ -75,13 +75,13 @@ class PublicacionController extends Controller
             }
         }
 
-        if($request->has('localidad') && $request->localidad != ''){
-            $id = $request->localidad;
+        if($request->has('with_localidad') && $request->with_localidad != ''){
+            $id = $request->with_localidad;
             $query->where(function($query) use ($id){
                 $query->where('localidades.id', $id );
             });
         }
-        $query->with('rubros_detalle.proveedor', 'rubros_detalle.rubro.subcategoria.categoria', 'fotos')->distinct('publicaciones.id');
+        $query->with('rubros_detalle.proveedor', 'rubros_detalle.rubro.subcategoria.categoria', 'rubros_detalle.domicilio.localidad.provincia', 'fotos')->distinct('publicaciones.id');
         $publicaciones = $query->paginate(10);
 
         return response()->json(['publicaciones' => $publicaciones], 200);
