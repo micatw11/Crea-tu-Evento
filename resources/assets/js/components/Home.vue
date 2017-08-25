@@ -105,7 +105,7 @@
 <script>
     import VSelect from "vue-select";
     import route from '../routes.js';
-    import Search from './Proveedores/Publicaciones/SearchPublicacion.vue';
+    import Search from './Proveedores/Publicaciones/Index.vue';
 
 
     export default {

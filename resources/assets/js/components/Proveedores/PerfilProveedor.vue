@@ -24,12 +24,12 @@
                         <div class="tab-content">
                             
                             <div class="active tab-pane" id="publicaciones">
-                               <index-publicaciones :proveedorId="perfil.user.proveedor.id"></index-publicaciones>
+                               <index-publicaciones :publicaciones="publicaciones" :optionsProveedor="true"></index-publicaciones>
                             </div>
                             <div class="tab-pane" id="rubro">
 
-                                 <div v-if="perfil.user.proveedor">
-                                        <index-rubros :perfil="perfil"></index-rubros>
+                                <div v-if="perfil.user.proveedor">
+                                    <index-rubros :perfil="perfil"></index-rubros>
                                 </div>
 
                             </div>
@@ -46,23 +46,40 @@
 
 <script>
 
-import IndexRubros from './RubrosDetalle/Index.vue';
-import IndexPublicaciones from './Publicaciones/Index.vue';
+    import IndexRubros from './RubrosDetalle/Index.vue';
+    import IndexPublicaciones from './Publicaciones/Index.vue';
 
-export default {
-    props: {
-            perfil: {
-                type: Object,
-                required: true
+    export default {
+        props: {
+                perfil: {
+                    type: Object,
+                    required: true
+                }
+        },
+        data(){
+            return {
+                publicaciones: []
             }
-    },
-    data(){
-        return {
-            perfilProveedor: []
+        },
+        created(){
+            this.getProductos();
+        },
+        components: {
+            IndexRubros, IndexPublicaciones
+        }, 
+        methods:{
+            getProductos: function(){
+                this.$http.get('api/proveedor/'+this.perfil.user.proveedor.id+'/publicacion' )
+                    .then(response => {
+                        this.publicaciones = response.data.publicaciones
+                    }, response => {
+                        this.$toast.error({
+                            title:'¡Error!',
+                            message:'No se han podido cargar los productos. :('
+                        });
+
+                    })
+            }
         }
-    },
-    components: {
-        IndexRubros, IndexPublicaciones
     }
-}
 </script>

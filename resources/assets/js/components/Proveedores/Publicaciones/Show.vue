@@ -9,67 +9,81 @@
 		    <!-- Default box -->
 		    <div class="box box-primary">
 		        <div class="box-body">
-			        <section>
-					  	<div class="col-md-offset-0.5 col-sm-7">
-					  		
-			          		<carousel :perPage="1" :perPageCustom="[[480, 1], [768, 1]]" :autoplay="true">
-			          			<slide v-for="item in publicacion.fotos" :key="item.nombre">
-			          				<img :src="'/storage/proveedores/publicaciones/'+item.nombre" class="img-responsive" style="max-height: 350px;    position: absolute;top: 50%;left: 50%;transform: translateX(-50%) translateY(-50%); min-height:100%">
+		        	<div class="col-sm-12">
+				        <section>
+						  	<div class="col-md-offset-0.5 col-sm-7">
+						  		
+				          		<carousel :perPage="1" :perPageCustom="[[480, 1], [768, 1]]" :autoplay="false" :autoplayTimeout="15000">
+				          			<slide v-for="item in publicacion.fotos" :key="item.nombre">
+				          				<img :src="'/storage/proveedores/publicaciones/'+item.nombre" class="img-responsive" style="max-height: 350px;    position: absolute;top: 50%;left: 50%;transform: translateX(-50%) translateY(-50%); min-height:100%">
 
-			          			</slide>
-			          		</carousel>
+				          			</slide>
+				          		</carousel>
 
-					    </div>
-						<div class="col-sm-5">
-							<div class="box box-default">
-									<div class="box-header">
-										<h3 class="text-uppercase">{{publicacion.titulo}}</h3>
-				                        <div class="box-tools pull-right">
-				                            <button class="btn btn-box-tool" data-toggle="tooltip" @click.prevent >
-				                                <i class="fa fa-fw fa-heart-o"></i>
-				                            </button>
-				                        </div><!-- /.box-tools -->
-									</div>
-		        					<div class="box-body">
-					        			<p>
-								      		<strong>Rubro:</strong> {{publicacion.rubros_detalle.rubro.subcategoria.categoria.nombre}}
-							      		</p>
-							      		<p>
-							      			<strong>Proveedor:</strong> {{publicacion.rubros_detalle.proveedor.nombre}}
-							      		</p>
-							      		<p>
-							      			<strong>Fecha de publicaci&oacute;n:</strong> {{formatData(publicacion.created_at)}}
-							      		</p>
-								       	<p>
-						                	<span>Email: {{publicacion.rubros_detalle.proveedor.email}}</span>
-							          	</p>
-							          	<!--
-							          	<hr>
-										<div class="col-xs-12 box-group" id="accordion" style="text-align:center">
-							          		<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded= "false">
-							                    Ver Datos Proveedor
-							                </a>
-									    </div>
-									    <div id="collapseOne" class="panel-collapse collapse" aria-expanded= "false">
-							                <div class="box-body">
-							                    <!--vista proveedor
-							                    <show-proveedor :proveedor="publicacion.rubros_detalle.proveedor"></show-proveedor>
-							                </div>
-							            </div>
-							            -->
-						        </div>
-						        <div  class="box-footer" v-if="auth.user.profile.roles_id == role.USUARIO">
-						        	<div class="col-sm-6 col-sm-offset-3">
-						                <button type="button" class="btn btn-block btn-success" @click.prevent>
-						                	<i class="fa fa-calendar-check-o"></i> Reservar
-						                </button>
-						        	</div>
-						        </div>
 						    </div>
-					      
-				        </div>
+							<div class="col-sm-5">
+								<div class="box box-default">
+										<div class="box-header">
+											<h3 class="text-uppercase">{{publicacion.titulo}}</h3>
+					                        <div class="box-tools pull-right">
+					                            <button class="btn btn-box-tool" data-toggle="tooltip" @click.prevent >
+					                                <i class="fa fa-fw fa-heart-o"></i>
+					                            </button>
+					                        </div><!-- /.box-tools -->
+										</div>
+			        					<div class="box-body">
+						        			<p>
+									      		<strong>Rubro:</strong> {{publicacion.rubros_detalle.rubro.subcategoria.categoria.nombre}}
+								      		</p>
 
-				    </section>
+								      		<p>
+								      			<strong>Fecha de publicaci&oacute;n:</strong> {{formatData(publicacion.created_at)}}
+								      		</p>
+
+								      		<p>
+								      			<strong>Proveedor:</strong> {{publicacion.rubros_detalle.proveedor.nombre}}
+								      		</p>
+
+									       	<p>
+							                	<strong>Email:</strong> {{publicacion.rubros_detalle.proveedor.email}}
+								          	</p>
+								          	
+								          	<hr>
+
+		                                    <div>
+		                                        <i class="fa fa-fw fa-star"></i>
+		                                        <i class="fa fa-fw fa-star"></i>
+		                                        <i class="fa fa-fw fa-star-half-o"></i>
+		                                        <i class="fa fa-fw fa-star-o"></i>
+		                                        <i class="fa fa-fw fa-star-o"></i>
+		                                    </div> 
+						          	<!--
+											<div class="col-xs-12 box-group" id="accordion" style="text-align:center">
+								          		<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded= "false">
+								                    Ver Datos Proveedor
+								                </a>
+										    </div>
+										    <div id="collapseOne" class="panel-collapse collapse" aria-expanded= "false">
+								                <div class="box-body">
+								                    <!--vista proveedor
+								                    <show-proveedor :proveedor="publicacion.rubros_detalle.proveedor"></show-proveedor>
+								                </div>
+								            </div>
+								            -->
+							        </div>
+							        <div  class="box-footer" v-if="auth.user.profile.roles_id == role.USUARIO">
+							        	<div class="col-sm-6 col-sm-offset-3">
+							                <button type="button" class="btn btn-block btn-success" @click.prevent>
+							                	<i class="fa fa-calendar-check-o"></i> Reservar
+							                </button>
+							        	</div>
+							        </div>
+							    </div>
+						      
+					        </div>
+
+					    </section>
+					</div>
 				    <hr>
 			        <div class="col-xs-12">
 			          	<h4>{{publicacion.oferta}}</h4>

@@ -76,7 +76,7 @@
                         <vue-editor 
                             data-vv-name="descripcion"  
                             v-model="publicacion.descripcion" 
-                            v-validate="'required|min:15'"
+                            v-validate="'required|min:20|max:900'"
                             :editorToolbar="customToolbar">
 
                             
