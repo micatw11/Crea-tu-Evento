@@ -18,7 +18,7 @@ class CreatePublicacionesTable extends Migration
             $table->date('fecha_finalizacion')->nullable();
             $table->string('titulo');
             $table->string('oferta')->nullable();
-            $table->string('descripcion');
+            $table->string('descripcion', 30000);
             $table->integer('estado')->default(1);
             $table->integer('rubros_detalle_id')->unsigned();
             $table->foreign('rubros_detalle_id')->references('id')->on('rubros_detalle');

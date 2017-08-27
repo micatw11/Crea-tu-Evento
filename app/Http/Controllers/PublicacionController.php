@@ -168,7 +168,7 @@ public function update(Request $request, $id){
 	    return $this->validate($request, 
 	        [
 	        	'titulo' => 'required|min:5', 
-	        	'descripcion' => 'required|min:15',
+	        	'descripcion' => 'required|min:20|max:30000',
 	        	'rubros_detalle_id' => 'required|exists:rubros_detalle,id'
 	        ]);
     }

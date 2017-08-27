@@ -1,5 +1,5 @@
 <template>
-    <div class="box box-default">
+    <div class="box">
          <div class="box-body">
             <template v-if="publicaciones.length > 0" class="row">
                 <div  v-for="(item, index) in publicaciones" class="col-sm-12">
@@ -75,7 +75,8 @@
             </template>
             <template v-else>
                 <div class="col-sm-12">
-                    <h3 class="text-center">No se encontraron resultados :(</h3>
+                    <h3 v-if="!optionsProveedor" class="text-center">No se encontraron resultados :(</h3>
+                    <h3 v-else class="text-center">No se encontraron publicaciones realizadas :(</h3>
                 </div>
             </template>
         </div>
