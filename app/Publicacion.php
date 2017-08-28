@@ -25,4 +25,9 @@ class Publicacion extends Model
     {
         return $this->belongsTo('App\RubrosDetalle');
     }
+
+     public function publicacion_caracteristicas()
+    {
+        return $this->hasMany('App\PublicacionCaracteristicas');
+    }
 }
