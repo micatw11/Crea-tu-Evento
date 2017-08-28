@@ -101,4 +101,5 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('caracteristica/{id}', 'CaracteristicaController@show');
     Route::post('caracteristica', 'CaracteristicaController@store');
     Route::patch('caracteristica/{id}','CaracteristicaController@update');
+
 });

@@ -16,7 +16,7 @@
     },
     methods: {
 	    doFilter () {
-	      this.$events.fire('filter-setRubro', this.filterText)
+	      this.$events.fire('filter-setCaracteristica', this.filterText)
 	    }
     }
   }

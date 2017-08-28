@@ -8,12 +8,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Proveedor;
+use App\Publicacion;
 use App\Rol;
 use App\Domicilio;
 use App\RubrosDetalle;
 use App\Rubro;
 use App\Log;
-use App\Publicacion;
 
 class ProveedorController extends Controller
 {
@@ -82,7 +82,7 @@ class ProveedorController extends Controller
     {
       return $this->validate($request, 
         [
-            'user_id' => 'required|exists:usuarios,id',
+            'user_id' => 'required|exists:users,id',
             'nombre' => 'required|min:4|max:55',
             'cuit' => 'required|min:9|max:12',
             'ingresos_brutos' => 'required|min:5|max:10',

@@ -168,7 +168,7 @@ public function update(Request $request, $id){
 	    return $this->validate($request, 
 	        [
 	        	'titulo' => 'required|min:5', 
-	        	'descripcion' => 'required|min:15',
+	        	'descripcion' => 'required|min:20|max:30000',
 	        	'rubros_detalle_id' => 'required|exists:rubros_detalle,id'
 	        ]);
     }
@@ -210,7 +210,7 @@ public function update(Request $request, $id){
                 ->select('publicaciones.id')
                 ->where('rubros_detalle.proveedor_id', $idProveedor)
                 ->groupby('publicaciones.id')->distinct()->get()->pluck('id');
-        $publicaciones = Publicacion::with('rubros_detalle.rubro.subcategoria.categoria', 'fotos')->whereIn('id', $publicacionesId)->get();
+        $publicaciones = Publicacion::with('rubros_detalle.rubro.subcategoria.categoria', 'fotos', 'rubros_detalle.proveedor', 'rubros_detalle.domicilio.localidad.provincia')->whereIn('id', $publicacionesId)->get();
         return response()->json(['publicaciones' => $publicaciones], 200);
     }
 
