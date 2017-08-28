@@ -97,4 +97,9 @@ Route::group(['prefix' => 'api'], function () {
     Route::post('rubro', 'RubroController@store');
     Route::patch('rubro/{id}','RubroController@update');
 
+    Route::get('caracteristica', 'CaracteristicaController@index');
+    Route::get('caracteristica/{id}', 'CaracteristicaController@show');
+    Route::post('caracteristica', 'CaracteristicaController@store');
+    Route::patch('caracteristica/{id}','CaracteristicaController@update');
+
 });

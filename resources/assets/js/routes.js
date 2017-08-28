@@ -30,6 +30,8 @@ var NewRubro = require('./components/Proveedores/RubrosDetalle/NewRubro');
 var EditRubro = require('./components/Proveedores/RubrosDetalle/EditRubro');
 
 var IndexCategoria = require('./components/Proveedores/Categorias/Index');
+var IndexCaracteristica = require('./components/Proveedores/Caracteristicas/Index');
+
 
 var InternalServerError = require('./components/Errors/500');
 var PageNotFound = require('./components/Errors/404');
@@ -109,6 +111,12 @@ let routes = [
 		{
 			path: '/categorias',
 			component: IndexCategoria,
+			beforeEnter: guardRoute,
+			meta: { Role: [role.ADMINISTRADOR, role.SUPERVISOR] }	
+		},
+		{
+			path: '/caracteristicas',
+			component: IndexCaracteristica,
 			beforeEnter: guardRoute,
 			meta: { Role: [role.ADMINISTRADOR, role.SUPERVISOR] }	
 		},

@@ -18,8 +18,15 @@ class Rubro extends Model
     {
         return $this->belongsTo('App\Subcategoria');
     }
-    public function rubros_detalles(){
+
+    public function rubros_detalles()
+    {
         return $this->hasMany('App\RubrosDetalle');
     }
 
+    public function rubros_caracteristicas()
+    {
+        return $this->hasMany('App\RubrosCaracteristicas');
+    }
+   
 }

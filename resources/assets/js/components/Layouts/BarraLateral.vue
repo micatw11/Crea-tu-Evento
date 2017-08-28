@@ -79,6 +79,14 @@
                     </router-link>
                 </li>
                 <li>
+                    <router-link
+                        v-if="auth.user.profile.roles_id == role.ADMINISTRADOR ||
+                            auth.user.profile.roles_id == role.SUPERVISOR"
+                            to="/caracteristicas">
+                                <i class="fa fa-th-list"></i> <span> Caracteristicas de Rubros</span>
+                    </router-link>
+                </li>
+                <li>
                     <a v-if="auth.user.profile.roles_id == role.PROVEEDOR" @click="goToNewPublicacion()">
                         <i class="fa fa-plus"></i> <span> Publicaci&oacute;n</span>
                     </a>

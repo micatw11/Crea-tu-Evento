@@ -40,4 +40,10 @@ class Publicacion extends Model
     public function scopeDarAlta($query) {
         $query->update(['publicaciones.estado' => 1]);
     }
+
+    public function publicacion_caracteristicas()
+    {
+        return $this->hasMany('App\PublicacionCaracteristicas');
+    }
+
 }
