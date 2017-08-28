@@ -202,7 +202,8 @@ export default {
                     apellido: this.usuario.apellido,
                     sexo: this.usuario.sexo,
                     fecha_nac: this.usuario.fecha_nac,
-                    localidad_id: this.usuario.localidad_id.value
+                    localidad_id: this.usuario.localidad_id.value,
+                    login: true
                 }
             ).then(response => {
   
