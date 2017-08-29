@@ -95,9 +95,22 @@
                     </div>
                 </div>
             </div>
-            <search
-                :publicaciones="publicaciones">
-            </search> 
+            <div class="box">
+                <div class="box-body">
+                    <search
+                        :publicaciones="publicaciones">
+                    </search>  
+                </div>
+                <div class="box-footer">
+                    <pagination 
+                        :current-page="pageOne.current_page"
+                        :items-per-page="pageOne.per_page"
+                        :total-pages="pageOne.last_page"
+                        :total-items="pageOne.total"
+                        @page-changed="pageOneChanged">
+                    </pagination> 
+                </div>
+            </div>
         </section>
     </div>
 </template>
@@ -106,11 +119,22 @@
     import VSelect from "vue-select";
     import route from '../routes.js';
     import Search from './Proveedores/Publicaciones/Index.vue';
-
+    import Pagination from './Plugins/pagination/Pagination.vue';
 
     export default {
         data(){
             return {
+                api: 'api/publicacion',
+                pageOne: {
+                    total:0,
+                    per_page:1,
+                    current_page: 1,
+                    last_page:1,
+                    next_page_url:null,
+                    prev_page_url:null,
+                    from:0,
+                    to:0 
+                },
                 titlePath: 'Home',
                 listaPath: [{route: '/', name: 'Home'}],
                 publicaciones : [],
@@ -127,29 +151,42 @@
         },
         mounted() {
             this.$events.fire('changePath', this.listaPath, this.titlePath);
-            //this.$events.on('search', value => this.searchPublication(value));
         },
         beforeMount() {
-            this.searchPublication('');
+            this.managerSearch('');
             this.getCategorias();
         },
+        components: {
+            VSelect, Search, Pagination
+        },
         methods: {
-            searchPublication(filter){
-                let filtro = ' '
-                if (filter!= ' '){
-                     let localidad= this.localidad_id==null? '':this.localidad_id.value  
-
-                    filtro = 'api/publicacion?filter='+ filter +'&with_category='+this.categoria_id+'&with_subcategory='+this.subcategoria_id+'&with_localidad='+localidad+'&with_denomination='+this.rubro_id
-                console.log(filtro)
+            pageOneChanged (pageNum) {
+                this.pageOne.current_page = pageNum
+            },
+            managerSearch(filter){
+                let filtro = ''
+                if (filter != ''){
+                    let localidad = this.localidad_id==  null ? '' : this.localidad_id.value  
+                    filtro = this.api+'?filter='+ filter +'&with_category='+this.categoria_id+'&with_subcategory='+this.subcategoria_id+'&with_localidad='+localidad+'&with_denomination='+this.rubro_id+'&page='+this.pageOne.current_page+'&per_page='+this.pageOne.per_page;
                 }else{
-                    filtro = 'api/publicacion'
+                    filtro = this.api+'?page='+this.pageOne.current_page+'&per_page='+this.pageOne.per_page;
                 }
                 this.$http.get(filtro)
                 .then(response => {
                     this.publicaciones = response.data.publicaciones.data;
-                    console.log(this.publicaciones)
+                    console.log(response.data.publicaciones)
+                    this.pageOne.total = response.data.publicaciones.total;
+                    this.pageOne.per_page = response.data.publicaciones.per_page;
+                    this.pageOne.last_page = response.data.publicaciones.last_page;
+                    this.pageOne.next_page_url = response.data.publicaciones.next_page_url;
+                    this.pageOne.prev_page_url = response.data.publicaciones.prev_page_url;
+                    this.pageOne.from = response.data.publicaciones.from;
+                    this.pageOne.to = response.data.publicaciones.to;
                 }, response => {
-
+                    this.$toast.error({
+                        title:'¡Error!',
+                        message:'No se han podido cargar las publicaciones. :('
+                    });
                 })
             },
             getLocalidades: function(search, loading) {
@@ -206,31 +243,14 @@
                     });
                 })
             },
+            pageOneChanged (pageOne) {
+                this.pageOne.current_page = pageOne;
+                this.searchPublicacion()
+            },
             searchPublicacion: function(){
-            if(route.path !== '/' && this.q !== '' )
-                route.push('/')
-            //this.$events.fire('search', this.q);
-                this.searchPublication(this.q)
+                this.managerSearch(this.q)
             }
-        },
-        components: {
-            VSelect, Search
+
         }
     }
 </script>
-<style>
-.stylish-input-group .input-group-addon{
-    background: white !important; 
-        border-radius: 4px 25px 25px 4px;
-}
-.stylish-input-group .form-control{
-    border-right:0; 
-    box-shadow:0 0 0; 
-    border-color:#ccc;
-        border-radius: 25px 4px 4px 25px;
-}
-.stylish-input-group button{
-    border:0;
-    background:transparent;
-}
-</style>

@@ -1,6 +1,6 @@
 <template>
-    <div class="box">
-         <div class="box-body">
+    <div>
+
             <template v-if="publicaciones.length > 0" class="row">
                 <div  v-for="(item, index) in publicaciones" class="col-sm-12">
                     <div>
@@ -72,6 +72,7 @@
                     </div>
                     <br><br>
                 </div>
+
             </template>
             <template v-else>
                 <div class="col-sm-12">
@@ -79,14 +80,14 @@
                     <h3 v-else class="text-center">No se encontraron publicaciones realizadas :(</h3>
                 </div>
             </template>
-        </div>
+
     </div>
 </template>
 
 <script>
     import route from './../../../routes.js';
-    import auth from './../../../auth.js'
-    import role from './../../../config.js'
+    import auth from './../../../auth.js';
+    import role from './../../../config.js';
     import moment from 'moment';
 
     export default {
@@ -97,7 +98,8 @@
             optionsProveedor: {
                 required: false,
                 default: false
-            }
+            },
+
         },
         data(){
             return {
@@ -107,6 +109,7 @@
             }
         },
         methods: {
+
             ver(id){
                 this.$events.fire('changePath', this.listPath, 'Ver Publicacion');
                 route.push('/publicacion/'+id);
