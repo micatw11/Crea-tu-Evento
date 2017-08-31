@@ -201,6 +201,9 @@
 	            this.$http.get('api/proveedor/'+this.auth.user.profile.id+'/rubro/'
 	                ).then(response => {
                         var data = response.data;
+                        if(data.length == 0){
+                            this.$emit('errorRubros'); 
+                        }
                         for (let rubro of data.rubros){
                             this.rubros.push({ text: rubro.rubro.nombre, value: rubro.id });
                         }

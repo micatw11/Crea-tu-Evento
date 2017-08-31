@@ -13,6 +13,7 @@
 				        		:nuevo="true"
 				        		:validarPublicacion="validarPublicacion"
 				        		@validadoNewPublicacion="sendNewForm()"
+				        		@errorRubros="errorRubrosVoid()"
 				        		@update:validarPublicacion="val => validarPublicacion = val"
 				        		:errorsApi="errorsApi">
 				        	</form-publicacion>
@@ -107,6 +108,13 @@
 	        },
 	        goBack: function(){
 	            route.go(-1)
+	        },
+	        errorRubrosVoid(){
+                this.$toast.error({
+                    title:'¡Error!',
+                    message:'Debe registrarse en un rubro para poder relizar un publicación. :('
+                });
+                route.push('/rubro/new');
 	        }
 		}
 	}

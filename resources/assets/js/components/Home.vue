@@ -102,13 +102,14 @@
                     </search>  
                 </div>
                 <div class="box-footer">
-                    <pagination 
+                    <pagination-home
+                        ref="paginationH"
                         :current-page="pageOne.current_page"
                         :items-per-page="pageOne.per_page"
                         :total-pages="pageOne.last_page"
                         :total-items="pageOne.total"
                         @page-changed="pageOneChanged">
-                    </pagination> 
+                    </pagination-home> 
                 </div>
             </div>
         </section>
@@ -119,7 +120,8 @@
     import VSelect from "vue-select";
     import route from '../routes.js';
     import Search from './Proveedores/Publicaciones/Index.vue';
-    import Pagination from './Plugins/pagination/Pagination.vue';
+    Vue.component('pagination-home', require('./Plugins/pagination/pagination-v1.vue'));
+    //import PaginationHome from './Plugins/pagination/pagination-v1.vue';
 
     export default {
         data(){
@@ -127,7 +129,7 @@
                 api: 'api/publicacion',
                 pageOne: {
                     total:0,
-                    per_page:1,
+                    per_page:10,
                     current_page: 1,
                     last_page:1,
                     next_page_url:null,
@@ -153,35 +155,48 @@
             this.$events.fire('changePath', this.listaPath, this.titlePath);
         },
         beforeMount() {
+
+            if(this.$route.query.with_denomination != undefined){
+                this.rubro_id = this.$route.query.with_denomination
+            }
+            if(this.$route.query.with_subcategory != undefined){
+                this.subcategoria_id = this.$route.query.with_subcategory
+            }
+            if(this.$route.query.with_category != undefined){
+                this.categoria_id = this.$route.query.with_category
+            }
             this.managerSearch('');
             this.getCategorias();
         },
         components: {
-            VSelect, Search, Pagination
+            VSelect, Search
         },
         methods: {
-            pageOneChanged (pageNum) {
-                this.pageOne.current_page = pageNum
-            },
             managerSearch(filter){
-                let filtro = ''
-                if (filter != ''){
-                    let localidad = this.localidad_id==  null ? '' : this.localidad_id.value  
+                let filtro = this.api+'?filter='+ filter;
+                //let localidad = this.localidad_id ==  null ? '' : this.localidad_id.value  
+
+                if(this.categoria_id != undefined && this.categoria_id != '')
+                    filtro = filtro + '&with_category='+this.categoria_id;
+                if(this.subcategoria_id != undefined && this.subcategoria_id != '')
+                    filtro = filtro + '&with_subcategory='+this.subcategoria_id;
+                if(this.rubro_id  != undefined && this.rubro_id  != '') 
+                    filtro = filtro + '&with_denomination='+this.rubro_id;
+                if(this.localidad_id !=  null)
+                    filtro = filtro + '&with_localidad='+this.localidad_id.value ;
+
+                filtro = filtro + '&page='+this.pageOne.current_page+'&per_page='+this.pageOne.per_page;
+                /**
+                if (filter != ''){ 
                     filtro = this.api+'?filter='+ filter +'&with_category='+this.categoria_id+'&with_subcategory='+this.subcategoria_id+'&with_localidad='+localidad+'&with_denomination='+this.rubro_id+'&page='+this.pageOne.current_page+'&per_page='+this.pageOne.per_page;
                 }else{
-                    filtro = this.api+'?page='+this.pageOne.current_page+'&per_page='+this.pageOne.per_page;
-                }
+                    filtro = this.api+'?with_category='+this.categoria_id+'&with_subcategory='+this.subcategoria_id+'&with_localidad='+localidad+'&with_denomination='+this.rubro_id+'&page='+this.pageOne.current_page+'&per_page='+this.pageOne.per_page;
+                }**/
                 this.$http.get(filtro)
                 .then(response => {
                     this.publicaciones = response.data.publicaciones.data;
-                    console.log(response.data.publicaciones)
-                    this.pageOne.total = response.data.publicaciones.total;
-                    this.pageOne.per_page = response.data.publicaciones.per_page;
-                    this.pageOne.last_page = response.data.publicaciones.last_page;
-                    this.pageOne.next_page_url = response.data.publicaciones.next_page_url;
-                    this.pageOne.prev_page_url = response.data.publicaciones.prev_page_url;
-                    this.pageOne.from = response.data.publicaciones.from;
-                    this.pageOne.to = response.data.publicaciones.to;
+                    this.setDataPagination(response.data.publicaciones);
+
                 }, response => {
                     this.$toast.error({
                         title:'¡Error!',
@@ -249,8 +264,16 @@
             },
             searchPublicacion: function(){
                 this.managerSearch(this.q)
+            },
+            setDataPagination(data){
+                    this.pageOne.total = data.total;
+                    this.pageOne.per_page = data.per_page;
+                    this.pageOne.last_page = data.last_page;
+                    this.pageOne.next_page_url = data.next_page_url;
+                    this.pageOne.prev_page_url = data.prev_page_url;
+                    this.pageOne.from = data.from;
+                    this.pageOne.to = data.to;
             }
-
         }
     }
 </script>

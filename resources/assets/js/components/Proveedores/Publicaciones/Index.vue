@@ -62,7 +62,7 @@
                                     <button class="btn btn-sm btn-default" @click="modificar(item.id)">
                                         Modificar
                                     </button>
-                                    <button class="btn btn-sm btn-warning" @click="estado(item)">
+                                    <button class="btn btn-sm" v-bind:class="styleButton(item.estado)" @click="estado(item)">
                                         {{ item.estado == 1 ? 'Dar de baja' : 'Dar de alta'}}
                                     </button>
                                 </div>
@@ -111,11 +111,14 @@
         methods: {
 
             ver(id){
-                this.$events.fire('changePath', this.listPath, 'Ver Publicacion');
+                var listPath = [
+                        {route: '/', name: 'Home'}, 
+                        {route: '/publicacion/'+id, name: 'Ver Publicacion'}
+                    ]
+                this.$events.fire('changePath', listPath, 'Ver Publicacion');
                 route.push('/publicacion/'+id);
             },
             modificar(id){
-                this.$events.fire('changePath', this.listPath, 'Modificar Publicacion');
                 route.push('/publicacion/'+id+'/edit');
             },
             estado(publicacion){
@@ -148,6 +151,10 @@
                 else{
                     this.favorite= true
                 }
+            },
+            styleButton: function(estado){
+                if(estado == 1) return ' btn-danger';
+                else return ' btn-success';
             }
         },
         directives: {

@@ -64,8 +64,9 @@ class RegisterUserController extends Controller
         $this->validatorUsuario($request);
 
         event(new Registered($user = $this->create($request)));
-        if($request->login)
-          $this->guard()->login($user);
+        
+        if(!$request->('login') || ($request->('login') && $request->login))
+            $this->guard()->login($user);
 
         $this->createUsuario($request, $user->id);
         $user->usuario->localidad->provincia;

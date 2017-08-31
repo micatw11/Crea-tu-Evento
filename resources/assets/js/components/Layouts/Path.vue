@@ -1,11 +1,11 @@
 <template>
     <section class="content-header">
         <h1 v-if="titlePath">
-            {{titlePath}}
+            {{ titleUpper(titlePath) }}
         </h1>
         <ol class="breadcrumb">
             <template v-if="listPath.length > 0" v-for="path in listPath">
-                <router-link :to="path.route" tag="li"><a>{{ path.name }}</a></router-link>
+                <router-link :to="path.route" tag="li"><a>{{ titleUpper(path.name) }}</a></router-link>
 
             </template>
         </ol>
@@ -32,8 +32,14 @@ export default {
         changePath: function(pathList, titlePath){
             this.titlePath = titlePath;
             this.listPath = pathList;
+        },
+        titleUpper: function(str){
+                var res = str.substring(1, str.length);
+                var res  = res.toLowerCase();
+                var res1 = str.substring(0, 1);
+                var res1 = res1.toUpperCase();
+                return  res1+''+res;
         }
-
     }
 }   
 </script>

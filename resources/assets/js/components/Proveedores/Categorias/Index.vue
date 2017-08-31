@@ -2,6 +2,9 @@
 	<div class="default-content">
         <div class="content">
             <div class="row">
+                <div class="col-lg-12">
+                    <index-rubros></index-rubros>
+                </div>
                 <div class="col-lg-5">
                     <div>
                         <div class="box-header">
@@ -96,9 +99,7 @@
                     <index-subcategorias></index-subcategorias>
                 
                 </div>
-                <div class="col-lg-12">
-                    <index-rubros></index-rubros>
-                </div>
+
             </div>
         </div>
 	</div>

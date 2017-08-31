@@ -81,17 +81,20 @@ class PublicacionController extends Controller
                 $query->where('localidades.id', $id );
             });
         }
-        $query->with('rubros_detalle.proveedor', 'rubros_detalle.rubro.subcategoria.categoria', 'rubros_detalle.domicilio.localidad.provincia', 'fotos')->distinct('publicaciones.id');
-        $publicaciones = $query->paginate(10);
+        $ids = $query->distinct('publicaciones.id')->get()->pluck('id');
 
-        return response()->json(['publicaciones' => $publicaciones], 200);
+
+
+        $publicaciones = Publicacion::whereIn('publicaciones.id', $ids)
+        ->with('rubros_detalle.proveedor', 'rubros_detalle.rubro.subcategoria.categoria', 'rubros_detalle.domicilio.localidad.provincia', 'fotos')->paginate(10);
+
+        return response()->json(['publicaciones' => $publicaciones, $ids], 200);
 
     }
 
     public function show(Request $request, $id){
         $publicacion = Publicacion::with('rubros_detalle.proveedor.user.usuario','rubros_detalle.rubro.subcategoria.categoria','fotos')
-                        ->where('id', $id)
-                        ->where('estado', 1)->firstOrFail();
+                        ->where('id', $id)->firstOrFail();
 
         return response()->json(['publicacion' => $publicacion], 200);
     }
@@ -122,7 +125,7 @@ class PublicacionController extends Controller
 
     }
 
-public function update(Request $request, $id){
+    public function update(Request $request, $id){
         $this->validatorPublicacion($request);
         $ids = [];
         $photo_delete = null;
@@ -210,7 +213,15 @@ public function update(Request $request, $id){
                 ->select('publicaciones.id')
                 ->where('rubros_detalle.proveedor_id', $idProveedor)
                 ->groupby('publicaciones.id')->distinct()->get()->pluck('id');
-        $publicaciones = Publicacion::with('rubros_detalle.rubro.subcategoria.categoria', 'fotos', 'rubros_detalle.proveedor', 'rubros_detalle.domicilio.localidad.provincia')->whereIn('id', $publicacionesId)->get();
+
+        $query = Publicacion::with('rubros_detalle.rubro.subcategoria.categoria', 'fotos', 'rubros_detalle.proveedor', 'rubros_detalle.domicilio.localidad.provincia')->whereIn('id', $publicacionesId);
+
+        if($request->has('with_estado') && ($request->with_estado == 0 || $request->with_estado == 1))
+        {
+            $query->where('estado', $request->with_estado);
+        }
+
+        $publicaciones = $query->orderBy('estado', 'desc')->orderBy('titulo', 'asc')->paginate(10);
         return response()->json(['publicaciones' => $publicaciones], 200);
     }
 

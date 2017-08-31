@@ -17,7 +17,7 @@
 		        		<button class="btn btn-primary" @click="modificar(publicacion.id)">
 		        			<i class="glyphicon glyphicon-pencil"></i>
 		        			Editar Publicaci&oacute;n</button>
-		        		<button class="btn btn-danger" @click="baja(publicacion.id)">
+		        		<button class="btn" v-bind:class="btnStyle(publicacion.estado)" @click="baja(publicacion.id)">
 		        			<i class="glyphicon glyphicon-trash"></i>
 		        			{{ publicacion.estado == 1 ? 'Dar de baja' : 'Dar de alta'}}
 		        		</button>
@@ -28,9 +28,14 @@
 		        <div class="box-body">
 		        	<div class="col-sm-12">
 				        <section>
-						  	<div class="col-md-offset-0.5 col-sm-7">
+						  	<div class="col-md-offset-0.5 col-sm-7" v-if="showCarousel" >
 						  		
-				          		<carousel :perPage="1" :perPageCustom="[[480, 1], [768, 1]]" :autoplay="false" :autoplayTimeout="15000">
+				          		<carousel 
+				          			:perPage="1" 
+				          			:perPageCustom="[[480, 1], [768, 1]]" 
+				          			:autoplay="false" 
+				          			:autoplayTimeout="15000" 
+				          			ref="carousel">
 				          			<slide v-for="item in publicacion.fotos" :key="item.nombre">
 				          				<img :src="'/storage/proveedores/publicaciones/'+item.nombre" class="img-responsive" style="max-height: 350px;    position: absolute;top: 50%;left: 50%;transform: translateX(-50%) translateY(-50%); min-height:100%">
 
@@ -75,19 +80,6 @@
 	                                    <i class="fa fa-fw fa-star-o fa-2x"></i>
 	                                    <i class="fa fa-fw fa-star-o fa-2x"></i>
 	                                </div> 
-				          			<!--
-									<div class="col-xs-12 box-group" id="accordion" style="text-align:center">
-						          		<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded= "false">
-						                    Ver Datos Proveedor
-						                </a>
-								    </div>
-								    <div id="collapseOne" class="panel-collapse collapse" aria-expanded= "false">
-						                <div class="box-body">
-						                    <!--vista proveedor
-						                    <show-proveedor :proveedor="publicacion.rubros_detalle.proveedor"></show-proveedor>
-						                </div>
-						            </div>
-						            -->
 						        </div>
 						        <div class="col-sm-12" v-if="auth.user.profile.roles_id == role.USUARIO">
 						        	<div class="col-sm-6 col-sm-offset-3">
@@ -149,7 +141,7 @@
 	        	</div>
 	        	<div class="box-body">
 	        		<div class="col-sm-3" style="text-align:center;">
-		        			<h2>3,5</h2>
+		        			<h2>2,5</h2>
 		        			<p>
 	                            <i class="fa fa-fw fa-star"></i>
 	                            <i class="fa fa-fw fa-star"></i>
@@ -261,13 +253,19 @@
 			return {
 				publicacion: null,
 				productoId: null,
-				listPath : [{route: '/', name: 'Home'}, {route: '/usuario/'+auth.user.profile.id +'/perfil', name: 'Perfil'}],
 				auth: auth,
-				role: Role
+				role: Role,
+				showCarousel: true
 			}
 		},
 		mounted(){
-			this.getProductos();
+		    this.$nextTick(function() {
+		      this.getProductos();
+		    })
+			
+		},
+		created() {
+			window.addEventListener('resize', this.handleResize)
 		},
 		components: {
         	ShowProveedor, Carousel, Slide
@@ -277,7 +275,24 @@
 	            this.$http.get('api/publicacion/'+this.$route.params.publicacionId )
 	                .then(response => {
 	                    this.publicacion = response.data.publicacion
-	                    
+						var listPath = [
+								{route: '/', name: 'Home'}, 
+								{
+									route: '/?with_category='+ this.publicacion.rubros_detalle.rubro.subcategoria.categoria.id, 
+									name: this.publicacion.rubros_detalle.rubro.subcategoria.categoria.nombre
+								},
+								{
+									route: '/?with_subcategory='+ this.publicacion.rubros_detalle.rubro.subcategoria.id, 
+									name: this.publicacion.rubros_detalle.rubro.subcategoria.nombre},
+								{
+									route: '/?with_denomination='+this.publicacion.rubros_detalle.rubro.id, 
+									name: this.publicacion.rubros_detalle.rubro.nombre},
+								{
+									route: '/publicacion/'+this.$route.params.publicacionId, 
+									name: this.publicacion.titulo
+								}
+							]
+						this.$events.fire('changePath', listPath, this.publicacion.titulo);
 	                }, response => {
 	                    this.$toast.error({
 	                        title:'¡Error!',
@@ -285,12 +300,7 @@
 	                    });
 	                })
 			},
-			verProveedor(id){
-				this.$events.fire('changePath', this.listPath, 'Ver Proveedor');
-				route.push('/proveedor/'+id);
-			},
 			modificar(id){
-				this.$events.fire('changePath', this.listPath, 'Modificar Publicacion');
 				route.push('/publicacion/'+id+'/edit');
 			},
 			baja(id){
@@ -310,7 +320,6 @@
 	                })
 			},
 			goToNewPublicacion(){
-				this.$events.fire('changePath', this.listPath, 'Nueva Publicacion');
 				route.push('/publicacion/new');
 			},
 			goBack: function(){
@@ -322,7 +331,22 @@
                     ? ''
                     : moment(value, 'YYYY-MM-DD').format('D MMM YYYY');
             },
-		}
+			btnStyle: function(estado){
+				if(estado == 1) return ' btn-danger';
+				else return ' btn-success';
+			},
+			handleResize: function(){
+				this.showCarousel = false;
+				setTimeout(this.showComponentCarousel, 100);
+			},
+			showComponentCarousel: function(){
+				this.showCarousel = true
+				console.log('paso')
+			}
+		},
+		beforeDestroy: function () {
+		    window.removeEventListener('resize', this.handleResize)
+		},
 	}
 </script>
 <style>
