@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Services\CheckCategoriesService;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Subcategoria;
 use App\Categoria;
 use App\Rubro;
@@ -34,7 +35,7 @@ class RubroController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Rubro::with('subcategoria.categoria')->orderBy('nombre', 'asc');
+        $query = Rubro::with('subcategoria.categoria','caracteristicas')->orderBy('nombre', 'asc');
 
         if ($request->filter) {
             $like = '%'.$request->filter.'%';
@@ -54,6 +55,7 @@ class RubroController extends Controller
         $subcategoria = null;
         $newCategoria = false;
         $rubro = null;
+        $caracteristicas= [];
 
         if($request->has('subcategoria_nombre'))
         {
@@ -93,7 +95,10 @@ class RubroController extends Controller
                 ]);
             $rubro = $this->createRubro($request, $request->subcategoria_id);
         }
-        
+        if($request->has('caracteristicas')&&$rubro)
+        {
+            $rubro->caracteristicas()->attach($request->caracteristicas);
+        }
         if ($rubro)
         {
             return response(null, Response::HTTP_OK);
@@ -120,6 +125,7 @@ class RubroController extends Controller
      */
     protected function createRubro(Request $request, $subcategoria_id)
     {
+        //$user->roles()->detach([1, 2, 3]);
         return Rubro::create([
                     'nombre'=> $request->nombre,
                     'subcategoria_id' => $subcategoria_id
@@ -162,7 +168,7 @@ class RubroController extends Controller
      */
     public function show($id)
     {
-        $rubros= Rubro::where('id', $id)->with('subcategoria.categoria')->firstOrFail();
+        $rubros= Rubro::where('id', $id)->with('subcategoria.categoria','caracteristicas')->firstOrFail();
 
         if ($rubros) {
             return response()->json(['data' => $rubros], 200);
@@ -195,6 +201,17 @@ class RubroController extends Controller
 
         $rubro->update($request->all());
 
+        if($request->has('caracteristicas'))
+        {   
+            $ids = $request->caracteristicas;
+            $rubros_eliminar = DB::table('caracteristica_rubro')
+                            ->where('rubro_id', $id)
+                            ->whereNotIn('caracteristica_id', $ids)->delete();
+
+            $rubro->caracteristicas()->detach($request->caracteristicas);
+            $rubro->caracteristicas()->attach($request->caracteristicas);
+
+        }
         if($subcategoria_id != null)
         {
             $this->categoriesService->checkSubcategories($subcategoria_id);

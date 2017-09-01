@@ -25,7 +25,7 @@
                         <div class="col-sm-12">
                             <label for="inputCategoria" class="control-label">Categoria</label><br>
 
-                            <input type="checkbox" v-model="newCategoria"> Nueva Categiria
+                            <input type="checkbox" v-model="newCategoria"> Nueva Categoria
 
                             <template v-if="newCategoria">
                                 <input 
@@ -139,11 +139,23 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-sm-12">
+                    <div class="col-sm-12">
+                        <label for="inputCaracteristica" class="control-label">Caracteristicas: </label><br>
+                        <div class="direct-chat-messages" style="height: 130px;">
+                            <div class="direct-chat-msg">
+                              <div v-for="caracteristica in caracteristicas">
+                                <div class="col-sm-3">
+                                  <input type="checkbox" @click="selected(caracteristica, $event)"> {{caracteristica.nombre}}
+                                </div>
+
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>  
 
             </form> 
-        </div>
-
-        <div class="modal-footer">
             <div class="col-sm-12 box-footer clearfix" style="text-align:center;">
                 <button class="btn btn-default" @click="closeModal()">
                     <i class="glyphicon glyphicon-chevron-left"></i>
@@ -154,7 +166,6 @@
                 </button>
             </div>
         </div>
-
     </div>   
 </template>
 <script>
@@ -175,6 +186,8 @@ export default {
             newSubcategoria: true,
             errorsApi: {},
             validarCategorias: false,
+            caracteristicas:[],
+            options_caracteristicas: [],
             opcionesTipo: [
                   { text: 'Servicios', value: 'Servicio' },
                   { text: 'Productos', value: 'Producto' }
@@ -185,29 +198,42 @@ export default {
     beforeMount: function(){
         //selected data
         this.getCategorias();
-        
+        this.getCaracteristicas();
     },
     methods: {
         //envio de formulario de modificación de informacion de usuario
         sendForm: function() {
-            var formData = new FormData();
-            formData.append("nombre", this.nombre);
+            var formData = { };
             if(!this.newSubcategoria){
-                formData.append("subcategoria_id", this.subcategoria_id);
+                formData= {
+                    nombre: this.nombre,
+                    caracteristicas: this.options_caracteristicas,
+                    subcategoria_id: this.subcategoria_id}
 
             } else {
-                formData.append("subcategoria_nombre", this.newSubcategoriaName);
                 if(!this.newCategoria){
-                    formData.append("categoria_id", this.categoria_id);
+                    formData= 
+                        {
+                        nombre: this.nombre,
+                        caracteristicas: this.options_caracteristicas,
+                        subcategoria_nombre: this.newSubcategoriaName,
+                        categoria_id: this.categoria_id
+                        }
                 } else {
-                    formData.append("categoria_nombre", this.newCategoriaName);
-                    formData.append("tipo_proveedor", this.tipo_proveedor);
+                    formData= 
+                        {
+                        nombre: this.nombre,
+                        caracteristicas: this.options_caracteristicas,
+                        categoria_nombre: this.newCategoriaName,
+                        subcategoria_nombre: this.newSubcategoriaName,
+                        tipo_proveedor: this.tipo_proveedor
+                        }
                 }
             }
 
-
+            console.log(formData)
             this.$http.post(
-                'api/rubro/', 
+                'api/rubro/',
                     formData
                 ).then(response => {
                     this.$events.fire('reloadIndexCategoria')
@@ -265,6 +291,34 @@ export default {
                         this.subcategorias.push({ text: subcategoria.nombre, value: subcategoria.id });
                     }
                 })
+        },
+        getCaracteristicas: function(){
+            this.$http.get('api/caracteristica')
+                .then(response => {
+                    this.caracteristicas = response.data.data
+                }, response => {
+                    this.$toast.error({
+                        title:'¡Error!',
+                        message:'No se han podido cargar las caracteristicas. :('
+                    });
+                    this.closeModal();
+                })
+        },
+        selected(caracteristica,e){
+            console.log(caracteristica)
+            if (e.toElement.checked){
+                    this.options_caracteristicas.push(caracteristica.id)
+            }else{
+                for (var i = 0; i < this.options_caracteristicas.length; i++)
+                {
+                    if (this.options_caracteristicas[i] == caracteristica.id){
+                        console.log(this.options_caracteristicas)
+                        console.log('index'+i)
+                        this.options_caracteristicas.splice(i, 1)
+                    }
+                }
+            }
+            console.log(e.toElement.checked + this.options_caracteristicas) 
         },
         closeModal: function(){
             this.$events.fire('cerrar');

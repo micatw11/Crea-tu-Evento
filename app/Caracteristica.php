@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Caracteristicas extends Model
+class Caracteristica extends Model
 {
        protected $table = 'caracteristicas';
 
@@ -14,13 +14,13 @@ class Caracteristicas extends Model
     					  ];
 
     
-    public function rubros_caracteristicas()
+    public function rubros()
     {
-        return $this->hasMany('App\RubrosCaracteristicas');
+        return $this->belongsToMany('App\Rubro');
     }
 
     public function publicacion_caracteristicas()
     {
-        return $this->hasMany('App\PublicacionCaracteristicas');
+        return $this->belongsToMany('App\PublicacionCaracteristicas');
     }
 }

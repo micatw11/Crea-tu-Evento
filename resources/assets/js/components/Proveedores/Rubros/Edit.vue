@@ -47,7 +47,6 @@ export default {
     beforeMount: function(){
         //selected data
         this.getRubro();
-        
     },
     methods: {
         //envio de formulario de modificación
@@ -57,7 +56,8 @@ export default {
                 {
                     _method: 'PATCH',
                     nombre: this.rubro.nombre,
-                    subcategoria_id : this.rubro.subcategoria_id
+                    subcategoria_id : this.rubro.subcategoria_id,
+                    caracteristicas : this.rubro.caracteristicas
                 })
                 .then(response => {
                     this.$events.fire('reloadIndexCategoria')

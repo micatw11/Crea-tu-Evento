@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Subcategoria;
 use App\Categoria;
+use App\Log;
 
 class SubcategoriaController extends Controller
 {

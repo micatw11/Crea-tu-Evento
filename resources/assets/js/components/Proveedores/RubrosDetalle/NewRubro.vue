@@ -61,7 +61,7 @@ export default {
             estado: true,
             getRubros: false,
             rubrosRegistrados: [],
-            param: {},
+            params: {},
             listPath : [{route: '/', name: 'Home'}, {route: '/rubro/new', name: 'Registrar Rubro'}]
         }
     },

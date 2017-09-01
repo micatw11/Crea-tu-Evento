@@ -74,6 +74,26 @@
                 </div>
             </div>
         </div>
+        <div class="col-sm-12">
+            <div class="col-sm-12">
+                <label for="inputCaracteristica" class="control-label">Caracteristicas: </label><br>
+                <div class="direct-chat-messages" style="height: 130px;">
+                    <div class="direct-chat-msg">
+                        <div v-for="caracteristica in caracteristicas">
+                            <div class="col-sm-3">
+                              <input type="checkbox" @click="selected(caracteristica, $event)" checked> {{caracteristica.nombre}}
+                            </div>
+                        </div>
+                        <div v-for="caracteristica in caracteristicas_no">
+                            <div class="col-sm-3">
+                              <input type="checkbox" @click="selected(caracteristica, $event)"> {{caracteristica.nombre}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>  
+
     </form> 
 </div>
 </template>
@@ -105,12 +125,17 @@ export default {
             subcategorias: [],
             subcategoria_id: '',
             categoria_id: '',
-            categorias: []
+            categorias: [],
+            options_caracteristicas: [],
+            caracteristicas: [],
+            caracteristicas_no: [],
+            checked: false
         }
     },
     beforeMount(){
         this.getOptionsSubcategory();
         this.getOptionsCategory();
+        this.getCaracteristicas();
     },
     components: {
         vSelect
@@ -119,17 +144,20 @@ export default {
         this.$events.$on('validarFormRubro', () => this.validateBeforeSubmit());
     },
     created(){
-        this.loadDefaultOptions()
+        this.loadDefaultOptions();
+        this.agregarOptions();
     },
     methods: {
         //form validation
         validateBeforeSubmit: function() {
-         this.$validator.validateAll().then(() => {
+         this.$validator.validateAll().then(() => { 
                     this.validarRubro = false; 
                     if (this.nuevo){
                         this.$emit('validadoNewRubro')
                     }else{
+                        this.rubro.caracteristicas = this.options_caracteristicas
                         this.$emit('validadoEditRubro')
+
                     }
                 }).catch(() => {
                     this.validarRubro = true;
@@ -171,9 +199,65 @@ export default {
                     }
                 })
         },
+        getCaracteristicas: function(){
+            this.$http.get('api/caracteristica')
+                .then(response => {
+                    this.caracteristicas = response.data.data,
+                    this.caracteristicas_no = this.noselected(this.caracteristicas,this.rubro.caracteristicas)
+                    this.caracteristicas = this.rubro.caracteristicas
+                }, response => {
+                    this.$toast.error({
+                        title:'¡Error!',
+                        message:'No se han podido cargar las caracteristicas. :('
+                    });
+                    this.closeModal();
+                })
+        },
         loadDefaultOptions: function(){
             this.categoria_id = this.rubro.subcategoria.categoria.id
             this.subcategoria_id = this.rubro.subcategoria.id
+        },
+        selected(caracteristica,e){
+            console.log("selected")
+            console.log('caracteristica selected:' + caracteristica)
+            if (e.toElement.checked){
+                    this.options_caracteristicas.push(caracteristica.id)
+            }else{
+                for (var i = 0; i < this.options_caracteristicas.length; i++)
+                {
+                    if (this.options_caracteristicas[i] == caracteristica.id){
+                        console.log('opcion caracteristica:' +this.options_caracteristicas)
+                        console.log('index'+i)
+                        this.options_caracteristicas.splice(i, 1)
+                    }
+                }
+            }
+            console.log(e.toElement.checked + this.options_caracteristicas) 
+        },
+        noselected: function(data1, data2){
+            console.log("noselected")
+            var option = [];
+            for (var i = 0; i < data1.length; i++) {
+                var igual=false;
+                 for (var j = 0; j < data2.length & !igual; j++) {
+                     if(data1[i]['id'] == data2[j]['id'] && 
+                        data1[i]['nombre'] == data2[j]['nombre']) 
+                             igual=true;
+                 }
+                if(!igual)
+                    option.push(data1[i]);
+            }
+             return option
+            
+
+        },
+        agregarOptions: function(){
+            console.log("agregarOptions")
+            if (this.rubro.caracteristicas){ 
+                for (var i = 0; i < this.rubro.caracteristicas.length; i++) { 
+                    this.options_caracteristicas.push(this.rubro.caracteristicas[i].id)
+                }
+            }
         }
     }
 }
