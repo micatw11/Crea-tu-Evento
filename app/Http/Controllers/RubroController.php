@@ -24,7 +24,6 @@ class RubroController extends Controller
     public function __construct(CheckCategoriesService $categoriesService)
     {
         $this->categoriesService = $categoriesService;
-        $this->middleware('auth');
     }
 
     /**

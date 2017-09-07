@@ -301,21 +301,28 @@ class UsuarioController extends Controller
 
     public function buscarUsuarios(Request $request)
     {
-        $like = '%'.$request->q.'%';
+        $like = '';
+        if($request->has('q'))
+            $like = '%'.$request->q.'%';
+
         $proveedores = Proveedor::all()->pluck('user_id');
+
         $usuarios = DB::table('users')
             ->join('usuarios', 'usuarios.user_id', '=', 'users.id')
             ->select('users.id as value', DB::raw('CONCAT(usuarios.apellido, ", ",usuarios.nombre, " - ", users.email) as label'))
-                //->whereNotIn('users.id', $proveedores)
+                
                 ->where([
                     ['users.roles_id', Rol::roleId('Usuario')],
                     ['users.id','!=', Auth::id()]
                 ])
+
                 ->where(function($query) use ($like){
                     $query->where('usuarios.nombre','like' ,$like)
                         ->orWhere('usuarios.apellido', 'like', $like)
                         ->orWhere('users.email', 'like', $like);
-                })->orderBy('usuarios.nombre', 'asc')->get();
+                })
+                ->whereNotIn('users.id', $proveedores)
+                ->orderBy('usuarios.nombre', 'asc')->get();
 
 
         return response()->json($usuarios);

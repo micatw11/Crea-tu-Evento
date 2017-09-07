@@ -55,29 +55,32 @@
                                                     v-model="categoria_id"
                                                     @change="changeCategory()">
 
-                                                    <option value="" disabled>Categoria</option>
+                                                    <option value="">Categoria</option>
+                                                    <option disabled>────────────</option>
                                                     <option v-for="option in categorias" v-bind:value="option.value">{{ option.text }}</option>
 
                                                 </select>
                                             </div>
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-4" v-if="categoria_id != ''">
                                                 <select 
                                                     class="form-control" 
                                                     v-bind:disabled="categoria_id == '' || subcategorias.length == 0"
                                                     v-model="subcategoria_id" 
                                                     @change="changeSubcategory()">
 
-                                                    <option value="" disabled>Subcategoria</option>
+                                                    <option value="">Subcategoria</option>
+                                                    <option disabled>────────────</option>
                                                     <option v-for="option in subcategorias" v-bind:value="option.value">{{ option.text }}</option>
 
                                                 </select>
                                             </div>
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-4" v-if="subcategoria_id != ''">
                                                 <select 
                                                     class="form-control" 
                                                     v-bind:disabled="subcategoria_id == '' || rubros.length == 0"
                                                     v-model="rubro_id">
-                                                    <option value="" disabled>Rubro</option>
+                                                    <option value="">Rubro</option>
+                                                    <option disabled>────────────</option>
                                                     <option v-for="option in rubros" v-bind:value="option.value">{{ option.text }}</option>
                                                 </select>
                                             </div>
@@ -121,7 +124,6 @@
     import route from '../routes.js';
     import Search from './Proveedores/Publicaciones/Index.vue';
     Vue.component('pagination-home', require('./Plugins/pagination/pagination-v1.vue'));
-    //import PaginationHome from './Plugins/pagination/pagination-v1.vue';
 
     export default {
         data(){
@@ -137,8 +139,8 @@
                     from:0,
                     to:0 
                 },
-                titlePath: 'Home',
-                listaPath: [{route: '/', name: 'Home'}],
+                titlePath: 'Inicio',
+                listaPath: [{route: '/', name: 'Inicio'}],
                 publicaciones : [],
                 localidades: [],
                 localidad_id: null,
@@ -148,33 +150,39 @@
                 subcategorias: [],
                 rubro_id: '',
                 rubros: [],
-                q: ''
+                q: '',
+                nombre: false
             }
-        },
-        mounted() {
-            this.$events.fire('changePath', this.listaPath, this.titlePath);
         },
         beforeMount() {
-
-            if(this.$route.query.with_denomination != undefined){
-                this.rubro_id = this.$route.query.with_denomination
-            }
-            if(this.$route.query.with_subcategory != undefined){
-                this.subcategoria_id = this.$route.query.with_subcategory
-            }
-            if(this.$route.query.with_category != undefined){
-                this.categoria_id = this.$route.query.with_category
-            }
-            this.managerSearch('');
             this.getCategorias();
+            this.$nextTick( function() {
+                this.$events.fire('changePath',[{route: '/', name: 'Inicio'}], 'Inicio');
+            });
+        },
+        mounted() {
+            this.queryPath();
+            console.log('montado')
+            console.log(this.q)
+            this.searchPublicacion();
+            this.categoria_id = '';
+            this.subcategoria_id = '';
+            this.rubro_id = '';
         },
         components: {
             VSelect, Search
         },
         methods: {
+            /** 
+            * Armar las consultas de publicaciones
+            * para luego realizarlas al servidor. 
+            * 
+            * @managerSearch 
+            * @ Param {String} filter Argumento 1 
+            */
             managerSearch(filter){
-                let filtro = this.api+'?filter='+ filter;
-                //let localidad = this.localidad_id ==  null ? '' : this.localidad_id.value  
+
+                let filtro = this.api+'?filter='+ filter; 
 
                 if(this.categoria_id != undefined && this.categoria_id != '')
                     filtro = filtro + '&with_category='+this.categoria_id;
@@ -186,16 +194,11 @@
                     filtro = filtro + '&with_localidad='+this.localidad_id.value ;
 
                 filtro = filtro + '&page='+this.pageOne.current_page+'&per_page='+this.pageOne.per_page;
-                /**
-                if (filter != ''){ 
-                    filtro = this.api+'?filter='+ filter +'&with_category='+this.categoria_id+'&with_subcategory='+this.subcategoria_id+'&with_localidad='+localidad+'&with_denomination='+this.rubro_id+'&page='+this.pageOne.current_page+'&per_page='+this.pageOne.per_page;
-                }else{
-                    filtro = this.api+'?with_category='+this.categoria_id+'&with_subcategory='+this.subcategoria_id+'&with_localidad='+localidad+'&with_denomination='+this.rubro_id+'&page='+this.pageOne.current_page+'&per_page='+this.pageOne.per_page;
-                }**/
-                this.$http.get(filtro)
-                .then(response => {
+
+                this.$http.get(filtro).then(response => {
                     this.publicaciones = response.data.publicaciones.data;
                     this.setDataPagination(response.data.publicaciones);
+                    this.nombre=false;
 
                 }, response => {
                     this.$toast.error({
@@ -204,6 +207,13 @@
                     });
                 })
             },
+            /** 
+            * Envia consultas de localidades. 
+            * 
+            * @getLocalidades 
+            * @ Param {String} search Argumento 1 
+            * @ Param {Function} loading Argumento 2 
+            */
             getLocalidades: function(search, loading) {
                 loading(true)
                 this.$http.get('api/localidades/?q='+ search
@@ -212,6 +222,11 @@
                         loading(false)
                     })
             },
+            /** 
+            * Consulta de todas las categorias.
+            * 
+            * @getCategorias 
+            */
             getCategorias: function(){
                 this.$http.get('api/categoria/')
                     .then(response => {
@@ -226,9 +241,16 @@
                         });
                     })
             },
+            /** 
+            * Consulta por una categoria al servidor
+            * 
+            * @changeCategory 
+            */
             changeCategory: function(){
                 this.subcategorias = [];
-                this.subcategoria_id = "";
+                this.subcategoria_id = '';
+                this.rubros = [];
+                this.rubro_id = '';
                 this.$http.get('api/categoria/' +this.categoria_id
                     ).then(response => {
                         let data = response.data.data
@@ -242,29 +264,66 @@
                         });
                     })
             },
+            /** 
+            * Consulta por una subcategoria al servidor
+            * 
+            * @changeSubcategory 
+            */
             changeSubcategory: function(){
                 this.rubros = [];
-                this.rubro_id= '';
-                this.$http.get('api/rubros/'+ this.subcategoria_id)
-                .then(response => {
-                    let options = response.data
-                    for (let rubros of options){
-                        this.rubros.push({ text: rubros.nombre, value: rubros.id })
-                    }
-                }, response => {
-                    this.$toast.error({
-                        title:'¡Error!',
-                        message:'No se han podido cargar opciones de filtrado. :('
-                    });
-                })
+                this.rubro_id = '';
+
+                if(this.subcategoria_id != undefined && this.subcategoria_id != '')
+                {
+                    this.$http.get('api/rubros/'+ this.subcategoria_id)
+                    .then(response => {
+                        let options = response.data
+                        for (let rubros of options){
+                            this.rubros.push({ text: rubros.nombre, value: rubros.id })
+                        }
+                    }, response => {
+                        this.$toast.error({
+                            title:'¡Error!',
+                            message:'No se han podido cargar opciones de filtrado. :('
+                        });
+                    })
+                }
+                
             },
+            /** 
+            * Cambia el pagina en la cual se ecuntra posicionado.
+            * 
+            * @pageOneChanged 
+            * @ Param {Number} pageOne Argumento 1  
+            */
             pageOneChanged (pageOne) {
                 this.pageOne.current_page = pageOne;
                 this.searchPublicacion()
             },
+            /** 
+            * Encapsula a la function @managerSearch .
+            * 
+            * @searchPublicacion  
+            */
             searchPublicacion: function(){
+
+                if(this.q != ''){
+                    this.nombre=true;
+                    this.$router.replace({ path : '/', query : {q: this.q} });
+                    console.log('push');
+                } else{
+                    this.$router.replace({ path : '/'})
+                }
+                if (this.nombre){
                 this.managerSearch(this.q)
+                }
             },
+            /** 
+            * actualiza los datos del paginador de publicaciones. 
+            * 
+            * @setDataPagination 
+            * @ Param {Object} data Argumento 1 
+            */
             setDataPagination(data){
                     this.pageOne.total = data.total;
                     this.pageOne.per_page = data.per_page;
@@ -273,6 +332,132 @@
                     this.pageOne.prev_page_url = data.prev_page_url;
                     this.pageOne.from = data.from;
                     this.pageOne.to = data.to;
+            },
+            /** 
+            * Captura las consultas de del path (si los hay) 
+            * 
+            * @queryPath 
+            */
+            queryPath(){
+                if(this.$route.query.with_denomination != undefined){
+                    this.rubro_id = this.$route.query.with_denomination;
+                    this.changePath(this.rubro_id, 'api/rubro/', 'rubro');
+                }
+                else
+                {
+                    if(this.$route.query.with_subcategory != undefined){
+                        this.subcategoria_id = this.$route.query.with_subcategory
+                        this.changePath(this.subcategoria_id, 'api/subcategoria/', 'subcategoria');
+                    }
+                    else
+                    {
+                        if(this.$route.query.with_category != undefined){
+                            this.categoria_id = this.$route.query.with_category
+                            this.changePath(this.categoria_id, 'api/categoria/', 'categoria');
+                        }
+                        else if(this.$route.query.q != undefined && this.$route.query.q != '')
+                        {
+                            this.q = this.$route.query.q;
+                            console.log('query path');
+
+
+                        }
+                    }
+                }
+
+                this.nombre=true;
+            },
+            /** 
+            * Consulta por el parametro dado y 
+            * actuliza la ruta en la que se encuentra.
+            * 
+            * @changePath 
+            * @ Param {String} id Argumento 1 
+            * @ Param {String} api Argumento 2
+            * @ Param {String} filtro Argumento 3 
+            */
+            changePath(id, api, filtro){
+                this.$http.get(api+''+id).then(response => {
+                    var responseData = response.data.data
+                    if(filtro == 'rubro')
+                    {
+                        this.listaPath.push( {
+                            route: '/?with_category='+responseData.subcategoria.categoria.id, 
+                            name: responseData.subcategoria.categoria.nombre
+                        } )
+                        this.listaPath.push( {
+                            route: '/?with_subcategory='+responseData.subcategoria.id, 
+                            name: responseData.subcategoria.nombre
+                        } )
+                        this.listaPath.push( {
+                            route: '/?with_denomination='+responseData.id, 
+                            name: responseData.nombre
+                        } )
+                    }
+                    else
+                    {
+                        if(filtro == 'subcategoria')
+                        {
+                            this.listaPath.push( {
+                                route: '/?with_category='+responseData.categoria.id, 
+                                name: responseData.categoria.nombre
+                            } )
+                            this.listaPath.push( {
+                                route: '/?with_subcategory='+responseData.id, 
+                                name: responseData.nombre
+                            } )
+                        } 
+                        else 
+                        {
+                            if(filtro == 'categoria')
+                            {
+                                this.listaPath.push( {
+                                    route: '/?with_category='+responseData.id, 
+                                    name: responseData.nombre
+                                } )
+                            }
+                        }
+                    }
+                    this.$events.fire('changePath', this.listaPath,  responseData.nombre);
+                })
+            },
+            /** 
+            * Cambia los valoresde los datos de consulta a sus valores por defecto.
+            * 
+            * @clearData 
+            */
+            clearData(){
+                this.rubro_id = '';
+                this.subcategoria_id = '';
+                this.categoria_id = '';
+                this.q = '';
+                this.pageOne= {
+                    total:0,
+                    per_page:10,
+                    current_page: 1,
+                    last_page:1,
+                    next_page_url:null,
+                    prev_page_url:null,
+                    from:0,
+                    to:0 
+                }
+            }
+        },
+        watch: {
+            '$route.query'() {
+
+                if (!this.nombre){
+                    this.clearData();
+                    this.listaPath = [{route: '/', name: 'Inicio'}];
+                    this.titlePath = 'Inicio';
+                    this.$events.fire('changePath', this.listaPath, this.titlePath);
+                    this.queryPath();
+                    this.searchPublicacion();
+                    this.categoria_id = '';
+                    this.subcategoria_id = '';
+                    this.rubro_id = '';
+                }
+
             }
         }
     }

@@ -131,7 +131,7 @@
                 showUserData: false,
                 userData: null,
                 listPath : [
-                        {route: '/', name: 'Home'}
+                        {route: '/', name: 'Inicio'}
                 ]
 
             }

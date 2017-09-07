@@ -62,7 +62,7 @@ export default {
             getRubros: false,
             rubrosRegistrados: [],
             params: {},
-            listPath : [{route: '/', name: 'Home'}, {route: '/rubro/new', name: 'Registrar Rubro'}]
+            listPath : [{route: '/', name: 'Inicio'}, {route: '/rubro/new', name: 'Registrar Rubro'}]
         }
     },
     beforeMount: function(){

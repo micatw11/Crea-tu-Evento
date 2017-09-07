@@ -203,7 +203,7 @@
                 titlePath: 'Proveedores',
                 observaciones: null,
                 showModalObservation: false,
-                listPath : [{route: '/', name: 'Home'}, {route: '/proveedores', name: 'Proveedores'}],
+                listPath : [{route: '/', name: 'Inicio'}, {route: '/proveedores', name: 'Proveedores'}],
                 action: '',
                 idProveedor: null,
                 showModificar: false,

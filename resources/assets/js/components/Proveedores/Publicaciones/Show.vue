@@ -6,24 +6,24 @@
 			<br>
 		    <!-- Default box -->
 		    <div class="box box-primary">
-		    	<div class="box-header">
-		    <div class="col-sm-12" v-if="auth.user.profile.roles_id == role.PROVEEDOR && publicacion.rubros_detalle.proveedor.user_id == auth.user.profile.id" >
-				<button class="btn btn-primary pull-left" @click="goToNewPublicacion()">Nueva Publicaci&oacute;n</button>
+		    	<div class="box-header" v-if="auth.user.authenticated">
+				    <div class="col-sm-12" v-if="
+				    	auth.user.profile.roles_id == role.PROVEEDOR && 
+				    	publicacion.rubros_detalle.proveedor.user_id == auth.user.profile.id" >
+						<button class="btn btn-primary pull-left" @click="goToNewPublicacion()">Nueva Publicaci&oacute;n</button>
 
-	        	<div 
-	        		class="pull-right" 
-	        		v-if="auth.user.profile.roles_id == role.PROVEEDOR && publicacion.rubros_detalle.proveedor.user_id == auth.user.profile.id" >
+			        	<div class="pull-right">
 
-		        		<button class="btn btn-primary" @click="modificar(publicacion.id)">
-		        			<i class="glyphicon glyphicon-pencil"></i>
-		        			Editar Publicaci&oacute;n</button>
-		        		<button class="btn" v-bind:class="btnStyle(publicacion.estado)" @click="baja(publicacion.id)">
-		        			<i class="glyphicon glyphicon-trash"></i>
-		        			{{ publicacion.estado == 1 ? 'Dar de baja' : 'Dar de alta'}}
-		        		</button>
+				        		<button class="btn btn-primary" @click="modificar(publicacion.id)">
+				        			<i class="glyphicon glyphicon-pencil"></i>
+				        			Editar Publicaci&oacute;n</button>
+				        		<button class="btn" v-bind:class="btnStyle(publicacion.estado)" @click="baja(publicacion.id)">
+				        			<i class="glyphicon glyphicon-trash"></i>
+				        			{{ publicacion.estado == 1 ? 'Dar de baja' : 'Dar de alta'}}
+				        		</button>
 
-	        	</div>
-			</div>
+			        	</div>
+					</div>
 		    	</div>
 		        <div class="box-body">
 		        	<div class="col-sm-12">
@@ -46,7 +46,7 @@
 							<div class="col-sm-5">
 								<div class="col-sm-12">
 									<h3 class="text-uppercase">{{publicacion.titulo}}
-				                        <div v-if="auth.user.profile.roles_id != role.PROVEEDOR" class="pull-right">
+				                        <div class="pull-right">
 				                            <button class="btn btn-box-tool" data-toggle="tooltip" @click.prevent >
 				                                <i class="fa fa-fw fa-heart-o fa-2x"></i>
 				                            </button>
@@ -81,12 +81,14 @@
 	                                    <i class="fa fa-fw fa-star-o fa-2x"></i>
 	                                </div> 
 						        </div>
-						        <div class="col-sm-12" v-if="auth.user.profile.roles_id == role.USUARIO">
-						        	<div class="col-sm-6 col-sm-offset-3">
-						                <button type="button" class="btn btn-block btn-success" @click.prevent>
-						                	<i class="fa fa-calendar-check-o"></i> Reservar
-						                </button>
-						        	</div>
+						        <div v-if="auth.user.authenticated">
+							        <div class="col-sm-12" v-if="auth.user.profile.roles_id == role.USUARIO">
+							        	<div class="col-sm-6 col-sm-offset-3">
+							                <button type="button" class="btn btn-block btn-success" @click.prevent>
+							                	<i class="fa fa-calendar-check-o"></i> Reservar
+							                </button>
+							        	</div>
+							        </div>
 						        </div>
 					        </div>
 
@@ -226,7 +228,7 @@
 		        <!-- /.box-body -->
 		        <div  class="box-footer">
 		          	<div style="text-align:center;">
-		          		<div v-if="auth.user.profile.roles_id == role.USUARIO" class="col-sm-4">
+		          		<div class="col-sm-4">
 		          			<button @click="goBack()" class="btn btn-default">
 		                        <i class="glyphicon glyphicon-chevron-left"></i> Atras
 		                    </button>
@@ -276,7 +278,7 @@
 	                .then(response => {
 	                    this.publicacion = response.data.publicacion
 						var listPath = [
-								{route: '/', name: 'Home'}, 
+								{route: '/', name: 'Inicio'}, 
 								{
 									route: '/?with_category='+ this.publicacion.rubros_detalle.rubro.subcategoria.categoria.id, 
 									name: this.publicacion.rubros_detalle.rubro.subcategoria.categoria.nombre

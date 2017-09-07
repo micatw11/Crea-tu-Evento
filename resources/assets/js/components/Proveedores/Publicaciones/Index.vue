@@ -112,7 +112,7 @@
 
             ver(id){
                 var listPath = [
-                        {route: '/', name: 'Home'}, 
+                        {route: '/', name: 'Inicio'}, 
                         {route: '/publicacion/'+id, name: 'Ver Publicacion'}
                     ]
                 this.$events.fire('changePath', listPath, 'Ver Publicacion');

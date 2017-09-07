@@ -72,3 +72,15 @@ html, body {
                 border:0;
                 background:transparent;
             }
+            .nav-tabs-custom > .tab-content {
+                min-height: 250px;
+            }
+            .profile-username {
+                margin-left: 23px;
+            }
+            .fade-enter-active, .fade-leave-active {
+                transition: opacity .7s
+            }
+            .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+                opacity: 0
+            }

@@ -1,10 +1,10 @@
 <template>
     <div v-bind:class="classWrapper">
-        <bar v-if="auth.user.authenticated && showComponent"></bar>
-        <barra-lateral v-if="auth.user.authenticated & showComponent"></barra-lateral>
+        <bar v-if="showComponent"></bar>
+        <barra-lateral v-if="showComponent"></barra-lateral>
         <div v-bind:class="classContentWrapper">
             <path-content 
-                v-if="auth.user.authenticated">
+                v-if="showComponent">
             </path-content>
 
             <router-view transition="fade"></router-view>
@@ -24,7 +24,7 @@ export default {
         return {
             auth: auth,
             routes: routes,
-            showComponent: true
+            showComponentLayout: true
         }
     },
     mounted() {
@@ -32,37 +32,32 @@ export default {
         $(this).ajaxStart(function() { Pace.restart(); });
     },
     computed: {
+        showComponent: function(){
+            return this.showComponentLayout && (this.auth.user.authenticated || this.$route.name == 'home' || this.$route.name == 'publicacion');
+        },
         classContentWrapper: function () {
             return {
-                'content-wrapper': this.auth.user.authenticated,
-                '': !this.auth.user.authenticated,
+                'content-wrapper': this.showComponent == true,
+                '': !this.showComponent == true,
             }
         },
         classWrapper: function () {
             return {
-                'wrapper': this.auth.user.authenticated,
-                '': !this.auth.user.authenticated,
+                'wrapper': this.showComponent == true,
+                '': !this.showComponent == true,
             }
         }
     },
     components: {Bar, BarraLateral, Foo, PathContent },
     methods: {
         reloadComponents(){
-            this.showComponent = false;
+            this.showComponentLayout = false;
             setTimeout(this.showComponentes, 1);
             
         },
         showComponentes(){
-            this.showComponent = true;
+            this.showComponentLayout = true;
         }
     }
 }
 </script>
-<style>
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .7s
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
-  opacity: 0
-}
-</style>

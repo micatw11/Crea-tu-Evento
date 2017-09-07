@@ -117,7 +117,7 @@
                 moreParams: {},
                 fieldDefs: FieldDefs,
                 auth: auth,
-                listPath : [{route: '/', name: 'Home'}, {route: '/usuario', name: 'Usuarios'}]
+                listPath : [{route: '/', name: 'Inicio'}, {route: '/usuario', name: 'Usuarios'}]
             }
         },
         components: {

@@ -148,7 +148,7 @@
                 titlePath: 'Categorias',
                 observaciones: null,
                 showModalObservationCategoria: false,
-                listPath : [{route: '/', name: 'Home'}, {route: '/categorias', name: 'Categorias'}],
+                listPath : [{route: '/', name: 'Inicio'}, {route: '/categorias', name: 'Categorias'}],
                 action: '',
                 idCategoria: null,
                 showModificarCategoria: false,

@@ -10,17 +10,17 @@
         <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar">
             <!-- Sidebar user panel -->
-            <div class="user-panel">
+            <div class="user-panel" v-if="auth.user.authenticated">
                 <div class="pull-left image">
-                    <img :src="srcUrl" class="img-circle" alt="User Image">
+                    <img v-bind:src="srcUrl" class="img-circle" alt="Avatar">
                 </div>
                 <div class="pull-left info">
-                    <p v-if="auth.user.authenticated" >{{ auth.user.profile.name}}</p>
+                    <p v-if="auth.user.authenticated">{{ auth.user.profile.name}}</p>
                     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                 </div>
             </div>
             <!-- search form -->
-            <form v-on:submit.prevent="searchPublicacion()" class="sidebar-form" >
+            <form v-on:submit.prevent="searchPublicacion()" class="sidebar-form" :style="{ display : showFormSearch  ? 'block' : 'none' }">
                 <div class="input-group">
                     <input type="text" name="q" class="form-control" v-model="q" placeholder="Busqueda">
                     <span class="input-group-btn">
@@ -32,10 +32,10 @@
             </form>
             <!-- /.search form -->
             <!-- sidebar menu: : style can be found in sidebar.less -->
-            <ul class="sidebar-menu">
+            <ul class="sidebar-menu" v-if="auth.user.authenticated">
                 <li class="header">MENU</li>
 
-                <li class="active treeview" 
+                <li class="treeview" 
                     v-if="auth.user.profile.roles_id == role.ADMINISTRADOR || 
                         auth.user.profile.roles_id == role.SUPERVISOR ||
                         auth.user.profile.roles_id == role.OPERADOR">
@@ -128,9 +128,14 @@ export default {
         }
     },
     mounted: function(){
-        this.srcUrl = '/storage/avatars/'+ this.auth.user.profile.usuario.avatar
+        if(auth.user.authenticated){
+            this.avatarUpdated();
+        }
     },
     methods: {
+        avatarUpdated: function(){
+            this.srcUrl = '/storage/avatars/'+ auth.user.profile.usuario.avatar
+        },
         goToNewRubro(){
             this.$events.fire('changePath', this.listPath, 'Registrar Rubro');
             route.push('/rubro/new');
@@ -141,10 +146,19 @@ export default {
         },
         searchPublicacion: function(){
             if(route.path !== '/' && this.q !== '' )
-                route.push('/')
-            this.$events.fire('search', this.q);
+                route.push('/?q='+this.q)
+            //this.$events.fire('searchPublicacion', this.q);
         }
-
+    },
+    computed: {
+        showFormSearch: function(){
+            return this.$route.name != 'home';
+        }
+    },
+    watch: {
+        'auth.user.profile.usuario'  (){
+             this.avatarUpdated();
+        }
     }
 
 }

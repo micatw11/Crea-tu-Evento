@@ -239,11 +239,3 @@ export default {
     }
 }
 </script>
-<style>
-    .nav-tabs-custom > .tab-content {
-        min-height: 250px;
-    }
-    .profile-username {
-        margin-left: 23px;
-    }
-</style>

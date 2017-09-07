@@ -46,7 +46,7 @@ export default {
     data() {
         return {
             titlePath: 'Nuevo Proveedor',
-            listaPath: [{route: '/', name: 'Home'},{route: '/proveedores', name: 'Proveedores'},{route: '/proveedor/new', name: 'Nuevo Proveedor'}],
+            listaPath: [{route: '/', name: 'Inicio'},{route: '/proveedores', name: 'Proveedores'},{route: '/proveedor/new', name: 'Nuevo Proveedor'}],
             validarProveedor: false,
             proveedor: { 
                 user_id: null,

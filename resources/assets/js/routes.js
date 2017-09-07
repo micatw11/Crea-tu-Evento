@@ -45,6 +45,7 @@ let routes = [
 			path: '/',
 			name: 'home',
 			component: Home,
+			meta: { requiresAuth: false },
 			beforeEnter: guardRoute
 		},
 		{
@@ -75,62 +76,63 @@ let routes = [
 			path: '/usuario',
 			component: IndexUsuarios,
 			beforeEnter: guardRoute,
-			meta: { Role: [role.ADMINISTRADOR, role.SUPERVISOR] }		
+			meta: { Role: [role.ADMINISTRADOR, role.SUPERVISOR], requiresAuth: true }		
 		},
 		{
 			path: '/proveedores',
 			component: IndexProveedor,
 			beforeEnter: guardRoute,
-			meta: { Role: [role.ADMINISTRADOR, role.SUPERVISOR, role.OPERADOR] }	
+			meta: { Role: [role.ADMINISTRADOR, role.SUPERVISOR, role.OPERADOR], requiresAuth: true }	
 		},
 		{
 			path: '/proveedor/new',
 			component: NewProveedor,
 			beforeEnter: guardRoute,
-			meta: { Role: [role.ADMINISTRADOR, role.SUPERVISOR, role.OPERADOR]}	
+			meta: { Role: [role.ADMINISTRADOR, role.SUPERVISOR, role.OPERADOR], requiresAuth: true }	
 		},
 		{
 			path: '/rubro/:idRubro/edit',
 			name: 'EditRubro',
 			component: EditRubro,
 			beforeEnter: guardRoute,
-			meta: { Role: [role.PROVEEDOR]}	
+			meta: { Role: [role.PROVEEDOR], requiresAuth: true }	
 		},
 		{
 			path: '/rubro/new',
 			name: 'NewRubro',
 			component: NewRubro,
 			beforeEnter: guardRoute,
-			meta: { Role: [role.PROVEEDOR]}	
-		},
+			meta: { Role: [role.PROVEEDOR], requiresAuth: true}	
+		},/*
 		{
 			path: '/form',
 			component: Form,
 			beforeEnter: guardRoute	
-		},
+		},*/
 		{
 			path: '/categorias',
 			component: IndexCategoria,
 			beforeEnter: guardRoute,
-			meta: { Role: [role.ADMINISTRADOR, role.SUPERVISOR] }	
+			meta: { Role: [role.ADMINISTRADOR, role.SUPERVISOR], requiresAuth: true }	
 		},
 		{
 			path: '/caracteristicas',
 			component: IndexCaracteristica,
 			beforeEnter: guardRoute,
-			meta: { Role: [role.ADMINISTRADOR, role.SUPERVISOR] }	
+			meta: { Role: [role.ADMINISTRADOR, role.SUPERVISOR], requiresAuth: true }	
 		},
-		{
+/*		{
 			path: '/calendario',
 			component: Calendar,
 			beforeEnter: guardRoute
 
-		},
+		},*/
 		{
 			path: '/usuario/:userId/perfil',
 			name: 'user',
 			component: Perfil,
-			beforeEnter: guardRoute
+			beforeEnter: guardRoute,
+			meta: { Role: [role.PROVEEDOR], requiresAuth: true }
 
 		},
 		//publicaciones
@@ -139,20 +141,21 @@ let routes = [
 			name: 'new-publicacion',
 			component: NewPublicacion,
 			beforeEnter: guardRoute,
-			meta: { Role: [role.PROVEEDOR]}	
+			meta: { Role: [role.PROVEEDOR], requiresAuth: true }	
 		},
 		{
 			path: '/publicacion/:publicacionId',
-			name: 'perfil-publicacion',
+			name: 'publicacion',
 			component: ShowPublicacion,
-			beforeEnter: guardRoute
+			beforeEnter: guardRoute,
+			meta: { requiresAuth: false }
 		},
 		{
 			path: '/publicacion/:publicacionId/edit',
 			name: 'edit-publicacion',
 			component: EditPublicacion,
 			beforeEnter: guardRoute,
-			meta: { Role: [role.PROVEEDOR]}	
+			meta: { Role: [role.PROVEEDOR], requiresAuth: true }	
 		},
 		//errors
 		{
@@ -187,7 +190,7 @@ let routes = [
 function guardRoute (to, from, next) 
 {
  	if (!auth.user.authenticated) {
- 		if(!checkAuth()){
+ 		if(to.matched.some(record => record.meta.requiresAuth) && !checkAuth()){
  			//se redirecciona al usuario al login si no esta autenticado
 			next('/login');
 		} else{

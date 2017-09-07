@@ -46,7 +46,7 @@
 				validarPublicacion: false,
 				errorsApi:[],
 				id: null,
-				listPath : [{route: '/', name: 'Home'}, {route: '/publicacion/new', name: 'Nueva Publicación'}],
+				listPath : [{route: '/', name: 'Inicio'}, {route: '/publicacion/new', name: 'Nueva Publicación'}],
 			}
 		},
 		mounted(){

@@ -40,7 +40,7 @@
                 pathUser: '',
                 srcUrl: '',
                 titlePath: 'Perfil',
-                listPath : [{route: '/', name: 'Home'}, {route: '/usuario/'+auth.user.profile.id +'/perfil' , name: 'Perfil'}]
+                listPath : [{route: '/', name: 'Inicio'}, {route: '/usuario/'+auth.user.profile.id +'/perfil' , name: 'Perfil'}]
             }
         },
         mounted: function(){

@@ -27,7 +27,7 @@ const USUARIO = 5;
 import CxltToastr from 'cxlt-vue2-toastr'
 var toastrConfigs = {
     position: 'top right',
-    showDuration: 2000,
+    showDuration: 3000,
     hideDuration: 4000
 }
 Vue.use(CxltToastr, toastrConfigs)

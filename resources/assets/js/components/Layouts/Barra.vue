@@ -3,12 +3,16 @@
         <!-- Logo -->
         <a href="#" class="logo">
         <!-- logo for regular state and mobile devices -->
+        <span class="logo-mini">
+            <b>C</b>tu<b>E</b>
+        </span>
             <span class="logo-lg">Crea tu Evento</span>
+
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top">
         <!-- Sidebar toggle button-->
-            <a v-if="auth.user.authenticated" href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -17,7 +21,7 @@
 
 
 
-            <div v-if="auth.user.authenticated" class="navbar-custom-menu">
+            <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
 
                     <notificaciones v-if="auth.user.authenticated"></notificaciones>
@@ -27,9 +31,9 @@
  
                    <menu-user v-if="auth.user.authenticated"></menu-user>
 
-                    <li v-else>
-                        <router-link :to="{ name: 'login' }"><a>Login</a></router-link>
-                    </li>
+                    <li v-if="!auth.user.authenticated"><router-link  :to="{ name: 'login' }">Iniciar Sesion</router-link></li>
+                    <li v-if="!auth.user.authenticated"><router-link  :to="{ name: 'registrar' }">Registrar</router-link></li>
+
                 </ul>
             </div>
         </nav>
