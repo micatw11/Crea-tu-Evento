@@ -128,8 +128,7 @@ export default {
             categorias: [],
             options_caracteristicas: [],
             caracteristicas: [],
-            caracteristicas_no: [],
-            checked: false
+            caracteristicas_no: []
         }
     },
     beforeMount(){
@@ -218,24 +217,18 @@ export default {
             this.subcategoria_id = this.rubro.subcategoria.id
         },
         selected(caracteristica,e){
-            console.log("selected")
-            console.log('caracteristica selected:' + caracteristica)
             if (e.toElement.checked){
                     this.options_caracteristicas.push(caracteristica.id)
             }else{
                 for (var i = 0; i < this.options_caracteristicas.length; i++)
                 {
                     if (this.options_caracteristicas[i] == caracteristica.id){
-                        console.log('opcion caracteristica:' +this.options_caracteristicas)
-                        console.log('index'+i)
                         this.options_caracteristicas.splice(i, 1)
                     }
                 }
             }
-            console.log(e.toElement.checked + this.options_caracteristicas) 
         },
         noselected: function(data1, data2){
-            console.log("noselected")
             var option = [];
             for (var i = 0; i < data1.length; i++) {
                 var igual=false;
@@ -252,7 +245,6 @@ export default {
 
         },
         agregarOptions: function(){
-            console.log("agregarOptions")
             if (this.rubro.caracteristicas){ 
                 for (var i = 0; i < this.rubro.caracteristicas.length; i++) { 
                     this.options_caracteristicas.push(this.rubro.caracteristicas[i].id)

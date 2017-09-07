@@ -201,10 +201,10 @@ class RubroController extends Controller
 
         $rubro->update($request->all());
 
-        if($request->has('caracteristicas'))
+        if($request->has('caracteristicas')&&($rubro))
         {   
             $ids = $request->caracteristicas;
-            $rubros_eliminar = DB::table('caracteristica_rubro')
+            DB::table('caracteristica_rubro')
                             ->where('rubro_id', $id)
                             ->whereNotIn('caracteristica_id', $ids)->delete();
 

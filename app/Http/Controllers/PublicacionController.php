@@ -13,16 +13,6 @@ use App\Rol;
 
 class PublicacionController extends Controller
 {
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
     
     public function index(Request $request){
         $query = Publicacion::where('publicaciones.estado', 1 )
@@ -89,7 +79,7 @@ class PublicacionController extends Controller
     }
 
     public function show(Request $request, $id){
-        $publicacion = Publicacion::with('rubros_detalle.proveedor.user.usuario','rubros_detalle.rubro.subcategoria.categoria','fotos')
+        $publicacion = Publicacion::with('rubros_detalle.proveedor.user.usuario','rubros_detalle.rubro.subcategoria.categoria','fotos', 'caracteristicas','rubros_detalle.rubro.caracteristicas')
                         ->where('id', $id)
                         ->where('estado', 1)->firstOrFail();
 
@@ -114,6 +104,10 @@ class PublicacionController extends Controller
                 $foto->publicacion_id = $publicacion->id;
                 $foto->save();
             }
+        if($request->has('caracteristicas')&&$publicacion)
+        {
+            $publicacion->caracteristicas()->attach($request->caracteristicas);
+        }
  
 			return response(['id' => $publicacion->id], Response::HTTP_OK);
     	} else {
@@ -125,38 +119,49 @@ class PublicacionController extends Controller
 public function update(Request $request, $id){
         $this->validatorPublicacion($request);
         $ids = [];
+        $idses = [];
         $photo_delete = null;
     	$publicacion = Publicacion::with('rubros_detalle')->where('id', $id)->firstOrFail();
 
         if($publicacion->rubros_detalle->proveedor_id == Auth::user()->proveedor->id)
         {    	   
             $publicacion->update($request->except(['fotos']));
+            if($publicacion->save())
+            { 
+                $ids = $request->fotos;
 
-            $ids = $request->fotos;
+                $photo_delete=Foto::whereNotIn('id', $ids)->where('publicacion_id', $publicacion->id)->get();
 
-            $photo_delete=Foto::whereNotIn('id', $ids)->where('publicacion_id', $publicacion->id)->get();
-
-                
-            foreach ($photo_delete as $foto) {
-                $file = "public/proveedores/publicaciones/{$foto->nombre}";
-                if(Storage::exists($file)) {
-                    Storage::delete($file);
+                    
+                foreach ($photo_delete as $foto) {
+                    $file = "public/proveedores/publicaciones/{$foto->nombre}";
+                    if(Storage::exists($file)) {
+                        Storage::delete($file);
+                    }
                 }
-            }
-            Foto::whereNotIn('id', $ids)->where('publicacion_id', $publicacion->id)->delete();
+                Foto::whereNotIn('id', $ids)->where('publicacion_id', $publicacion->id)->delete();
 
-            for ($i=0; $i < sizeof($request->fotosUpdate); $i++) { 
-                $filename = $this->createFoto($request->fotosUpdate[$i]);
-                $foto = new Foto;
-                $foto->nombre = $filename;
-                $foto->publicacion_id = $publicacion->id;
-                $foto->save();
-            }
-  
+                for ($i=0; $i < sizeof($request->fotosUpdate); $i++) { 
+                    $filename = $this->createFoto($request->fotosUpdate[$i]);
+                    $foto = new Foto;
+                    $foto->nombre = $filename;
+                    $foto->publicacion_id = $publicacion->id;
+                    $foto->save();
+                }
+                if($request->has('caracteristicas')&&$publicacion)
+                {   
+                    foreach ($request->caracteristicas as $key) {
+                        $idses[] = $key['caracteristica_id'];
+                    }
+                    DB::table('caracteristica_publicacion')
+                                    ->where('publicacion_id', $id)
+                                   ->whereNotIn('caracteristica_id', $idses)->delete();
 
-        	if($publicacion->save())
-            {
-    			return response(['id' => $publicacion->id] , Response::HTTP_OK);
+                    $publicacion->caracteristicas()->detach($request->caracteristicas);
+                    $publicacion->caracteristicas()->attach($request->caracteristicas);
+
+                }
+    			return response(['id' => $publicacion->id, 'iddssss' => $idses] , Response::HTTP_OK);
         	}
         }
 
@@ -210,7 +215,7 @@ public function update(Request $request, $id){
                 ->select('publicaciones.id')
                 ->where('rubros_detalle.proveedor_id', $idProveedor)
                 ->groupby('publicaciones.id')->distinct()->get()->pluck('id');
-        $publicaciones = Publicacion::with('rubros_detalle.rubro.subcategoria.categoria', 'fotos', 'rubros_detalle.proveedor', 'rubros_detalle.domicilio.localidad.provincia')->whereIn('id', $publicacionesId)->get();
+        $publicaciones = Publicacion::with('rubros_detalle.rubro.subcategoria.categoria', 'fotos', 'rubros_detalle.proveedor', 'rubros_detalle.domicilio.localidad.provincia', 'caracteristicas')->whereIn('id', $publicacionesId)->get();
         return response()->json(['publicaciones' => $publicaciones], 200);
     }
 

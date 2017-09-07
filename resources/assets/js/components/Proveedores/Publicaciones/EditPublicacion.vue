@@ -73,7 +73,8 @@
 	                    rubros_detalle_id: this.publicacion.rubros_detalle_id,
 	                    oferta: this.publicacion.oferta,
 	                    fotos: fotosIds,
-	                    fotosUpdate: this.publicacion.fotosUpdate
+	                    fotosUpdate: this.publicacion.fotosUpdate,
+	                    caracteristicas: this.publicacion.caracteristicas
 
 	                })
 	                .then(response => {

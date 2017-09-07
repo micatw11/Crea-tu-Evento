@@ -28,7 +28,8 @@
                             name="rubro"                  
                             v-model="publicacion.rubros_detalle_id"
                             class="form-control" 
-                            v-validate="'required'">
+                            v-validate="'required'"
+                            @change="changeCaracteristicas(publicacion.rubros_detalle_id)">
                             <option value="" disabled="">Seleccione un rubro</option>
                             <option v-for="option in rubros" v-bind:value="option.value">
                                 {{ option.text }}
@@ -44,10 +45,58 @@
                         </div>
                     </div>
                 </div>
+                  <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('fotos[]')&&validarPublicacion}">
+                    <div class="col-sm-12">
+                        <label for="fotos" class="control-label" style="text-align: center;">Fotos <i class="fa fa-file-image-o"></i></label><br>
+                        <input v-if="nuevo"
+                            type="file"
+                            ref="files"
+                            v-validate.reject="'required|ext:jpg,png,jpeg|size:4096'" 
+                            @change="onFilesChange" 
+                            name="fotos[]">
 
+                        <input v-else
+                            type="file"
+                            ref="files"
+                            v-validate.reject="isRequiredInputFile ? 'required|ext:jpg,png,jpeg|size:4096' : 'ext:jpg,png,jpeg|size:4096'" 
+                            @change="onFilesChange" 
+                            name="fotos[]">
+                            <br><br>
+                        <div v-if="publicacion.fotos" v-for="(fotos,index) in publicacion.fotos">
+                            <div v-if="fotos.nombre != null" class="col-sm-3">
+                                <div class="box" style="height: 120px; width: 100px;">
+                                    <div  class="box-body" style="display: block;">
+                                        <img :src="'/storage/proveedores/publicaciones/'+fotos.nombre" class="img-thumbnail" style="height: 80px; width: 80px;">
+                                        <button type="button" class="btn btn-box-tool pull-right" @click="deleteImage(index)">
+                                            <i class="fa fa-close"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 with-border" v-if="src" v-for="(fotos,index) in src">
+                            <div class="box" style="height: 120px; width: 100px;">
+                                 <div class="box-body" style="display: block;">
+                                    <img :src="fotos" class="img-thumbnail" style="height: 80px; width: 80px;">
+                                    <button type="button" class="btn btn-box-tool pull-right" @click="deleteImageSrc(index)">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- validacion vee-validation -->
+                        <span v-show="errors.has('fotos[]')&&validarPublicacion" class="help-block">El campo fotos en requerido.</span>
+                        <!-- validacion api-->
+                        <div class="text-red" v-if="errorsApi.fotos">
+                            <div v-for="msj in errorsApi.fotos">
+                                <p>{{ msj }}</p>
+                            </div>
+                        </div>
+                    </div>                    
+                </div>
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('oferta')&&validarPublicacion}">
                     <div class="col-sm-12">
-                        <label for="oferta" class="control-label">Oferta </label>
+                        <label for="oferta" class="control-label">Promocion</label>
                         <textarea
                             name="oferta" 
                             type="text"
@@ -60,12 +109,51 @@
 
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('fecha')&&validarPublicacion}">
                     <div class="col-sm-12">
-                        <label for="fecha" class="control-label">Fecha de Finalización</label>
+                        <label for="fecha" class="control-label">Fecha de Finalización de la Promoción</label>
                         <input
                             name="fecha" 
                             type="date"
                             v-model="publicacion.fecha_finalizacion" 
                             class="form-control">
+                    </div>
+                </div>
+
+                <div v-if="publicacion.rubros_detalle_id&&(caracteristicas.length>0||caracteristicas_no.length>0)">
+                    <div class="col-sm-12">
+                        <label for="caracteristicas" class="control-label">Caracteristicas</label>
+                        <div class="direct-chat-messages col-sm-12" style="height: 100px;">
+                            <div class="direct-chat-msg">
+                                <div v-for="caracteristica in caracteristicas">
+                                    <div class="col-sm-6">
+                                        <div class="col-sm-6">
+                                            <input type="checkbox" id="checkbox1" @click="selected(caracteristica, $event)"
+                                                 checked> {{caracteristica.nombre}}
+                                        </div>
+                                        <div v-if="caracteristica.adicional==true" class="col-sm-6">
+                                            <input 
+                                                name="inf_adicional"
+                                                type="text" class="form-control"
+                                                :value="caracteristica.pivot.informacion"
+                                                @change="c_adicional(caracteristica,$event)"
+                                                >
+                                        </div>
+                                    </div>
+                                </div>
+                                <div v-for="caracteristica in caracteristicas_no">
+                                    <div class="col-sm-6">
+                                        <div class="col-sm-6">
+                                            <input type="checkbox" id="checkbox" @click="selected(caracteristica, $event)"> {{caracteristica.nombre}}
+                                        </div>
+                                        <div v-if="caracteristica.adicional==true" class="col-sm-6">
+                                            <input 
+                                                name="inf_adicional"
+                                                type="text" class="form-control"
+                                                @change="c_adicional(caracteristica,$event)" >
+                                       </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -91,59 +179,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('fotos[]')&&validarPublicacion}">
-                    <div class="col-sm-12">
-                        <label for="fotos" class="control-label" style="text-align: center;">Fotos <i class="fa fa-file-image-o"></i></label><br>
-                        <input v-if="nuevo"
-                            type="file"
-                            ref="files"
-                            v-validate.reject="'required|ext:jpg,png,jpeg|size:4096'" 
-                            @change="onFilesChange" 
-                            name="fotos[]">
-
-                        <input v-else
-                            type="file"
-                            ref="files"
-                            v-validate.reject="isRequiredInputFile ? 'required|ext:jpg,png,jpeg|size:4096' : 'ext:jpg,png,jpeg|size:4096'" 
-                            @change="onFilesChange" 
-                            name="fotos[]">
-
-                        <!-- validacion vee-validation -->
-                        <span v-show="errors.has('fotos[]')&&validarPublicacion" class="help-block">El campo fotos en requerido.</span>
-                        <!-- validacion api-->
-                        <div class="text-red" v-if="errorsApi.fotos">
-                            <div v-for="msj in errorsApi.fotos">
-                                <p>{{ msj }}</p>
-                            </div>
-                        </div>
-
-                        <br><br>
-                        <div v-if="publicacion.fotos" v-for="(fotos,index) in publicacion.fotos">
-                            <div v-if="fotos.nombre != null" class="col-sm-3">
-                                <div class="box" style="height: 120px; width: 100px;">
-                                    <div  class="box-body" style="display: block;">
-                                        <img :src="'/storage/proveedores/publicaciones/'+fotos.nombre" class="img-thumbnail" style="height: 80px; width: 80px;">
-                                        <button type="button" class="btn btn-box-tool pull-right" @click="deleteImage(index)">
-                                            <i class="fa fa-close"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3 with-border" v-if="src" v-for="(fotos,index) in src">
-                            <div class="box" style="height: 120px; width: 100px;">
-                                 <div class="box-body" style="display: block;">
-                                    <img :src="fotos" class="img-thumbnail" style="height: 80px; width: 80px;">
-                                    <button type="button" class="btn btn-box-tool pull-right" @click="deleteImageSrc(index)">
-                                        <i class="fa fa-close"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>                    
                 </div>
             </div>
         </form>
@@ -187,7 +222,12 @@
                       ['clean']
                   ],
                   isRequiredInputFile: false,
-			}
+                options_caracteristicas: [],
+                caracteristicas: [],
+                caracteristicas_no: [],
+                rubro_caracteristicas:{type: Object},
+                edit: false
+			}        
 		},
         beforeMount(){
             this.getOptions();
@@ -201,10 +241,16 @@
 	            this.$http.get('api/proveedor/'+this.auth.user.profile.id+'/rubro/'
 	                ).then(response => {
                         var data = response.data;
+                        this.rubro_caracteristicas= data
                         for (let rubro of data.rubros){
                             this.rubros.push({ text: rubro.rubro.nombre, value: rubro.id });
                         }
+                        if (!this.nuevo){
+                            this.edit=true
+                            this.changeCaracteristicas(this.publicacion.rubros_detalle_id);
+                        }
                     })
+
             },
             onFilesChange(e) {
                 var files = e.target.files || e.dataTransfer.files;
@@ -248,13 +294,14 @@
             validateSubmit: function() {
                 this.$validator.validateAll().then(() => {
                     this.remplaceStyle();
+                    this.publicacion.caracteristicas = this.options_caracteristicas
                     if(this.nuevo){
 
                         this.publicacion.fotos = []
                         for (var i = 0; i < this.src.length; i++){
                             this.publicacion.fotos.push(this.src[i]);
                         }
-                        //this.src=[]
+                        
                         this.$emit('validadoNewPublicacion'); 
                     }
                     else
@@ -279,6 +326,77 @@
                     .join('style="text-align:right"');
                 this.publicacion.descripcion = this.publicacion.descripcion.split('class=\"ql-align-justify\"')
                     .join('style="text-align:justify"')
+            },
+            changeCaracteristicas: function(rubro_id){
+                 this.options_caracteristicas= [] 
+                 this.caracteristicas= [] 
+                 this.caracteristicas_no= []
+                
+                for (var i = 0; i < this.rubro_caracteristicas.rubros.length; i++){
+                    if (this.rubro_caracteristicas.rubros[i].id==rubro_id){
+                        this.caracteristicas = this.rubro_caracteristicas.rubros[i].rubro.caracteristicas
+                        break;
+                    }
+                }
+                if (this.edit) {
+                    this.caracteristicas_no = this.noselected(this.caracteristicas, this.publicacion.caracteristicas)
+                    this.caracteristicas= this.publicacion.caracteristicas
+                    this.edit=false
+                    this.agregarOptions();
+                }
+                else{
+                    this.caracteristicas_no = this.caracteristicas
+                    this.caracteristicas = []
+                    for (var i = 0; i <  this.caracteristicas_no.length; i++) {
+                        if (this.$el.elements.checkbox != undefined){ 
+                            this.$el.elements.checkbox[i].checked= false
+                        }
+                    }
+                }
+                this.$forceUpdate()
+            },
+            selected(caracteristica,e){
+                if (e.toElement.checked){
+                        this.options_caracteristicas.push({caracteristica_id: caracteristica.id, informacion: null})
+                }else{
+                    for (var i = 0; i < this.options_caracteristicas.length; i++)
+                    {
+                        if (this.options_caracteristicas[i].caracteristica_id == caracteristica.id){
+                            this.options_caracteristicas.splice(i, 1)
+                            break;
+                        }
+                    }
+                }
+            },
+            c_adicional(caracteristica,e){
+                    for (var i = 0; i < this.options_caracteristicas.length; i++){
+                        if (caracteristica.id == this.options_caracteristicas[i].caracteristica_id){
+                            this.options_caracteristicas[i].informacion=  e.srcElement.value
+                            break;
+                        }
+                    }
+                
+            },
+            noselected: function(data1, data2){
+                var option = [];
+                for (var i = 0; i < data1.length; i++) {
+                    var igual=false;
+                     for (var j = 0; j < data2.length & !igual; j++) {
+                         if(data1[i]['id'] == data2[j]['id'] && 
+                            data1[i]['nombre'] == data2[j]['nombre']) 
+                                 igual=true;
+                     }
+                    if(!igual)
+                        option.push(data1[i]);
+                }
+                 return option
+            },
+            agregarOptions: function(){
+                if (this.publicacion.caracteristicas){ 
+                    for (var i = 0; i < this.publicacion.caracteristicas.length; i++) { 
+                        this.options_caracteristicas.push({caracteristica_id: this.publicacion.caracteristicas[i].pivot.caracteristica_id, informacion: this.publicacion.caracteristicas[i].pivot.informacion})
+                    }
+                }
             }
         }
     }

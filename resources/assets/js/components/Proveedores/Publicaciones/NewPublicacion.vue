@@ -62,7 +62,6 @@
 	            this.$events.fire('validarFormPublicacion')
 	        },
 	        sendNewForm(){
-	        	console.log(this.publicacion)
 	            this.$http.post(
 	                'api/publicacion/', 
 	                {
@@ -71,17 +70,16 @@
 	                    rubros_detalle_id: this.publicacion.rubros_detalle_id,
 	                    oferta: this.publicacion.oferta,
 	                    fecha_finalizacion: this.fecha_finalizacion,
-	                    fotos: this.publicacion.fotos
+	                    fotos: this.publicacion.fotos,
+	                    caracteristicas: this.publicacion.caracteristicas
 	                })
 	                .then(response => {
 	                    this.$toast.success({
 	                        title:'¡Publiacion Creada!',
 	                        message:'Se creado correctamente su publicación. :D'
 	                    });
-	                    console.log(response)
 	                    this.$events.fire('changePath', this.listPath, 'Ver Publicacion');
 	                    this.id = response.data.id;
-	                    console.log(response.data)
 						route.push('/publicacion/'+ this.id);
 	                }, response => {
 	                    this.validarPublicacion= false;

@@ -19,8 +19,8 @@ class Caracteristica extends Model
         return $this->belongsToMany('App\Rubro');
     }
 
-    public function publicacion_caracteristicas()
+    public function publicaciones()
     {
-        return $this->belongsToMany('App\PublicacionCaracteristicas');
+        return $this->belongsToMany('App\Publicacion')->withPivot('informacion');
     }
 }

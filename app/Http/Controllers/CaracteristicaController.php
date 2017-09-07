@@ -11,6 +11,7 @@ use App\Caracteristica;
 
 class CaracteristicaController extends Controller
 {
+     
     /**
      * Display a listing of the resource.
      *

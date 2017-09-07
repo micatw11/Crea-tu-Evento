@@ -208,7 +208,7 @@ class RubrosDetalleController extends Controller
         $proveedor = Proveedor::where('user_id', $id)->firstOrFail();
 
         $rubros = RubrosDetalle::where('proveedor_id', $proveedor->id)
-            ->with('domicilio.localidad.provincia', 'rubro.subcategoria.categoria')->get();
+            ->with('domicilio.localidad.provincia', 'rubro.subcategoria.categoria','rubro.caracteristicas')->get();
         return response()->json(['rubros' => $rubros], 200);
     }
 
