@@ -82,7 +82,6 @@
 	                        title:'¡Publiacion Editada!',
 	                        message:'Se edito correctamente su publicación. :D'
 	                    });
-	                    console.log(response.data)
 	                    this.$events.fire('changePath', this.listPath, 'Ver Publicacion');
 	                    this.id =  response.data.id ; 
 						router.push('/publicacion/'+ this.id);
