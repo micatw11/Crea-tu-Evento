@@ -73,7 +73,8 @@
 	                    rubros_detalle_id: this.publicacion.rubros_detalle_id,
 	                    oferta: this.publicacion.oferta,
 	                    fotos: fotosIds,
-	                    fotosUpdate: this.publicacion.fotosUpdate
+	                    fotosUpdate: this.publicacion.fotosUpdate,
+	                    caracteristicas: this.publicacion.caracteristicas
 
 	                })
 	                .then(response => {
@@ -81,7 +82,6 @@
 	                        title:'¡Publiacion Editada!',
 	                        message:'Se edito correctamente su publicación. :D'
 	                    });
-	                    console.log(response.data)
 	                    this.$events.fire('changePath', this.listPath, 'Ver Publicacion');
 	                    this.id =  response.data.id ; 
 						router.push('/publicacion/'+ this.id);

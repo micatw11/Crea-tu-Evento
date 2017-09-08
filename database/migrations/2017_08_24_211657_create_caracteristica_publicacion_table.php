@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePublicacionCaracteristicasTable extends Migration
+class CreateCaracteristicaPublicacionTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreatePublicacionCaracteristicasTable extends Migration
      */
     public function up()
     {
-         Schema::create('publicacion_caracteristicas', function (Blueprint $table) {
+         Schema::create('caracteristica_publicacion', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('publicacion_id')->unsigned();
             $table->integer('caracteristica_id')->unsigned();
@@ -33,6 +33,6 @@ class CreatePublicacionCaracteristicasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('publicacion_caracteristicas');
+        Schema::dropIfExists('caracteristica_publicacion');
     }
 }

@@ -80,7 +80,6 @@ Route::group(['prefix' => 'api'], function () {
     Route::post('categoria', 'CategoriaController@store')->middleware('role:administrador,supervisor');
     Route::get('categoria','CategoriaController@index');
     Route::patch('categoria/{id}', 'CategoriaController@update')->middleware('role:administrador,supervisor');
-    //Route::get('categoria/all', 'CategoriaController@searchCategoria');
     Route::get('categoria/{id}', 'CategoriaController@show');
 
 

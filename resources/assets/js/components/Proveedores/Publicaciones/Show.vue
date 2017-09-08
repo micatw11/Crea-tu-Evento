@@ -53,9 +53,11 @@
 				                        </div>
 			                        </h3>
 
-
+			                        <p>
+							      		<strong>Categoria: </strong> {{publicacion.rubros_detalle.rubro.subcategoria.categoria.nombre}}
+							      	</p>
 				        			<p>
-							      		<strong>Rubro:</strong> {{publicacion.rubros_detalle.rubro.subcategoria.categoria.nombre}}
+							      		<strong>Rubro: </strong> {{publicacion.rubros_detalle.rubro.nombre}}
 						      		</p>
 
 						      		<p>
@@ -97,39 +99,36 @@
 		        </div>
 		    </div>
 		    <!-- /.box -->
-	        <div <div class="box box-default">
+	        <div class="box box-default">
 	        	<div class="box-header with-border">
 	        		<i class="fa fa-bars margin-r-5"></i><h3 class="box-title">Informaci&oacute;n</h3>
 	        	</div>
 	        	<div class="box-body">
-					<div class="col-sm-12">
+					<div v-if="publicacion.caracteristicas.length!=0" class="col-sm-12">
 						<h4>Caracteristicas</h4>
 						<ul>
-							<div class="col-sm-4">
-									<li></li>
-									<li></li>
-							</div>
-							<div class="col-sm-4">
-									<li></li>
-									<li></li>
-							</div>
-							<div class="col-sm-4">
-									<li></li>
-									<li></li>
+							<div v-for="item in publicacion.caracteristicas">
+								<div class="col-sm-4">
+									<li>
+										<div class="col-sm-6">{{item.nombre}}</div>
+										<div class="col-sm-6"v-if="item.adicional">{{item.pivot.informacion}}</div>
+									</li>
+									
+								</div>
 							</div>
 						</ul>
+						<br><br><hr>
 					</div>
 
-
-			        <div class="col-sm-12">
-			        	<hr>
+			        <div v-if="publicacion.oferta.length!=''" class="col-sm-12">
 			          	<h4>{{publicacion.oferta}}</h4>
 			          	<p v-if="publicacion.fecha_finalizacion">
 		          			Fecha Finalizacion: {{publicacion.fecha_finalizacion}}
 		         		</p>
+		         		<br><hr>
 			        </div>
-
-			        <div class="nav-tabs-custom">
+			        <div class="col-sm-12">
+			        <br>
 		               	<div class="col-sm-12" v-html='publicacion.descripcion'></div>
 		            </div>
 	        	</div>

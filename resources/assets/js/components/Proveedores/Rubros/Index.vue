@@ -42,8 +42,8 @@
 	                        :api-url="url"
 	                        pagination-path=""
 	                        @vuetable:pagination-data="onPaginationData"
+                            detail-row-component="detail-row-rubro"
 	                        @vuetable:cell-clicked="onCellClicked">
-
 	                            <template slot="actions" scope="props">
 	                                <div class="custom-actions">
 
@@ -100,7 +100,9 @@
     import FilterBar from './FilterBarRubro';
     import NewRubro from './New';
     import EditRubro from './Edit';
+    import DetailRowR from './DetailRowRubro';
 
+    Vue.component('detail-row-rubro', DetailRowR);
     Vue.component('filter-bar-rubro', FilterBar);
     export default	{
     	data(){

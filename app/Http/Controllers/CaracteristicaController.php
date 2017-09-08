@@ -7,10 +7,11 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
-use App\Caracteristicas;
+use App\Caracteristica;
 
 class CaracteristicaController extends Controller
 {
+     
     /**
      * Display a listing of the resource.
      *
@@ -18,7 +19,7 @@ class CaracteristicaController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Caracteristicas::orderBy('nombre', 'asc');
+        $query = Caracteristica::orderBy('nombre', 'asc');
 
         //filtro
         if ($request->filter) {
@@ -38,7 +39,7 @@ class CaracteristicaController extends Controller
      */
     public function create(Request $request)
     {
-         return Caracteristicas::create([
+         return Caracteristica::create([
                     'nombre'=> $request->nombre,
                     'adicional' => $request->adicional
             ]);
@@ -84,7 +85,7 @@ class CaracteristicaController extends Controller
      */
     public function show($id)
     {
-        $caracteristica = Caracteristicas::where('id', $id)->firstOrFail();
+        $caracteristica = Caracteristica::where('id', $id)->firstOrFail();
 
         return response()->json(['caracteristica' => $caracteristica], 200);
     }
@@ -113,7 +114,7 @@ class CaracteristicaController extends Controller
         $this->validatorCaracteristica($request);
         //$table_name= "caracteristica";
         //$accion = "update";
-        $caracteristica= Caracteristicas::where('id', $id)->firstOrFail();
+        $caracteristica= Caracteristica::where('id', $id)->firstOrFail();
         //Log::logs($id, $table_name, $accion , $caracteristica, 'Ha actualizado informacion personal');
         $caracteristica->update($request->all());
         if($caracteristica->save()){

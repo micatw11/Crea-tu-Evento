@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRubrosCaracteristicasTable extends Migration
+class CreateCaracteristicaRubroTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateRubrosCaracteristicasTable extends Migration
      */
     public function up()
     {
-         Schema::create('rubros_caracteristicas', function (Blueprint $table) {
+         Schema::create('caracteristica_rubro', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('rubro_id')->unsigned();
             $table->integer('caracteristica_id')->unsigned();
@@ -32,6 +32,6 @@ class CreateRubrosCaracteristicasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rubros_caracteristicas');
+        Schema::dropIfExists('caracteristica_rubro');
     }
 }

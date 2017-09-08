@@ -24,9 +24,9 @@ class Rubro extends Model
         return $this->hasMany('App\RubrosDetalle');
     }
 
-    public function rubros_caracteristicas()
+    public function caracteristicas()
     {
-        return $this->hasMany('App\RubrosCaracteristicas');
+        return $this->belongsToMany('App\Caracteristica');
     }
    
 }
