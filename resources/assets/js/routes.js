@@ -190,7 +190,7 @@ let routes = [
 function guardRoute (to, from, next) 
 {
  	if (!auth.user.authenticated) {
- 		if(to.matched.some(record => record.meta.requiresAuth) && !checkAuth()){
+ 		if( !checkAuth() && to.matched.some(record => record.meta.requiresAuth)){
  			//se redirecciona al usuario al login si no esta autenticado
 			next('/login');
 		} else{

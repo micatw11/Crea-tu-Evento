@@ -19,7 +19,7 @@
             </div>
         </div>
 
-        <div class="col-sm-2">
+        <div class="col-sm-6">
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('adicional')&&validarCaracteristica}">
                 <div class="col-sm-12">
                     <label class="control-label">Informacion Adicional</label><br>

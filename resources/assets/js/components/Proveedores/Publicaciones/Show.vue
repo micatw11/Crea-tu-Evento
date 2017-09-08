@@ -120,7 +120,7 @@
 						<br><br><hr>
 					</div>
 
-			        <div v-if="publicacion.oferta.length!=''" class="col-sm-12">
+			        <div v-if="publicacion.oferta != null && publicacion.oferta.length!=0" class="col-sm-12">
 			          	<h4>{{publicacion.oferta}}</h4>
 			          	<p v-if="publicacion.fecha_finalizacion">
 		          			Fecha Finalizacion: {{publicacion.fecha_finalizacion}}

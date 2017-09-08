@@ -75,8 +75,17 @@ class PublicacionController extends Controller
 
 
 
-        $publicaciones = Publicacion::whereIn('publicaciones.id', $ids)
-        ->with('rubros_detalle.proveedor', 'rubros_detalle.rubro.subcategoria.categoria', 'rubros_detalle.domicilio.localidad.provincia', 'fotos')->paginate(10);
+        $publicaciones = 
+            Publicacion::whereIn('publicaciones.id', $ids)
+        
+        ->with('rubros_detalle.proveedor', 'rubros_detalle.rubro.subcategoria.categoria', 'rubros_detalle.domicilio.localidad.provincia', 'fotos', 'caracteristicas')
+
+        ->select(
+            '*', 
+                DB::raw('(CASE WHEN publicaciones.oferta IS NULL OR length(oferta) = 0 THEN FALSE ELSE TRUE END) as tiene_oferta'),
+
+                DB::raw('(SELECT CASE WHEN COUNT(caracteristica_publicacion.id) = 0 THEN FALSE ELSE TRUE END FROM caracteristica_publicacion WHERE caracteristica_publicacion.publicacion_id = publicaciones.id ) as tiene_caracteristicas')
+                )->orderBy('tiene_oferta', 'DESC')->orderBy('tiene_caracteristicas', 'DESC')->paginate(10);
 
         return response()->json(['publicaciones' => $publicaciones, $ids], 200);
 
@@ -84,7 +93,7 @@ class PublicacionController extends Controller
 
     public function show(Request $request, $id){
 
-        $publicacion = Publicacion::with('rubros_detalle.proveedor.user.usuario','rubros_detalle.rubro.subcategoria.categoria','fotos', 'caracteristicas','rubros_detalle.rubro.caracteristicas')
+        $publicacion = Publicacion::with('rubros_detalle.proveedor.user.usuario','rubros_detalle.rubro.subcategoria.categoria','fotos', 'caracteristicas')
                         ->where('id', $id)->firstOrFail();
 
         return response()->json(['publicacion' => $publicacion], 200);

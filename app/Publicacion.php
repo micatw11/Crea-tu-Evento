@@ -41,9 +41,14 @@ class Publicacion extends Model
         $query->update(['publicaciones.estado' => 1]);
     }
 
-     public function caracteristicas()
+    public function caracteristicas()
     {
         return $this->belongsToMany('App\Caracteristica')->withPivot('informacion');
+    }
+
+    public function caracteristicasCount()
+    {
+        return $this->belongsToMany('App\Caracteristica')->selectRaw('count(caracteristicas.id) as caracteristicas_count');
     }
 
 }

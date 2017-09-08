@@ -32,9 +32,11 @@
             </form>
             <!-- /.search form -->
             <!-- sidebar menu: : style can be found in sidebar.less -->
-            <ul class="sidebar-menu" v-if="auth.user.authenticated">
+            <ul class="sidebar-menu">
                 <li class="header">MENU</li>
 
+                <!--  Administracion -->
+                <div v-if="auth.user.authenticated">
                 <li class="treeview" 
                     v-if="auth.user.profile.roles_id == role.ADMINISTRADOR || 
                         auth.user.profile.roles_id == role.SUPERVISOR ||
@@ -42,7 +44,7 @@
                     
                     <a href="#">
                         <i class="fa fa-dashboard"></i>
-                        <span>Usuarios</span>
+                        <span>Administrar</span>
                         <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                         </span>
@@ -55,7 +57,7 @@
                             tag="li" 
                             to="/usuario">
                             <a>
-                                <i class="fa fa-circle-o"></i> Usuarios
+                                <i class="fa fa-th-list"></i> Usuarios
                             </a>
                         </router-link>
                         <router-link
@@ -65,37 +67,54 @@
                                 tag="li"
                                 to="/proveedores">
                                 <a>
-                                    <i class="fa fa-circle-o"></i> Proveedores
+                                    <i class="fa fa-th-list"></i> Proveedores
                                 </a>
+                        </router-link>
+                        <router-link
+                            v-if="auth.user.profile.roles_id == role.ADMINISTRADOR ||
+                                auth.user.profile.roles_id == role.SUPERVISOR"
+                                tag="li"
+                                to="/categorias">
+                                    <a>
+                                        <i class="fa fa-th-list"></i> <span> Categorias</span>
+                                    </a>
+                        </router-link>
+
+                        <router-link
+                            v-if="auth.user.profile.roles_id == role.ADMINISTRADOR ||
+                                auth.user.profile.roles_id == role.SUPERVISOR"
+                                tag="li"
+                                to="/caracteristicas">
+                                    <a>
+                                        <i class="fa fa-th-list"></i> <span> Caracteristicas de Rubros</span>
+                                    </a>
                         </router-link>
                     </ul>
                 </li>
-                <li>
-                    <router-link
-                        v-if="auth.user.profile.roles_id == role.ADMINISTRADOR ||
-                            auth.user.profile.roles_id == role.SUPERVISOR"
-                            to="/categorias">
-                                <i class="fa fa-th-list"></i> <span> Categorias</span>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link
-                        v-if="auth.user.profile.roles_id == role.ADMINISTRADOR ||
-                            auth.user.profile.roles_id == role.SUPERVISOR"
-                            to="/caracteristicas">
-                                <i class="fa fa-th-list"></i> <span> Caracteristicas de Rubros</span>
-                    </router-link>
-                </li>
-                <li>
-                    <a v-if="auth.user.profile.roles_id == role.PROVEEDOR" @click="goToNewPublicacion()">
-                        <i class="fa fa-plus"></i> <span> Publicaci&oacute;n</span>
+
+                <!-- Proveedores-->
+                <li class="treeview" v-if="auth.user.profile.roles_id == role.PROVEEDOR">
+                    <a href="#" v-if="auth.user.profile.roles_id == role.PROVEEDOR">
+                        <i class="fa fa-dashboard"></i>
+                        <span>Agregar</span>
+                        <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                        </span>
                     </a>
+                    <ul class="treeview-menu" v-if="auth.user.profile.roles_id == role.PROVEEDOR">
+                        <li>
+                            <a v-if="auth.user.profile.roles_id == role.PROVEEDOR" @click="goToNewPublicacion()">
+                                <i class="fa fa-plus"></i> <span> Publicaci&oacute;n</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a v-if="auth.user.profile.roles_id == role.PROVEEDOR" @click="goToNewRubro()">
+                                <i class="fa fa-plus"></i> <span> Rubro</span>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
-                <li>
-                    <a v-if="auth.user.profile.roles_id == role.PROVEEDOR" @click="goToNewRubro()">
-                        <i class="fa fa-plus"></i> <span> Rubro</span>
-                    </a>
-                </li>
+                </div>
                 <!--
                 <li class="treeview">
                     <a href="/calendario">
