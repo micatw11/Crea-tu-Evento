@@ -70,7 +70,7 @@
 	                    descripcion: this.publicacion.descripcion,
 	                    rubros_detalle_id: this.publicacion.rubros_detalle_id,
 	                    oferta: this.publicacion.oferta,
-	                    fecha_finalizacion: this.fecha_finalizacion,
+	                    fecha_finalizacion: this.publicacion.fecha_finalizacion,
 	                    fotos: this.publicacion.fotos,
 	                    caracteristicas: this.publicacion.caracteristicas
 	                })

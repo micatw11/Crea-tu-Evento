@@ -66,12 +66,14 @@
 	        	for (var i = 0; i < this.publicacion.fotos.length; i++) {
 	        		fotosIds.push(this.publicacion.fotos[i].id);
 	        	}
+	        	console.log(this.publicacion.fecha_finalizacion)
 	            this.$http.patch('api/publicacion/'+this.$route.params.publicacionId,
 	                {
 	                    titulo: this.publicacion.titulo,
 	                    descripcion: this.publicacion.descripcion,
 	                    rubros_detalle_id: this.publicacion.rubros_detalle_id,
 	                    oferta: this.publicacion.oferta,
+	                    fecha_finalizacion: this.publicacion.fecha_finalizacion,
 	                    fotos: fotosIds,
 	                    fotosUpdate: this.publicacion.fotosUpdate,
 	                    caracteristicas: this.publicacion.caracteristicas
