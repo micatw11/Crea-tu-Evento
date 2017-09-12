@@ -122,7 +122,7 @@ class PublicacionController extends Controller
             $publicacion->caracteristicas()->attach($request->caracteristicas);
         }
  
-			return response(['id' => $publicacion->id], Response::HTTP_OK);
+			return response(['id' => $publicacion->id, 'fecha' => $request->fecha_finalizacion], Response::HTTP_OK);
     	} else {
 			return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     	}
@@ -135,7 +135,6 @@ class PublicacionController extends Controller
         $idses = [];
         $photo_delete = null;
     	$publicacion = Publicacion::with('rubros_detalle')->where('id', $id)->firstOrFail();
-
         if($publicacion->rubros_detalle->proveedor_id == Auth::user()->proveedor->id)
         {    	   
             $publicacion->update($request->except(['fotos']));
@@ -165,16 +164,16 @@ class PublicacionController extends Controller
                 {   
                     foreach ($request->caracteristicas as $key) {
                         $idses[] = $key['caracteristica_id'];
+                        $publicacion->caracteristicas()->detach($key);
                     }
                     DB::table('caracteristica_publicacion')
                                     ->where('publicacion_id', $id)
                                    ->whereNotIn('caracteristica_id', $idses)->delete();
-
-                    $publicacion->caracteristicas()->detach($request->caracteristicas);
+                    
                     $publicacion->caracteristicas()->attach($request->caracteristicas);
 
                 }
-    			return response(['id' => $publicacion->id, 'iddssss' => $idses] , Response::HTTP_OK);
+    			return response(['id' => $publicacion->id] , Response::HTTP_OK);
         	}
         }
 

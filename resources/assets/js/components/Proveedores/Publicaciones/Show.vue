@@ -111,7 +111,7 @@
 								<div class="col-sm-4">
 									<li>
 										<div class="col-sm-6">{{item.nombre}}</div>
-										<div class="col-sm-6"v-if="item.adicional">{{item.pivot.informacion}}</div>
+										<div class="col-sm-6" v-if="((item.adicional)&&(item.pivot.informacion!=null))"> = {{item.pivot.informacion}}</div>
 									</li>
 									
 								</div>
@@ -122,8 +122,8 @@
 
 			        <div v-if="publicacion.oferta != null && publicacion.oferta.length!=0" class="col-sm-12">
 			          	<h4>{{publicacion.oferta}}</h4>
-			          	<p v-if="(publicacion.fecha_finalizacion != '0000-00-00')">
-		          			Fecha Finalizacion: {{formatData(publicacion.fecha_finalizacion)}}
+			          	<p v-if="(publicacion.fecha_finalizacion != '0000-00-00')&&(publicacion.fecha_finalizacion != null)">
+		          			Fecha Finalizacion: {{(publicacion.fecha_finalizacion)}}
 		         		</p>
 		         		<br><hr>
 			        </div>

@@ -66,7 +66,9 @@
 	        	for (var i = 0; i < this.publicacion.fotos.length; i++) {
 	        		fotosIds.push(this.publicacion.fotos[i].id);
 	        	}
-	        	console.log(this.publicacion.fecha_finalizacion)
+	        	if ((this.publicacion.fecha_finalizacion == '0000-00-00')||(this.publicacion.fecha_finalizacion == '')){
+	        		this.publicacion.fecha_finalizacion = null
+	        	}
 	            this.$http.patch('api/publicacion/'+this.$route.params.publicacionId,
 	                {
 	                    titulo: this.publicacion.titulo,
