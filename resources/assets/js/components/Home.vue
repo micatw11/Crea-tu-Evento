@@ -7,6 +7,9 @@
                         <div class="input-group stylish-input-group">
                             <input type="text" name="q" class="form-control" v-model="q" placeholder="Busqueda">
                             <span class="input-group-addon">
+                                <button v-if="category_name != ''">
+                                    <input type="checkbox" v-model="with_category" name="with_category"> En {{ category_name }}
+                                </button>
                                 <button type="submit" name="search" id="search-btn">
                                 <i class="fa fa-search"></i>
                                 </button>
@@ -15,88 +18,6 @@
                     </form>
                 </div>
                 <div class="col-xs-12">&nbsp;</div>
-                <div class="col-xs-12">
-                    <div class="box box-default collapsed-box">
-                         <!-- search form -->
-                        <!-- /.search form -->
-                        <div class="box-header with-border">
-                            <h3 class="box-title">Filtro</h3>
-
-                            <div class="box-tools pull-right">
-                                <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                            </div>
-                            <!-- /.box-tools -->
-                        </div>
-                        <!-- /.box-header -->
-                        <div class="box-body" style="display: none;">
-                            <form role="form">
-                                <div class="col-sm-12">
-                                    <div class="col-sm-4">
-                                        <div class="form-group has-feedback">
-                                            <div class="col-sm-12">
-                                                <v-select
-                                                    :on-search="getLocalidades" 
-                                                    :options="localidades"
-                                                    v-model="localidad_id" 
-                                                    placeholder="Ubicación">
-                                                </v-select>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-sm-8">
-                                        <div class="form-group has-feedback">
-                                            <div class="col-sm-4">
-                                                <select 
-                                                    class="form-control"
-                                                    v-model="categoria_id"
-                                                    @change="changeCategory()">
-
-                                                    <option value="">Categoria</option>
-                                                    <option disabled>────────────</option>
-                                                    <option v-for="option in categorias" v-bind:value="option.value">{{ option.text }}</option>
-
-                                                </select>
-                                            </div>
-                                            <div class="col-sm-4" v-if="categoria_id != ''">
-                                                <select 
-                                                    class="form-control" 
-                                                    v-bind:disabled="categoria_id == '' || subcategorias.length == 0"
-                                                    v-model="subcategoria_id" 
-                                                    @change="changeSubcategory()">
-
-                                                    <option value="">Subcategoria</option>
-                                                    <option disabled>────────────</option>
-                                                    <option v-for="option in subcategorias" v-bind:value="option.value">{{ option.text }}</option>
-
-                                                </select>
-                                            </div>
-                                            <div class="col-sm-4" v-if="subcategoria_id != ''">
-                                                <select 
-                                                    class="form-control" 
-                                                    v-bind:disabled="subcategoria_id == '' || rubros.length == 0"
-                                                    v-model="rubro_id">
-                                                    <option value="">Rubro</option>
-                                                    <option disabled>────────────</option>
-                                                    <option v-for="option in rubros" v-bind:value="option.value">{{ option.text }}</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <!-- /.box-body -->
-                        <div class="box-footer" style="display: none;">
-                            <div class="pull-right">
-                                <button class="btn btn-primary" @click="searchPublicacion()">Aplicar Filtro</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
             <div class="box">
                 <div class="box-body">
@@ -142,32 +63,26 @@
                 titlePath: 'Inicio',
                 listaPath: [{route: '/', name: 'Inicio'}],
                 publicaciones : [],
-                localidades: [],
                 localidad_id: null,
                 categoria_id: '',
-                categorias: [],
                 subcategoria_id: '',
-                subcategorias: [],
                 rubro_id: '',
-                rubros: [],
                 q: '',
+                with_category: false, 
+                category_name: '',
                 nombre: false
             }
         },
         beforeMount() {
-            this.getCategorias();
+            //this.getCategorias();
             this.$nextTick( function() {
                 this.$events.fire('changePath',[{route: '/', name: 'Inicio'}], 'Inicio');
             });
         },
         mounted() {
             this.queryPath();
-            console.log('montado')
-            console.log(this.q)
             this.searchPublicacion();
-            this.categoria_id = '';
-            this.subcategoria_id = '';
-            this.rubro_id = '';
+            this.with_category = false;
         },
         components: {
             VSelect, Search
@@ -184,11 +99,11 @@
 
                 let filtro = this.api+'?filter='+ filter; 
 
-                if(this.categoria_id != undefined && this.categoria_id != '')
+                if(this.categoria_id != undefined && this.categoria_id != '' && this.with_category)
                     filtro = filtro + '&with_category='+this.categoria_id;
-                if(this.subcategoria_id != undefined && this.subcategoria_id != '')
+                if(this.subcategoria_id != undefined && this.subcategoria_id != '' && this.with_category)
                     filtro = filtro + '&with_subcategory='+this.subcategoria_id;
-                if(this.rubro_id  != undefined && this.rubro_id  != '') 
+                if(this.rubro_id  != undefined && this.rubro_id  != '' && this.with_category) 
                     filtro = filtro + '&with_denomination='+this.rubro_id;
                 if(this.localidad_id !=  null)
                     filtro = filtro + '&with_localidad='+this.localidad_id.value ;
@@ -199,6 +114,7 @@
                     this.publicaciones = response.data.publicaciones.data;
                     this.setDataPagination(response.data.publicaciones);
                     this.nombre=false;
+                    this.q = '';
 
                 }, response => {
                     this.$toast.error({
@@ -207,89 +123,7 @@
                     });
                 })
             },
-            /** 
-            * Envia consultas de localidades. 
-            * 
-            * @getLocalidades 
-            * @ Param {String} search Argumento 1 
-            * @ Param {Function} loading Argumento 2 
-            */
-            getLocalidades: function(search, loading) {
-                loading(true)
-                this.$http.get('api/localidades/?q='+ search
-                    ).then(response => {
-                        this.localidades = response.data.data
-                        loading(false)
-                    })
-            },
-            /** 
-            * Consulta de todas las categorias.
-            * 
-            * @getCategorias 
-            */
-            getCategorias: function(){
-                this.$http.get('api/categoria/')
-                    .then(response => {
-                        let data = response.data.data
-                        for (let categoria of data){
-                            this.categorias.push({ value: categoria.id, text: categoria.nombre });
-                        }
-                    }, response => {
-                        this.$toast.error({
-                            title:'¡Error!',
-                            message:'No se han podido cargar opciones de filtrado. :('
-                        });
-                    })
-            },
-            /** 
-            * Consulta por una categoria al servidor
-            * 
-            * @changeCategory 
-            */
-            changeCategory: function(){
-                this.subcategorias = [];
-                this.subcategoria_id = '';
-                this.rubros = [];
-                this.rubro_id = '';
-                this.$http.get('api/categoria/' +this.categoria_id
-                    ).then(response => {
-                        let data = response.data.data
-                        for (let subcategoria of data.subcategorias){
-                            this.subcategorias.push({ text: subcategoria.nombre, value: subcategoria.id });
-                        }
-                    }, response => {
-                        this.$toast.error({
-                            title:'¡Error!',
-                            message:'No se han podido cargar opciones de filtrado. :('
-                        });
-                    })
-            },
-            /** 
-            * Consulta por una subcategoria al servidor
-            * 
-            * @changeSubcategory 
-            */
-            changeSubcategory: function(){
-                this.rubros = [];
-                this.rubro_id = '';
 
-                if(this.subcategoria_id != undefined && this.subcategoria_id != '')
-                {
-                    this.$http.get('api/rubros/'+ this.subcategoria_id)
-                    .then(response => {
-                        let options = response.data
-                        for (let rubros of options){
-                            this.rubros.push({ text: rubros.nombre, value: rubros.id })
-                        }
-                    }, response => {
-                        this.$toast.error({
-                            title:'¡Error!',
-                            message:'No se han podido cargar opciones de filtrado. :('
-                        });
-                    })
-                }
-                
-            },
             /** 
             * Cambia el pagina en la cual se ecuntra posicionado.
             * 
@@ -310,10 +144,9 @@
                 if(this.q != ''){
                     this.nombre=true;
                     this.$router.replace({ path : '/', query : {q: this.q} });
-                    console.log('push');
-                } else{
+                }/* else{
                     this.$router.replace({ path : '/'})
-                }
+                }*/
                 if (this.nombre){
                 this.managerSearch(this.q)
                 }
@@ -341,26 +174,28 @@
             queryPath(){
                 if(this.$route.query.with_denomination != undefined){
                     this.rubro_id = this.$route.query.with_denomination;
+                    this.with_category = true;
                     this.changePath(this.rubro_id, 'api/rubro/', 'rubro');
                 }
                 else
                 {
                     if(this.$route.query.with_subcategory != undefined){
-                        this.subcategoria_id = this.$route.query.with_subcategory
+                        this.subcategoria_id = this.$route.query.with_subcategory;
+                        this.with_category = true;
+                        this.$events.fire('changeSubategory', this.subcategoria_id);
                         this.changePath(this.subcategoria_id, 'api/subcategoria/', 'subcategoria');
                     }
                     else
                     {
                         if(this.$route.query.with_category != undefined){
-                            this.categoria_id = this.$route.query.with_category
+                            this.categoria_id = this.$route.query.with_category;
+                            this.with_category = true;
+                            this.$events.fire('changeCategory', this.categoria_id);
                             this.changePath(this.categoria_id, 'api/categoria/', 'categoria');
                         }
                         else if(this.$route.query.q != undefined && this.$route.query.q != '')
                         {
                             this.q = this.$route.query.q;
-                            console.log('query path');
-
-
                         }
                     }
                 }
@@ -381,6 +216,7 @@
                     var responseData = response.data.data
                     if(filtro == 'rubro')
                     {
+                        this.category_name = responseData.nombre;
                         this.listaPath.push( {
                             route: '/?with_category='+responseData.subcategoria.categoria.id, 
                             name: responseData.subcategoria.categoria.nombre
@@ -398,6 +234,7 @@
                     {
                         if(filtro == 'subcategoria')
                         {
+                            this.category_name = responseData.nombre;
                             this.listaPath.push( {
                                 route: '/?with_category='+responseData.categoria.id, 
                                 name: responseData.categoria.nombre
@@ -411,6 +248,7 @@
                         {
                             if(filtro == 'categoria')
                             {
+                                this.category_name = responseData.nombre;
                                 this.listaPath.push( {
                                     route: '/?with_category='+responseData.id, 
                                     name: responseData.nombre
@@ -431,6 +269,8 @@
                 this.subcategoria_id = '';
                 this.categoria_id = '';
                 this.q = '';
+                this.with_category = false;
+                this.category_name = '';
                 this.pageOne= {
                     total:0,
                     per_page:10,
@@ -453,9 +293,6 @@
                     this.$events.fire('changePath', this.listaPath, this.titlePath);
                     this.queryPath();
                     this.searchPublicacion();
-                    this.categoria_id = '';
-                    this.subcategoria_id = '';
-                    this.rubro_id = '';
                 }
 
             }

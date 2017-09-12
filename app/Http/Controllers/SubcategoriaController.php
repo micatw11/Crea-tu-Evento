@@ -34,7 +34,7 @@ class SubcategoriaController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Subcategoria::with('categoria')->orderBy('nombre', 'asc');
+        $query = Subcategoria::with('categoria', 'rubros.rubros_detalles.publicaciones')->orderBy('nombre', 'asc');
 
         if ($request->filter) {
             $like = '%'.$request->filter.'%';

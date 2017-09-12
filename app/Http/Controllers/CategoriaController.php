@@ -18,7 +18,7 @@ class CategoriaController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Categoria::orderBy('nombre', 'asc');
+        $query = Categoria::with('subcategorias.rubros.rubros_detalles.publicaciones')->orderBy('nombre', 'asc');
 
         //filtro
         if ($request->filter) {
@@ -87,7 +87,7 @@ class CategoriaController extends Controller
      */
     public function show($id)
     {
-          $categoria= Categoria::where('id', $id)->with('subcategorias')->firstOrFail();
+          $categoria= Categoria::where('id', $id)->with('subcategorias.rubros.rubros_detalles.publicaciones')->firstOrFail();
 
         if ($categoria) {
             return response()->json(['data' => $categoria], 200);

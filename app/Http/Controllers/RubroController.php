@@ -226,7 +226,7 @@ class RubroController extends Controller
 
     public function searchRubros(Request $request, $subcategoria)
     {
-        $rubros = Rubro::where('subcategoria_id',$subcategoria)
+        $rubros = Rubro::with('rubros_detalles.publicaciones')->where('subcategoria_id',$subcategoria)
                 ->orderBy('nombre', 'asc')->get();
 
 

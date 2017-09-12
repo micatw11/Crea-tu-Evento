@@ -62,7 +62,8 @@
                                     <button class="btn btn-sm btn-default" @click="modificar(item.id)">
                                         Modificar
                                     </button>
-                                    <button class="btn btn-sm" v-bind:class="styleButton(item.estado)" @click="estado(item)">
+                                    <button class="btn btn-sm" v-bind:class="styleButton(item.estado)" @click="showModalDelete = true, publicacion = item,
+                                    accion = item.estado">
                                         {{ item.estado == 1 ? 'Dar de baja' : 'Dar de alta'}}
                                     </button>
                                 </div>
@@ -78,6 +79,42 @@
                 <div class="col-sm-12">
                     <h3 v-if="!optionsProveedor" class="text-center">No se encontraron resultados :(</h3>
                     <h3 v-else class="text-center">No se encontraron publicaciones realizadas :(</h3>
+                </div>
+            </template>
+             <template>
+                <!-- Modal cambiar observaciones (baja/alta)-->
+                <div class="modal" role="dialog" :style="{ display : showModalDelete  ? 'block' : 'none' }">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" @click="showModalDelete = false">&times;</button>
+                                <h4 class="modal-title">Dar de baja publicacion</h4>
+                            </div>
+                            <div class="modal-body">
+
+                                <div class="box-body">
+                                    <p>¿Esta seguro de dar de {{ accion != 1 ? 'Alta' : 'Baja'}} esta publicación?</p>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <div class="col-sm-12">
+                                    <div class="pull-right">
+                                        <button type="button" @click="showModalDelete = false" class="btn btn-default">
+                                            Atras
+                                        </button>
+                                        <button
+                                            @click="estado(publicacion)" 
+                                            type="button" class="btn btn-danger">
+                                         Guargar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </template>
 
@@ -105,7 +142,10 @@
             return {
                 favorite: false,
                 auth: auth,
-                role: role
+                showModalDelete: false,
+                role: role,
+                accion: '',
+                publicacion: {}
             }
         },
         methods: {
@@ -136,6 +176,7 @@
                             message:'No se han podido realizar la acción. :('
                         });
                     })
+                    this.showModalDelete = false;
             },
             formatData: function(value){
 
