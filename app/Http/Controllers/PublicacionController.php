@@ -73,9 +73,7 @@ class PublicacionController extends Controller
         }
         $ids = $query->distinct('publicaciones.id')->get()->pluck('id');
 
-
-
-        $publicaciones = 
+        $query = 
             Publicacion::whereIn('publicaciones.id', $ids)
         
         ->with('rubros_detalle.proveedor', 'rubros_detalle.rubro.subcategoria.categoria', 'rubros_detalle.domicilio.localidad.provincia', 'fotos', 'caracteristicas')
@@ -85,9 +83,13 @@ class PublicacionController extends Controller
                 DB::raw('(CASE WHEN publicaciones.oferta IS NULL OR length(oferta) = 0 THEN FALSE ELSE TRUE END) as tiene_oferta'),
 
                 DB::raw('(SELECT CASE WHEN COUNT(caracteristica_publicacion.id) = 0 THEN FALSE ELSE TRUE END FROM caracteristica_publicacion WHERE caracteristica_publicacion.publicacion_id = publicaciones.id ) as tiene_caracteristicas')
-                )->orderBy('tiene_oferta', 'DESC')->orderBy('tiene_caracteristicas', 'DESC')->paginate(10);
 
-        return response()->json(['publicaciones' => $publicaciones, $ids], 200);
+                );
+            $publicaciones = $query->orderBy('tiene_oferta', 'DESC')
+                ->orderBy('tiene_caracteristicas', 'DESC')
+                    ->paginate(10);
+
+        return response()->json(['publicaciones' => $publicaciones], 200);
 
     }
 

@@ -103,12 +103,7 @@ let routes = [
 			component: NewRubro,
 			beforeEnter: guardRoute,
 			meta: { Role: [role.PROVEEDOR], requiresAuth: true}	
-		},/*
-		{
-			path: '/form',
-			component: Form,
-			beforeEnter: guardRoute	
-		},*/
+		},
 		{
 			path: '/categorias',
 			component: IndexCategoria,
@@ -121,12 +116,6 @@ let routes = [
 			beforeEnter: guardRoute,
 			meta: { Role: [role.ADMINISTRADOR, role.SUPERVISOR], requiresAuth: true }	
 		},
-/*		{
-			path: '/calendario',
-			component: Calendar,
-			beforeEnter: guardRoute
-
-		},*/
 		{
 			path: '/usuario/:userId/perfil',
 			name: 'user',
