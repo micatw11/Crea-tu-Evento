@@ -13,7 +13,7 @@ class Publicacion extends Model
      * @var array
      */
     protected $fillable = [
-        'titulo', 'oferta', 'descripcion', 'estado','proveedor_id',  'created_at', 'updated_at'
+        'titulo', 'oferta', 'descripcion', 'estado','proveedor_id','fecha_finalizacion', 'created_at', 'updated_at'
     ];
 
     public function fotos()
@@ -64,6 +64,11 @@ class Publicacion extends Model
     public function caracteristicasCount()
     {
         return $this->belongsToMany('App\Caracteristica')->selectRaw('count(caracteristicas.id) as caracteristicas_count');
+    }
+
+       public function favoritos()
+    {
+        return $this->hasMany('App\Favorito');
     }
 
 }

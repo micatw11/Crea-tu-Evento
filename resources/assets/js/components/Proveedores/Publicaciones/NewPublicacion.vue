@@ -63,6 +63,9 @@
 	            this.$events.fire('validarFormPublicacion')
 	        },
 	        sendNewForm(){
+	        	if ((this.publicacion.fecha_finalizacion == '0000-00-00')||(this.publicacion.fecha_finalizacion == '')){
+	        		this.publicacion.fecha_finalizacion = null
+	        	}
 	            this.$http.post(
 	                'api/publicacion/', 
 	                {
@@ -70,7 +73,7 @@
 	                    descripcion: this.publicacion.descripcion,
 	                    rubros_detalle_id: this.publicacion.rubros_detalle_id,
 	                    oferta: this.publicacion.oferta,
-	                    fecha_finalizacion: this.fecha_finalizacion,
+	                    fecha_finalizacion: this.publicacion.fecha_finalizacion,
 	                    fotos: this.publicacion.fotos,
 	                    caracteristicas: this.publicacion.caracteristicas
 	                })

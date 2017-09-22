@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Publicacion;
+use App\Favorito;
 use App\Foto;
 use App\Rol;
 
@@ -15,63 +16,69 @@ class PublicacionController extends Controller
 {
     
     public function index(Request $request){
-        $query = Publicacion::where('publicaciones.estado', 1 )
-
-                            ->join('proveedores', 'publicaciones.proveedor_id', '=', 'proveedores.id')
-
-                            ->join('rubros_detalle', 'rubros_detalle.proveedor_id', '=', 'proveedores.id')
-                            ->join('rubros', 'rubros_detalle.rubro_id', '=', 'rubros.id')
-
-                            ->join('domicilios', 'rubros_detalle.domicilio_id', '=', 'domicilios.id')
-                            ->join('localidades', 'domicilios.localidad_id', '=', 'localidades.id')
-
-                            ->join('subcategorias', 'publicaciones.subcategoria_id', '=', 'subcategorias.id')
-                            ->join('categorias', 'subcategorias.categoria_id', '=', 'categorias.id')
-
-                            ->select('publicaciones.*')
-                            ->where('publicaciones.estado', 1);
-                           
-        if($request->has('filter') && $request->filter != ''){
-            $like = '%'.$request->filter.'%';
-
-            $query->where(function($query) use ($like){
-                $query->where('publicaciones.titulo','like', $like )
-                    ->orWhere('publicaciones.descripcion', 'like', $like);
-                });
-        }
-
-
-        if($request->has('with_subcategory') && $request->with_subcategory != '')
+        $ids = [];
+        if($request->has('favorite') && $request->favorite && Auth::user())
         {
-            $id = $request->with_subcategory;
-            $query->where(function($query) use ($id){
-                $query->where('subcategorias.id', $id );
-            });
-        } 
-        else 
-        {
-            if($request->has('with_category') && $request->with_category != '')
+            $user_id = $request->favorite;
+            $ids = Favorito::where('user_id', Auth::id())->orderBy('created_at', 'ASC')->get()->pluck('publicacion_id');
+            
+        } else {
+            $query = Publicacion::where('publicaciones.estado', 1 )
+
+                ->join('proveedores', 'publicaciones.proveedor_id', '=', 'proveedores.id')
+
+                ->join('rubros_detalle', 'rubros_detalle.proveedor_id', '=', 'proveedores.id')
+                ->join('rubros', 'rubros_detalle.rubro_id', '=', 'rubros.id')
+
+                ->join('domicilios', 'rubros_detalle.domicilio_id', '=', 'domicilios.id')
+                ->join('localidades', 'domicilios.localidad_id', '=', 'localidades.id')
+
+                ->join('subcategorias', 'publicaciones.subcategoria_id', '=', 'subcategorias.id')
+                ->join('categorias', 'subcategorias.categoria_id', '=', 'categorias.id')
+
+                ->select('publicaciones.*')
+                ->where('publicaciones.estado', 1);
+        
+
+
+            if($request->has('filter') && $request->filter != ''){
+                $like = '%'.$request->filter.'%';
+                $query->where(function($query) use ($like){
+                    $query->where('publicaciones.titulo','like', $like )
+                        ->orWhere('publicaciones.descripcion', 'like', $like);
+                    });
+            }
+            if($request->has('with_subcategory') && $request->with_subcategory != '')
             {
-                $id = $request->with_category;
+                $id = $request->with_subcategory;
                 $query->where(function($query) use ($id){
-                    $query->where('categorias.id', $id );
+                    $query->where('subcategorias.id', $id );
+                });
+            } 
+            else 
+            {
+                if($request->has('with_category') && $request->with_category != '')
+                {
+                    $id = $request->with_category;
+                    $query->where(function($query) use ($id){
+                        $query->where('categorias.id', $id );
+                    });
+                }
+            }
+            if($request->has('with_localidad') && $request->with_localidad != ''){
+                $id = $request->with_localidad;
+                $query->where(function($query) use ($id){
+                    $query->where('localidades.id', $id );
                 });
             }
+            $ids = $query->distinct('publicaciones.id')->get()->pluck('id');
+            
         }
 
-        if($request->has('with_localidad') && $request->with_localidad != ''){
-            $id = $request->with_localidad;
-            $query->where(function($query) use ($id){
-                $query->where('localidades.id', $id );
-            });
-        }
-        $ids = $query->distinct('publicaciones.id')->get()->pluck('id');
+        $query = Publicacion::whereIn('publicaciones.id', $ids)
+            ->with('proveedor.rubros_detalles.domicilio.localidad.provincia',
+             'proveedor.rubros_detalles.rubro', 'subcategoria.categoria', 'fotos', 'caracteristicas', 'favoritos')
 
-        $query = 
-            Publicacion::whereIn('publicaciones.id', $ids)
-        
-        ->with('proveedor.rubros_detalles.domicilio.localidad.provincia',
-             'proveedor.rubros_detalles.rubro', 'subcategoria.categoria', 'fotos', 'caracteristicas')
 
         ->select(
             '*', 
@@ -84,13 +91,14 @@ class PublicacionController extends Controller
                 ->orderBy('tiene_caracteristicas', 'DESC')
                     ->paginate(10);
 
-        return response()->json(['publicaciones' => $publicaciones], 200);
+        return response()->json(['publicaciones' => $publicaciones, 'idses' => $ids], 200);
 
     }
 
     public function show(Request $request, $id){
 
-        $publicacion = Publicacion::with('proveedor.rubros_detalles.rubro', 'proveedor.user.usuario','subcategoria.categoria','fotos', 'caracteristicas')
+        $publicacion = Publicacion::with('proveedor.rubros_detalles.rubro', 'proveedor.user.usuario','subcategoria.categoria','fotos', 'caracteristicas', 'favoritos')
+
                         ->where('id', $id)->firstOrFail();
 
         return response()->json(['publicacion' => $publicacion], 200);
@@ -123,7 +131,7 @@ class PublicacionController extends Controller
                 $publicacion->caracteristicas()->attach($request->caracteristicas);
             }
  
-			return response(['id' => $publicacion->id], Response::HTTP_OK);
+			return response(['id' => $publicacion->id, 'fecha' => $request->fecha_finalizacion], Response::HTTP_OK);
     	} else {
 			return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     	}
@@ -135,9 +143,11 @@ class PublicacionController extends Controller
         $ids = [];
         $idses = [];
         $photo_delete = null;
+
     	$publicacion = Publicacion::where('id', $id)->firstOrFail();
 
         if($publicacion->proveedor_id == Auth::user()->proveedor->id)
+
         {    	   
             $publicacion->update($request->except(['fotos']));
             if($publicacion->save())
@@ -166,12 +176,12 @@ class PublicacionController extends Controller
                 {   
                     foreach ($request->caracteristicas as $key) {
                         $idses[] = $key['caracteristica_id'];
+                        $publicacion->caracteristicas()->detach($key);
                     }
                     DB::table('caracteristica_publicacion')
                                     ->where('publicacion_id', $id)
                                    ->whereNotIn('caracteristica_id', $idses)->delete();
-
-                    $publicacion->caracteristicas()->detach($request->caracteristicas);
+                    
                     $publicacion->caracteristicas()->attach($request->caracteristicas);
 
                 }

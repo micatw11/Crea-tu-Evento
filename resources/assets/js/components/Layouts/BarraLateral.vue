@@ -97,10 +97,19 @@
                             </router-link>
                         </ul>
                     </li>
+                    <li class="treeview">
+                          <router-link :to="'/?favorite='+ true" tag="a" @click="goToFavourites()">
+                            <i class="fa fa-dashboard"></i>
+                            <span>Favoritos</span>
+                            <span class="pull-right-container">
+                                 <span class="label label-primary pull-right">{{favourites}}</span>
+                            </span>
+                        </router-link>
+                    </li>
 
                     <!-- Proveedores-->
                     <li class="treeview" v-if="auth.user.profile.roles_id == role.PROVEEDOR">
-                        <a href="#" v-if="auth.user.profile.roles_id == role.PROVEEDOR">
+                        <a v-if="auth.user.profile.roles_id == role.PROVEEDOR">
                             <i class="fa fa-dashboard"></i>
                             <span>Agregar</span>
                             <span class="pull-right-container">
@@ -165,7 +174,9 @@
                 role: Role,
                 q: '',
                 categorias: [],
-                showCategories: false
+                favoritos:[],
+                showCategories: false,
+                favourites: ''
             }
         },
         beforeMount: function(){
@@ -173,8 +184,11 @@
         },
         mounted: function(){
             this.$events.$on('changeCategory', eventData => this.changeCategory(eventData));
+            this.$events.$on('changeSubategory', eventData => this.changeSubcategory(eventData));
+            this.$events.$on('changeFavorite', eventData => this.getFavourite());
             if(auth.user.authenticated){
                 this.avatarUpdated();
+                this.getFavourite();
             }
         },
         methods: {
@@ -189,6 +203,10 @@
                 this.$events.fire('changePath', this.listPath, 'Nueva Publicacion');
                 route.push('/publicacion/new');
             },
+            goToFavourites(){
+                this.$events.fire('changePath', this.listPath, 'Favoritos');
+                route.push('/?favorite='+ true);
+            },
             searchPublicacion: function(){
                 if(route.path !== '/' && this.q !== '' )
                     route.push('/?q='+this.q)
@@ -201,7 +219,6 @@
             */
             getCategorias: function(){
                 this.showCategories = false;
-
                 this.$http.get('api/categoria/')
                     .then(response => {
                         let data = response.data
@@ -224,7 +241,6 @@
             */
             changeCategory: function(id){
                 this.showCategories = false;
-
                 this.$http.get('api/categoria/' +id
                     ).then(response => {
                         let data = response.data.data
@@ -239,6 +255,20 @@
                         setTimeout(() => this.showCategories = true, 3000);
                     })
                     
+            },
+            /** 
+            * Consulta de todas las publicaciones Favoritas.
+            * 
+            * @getFavourite
+            */
+            getFavourite: function(){
+                if (auth.user.authenticated){
+                    this.$http.get('api/favoritos/'+ auth.user.profile.id)
+                        .then(response => {
+                            this.favoritos = response.data.data
+                                this.favourites = this.favoritos.length
+                        })
+                }
             }
         },
         computed: {
@@ -253,11 +283,21 @@
             'auth.user.profile.usuario'  (){
                  this.avatarUpdated();
             },
+            'auth.user.authenticated'  (){
+                 this.getFavourite();
+            },
             '$route.query' (){
                 if(JSON.stringify(this.$route.query) === JSON.stringify({})){
                     this.getCategorias();
                 }
+            },
+            'favourites'(){
+                if (JSON.stringify(this.$route.query) === '{"favorite":"true"}'){
+                    route.push('/')
+                    this.goToFavourites();
+                }
             }
+
         }
 
     }

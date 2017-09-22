@@ -54,7 +54,7 @@
                             v-model="categoria_id"
                             class="form-control" 
                             v-validate="'required'"
-                            @change="category()">
+                            @change="changeCategory()">
                             <option value="" disabled="">Seleccione un categoria</option>
                             <option v-for="option in categorias" v-bind:value="option.value">
                                 {{ option.text }}

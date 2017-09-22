@@ -100,4 +100,6 @@ Route::group(['prefix' => 'api'], function () {
     Route::post('caracteristica', 'CaracteristicaController@store');
     Route::patch('caracteristica/{id}','CaracteristicaController@update');
 
+    Route::post('favoritos','FavoritoController@store');
+    Route::get('favoritos/{user_id}', 'FavoritoController@show');
 });

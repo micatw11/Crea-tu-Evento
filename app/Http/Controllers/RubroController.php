@@ -52,7 +52,7 @@ class RubroController extends Controller
 
         if ($rubro)
         {
-            return response(''.$request->salon, Response::HTTP_OK);
+            return response($request->salon.'-'.$request->servicio.'-'.$request->producto, Response::HTTP_OK);
         } 
         else 
         {
