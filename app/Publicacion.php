@@ -13,7 +13,7 @@ class Publicacion extends Model
      * @var array
      */
     protected $fillable = [
-        'titulo', 'oferta', 'descripcion', 'estado','rubros_detalle_id',  'created_at', 'updated_at'
+        'titulo', 'oferta', 'descripcion', 'estado','proveedor_id',  'created_at', 'updated_at'
     ];
 
     public function fotos()
@@ -21,9 +21,29 @@ class Publicacion extends Model
         return $this->hasMany('App\Foto');
     }
 
+    public function subcategoria()
+    {
+        return $this->belongsTo('App\Subcategoria');
+    }
+
     public function rubros_detalle()
     {
         return $this->belongsTo('App\RubrosDetalle');
+    }
+
+    public function proveedor()
+    {
+        return $this->belongsTo('App\Proveedor');
+    }
+
+    public function articulos()
+    {
+        return $this->belongsToMany('App\Articulos');
+    }
+
+    public function caracteristicas()
+    {
+        return $this->belongsToMany('App\Caracteristica')->withPivot('informacion');
     }
 
     public function scopeOfProveedor($query, $proveedor_id){
@@ -39,11 +59,6 @@ class Publicacion extends Model
 
     public function scopeDarAlta($query) {
         $query->update(['publicaciones.estado' => 1]);
-    }
-
-    public function caracteristicas()
-    {
-        return $this->belongsToMany('App\Caracteristica')->withPivot('informacion');
     }
 
     public function caracteristicasCount()

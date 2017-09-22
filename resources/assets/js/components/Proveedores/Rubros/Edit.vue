@@ -9,7 +9,7 @@
             </form-rubro>
         </div>
         <div class="modal-footer">
-            <div class="col-sm-12 box-footer clearfix" style="text-align:center;">
+            <div class="col-sm-12" style="text-align:center;">
                 <button class="btn btn-default" @click="closeModal()">
                     <i class="glyphicon glyphicon-chevron-left"></i>
                     Atras
@@ -56,12 +56,12 @@ export default {
                 {
                     _method: 'PATCH',
                     nombre: this.rubro.nombre,
-                    subcategoria_id : this.rubro.subcategoria_id,
+                    salon: this.rubro.salon,
+                    servicio: this.rubro.servicio,
+                    producto: this.rubro.producto,
                     caracteristicas : this.rubro.caracteristicas
                 })
                 .then(response => {
-                    this.$events.fire('reloadIndexCategoria')
-                    this.$events.fire('reloadIndexSubcategoria')
                     this.$events.fire('reloadIndexRubro')
                     this.closeModal();
                     this.errorsApi= {},

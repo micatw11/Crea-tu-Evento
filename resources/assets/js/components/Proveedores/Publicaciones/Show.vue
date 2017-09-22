@@ -9,7 +9,7 @@
 		    	<div class="box-header" v-if="auth.user.authenticated">
 				    <div class="col-sm-12" v-if="
 				    	auth.user.profile.roles_id == role.PROVEEDOR && 
-				    	publicacion.rubros_detalle.proveedor.user_id == auth.user.profile.id" >
+				    	publicacion.proveedor.user_id == auth.user.profile.id" >
 						<button class="btn btn-primary pull-left" @click="goToNewPublicacion()">Nueva Publicaci&oacute;n</button>
 
 			        	<div class="pull-right">
@@ -54,22 +54,18 @@
 			                        </h3>
 
 			                        <p>
-							      		<strong>Categoria: </strong> {{publicacion.rubros_detalle.rubro.subcategoria.categoria.nombre}}
+							      		<strong>Categoria: </strong> {{publicacion.subcategoria.categoria.nombre}}
 							      	</p>
-				        			<p>
-							      		<strong>Rubro: </strong> {{publicacion.rubros_detalle.rubro.nombre}}
-						      		</p>
-
 						      		<p>
 						      			<strong>Fecha de publicaci&oacute;n:</strong> {{formatData(publicacion.created_at)}}
 						      		</p>
 
 						      		<p>
-						      			<strong>Proveedor:</strong> {{publicacion.rubros_detalle.proveedor.nombre}}
+						      			<strong>Proveedor:</strong> {{publicacion.proveedor.nombre}}
 						      		</p>
 
 							       	<p>
-					                	<strong>Email:</strong> {{publicacion.rubros_detalle.proveedor.email}}
+					                	<strong>Email:</strong> {{publicacion.proveedor.email}}
 						          	</p>
 						          	
 						          	<hr>
@@ -265,9 +261,6 @@
 		    })
 			
 		},
-		created() {
-			window.addEventListener('resize', this.handleResize)
-		},
 		components: {
         	ShowProveedor, Carousel, Slide
     	},
@@ -279,15 +272,13 @@
 						var listPath = [
 								{route: '/', name: 'Inicio'}, 
 								{
-									route: '/?with_category='+ this.publicacion.rubros_detalle.rubro.subcategoria.categoria.id, 
-									name: this.publicacion.rubros_detalle.rubro.subcategoria.categoria.nombre
+									route: '/?with_category='+ this.publicacion.subcategoria.categoria.id, 
+									name: this.publicacion.subcategoria.categoria.nombre
 								},
 								{
-									route: '/?with_subcategory='+ this.publicacion.rubros_detalle.rubro.subcategoria.id, 
-									name: this.publicacion.rubros_detalle.rubro.subcategoria.nombre},
-								{
-									route: '/?with_denomination='+this.publicacion.rubros_detalle.rubro.id, 
-									name: this.publicacion.rubros_detalle.rubro.nombre},
+									route: '/?with_subcategory='+ this.publicacion.subcategoria.id, 
+									name: this.publicacion.subcategoria.nombre},
+
 								{
 									route: '/publicacion/'+this.$route.params.publicacionId, 
 									name: this.publicacion.titulo
@@ -344,10 +335,7 @@
 				this.showCarousel = true
 				console.log('paso')
 			}
-		},
-		beforeDestroy: function () {
-		    window.removeEventListener('resize', this.handleResize)
-		},
+		}
 	}
 </script>
 <style>

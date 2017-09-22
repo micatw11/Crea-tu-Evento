@@ -34,14 +34,18 @@ class SubcategoriaController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Subcategoria::with('categoria', 'rubros.rubros_detalles.publicaciones')->orderBy('nombre', 'asc');
+        $subcategorias = [];
+        $query = Subcategoria::with('categoria')->orderBy('nombre', 'asc');
 
         if ($request->filter) {
             $like = '%'.$request->filter.'%';
             $query = $query->where('nombre','like',$like);
         }
 
-        $subcategorias = $query->paginate(10);
+        if( $request->has('page') || $request->has('per_page') ) 
+            $subcategorias = $query->paginate(10);
+        else
+            $subcategorias = $query->get();
 
         return response()->json($subcategorias);
     }
@@ -49,7 +53,8 @@ class SubcategoriaController extends Controller
     public function store(Request $request){
 
         $this->validatorSubcategoria($request);
-        $subcategoria = $this->create($request);
+
+        $subcategoria = Subcategoria::create( [ 'nombre' => $request->nombre, 'categoria_id' => $request->categoria_id ]);
 
         return response(null, Response::HTTP_OK);
     }
@@ -61,24 +66,10 @@ class SubcategoriaController extends Controller
     {
       return $this->validate($request, 
         [
-            'nombre'=>'required|min:4|max:55',
-            'categoria_id'=>'required|exists:categorias,id'
+            'nombre'=>'required|min:4|max:55'
         ]);
     }
 
-    /**
-    * @param  \Illuminate\Http\Request  $request
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    protected function create(Request $request)
-    {
-        return Subcategoria::create([
-                    'nombre'=> $request->nombre,
-                    'categoria_id' => $request->categoria_id
-            ]);
-    }
 
     /**
      * Display the specified resource.
@@ -111,15 +102,22 @@ class SubcategoriaController extends Controller
         $subcategoria = Subcategoria::where('id', $id)->firstOrFail();
         $categoria_id = null;
 
-        if($request->categoria_id != $subcategoria->categoria_id)
+        if(!$request->has('categoria_id'))
         {
+            $categoria = Categoria::create( [ 'nombre' => $request->categoria ]);
+            $categoria_id = $subcategoria->categoria_id;
+
+            $subcategoria->categoria_id = $categoria->id;
+        } else if($request->categoria_id != $subcategoria->categoria_id) {
             $categoria_id = $subcategoria->categoria_id;
         }
 
         $subcategoria->update($request->all());
+
         $table_name= "subcategoria";
         $accion = "update";
         Log::logs($id, $table_name, $accion , $subcategoria, 'Ha actualizado informacion de Categoria');
+
         if($categoria_id != null)
         {
             $this->categoriesService->checkCategories($categoria_id);

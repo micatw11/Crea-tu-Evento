@@ -305,20 +305,19 @@ export default {
                 })
         },
         selected(caracteristica,e){
-            console.log(caracteristica)
+
             if (e.toElement.checked){
                     this.options_caracteristicas.push(caracteristica.id)
             }else{
                 for (var i = 0; i < this.options_caracteristicas.length; i++)
                 {
                     if (this.options_caracteristicas[i] == caracteristica.id){
-                        console.log(this.options_caracteristicas)
-                        console.log('index'+i)
+
                         this.options_caracteristicas.splice(i, 1)
                     }
                 }
             }
-            console.log(e.toElement.checked + this.options_caracteristicas) 
+
         },
         closeModal: function(){
             this.$events.fire('cerrar');

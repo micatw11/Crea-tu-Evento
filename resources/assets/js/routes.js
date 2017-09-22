@@ -26,6 +26,9 @@ var NewPublicacion = require('./components/Proveedores/Publicaciones/NewPublicac
 var EditPublicacion = require('./components/Proveedores/Publicaciones/EditPublicacion');
 var ShowPublicacion = require('./components/Proveedores/Publicaciones/Show');
 
+var IndexRubro = require('./components/Proveedores/Rubros/Index');
+
+
 var NewRubro = require('./components/Proveedores/RubrosDetalle/NewRubro');
 var EditRubro = require('./components/Proveedores/RubrosDetalle/EditRubro');
 
@@ -91,6 +94,13 @@ let routes = [
 			meta: { Role: [role.ADMINISTRADOR, role.SUPERVISOR, role.OPERADOR], requiresAuth: true }	
 		},
 		{
+			path: '/rubros',
+			name: 'IndexRubro',
+			component: IndexRubro,
+			beforeEnter: guardRoute,
+			meta: { Role: [role.ADMINISTRADOR, role.SUPERVISOR, role.OPERADOR], requiresAuth: true }				
+		},
+		{
 			path: '/rubro/:idRubro/edit',
 			name: 'EditRubro',
 			component: EditRubro,
@@ -121,7 +131,7 @@ let routes = [
 			name: 'user',
 			component: Perfil,
 			beforeEnter: guardRoute,
-			meta: { Role: [role.PROVEEDOR], requiresAuth: true }
+			meta: { requiresAuth: true }
 
 		},
 		//publicaciones

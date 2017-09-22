@@ -70,7 +70,7 @@ class ProveedorController extends Controller
         $domicilio= $this->createDomicilio($request);
         $proveedor= $this->createProveedor($request,$domicilio);
         
-        if (($proveedor)&&($domicilio)){
+        if ($proveedor && $domicilio ){
             return response(null, Response::HTTP_OK);
         
         } else {
@@ -199,8 +199,7 @@ class ProveedorController extends Controller
 
         if($request->action == 'Baja'){
             $proveedor->user->roles_id = Rol::roleId('Usuario');
-            $rubros = RubrosDetalle::where('proveedor_id', $id)->pluck('id');
-            $publicaciones = Publicacion::whereIn('rubros_detalle_id', $rubros)->update(['estado'=> 0]);
+            $publicaciones = Publicacion::where('proveedor_id', $proveedor->id)->update(['estado'=> 0]);
 
             
         } 

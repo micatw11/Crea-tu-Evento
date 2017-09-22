@@ -10,14 +10,9 @@ class Rubro extends Model
 
     protected $fillable = [ 
                             'nombre',
-    						'subcategoria_id',
     					  ];
     
     ///RELACIONES//
-    public function subcategoria()
-    {
-        return $this->belongsTo('App\Subcategoria');
-    }
 
     public function rubros_detalles()
     {

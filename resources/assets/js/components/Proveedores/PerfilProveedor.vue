@@ -11,20 +11,22 @@
 
                 <div class="box-body" style="display: block;">
                     <div class="nav-tabs-custom">
+                        
                         <ul class="nav nav-tabs">
-                            <!--<li class="active"><a href="#activity" data-toggle="tab">Activity</a></li>-->
+
                             <li class="active">
                                 <a href="#publicaciones" data-toggle="tab">Publicaciones</a>
                             </li>
                             <li>
                                 <a href="#rubro" data-toggle="tab">Rubro</a>
                             </li>
+
                         </ul>
                     
                         <div class="tab-content">
                             
                             <div class="active tab-pane" id="publicaciones">
-                                <div class="box-header">
+                                <div v-if="publicaciones.length" class="box-header">
                                     <div class="box-tools pull-right">
                                         <select v-model="selected" @change="changeFilter()">
                                             <option v-for="option in optionsEstados" v-bind:value="option.value">
@@ -34,7 +36,9 @@
                                     </div>
                                 </div>
                                 <div class="box-body">
-                                    <index-publicaciones :publicaciones="publicaciones" :optionsProveedor="true"></index-publicaciones>
+                                    <index-publicaciones 
+                                        :publicaciones="publicaciones" :optionsProveedor="true">
+                                    </index-publicaciones>
                                </div>
                                 <div class="box-footer">
                         

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Caracteristica extends Model
 {
-       protected $table = 'caracteristicas';
+    protected $table = 'caracteristicas';
 
     protected $fillable = [ 
                             'nombre',
@@ -23,4 +23,5 @@ class Caracteristica extends Model
     {
         return $this->belongsToMany('App\Publicacion')->withPivot('informacion');
     }
+    
 }

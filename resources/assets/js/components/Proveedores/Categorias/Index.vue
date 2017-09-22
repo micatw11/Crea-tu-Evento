@@ -2,32 +2,46 @@
 	<div class="default-content">
         <div class="content">
             <div class="row">
-                <div class="col-lg-12">
-                    <index-rubros></index-rubros>
-                </div>
-                <div class="col-lg-5">
-                    <div>
-                        <div class="box-header">
-                            <div class="col-sm-2">
-                                <button class="btn btn-primary btn-sm"
-                                @click="showNewCategoria = true">
-                                Agregar
-                                </button>
-                            </div>
-                        </div>
-                        <div v-if="showNewCategoria" class="modal" role="dialog" :style="{ display : showNewCategoria  ? 'block' : 'none' }">
-                            <div class="modal-dialog">
-                            <!-- Modal content-->
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" @click="closeModal()">&times;</button>
-                                        <h4 class="modal-title">Crear Categoria</h4>
-                                    </div>
-                                    <new-categorias></new-categorias>
-                                </div>
-                            </div>    
+                <div>
+                    <div class="box-header">
+                        <div class="col-sm-12">
+                            <button class="btn btn-primary btn-sm"
+                            @click="showNewCategoria = true">
+                            Agregar Categoria
+                            </button>
+                            <button class="btn btn-primary btn-sm"
+                            @click="showNewSubcategoria = true">
+                            Agregar Subcategoria
+                            </button>
                         </div>
                     </div>
+                    <div v-if="showNewCategoria" class="modal" role="dialog" :style="{ display : showNewCategoria  ? 'block' : 'none' }">
+                        <div class="modal-dialog">
+                        <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" @click="closeModal()">&times;</button>
+                                    <h4 class="modal-title">Agregar Categoria</h4>
+                                </div>
+                                <new-categorias></new-categorias>
+                            </div>
+                        </div>    
+                    </div>
+                    <div v-if="showNewSubcategoria" class="modal" role="dialog" :style="{ display : showNewSubcategoria  ? 'block' : 'none' }">
+                        <div class="modal-dialog">
+                        <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" @click="closeModal()">&times;</button>
+                                    <h4 class="modal-title">Agregar Subcategoria</h4>
+                                </div>
+                                <new-subcategorias></new-subcategorias>
+                            </div>
+                        </div>    
+                    </div>
+
+                </div>
+                <div class="col-lg-5">
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="box box-primary">
@@ -95,9 +109,7 @@
                     </div>
                 </div>
                 <div class="col-lg-7">
-
                     <index-subcategorias></index-subcategorias>
-                
                 </div>
 
             </div>
@@ -114,11 +126,11 @@
     import FilterBar from './FilterBarCategoria';
     import route from '../../../routes.js';
     import PathContent from '../../Layouts/Path';
-    import NewCategorias from './FormNewCategorias';
+    import NewCategorias from './New';
+    import NewSubcategorias from './../Subcategorias/New';
     import EditCategoria from './Edit';
 
    import IndexSubcategorias from './../Subcategorias/Index.vue';
-   import IndexRubros from './../Rubros/Index.vue';
 
     Vue.component('filter-bar-categoria', FilterBar);
 
@@ -146,20 +158,18 @@
                 ],
                 url: '/api/categoria',
                 titlePath: 'Categorias',
-                observaciones: null,
                 showModalObservationCategoria: false,
                 listPath : [{route: '/', name: 'Inicio'}, {route: '/categorias', name: 'Categorias'}],
-                action: '',
                 idCategoria: null,
                 showModificarCategoria: false,
                 showNewCategoria: false,
-                dataUser: null,
-                validar: false,
+                showNewSubcategoria: false,
+
                 errorsApi: []
             }
         },
         components: {
-            VuetableP, VuetablePaginationP, VuetablePaginationInfoP, PathContent, NewCategorias, EditCategoria, IndexSubcategorias, IndexRubros
+            VuetableP, VuetablePaginationP, VuetablePaginationInfoP, PathContent, NewCategorias, EditCategoria, IndexSubcategorias, NewSubcategorias
         },
         mounted() {
             this.$events.$on('filter-set', eventData => this.onFilterSet(eventData));
@@ -195,12 +205,13 @@
             closeModal: function(){
                 this.showModificarCategoria = false;
                 this.showNewCategoria= false;
+                this.showNewSubcategoria= false;
                 this.idCategoria = null;
             },
             clearForm(){
                 this.showModificarCategoria= false;
                 this.showNewCategoria= false;
-                this.validar = false;
+                this.showNewSubcategoria= false;
             }
         },
 

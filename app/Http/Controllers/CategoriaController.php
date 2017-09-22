@@ -18,16 +18,25 @@ class CategoriaController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Categoria::with('subcategorias.rubros.rubros_detalles.publicaciones')->orderBy('nombre', 'asc');
+        $categorias = [];
+        $query = Categoria::with('subcategorias.publicaciones')->orderBy('nombre', 'asc');
 
         //filtro
         if ($request->filter) {
             $like = '%'.$request->filter.'%';
             $query = $query->where('categorias.nombre','like',$like);
         }
+        if($request->has('with_tipo_proveedor') && $request->with_tipo_proveedor != '')
+        {
+            $like = '%'.$request->with_tipo_proveedor.'%';
+            $query->where('categorias.tipo_proveedor','like',$like);
+        }
 
-        $categorias = $query->paginate(10);
-
+        if( $request->has('page') || $request->has('per_page') ) 
+            $categorias = $query->paginate(10);
+        else
+            $categorias = $query->get();
+        
         return response()->json($categorias, 200);
 
     }
@@ -40,10 +49,7 @@ class CategoriaController extends Controller
      */
     protected function create(Request $request)
     {
-        return Categoria::create([
-                    'nombre'=> $request->nombre,
-                    'tipo_proveedor' => $request->tipo_proveedor
-            ]);
+        return Categoria::create( [ 'nombre' => $request->nombre, 'tipo_proveedor' => $request->tipo_proveedor ]);
     }
 
     /**
@@ -73,10 +79,7 @@ class CategoriaController extends Controller
     protected function validatorCategoria(Request $request)
     {
       return $this->validate($request, 
-        [
-            'nombre'=>'required|min:4|max:55',
-            'tipo_proveedor'=>'required'
-        ]);
+        [ 'nombre' => 'required|min:4|max:55', 'tipo_proveedor'=>'required' ]);
     }
 
     /**
@@ -87,7 +90,7 @@ class CategoriaController extends Controller
      */
     public function show($id)
     {
-          $categoria= Categoria::where('id', $id)->with('subcategorias.rubros.rubros_detalles.publicaciones')->firstOrFail();
+          $categoria= Categoria::where('id', $id)->with('subcategorias.publicaciones')->firstOrFail();
 
         if ($categoria) {
             return response()->json(['data' => $categoria], 200);

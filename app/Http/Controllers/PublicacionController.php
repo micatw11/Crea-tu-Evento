@@ -16,14 +16,18 @@ class PublicacionController extends Controller
     
     public function index(Request $request){
         $query = Publicacion::where('publicaciones.estado', 1 )
-                            ->join('rubros_detalle', 'rubros_detalle.id', '=', 'publicaciones.rubros_detalle_id')
-                            ->join('proveedores', 'rubros_detalle.proveedor_id', '=', 'proveedores.id')
+
+                            ->join('proveedores', 'publicaciones.proveedor_id', '=', 'proveedores.id')
+
+                            ->join('rubros_detalle', 'rubros_detalle.proveedor_id', '=', 'proveedores.id')
                             ->join('rubros', 'rubros_detalle.rubro_id', '=', 'rubros.id')
-                            ->join('subcategorias', 'rubros.subcategoria_id', '=', 'subcategorias.id')
-                            ->join('categorias', 'subcategorias.categoria_id', '=', 'categorias.id')
+
                             ->join('domicilios', 'rubros_detalle.domicilio_id', '=', 'domicilios.id')
                             ->join('localidades', 'domicilios.localidad_id', '=', 'localidades.id')
-                            ->join('fotos', 'publicaciones.id', '=', 'fotos.publicacion_id')
+
+                            ->join('subcategorias', 'publicaciones.subcategoria_id', '=', 'subcategorias.id')
+                            ->join('categorias', 'subcategorias.categoria_id', '=', 'categorias.id')
+
                             ->select('publicaciones.*')
                             ->where('publicaciones.estado', 1);
                            
@@ -37,31 +41,21 @@ class PublicacionController extends Controller
         }
 
 
-        if($request->has('with_denomination') && $request->with_denomination != '')
+        if($request->has('with_subcategory') && $request->with_subcategory != '')
         {
-            $id = $request->with_denomination;
+            $id = $request->with_subcategory;
             $query->where(function($query) use ($id){
-                $query->where('rubros.id', $id );
+                $query->where('subcategorias.id', $id );
             });
         } 
         else 
         {
-            if($request->has('with_subcategory') && $request->with_subcategory != '')
+            if($request->has('with_category') && $request->with_category != '')
             {
-                $id = $request->with_subcategory;
+                $id = $request->with_category;
                 $query->where(function($query) use ($id){
-                    $query->where('subcategorias.id', $id );
+                    $query->where('categorias.id', $id );
                 });
-            } 
-            else 
-            {
-                if($request->has('with_category') && $request->with_category != '')
-                {
-                    $id = $request->with_category;
-                    $query->where(function($query) use ($id){
-                        $query->where('categorias.id', $id );
-                    });
-                }
             }
         }
 
@@ -76,11 +70,12 @@ class PublicacionController extends Controller
         $query = 
             Publicacion::whereIn('publicaciones.id', $ids)
         
-        ->with('rubros_detalle.proveedor', 'rubros_detalle.rubro.subcategoria.categoria', 'rubros_detalle.domicilio.localidad.provincia', 'fotos', 'caracteristicas')
+        ->with('proveedor.rubros_detalles.domicilio.localidad.provincia',
+             'proveedor.rubros_detalles.rubro', 'subcategoria.categoria', 'fotos', 'caracteristicas')
 
         ->select(
             '*', 
-                DB::raw('(CASE WHEN publicaciones.oferta IS NULL OR length(oferta) = 0 THEN FALSE ELSE TRUE END) as tiene_oferta'),
+                DB::raw('(CASE WHEN publicaciones.oferta IS NULL THEN FALSE ELSE TRUE END) as tiene_oferta'),
 
                 DB::raw('(SELECT CASE WHEN COUNT(caracteristica_publicacion.id) = 0 THEN FALSE ELSE TRUE END FROM caracteristica_publicacion WHERE caracteristica_publicacion.publicacion_id = publicaciones.id ) as tiene_caracteristicas')
 
@@ -95,7 +90,7 @@ class PublicacionController extends Controller
 
     public function show(Request $request, $id){
 
-        $publicacion = Publicacion::with('rubros_detalle.proveedor.user.usuario','rubros_detalle.rubro.subcategoria.categoria','fotos', 'caracteristicas')
+        $publicacion = Publicacion::with('proveedor.rubros_detalles.rubro', 'proveedor.user.usuario','subcategoria.categoria','fotos', 'caracteristicas')
                         ->where('id', $id)->firstOrFail();
 
         return response()->json(['publicacion' => $publicacion], 200);
@@ -103,12 +98,16 @@ class PublicacionController extends Controller
 
     public function store(Request $request){
     	$this->validatorPublicacion($request);
+
+        $user = Auth::user();
+        $proveedor = Proveedor::where('user_id', $user->id)->firstOrFail();
+
     	$publicacion = Publicacion::create([
             'titulo' => $request->titulo,
             'oferta' => $request->oferta,
             'descripcion' => $request->descripcion,
             'fecha_finalizacion' => $request->fecha_finalizacion,
-            'rubros_detalle_id' => $request->rubros_detalle_id
+            'proveedor_id' => $proveedor->id
         ]);
 
     	if($publicacion->save()){
@@ -119,10 +118,10 @@ class PublicacionController extends Controller
                 $foto->publicacion_id = $publicacion->id;
                 $foto->save();
             }
-        if($request->has('caracteristicas')&&$publicacion)
-        {
-            $publicacion->caracteristicas()->attach($request->caracteristicas);
-        }
+            if($request->has('caracteristicas')&&$publicacion)
+            {
+                $publicacion->caracteristicas()->attach($request->caracteristicas);
+            }
  
 			return response(['id' => $publicacion->id], Response::HTTP_OK);
     	} else {
@@ -136,9 +135,9 @@ class PublicacionController extends Controller
         $ids = [];
         $idses = [];
         $photo_delete = null;
-    	$publicacion = Publicacion::with('rubros_detalle')->where('id', $id)->firstOrFail();
+    	$publicacion = Publicacion::where('id', $id)->firstOrFail();
 
-        if($publicacion->rubros_detalle->proveedor_id == Auth::user()->proveedor->id)
+        if($publicacion->proveedor_id == Auth::user()->proveedor->id)
         {    	   
             $publicacion->update($request->except(['fotos']));
             if($publicacion->save())
@@ -176,7 +175,7 @@ class PublicacionController extends Controller
                     $publicacion->caracteristicas()->attach($request->caracteristicas);
 
                 }
-    			return response(['id' => $publicacion->id, 'iddssss' => $idses] , Response::HTTP_OK);
+    			return response(['id' => $publicacion->id] , Response::HTTP_OK);
         	}
         }
 
@@ -188,8 +187,7 @@ class PublicacionController extends Controller
 	    return $this->validate($request, 
 	        [
 	        	'titulo' => 'required|min:5', 
-	        	'descripcion' => 'required|min:20|max:30000',
-	        	'rubros_detalle_id' => 'required|exists:rubros_detalle,id'
+	        	'descripcion' => 'required|min:20|max:30000'
 	        ]);
     }
 
@@ -224,14 +222,15 @@ class PublicacionController extends Controller
 
   
     public function publicacionesProveedor(Request $request, $idProveedor){
-        $publicacionesId = DB::table('publicaciones')
+        /*$publicacionesId = DB::table('publicaciones')
             ->join('rubros_detalle', 'rubros_detalle.id', '=', 'publicaciones.rubros_detalle_id')
             ->join('rubros', 'rubros.id', '=', 'rubros_detalle.rubro_id')
                 ->select('publicaciones.id')
                 ->where('rubros_detalle.proveedor_id', $idProveedor)
-                ->groupby('publicaciones.id')->distinct()->get()->pluck('id');
+                ->groupby('publicaciones.id')->distinct()->get()->pluck('id');*/
 
-        $query = Publicacion::with('rubros_detalle.rubro.subcategoria.categoria', 'fotos', 'rubros_detalle.proveedor', 'rubros_detalle.domicilio.localidad.provincia', 'caracteristicas')->whereIn('id', $publicacionesId);
+        $query = Publicacion::with('proveedor.rubros_detalles.rubro', 'subcategoria.categoria', 'fotos', 'proveedor.rubros_detalles.domicilio.localidad.provincia', 'caracteristicas')
+            ->where('proveedor_id', $idProveedor);
 
         if($request->has('with_estado') && ($request->with_estado == 0 || $request->with_estado == 1))
         {
@@ -246,8 +245,8 @@ class PublicacionController extends Controller
     public function destroy($id){
         if(Auth::user()->roles_id == Rol::roleId('Proveedor'))
         {
-            $publicacion = Publicacion::with('rubros_detalle')->where('id', $id)->firstOrFail();
-            if($publicacion->rubros_detalle->proveedor_id == Auth::user()->proveedor->id)
+            $publicacion = Publicacion::where('id', $id)->firstOrFail();
+            if($publicacion->proveedor_id == Auth::user()->proveedor->id)
             {
                 if ($publicacion->estado == 1)
                     $publicacion->estado = 0;
@@ -259,7 +258,7 @@ class PublicacionController extends Controller
                     return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         }
-        return response(null, Response::HTTP_UNAUTHORIZED);;
+        return response(null, Response::HTTP_UNAUTHORIZED);
     }
 
 }

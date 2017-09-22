@@ -2,20 +2,21 @@
 <div>
     <form role="form">
         <div class="col-sm-6">
-            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('proveedor')&&validarCategoria}">
+            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('tipo')&&validarCategoria}">
                 <div class="col-sm-12">
-                    <label  class="control-label">Tipo de Proveedor</label><br>
+                    <label  class="control-label">Indique a el tipo de categoria.</label><br>
                     <select       
-                        name="proveedor"                  
+                        name="tipo"                  
                         v-model="categoria.tipo_proveedor"
                         class="form-control" 
                         v-validate="'required'">
+                        <option value="" disabled>Seleccione</option>
                         <option v-for="option in opcionesTipo" v-bind:value="option.value">
                             {{ option.text }}
                         </option>
                     </select>
                     <!-- validacion vee-validation -->
-                    <span v-show="errors.has('proveedor')&&validarCategoria" class="help-block">{{ errors.first('proveedor') }}</span>
+                    <span v-show="errors.has('tipo')&&validarCategoria" class="help-block">El campo es obligatorio.</span>
                     <!-- validacion api-->
                     <div class="text-red" v-if="errorsApi.tipo_proveedor">
                         <div v-for="msj in errorsApi.tipo_proveedor">
@@ -69,8 +70,9 @@ export default {
             localidades: [],
             validarCategoria: false,
             opcionesTipo: [
-                  { text: 'Servicios', value: 'Servicio' },
-                  { text: 'Productos', value: 'Producto' }
+                  { text: 'Producto', value: 'producto' },
+                  { text: 'Salón', value: 'salon' },
+                  { text: 'Servicio', value: 'servicio' }
                 ]
         }
     },

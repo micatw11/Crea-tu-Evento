@@ -1,8 +1,8 @@
 <template>
     <div>
         <div class="box-header">
-            <div class="col-xs-2">
-                <button class="btn btn-block btn-primary btn-sm"
+            <div class="col-xs-12">
+                <button class="btn btn-primary btn-sm"
                     @click="showModalRegister = true">
                     Registrar Usuario
                 </button>

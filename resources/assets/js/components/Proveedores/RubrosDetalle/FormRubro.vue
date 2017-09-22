@@ -1,64 +1,6 @@
 <template>
 <div>
     <form role="form">
-        <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('categoria')&&validarRubro}">
-            <div class="col-sm-12">
-                <label for="inputCategoria" class="control-label">Categoria</label><br>
-                <select
-                    class="form-control"
-                    name='categoria'
-                    v-model="categoria_id"
-                    @change="cambiarCategoria()"
-                    v-validate="'required'"
-                    placeholder="Seleccione la Categoria" >
-                    <option disabled value="">Seleccione una categoria</option>
-                    <option 
-                        v-for="option in optionsCategorias" 
-                        v-bind:value="option.value">
-                        {{ option.text }}
-                    </option>
-
-                </select>
-                <!-- validacion vee-validation -->
-                <span v-show="errors.has('categoria')&&validarRubro" class="help-block">{{ errors.first('categoria') }}</span>
-                <!-- validacion api-->
-                <div class="text-red" v-if="errorsApi.categoria">
-                    <div v-for="msj in errorsApi.categoria">
-                        <p>{{ msj }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('subcategoria')&&validarRubro}">
-            <div v-if="categoria_id != null" class="col-sm-12">
-                <label for="inputSubcategoria" class="control-label">Subcategoria</label><br>
-                <select
-                    class="form-control"
-                    name='subcategoria'
-                    v-model="subcategoria_id"
-                    @change="cambiarSubcategoria()"
-                    v-validate="'required'"
-                    placeholder="Seleccione una subCategoria" 
-                    v-bind:disabled="categoria_id == '' || optionsSubcategorias.length == 0">
-                    <option disabled value="">Seleccione una Subcategoria</option>
-                    <option 
-                        v-for="option in optionsSubcategorias" 
-                        v-bind:value="option.value">
-                        {{ option.text }}
-                    </option>
-
-                </select>
-                <!-- validacion vee-validation -->
-                <span v-show="errors.has('subcategoria')&&validarRubro" class="help-block">{{ errors.first('subcategoria') }}</span>
-                <!-- validacion api-->
-                <div class="text-red" v-if="errorsApi.subcategoria">
-                    <div v-for="msj in errorsApi.subcategoria">
-                        <p>{{ msj }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('rubro')&&validarRubro}">
             <div v-if="subcategoria_id != null" class="col-sm-12">
@@ -68,7 +10,7 @@
                     v-model="rubro_id"
                     name='rubro'
                     @change="cambiarRubro()"
-                    v-bind:disabled="subcategoria_id == '' || optionsRubros.length == 0"
+                    v-bind:disabled="optionsRubros.length == 0"
                     v-validate="'required'"
                     placeholder="Seleccione un Rubro" >
                     <option disabled value="">Seleccione un Rubro</option>
@@ -268,7 +210,7 @@ export default {
         vSelect
     },
     beforeMount() {
-        this.getOptionsCategoria();
+        this.getOptionsRubros();
     },
     created: function() {
         this.loadDefaultOptions();
@@ -303,34 +245,13 @@ export default {
                     loading(false)
                 })
         },
-        getOptionsCategoria: function() {
-            this.$http.get('api/categoria'
-                ).then(response => {
-                    let optionscat = response.data.data
-                    for (let categoria of optionscat){
-                        this.optionsCategorias.push({ text: categoria.nombre, value: categoria.id })
-                    }
-                })
 
-        },
-        getOptionsSubcategorias: function(categoria) {
-            this.$http.get('api/subcategoria/'
-                ).then(response => {
-                    let options = response.data.data
-                    for (let subcategoria of options){
-                        if(categoria == subcategoria.categoria_id){
-                            this.optionsSubcategorias.push({ text: subcategoria.nombre, value: subcategoria.id })
-                        }
-                    }
-                })
-
-        },
-        getOptionsRubros: function(subcategoria) {
-            this.$http.get('api/rubros/'+ subcategoria
+        getOptionsRubros: function() {
+            this.$http.get('api/rubros/'
                 ).then(response => {
                     let options = response.data
                     for (let rubros of options){
-                        console.log(this.rubrosRegistrados.length)
+
                         if(this.rubrosRegistrados.length > 0)
                         {
                             for (var i = 0; i < this.rubrosRegistrados.length; i++) {
@@ -353,34 +274,12 @@ export default {
                 })
 
         },
-        cambiarCategoria(){
-            this.rubro.categoria_id = this.categoria_id;
-               if (this.categoria_id!=''){
-                 this.optionsSubcategorias = []
-                 this.optionsRubros = []
-                 this.subcategoria_id =  ''
-                 this.rubro_id = ''
-                 this.getOptionsSubcategorias(this.categoria_id);
-                }
-        },
-        cambiarSubcategoria(){
-            this.rubro.subcategoria_id = this.subcategoria_id;
-            if (this.subcategoria_id!=''){
-                  this.optionsRubros = []
-                  this.rubro_id = ''
-                  this.getOptionsRubros(this.subcategoria_id);
-             }
-        },
         cambiarRubro(){
             this.rubro.rubro_id = this.rubro_id;
         },
         loadDefaultOptions: function(){
             if(!this.nuevo){
-                this.categoria_id = this.rubro.rubro.subcategoria.categoria_id;
-                this.subcategoria_id = this.rubro.rubro.subcategoria_id;
                 this.rubro_id = this.rubro.rubro_id;
-                this.getOptionsSubcategorias(this.categoria_id);
-                this.getOptionsRubros(this.rubro.rubro.subcategoria_id);
             }
         }
     }

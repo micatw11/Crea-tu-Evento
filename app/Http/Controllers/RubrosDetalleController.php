@@ -135,7 +135,7 @@ class RubrosDetalleController extends Controller
      */
     public function show($id)
     {
-        $rubro= RubrosDetalle::where('id', $id)->with('rubro.subcategoria.categoria','domicilio.localidad.provincia')->firstOrFail();
+        $rubro= RubrosDetalle::where('id', $id)->with('rubro','domicilio.localidad.provincia')->firstOrFail();
 
         if ($rubro) {
             return response()->json(['rubro' => $rubro], 200);
@@ -208,7 +208,7 @@ class RubrosDetalleController extends Controller
         $proveedor = Proveedor::where('user_id', $id)->firstOrFail();
 
         $rubros = RubrosDetalle::where('proveedor_id', $proveedor->id)
-            ->with('domicilio.localidad.provincia', 'rubro.subcategoria.categoria','rubro.caracteristicas')->get();
+            ->with('domicilio.localidad.provincia','rubro.caracteristicas')->get();
         return response()->json(['rubros' => $rubros], 200);
     }
 

@@ -16,7 +16,9 @@
                     <div class="box-body">
                         <p>
                             <b>Tipo de Proveedor: </b>
-                            {{item.rubro.subcategoria.categoria.tipo_proveedor}}
+                            <div v-if="item.rubro.servicio"> Servicio </div>
+                            <div v-if="item.rubro.salon"> Salon </div>
+                            <div v-if="item.rubro.producto"> Servicio </div>
                         </p>
                         <div v-if="item.habilitacion != null">
                             <p>
@@ -33,12 +35,6 @@
                         <div v-else>
                             <p><b>Habilitación: </b>Sin habilitación</p>
                         </div>
-                        <p>
-                            <b>Categoria: </b>
-                        
-                            {{item.rubro.subcategoria.categoria.nombre}} / {{ item.rubro.subcategoria.nombre }} / {{item.rubro.nombre}}
-                        </p>
-
                         <p if= "item.domicilio">
                             <b>Domicilio: </b><br>
                             calle: {{item.domicilio.calle}}<br>

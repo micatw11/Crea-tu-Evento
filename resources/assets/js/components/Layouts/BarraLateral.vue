@@ -54,6 +54,7 @@
                                     <i class="fa fa-th-list"></i> Usuarios
                                 </a>
                             </router-link>
+
                             <router-link
                                 v-if="auth.user.profile.roles_id == role.ADMINISTRADOR ||
                                     auth.user.profile.roles_id == role.SUPERVISOR ||
@@ -64,6 +65,7 @@
                                         <i class="fa fa-th-list"></i> Proveedores
                                     </a>
                             </router-link>
+
                             <router-link
                                 v-if="auth.user.profile.roles_id == role.ADMINISTRADOR ||
                                     auth.user.profile.roles_id == role.SUPERVISOR"
@@ -71,6 +73,16 @@
                                     to="/categorias">
                                         <a>
                                             <i class="fa fa-th-list"></i> <span> Categorias</span>
+                                        </a>
+                            </router-link>
+
+                            <router-link
+                                v-if="auth.user.profile.roles_id == role.ADMINISTRADOR ||
+                                    auth.user.profile.roles_id == role.SUPERVISOR"
+                                    tag="li"
+                                    to="/rubros">
+                                        <a>
+                                            <i class="fa fa-th-list"></i> <span> Rubros</span>
                                         </a>
                             </router-link>
 
@@ -161,7 +173,6 @@
         },
         mounted: function(){
             this.$events.$on('changeCategory', eventData => this.changeCategory(eventData));
-            this.$events.$on('changeSubategory', eventData => this.changeSubcategory(eventData));
             if(auth.user.authenticated){
                 this.avatarUpdated();
             }
@@ -189,21 +200,16 @@
             * @getCategorias 
             */
             getCategorias: function(){
-                this.categorias = [];
                 this.showCategories = false;
 
                 this.$http.get('api/categoria/')
                     .then(response => {
-                        let data = response.data.data
-
+                        let data = response.data
+                        this.categorias = [];
                         for (let categoria of data){
                             var lengthP = 0;
                             for (let subcategoria of categoria.subcategorias){
-                                for (let rubro of subcategoria.rubros) {
-                                    for(let detalle of rubro.rubros_detalles){
-                                        lengthP = lengthP + detalle.publicaciones.length
-                                    }
-                                }
+                                lengthP = lengthP + subcategoria.publicaciones.length
                             }
                             if(lengthP > 0)
                             this.categorias.push({ value: '/?with_category=' + categoria.id, text: categoria.nombre, quantity: lengthP });
@@ -217,47 +223,22 @@
             * @changeCategory 
             */
             changeCategory: function(id){
-                this.categorias = [];
                 this.showCategories = false;
 
                 this.$http.get('api/categoria/' +id
                     ).then(response => {
                         let data = response.data.data
+                        this.categorias = [];
                         for (let subcategoria of data.subcategorias){
                             var lengthP = 0;
-                            for (let rubro of subcategoria.rubros) {
-                                for(let detalle of rubro.rubros_detalles){
-                                    lengthP = lengthP + detalle.publicaciones.length
-                                }
-                            }
+                            lengthP = lengthP + subcategoria.publicaciones.length
+
                             if(lengthP > 0)
-                            this.categorias.push({ text: subcategoria.nombre, value: '/?with_subcategory=' + subcategoria.id, quantity: lengthP });
+                                this.categorias.push({ text: subcategoria.nombre, value: '/?with_subcategory=' + subcategoria.id, quantity: lengthP });
                         }
                         setTimeout(() => this.showCategories = true, 3000);
                     })
                     
-            },
-            /** 
-            * Consulta por una subcategoria al servidor
-            * 
-            * @changeSubcategory 
-            */
-            changeSubcategory: function(id){
-                this.categorias = [];
-                this.showCategories = false;
-                this.$http.get('api/rubros/'+ id)
-                .then(response => {
-                    let options = response.data
-                    for (let rubro of options){
-                        var lengthP = 0;
-                        for(let detalle of rubro.rubros_detalles){
-                            lengthP = lengthP + detalle.publicaciones.length
-                        }
-                        if(lengthP > 0)
-                        this.categorias.push({ text: rubro.nombre, value: '/?with_denomination=' + rubro.id, quantity: lengthP})
-                    }
-                    setTimeout(() => this.showCategories = true, 3000);
-                })
             }
         },
         computed: {

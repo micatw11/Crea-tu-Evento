@@ -28,7 +28,8 @@ export default {
     data() {
         return {
             categoria:{
-                nombre: null
+                nombre: null,
+                tipo_proveedor: ''
             },
             errorsApi: {}
         }
@@ -42,7 +43,8 @@ export default {
             this.$http.post(
                 'api/categoria', 
                 {
-                    nombre: this.categoria.nombre
+                    nombre: this.categoria.nombre,
+                    tipo_proveedor: this.categoria.tipo_proveedor
                 })
                 .then(response => {
                     this.$events.fire('reloadIndexCategoria')

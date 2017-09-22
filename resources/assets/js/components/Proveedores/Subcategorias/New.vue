@@ -28,7 +28,8 @@ export default {
     data() {
         return {
             subcategoria:{
-                nombre: null
+                nombre: null,
+                categoria_id: ''
             },
             errorsApi: {}
         }
@@ -42,7 +43,8 @@ export default {
             this.$http.post(
                 'api/subcategoria', 
                 {
-                    nombre: this.subcategoria.nombre
+                    nombre: this.subcategoria.nombre,
+                    categoria_id: this.subcategoria.categoria_id
                 })
                 .then(response => {
                     this.$events.fire('reloadIndexSubcategoria')
@@ -75,7 +77,7 @@ export default {
                 nombre: null
             }
         },
-         closeModal: function(){
+        closeModal: function(){
             this.$events.fire('cerrar')
         }
     }

@@ -35,4 +35,9 @@ class RubrosDetalle extends Model
     {
         return $this->hasMany('App\Publicacion');
     }
+
+    public function articulos()
+    {
+        return $this->hasMany('App\Articulo');
+    }
 }

@@ -18,8 +18,9 @@ class Subcategoria extends Model
         return $this->belongsTo('App\Categoria');
     }
 
-    public function rubros()
+    public function publicaciones()
     {
-    	return $this->hasMany('App\Rubro');
+    	return $this->hasMany('App\Publicacion');
     }
+
 }

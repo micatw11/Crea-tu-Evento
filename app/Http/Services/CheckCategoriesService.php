@@ -5,31 +5,6 @@ use Illuminate\Support\Facades\DB;
 
 class CheckCategoriesService
 {
-    /**
-    * @param  $subcategoria_id  
-     * Elimina la subcategoria dada por parametro 
-     * si esta no esta relacionada a ningun rubro.
-     *
-     */
-	public function checkSubcategories($subcategoria_id=null )
-	{
-		if($subcategoria_id != null)
-		{
-            $subcategoria = DB::table('subcategorias')
-                ->select(DB::raw('count(rubros.subcategoria_id) as quantity'), 'subcategorias.categoria_id')
-                    ->join('rubros', 'subcategorias.id', '=', 'rubros.subcategoria_id')
-                	->where('subcategorias.id', $subcategoria_id)->first();
-
-			if($subcategoria->quantity === 0)
-			{
-				$categoria_id = $subcategoria->categoria_id;
-				DB::table('subcategorias')->where('subcategorias.id', $subcategoria_id)->delete();
-
-				$this->checkCategories($categoria_id);
-			}
-		}
-
-	}
 
     /**
     * @param  $categoria_id  

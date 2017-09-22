@@ -28,7 +28,10 @@ export default {
     data() {
         return {
             rubro:{
-                nombre: null
+                nombre: null,
+                servicio: false,
+                salon: false,
+                producto: false
             },
             errorsApi: {}
         }
@@ -39,10 +42,15 @@ export default {
     methods: {
         //envio de formulario de nueva Categoria
         sendForm: function() {
+
             this.$http.post(
                 'api/rubro', 
                 {
-                    nombre: this.rubro.nombre
+                    nombre: this.rubro.nombre,
+                    servicio: this.rubro.servicio,
+                    salon: this.rubro.salon,
+                    producto: this.rubro.producto,
+                    caracteristicas: this.rubro.caracteristicas
                 })
                 .then(response => {
                     this.$events.fire('reloadIndexRubro')

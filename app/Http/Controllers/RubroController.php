@@ -14,27 +14,13 @@ class RubroController extends Controller
 {
 
     /**
-     * @var CheckCategoriesService
-     */
-    private $categoriesService;
-
-    /**
-     *  constructor.
-     * @param CheckCategoriesService $categoriesService
-     */
-    public function __construct(CheckCategoriesService $categoriesService)
-    {
-        $this->categoriesService = $categoriesService;
-    }
-
-    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
-        $query = Rubro::with('subcategoria.categoria','caracteristicas')->orderBy('nombre', 'asc');
+        $query = Rubro::with('caracteristicas')->orderBy('nombre', 'asc');
 
         if ($request->filter) {
             $like = '%'.$request->filter.'%';
@@ -50,57 +36,23 @@ class RubroController extends Controller
 
         //$this->validatorRubro($request);
 
-        $categoria = null;
-        $subcategoria = null;
-        $newCategoria = false;
-        $rubro = null;
-        $caracteristicas= [];
+        $this->validate($request, [
+                'nombre'=>'required|min:4|max:55',
+                'servicio'=>'required',
+                'salon'=>'required',
+                'producto'=>'required'
+            ]);
 
-        if($request->has('subcategoria_nombre'))
-        {
-            if($request->has('categoria_nombre'))
-            {
-                $newCategoria = true;
-            }
-            
-            if($newCategoria)
-            {
-                $this->validate($request, [
-                        'subcategoria_nombre' => 'required|unique:subcategorias,nombre|min:4|max:55',
-                        'categoria_nombre' => 'required|unique:categorias,nombre|min:4|max:55',
-                        'tipo_proveedor' => 'required',
-                        'nombre' => 'required|unique:rubros,nombre|min:4|max:55'
-                    ]);
-                $categoria = $this->createCategoria($request);
-                $subcategoria = $this->createSubcategoria($request, $categoria->id);
-            }
-            else
-            {
-                $this->validate($request, [
-                        'subcategoria_nombre' => 'required|unique:subcategorias,nombre|min:4|max:55',
-                        'categoria_id' => 'required|exists:categorias,id',
-                        'nombre' => 'required|unique:rubros,nombre|min:4|max:55'
-                    ]);
-                $subcategoria = $this->createSubcategoria($request, $request->categoria_id);
-            }
-
-            $rubro = $this->createRubro($request, $subcategoria->id);
-        }
-        else 
-        {
-            $this->validate($request, [
-                    'subcategoria_id'=> 'required|exists:subcategorias,id',
-                    'nombre'=>'required|unique:rubros,nombre|min:4|max:55'
-                ]);
-            $rubro = $this->createRubro($request, $request->subcategoria_id);
-        }
-        if($request->has('caracteristicas')&&$rubro)
+        $rubro = $this->createRubro($request);
+        
+        if($request->has('caracteristicas') && $rubro)
         {
             $rubro->caracteristicas()->attach($request->caracteristicas);
         }
+
         if ($rubro)
         {
-            return response(null, Response::HTTP_OK);
+            return response(''.$request->salon, Response::HTTP_OK);
         } 
         else 
         {
@@ -109,55 +61,22 @@ class RubroController extends Controller
     }
 
     /**
-     * @param $request
-     */
-    protected function validatorRubro(Request $request)
-    {
-        return $this->validate($request, ['nombre'=>'required|unique:rubros,nombre|min:4|max:55']);
-    }
-
-    /**
     * @param  \Illuminate\Http\Request  $request
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    protected function createRubro(Request $request, $subcategoria_id)
+    protected function createRubro(Request $request)
     {
-        //$user->roles()->detach([1, 2, 3]);
         return Rubro::create([
-                    'nombre'=> $request->nombre,
-                    'subcategoria_id' => $subcategoria_id
-                ]);
+            'nombre'=> $request->nombre,
+            'servicio' => $request->servicio,
+            'salon' => $request->salon,
+            'producto' => $request->producto
+        ]);
     }
 
-    /**
-    * @param  \Illuminate\Http\Request  $request
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    protected function createSubcategoria(Request $request, $categoria_id)
-    {
-        return Subcategoria::create([
-                    'nombre'=> $request->subcategoria_nombre,
-                    'categoria_id' => $categoria_id
-                ]);
-    }
 
-    /**
-    * @param  \Illuminate\Http\Request  $request
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    protected function createCategoria(Request $request)
-    {
-        return Categoria::create([
-                    'nombre'=> $request->categoria_nombre,
-                    'tipo_proveedor' => $request->tipo_proveedor
-                ]);
-    }
 
     /**
      * Display the specified resource.
@@ -167,7 +86,7 @@ class RubroController extends Controller
      */
     public function show($id)
     {
-        $rubros= Rubro::where('id', $id)->with('subcategoria.categoria','caracteristicas')->firstOrFail();
+        $rubros= Rubro::where('id', $id)->with('caracteristicas')->firstOrFail();
 
         if ($rubros) {
             return response()->json(['data' => $rubros], 200);
@@ -187,16 +106,13 @@ class RubroController extends Controller
     {
         $this->validate($request, [
                 'nombre'=>'required|min:4|max:55',
-                'subcategoria_id'=>'required|exists:subcategorias,id'
-                ]);
+                'servicio'=>'required',
+                'salon'=>'required',
+                'producto'=>'required'
+            ]);
 
         $rubro = Rubro::where('id', $id)->firstOrFail();
-        $subcategoria_id = null;
 
-        if($request->subcategoria_id != $rubro->subcategoria_id)
-        {
-            $subcategoria_id = $rubro->subcategoria_id;
-        }
 
         $rubro->update($request->all());
 
@@ -211,10 +127,6 @@ class RubroController extends Controller
             $rubro->caracteristicas()->attach($request->caracteristicas);
 
         }
-        if($subcategoria_id != null)
-        {
-            $this->categoriesService->checkSubcategories($subcategoria_id);
-        }
 
         if($rubro->save())
         {
@@ -224,10 +136,9 @@ class RubroController extends Controller
         }
     }
 
-    public function searchRubros(Request $request, $subcategoria)
+    public function searchRubros(Request $request)
     {
-        $rubros = Rubro::with('rubros_detalles.publicaciones')->where('subcategoria_id',$subcategoria)
-                ->orderBy('nombre', 'asc')->get();
+        $rubros = Rubro::orderBy('nombre', 'asc')->get();
 
 
         return response()->json($rubros);

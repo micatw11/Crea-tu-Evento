@@ -10,7 +10,7 @@ class Categoria extends Model
 
     protected $fillable = [ 
                             'nombre',
-    						'tipo_proveedor'
+            				'tipo_proveedor'
     					  ];
 
     
