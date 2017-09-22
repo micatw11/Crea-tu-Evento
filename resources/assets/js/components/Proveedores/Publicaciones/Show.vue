@@ -47,9 +47,17 @@
 								<div class="col-sm-12">
 									<h3 class="text-uppercase">{{publicacion.titulo}}
 				                        <div class="pull-right">
-				                            <button class="btn btn-box-tool" data-toggle="tooltip" @click.prevent >
-				                                <i class="fa fa-fw fa-heart-o fa-2x"></i>
-				                            </button>
+	                                       <div v-if="verificar_favorite()">
+		                                        <div @click="favorite_icon(publicacion.id)">
+		                                            <i class="fa fa-fw fa-heart"></i>
+		                                        </div>
+		                                    </div>
+
+		                                    <div v-else>
+		                                        <div @click="favorite_icon(publicacion.id)">
+		                                            <i class="fa fa-fw fa-heart-o"></i>
+		                                        </div>
+		                                    </div>
 				                        </div>
 			                        </h3>
 
@@ -244,7 +252,6 @@
 	import route from './../../../routes.js'
 	import auth from './../../../auth.js'
 	import Role from '../../../config.js'
-	import ShowProveedor from './../Show.vue'
 	import { Carousel, Slide } from 'vue-carousel';
 	import moment from 'moment';
 
@@ -261,7 +268,7 @@
 		},
 		mounted(){
 		    this.$nextTick(function() {
-		      this.getProductos();
+		      this.getPublicacion();
 		    })
 			
 		},
@@ -269,10 +276,10 @@
 			window.addEventListener('resize', this.handleResize)
 		},
 		components: {
-        	ShowProveedor, Carousel, Slide
+        	Carousel, Slide
     	},
 		methods: {
-			getProductos: function(){
+			getPublicacion: function(){
 	            this.$http.get('api/publicacion/'+this.$route.params.publicacionId )
 	                .then(response => {
 	                    this.publicacion = response.data.publicacion
@@ -301,6 +308,33 @@
 	                    });
 	                })
 			},
+			verificar_favorite(){
+				if (this.publicacion.favoritos != null){
+	                for (var i = 0; i < this.publicacion.favoritos.length; i++) {
+	                    if (this.publicacion.favoritos[i].user_id == auth.user.profile.id){
+	                        return true
+	                    }
+	                }
+	            }
+                return false
+            },
+			favorite_icon(id){
+                this.$http.post(
+                    'api/favoritos/', 
+                    {
+                        user_id: auth.user.profile.id,
+                        publicacion_id : id
+                    }).then(response => {
+                            this.publicacion.favoritos = response.data.favoritos
+                             this.$events.$emit('changeFavorite', eventData => this.getFavourite());
+                             this.getPublicacion();
+                    }, response => {
+                        this.$toast.error({
+                            title:'¡Error!',
+                            message:'No se ha podido completar la accion. :('
+                        });
+                    })   
+            },
 			modificar(id){
 				route.push('/publicacion/'+id+'/edit');
 			},

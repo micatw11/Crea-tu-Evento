@@ -51,4 +51,9 @@ class Publicacion extends Model
         return $this->belongsToMany('App\Caracteristica')->selectRaw('count(caracteristicas.id) as caracteristicas_count');
     }
 
+       public function favoritos()
+    {
+        return $this->hasMany('App\Favorito');
+    }
+
 }

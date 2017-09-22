@@ -67,6 +67,8 @@
                 categoria_id: '',
                 subcategoria_id: '',
                 rubro_id: '',
+                favorite_user:false,
+                favourite: '',
                 q: '',
                 with_category: false, 
                 category_name: '',
@@ -107,7 +109,8 @@
                     filtro = filtro + '&with_denomination='+this.rubro_id;
                 if(this.localidad_id !=  null)
                     filtro = filtro + '&with_localidad='+this.localidad_id.value ;
-
+                if(this.favorite_user) 
+                    filtro = filtro + '&favorite='+true;
                 filtro = filtro + '&page='+this.pageOne.current_page+'&per_page='+this.pageOne.per_page;
 
                 this.$http.get(filtro).then(response => {
@@ -115,6 +118,7 @@
                     this.setDataPagination(response.data.publicaciones);
                     this.nombre=false;
                     this.q = '';
+                    this.favorite_user=false;
 
                 }, response => {
                     this.$toast.error({
@@ -196,6 +200,14 @@
                         else if(this.$route.query.q != undefined && this.$route.query.q != '')
                         {
                             this.q = this.$route.query.q;
+                        }else {
+                            if(this.$route.query.favorite != undefined){
+                                this.favorite_user=this.$route.query.favorite;
+                                this.listaPath.push( {
+                                        route: '/?favorite='+true, 
+                                        name: "Favoritos"
+                                    } );
+                            }
                         }
                     }
                 }

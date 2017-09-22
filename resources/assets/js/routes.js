@@ -121,7 +121,7 @@ let routes = [
 			name: 'user',
 			component: Perfil,
 			beforeEnter: guardRoute,
-			meta: { Role: [role.PROVEEDOR], requiresAuth: true }
+			meta: { requiresAuth: true }
 
 		},
 		//publicaciones
