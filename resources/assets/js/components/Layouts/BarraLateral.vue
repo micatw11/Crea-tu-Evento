@@ -226,7 +226,10 @@
                         for (let categoria of data){
                             var lengthP = 0;
                             for (let subcategoria of categoria.subcategorias){
-                                lengthP = lengthP + subcategoria.publicaciones.length
+                                for(let publicacion of subcategoria.publicaciones){
+                                    if(publicacion.estado == 1)
+                                        lengthP = lengthP + 1;
+                                }
                             }
                             if(lengthP > 0)
                             this.categorias.push({ value: '/?with_category=' + categoria.id, text: categoria.nombre, quantity: lengthP });
@@ -247,8 +250,10 @@
                         this.categorias = [];
                         for (let subcategoria of data.subcategorias){
                             var lengthP = 0;
-                            lengthP = lengthP + subcategoria.publicaciones.length
-
+                            for(let publicacion of subcategoria.publicaciones){
+                                if(publicacion.estado == 1)
+                                    lengthP = lengthP + 1;
+                            }
                             if(lengthP > 0)
                                 this.categorias.push({ text: subcategoria.nombre, value: '/?with_subcategory=' + subcategoria.id, quantity: lengthP });
                         }
@@ -266,7 +271,7 @@
                     this.$http.get('api/favoritos/'+ auth.user.profile.id)
                         .then(response => {
                             this.favoritos = response.data.data
-                                this.favourites = this.favoritos.length
+                            this.favourites = this.favoritos.length
                         })
                 }
             }

@@ -69,6 +69,7 @@
 	        	if ((this.publicacion.fecha_finalizacion == '0000-00-00')||(this.publicacion.fecha_finalizacion == '')){
 	        		this.publicacion.fecha_finalizacion = null
 	        	}
+
 	            this.$http.patch('api/publicacion/'+this.$route.params.publicacionId,
 	                {
 	                    titulo: this.publicacion.titulo,
@@ -76,7 +77,7 @@
 	                    subcategoria_id: this.publicacion.subcategoria_id,
 	                    oferta: this.publicacion.oferta,
 	                    descuento: this.publicacion.descuento,
-	                    precio: this.Publicacion.precio,
+	                    precio: this.publicacion.precio,
 	                    fecha_finalizacion: this.publicacion.fecha_finalizacion,
 	                    fotos: fotosIds,
 	                    fotosUpdate: this.publicacion.fotosUpdate,

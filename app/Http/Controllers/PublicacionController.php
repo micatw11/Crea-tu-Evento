@@ -201,6 +201,7 @@ class PublicacionController extends Controller
 	        [
 	        	'titulo' => 'required|min:5', 
 	        	'descripcion' => 'required|min:20|max:30000',
+                'subcategoria_id' => 'required|exists:subcategorias,id',
                 'precio' => 'required'
 	        ]);
     }

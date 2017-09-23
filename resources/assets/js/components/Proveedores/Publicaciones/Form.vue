@@ -334,6 +334,9 @@
 		mounted(){
 			this.$events.on("validarFormPublicacion", () => this.validateSubmit())
 		},
+        created() {
+            this.loadDefaultOptions();
+        },
 		components: { vSelect, VueEditor },
 		methods: {
 			getOptionsRubros: function() {
@@ -522,6 +525,22 @@
                     for (var i = 0; i < this.publicacion.caracteristicas.length; i++) { 
                         this.options_caracteristicas.push({caracteristica_id: this.publicacion.caracteristicas[i].pivot.caracteristica_id, informacion: this.publicacion.caracteristicas[i].pivot.informacion})
                     }
+                }
+            },
+            loadDefaultOptions(){
+                if(!this.nuevo){
+                    if(this.publicacion.oferta || this.publicacion.descuento){
+                        this.ofertaChecked = true;
+                    }
+                    this.subcategorias = [];
+                    this.$http.get('api/subcategoria').then( response => {
+                        var data = response.data;
+                        for (let subcategoria of data) {
+                            this.subcategorias.push({ text: subcategoria.nombre, value: subcategoria.id});
+                            if(subcategoria.id == this.publicacion.subcategoria_id)
+                                this.categoria_id = subcategoria.categoria_id;
+                        }
+                    })
                 }
             }
         }
