@@ -46,20 +46,23 @@
                     </div>
                 </div>
 -->
-                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('categoria')&&validarPublicacion}">
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': (errors.has('categoria') || errors.has('subcategoria') ) &&validarPublicacion}">
                     <div class="col-sm-12"><label class="control-label">Categoria (*)</label><br></div>
                     <div class="col-sm-6">
+
                         <select
                             name="categoria"                  
                             v-model="categoria_id"
                             class="form-control" 
                             v-validate="'required'"
                             @change="changeCategory()">
-                            <option value="" disabled="">Seleccione un categoria</option>
+                            <option value="" disabled="">Seleccione una categoria</option>
                             <option v-for="option in categorias" v-bind:value="option.value">
                                 {{ option.text }}
                             </option>
                         </select>
+                        <!-- validacion vee-validation -->
+                        <span v-show="errors.has('categoria')&&validarPublicacion" class="help-block">{{ errors.first('categoria') }}</span>
                     </div>
                     <div class="col-sm-6" v-if="categoria_id != ''">
 
@@ -68,11 +71,20 @@
                             v-model="publicacion.subcategoria_id"
                             class="form-control" 
                             v-validate="'required'">
-                            <option value="" disabled="">Seleccione un categoria</option>
+                            <option value="" disabled="">Seleccione una subcategoria</option>
                             <option v-for="option in subcategorias" v-bind:value="option.value">
                                 {{ option.text }}
                             </option>
                         </select>
+                        
+                        <!-- validacion vee-validation -->
+                        <span v-show="errors.has('subcategoria')&&validarPublicacion" class="help-block">{{ errors.first('subcategoria') }}</span>
+                        <!-- validacion api-->
+                        <div class="text-red" v-if="errorsApi.subcategoria_id">
+                            <div v-for="msj in errorsApi.subcategoria_id">
+                                <p>{{ msj }}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('fotos[]')}">
@@ -83,7 +95,7 @@
                             type="file"
                             accept="image/*"
                             ref="files"
-                            v-validate.reject="'required|ext:jpg,png,jpeg|size:4096|dimensions:518,350'" 
+                            v-validate.reject="'required|ext:jpg,png,jpeg|size:4096'" 
                             @change="onFilesChange" 
                             name="fotos[]">
 
@@ -92,7 +104,7 @@
                             type="file"
                             accept="image/*"
                             ref="files"
-                            v-validate.reject="isRequiredInputFile ? 'required|ext:jpg,png,jpeg|size:4096|dimensions:418,250' : 'ext:jpg,png,jpeg|size:4096|dimensions:518,350'" 
+                            v-validate.reject="isRequiredInputFile ? 'required|ext:jpg,png,jpeg|size:4096' : 'ext:jpg,png,jpeg|size:4096'" 
                             @change="onFilesChange" 
                             name="fotos[]"><br>
 
@@ -307,6 +319,7 @@
                 categoria_id: '',
                 ofertaChecked: false,
                 categorias: [],
+                subcategorias: [],
                 options_caracteristicas: [],
                 caracteristicas: [],
                 caracteristicas_no: [],
@@ -374,10 +387,12 @@
                 }
             },
             changeCategory(){
+                this.publicacion.subcategoria_id = '';
+                this.subcategorias = [];
                 this.$http.get('api/subcategoria').then( response => {
                     var data = response.data;
                     for (let subcategoria of data) {
-                        if(subcategoria == this.categoria_id)
+                        if(subcategoria.categoria_id == this.categoria_id)
                             this.subcategorias.push({ text: subcategoria.nombre, value: subcategoria.id});
                     }
                 })

@@ -13,7 +13,7 @@ class Publicacion extends Model
      * @var array
      */
     protected $fillable = [
-        'titulo', 'oferta', 'descripcion', 'estado','proveedor_id','fecha_finalizacion', 'created_at', 'updated_at'
+        'titulo', 'oferta', 'descuento', 'descripcion', 'estado','proveedor_id', 'subcategoria_id', 'precio', 'fecha_finalizacion', 'created_at', 'updated_at'
     ];
 
     public function fotos()

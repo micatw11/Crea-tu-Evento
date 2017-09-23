@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Publicacion;
+use App\Proveedor;
 use App\Favorito;
 use App\Foto;
 use App\Rol;
@@ -115,6 +116,8 @@ class PublicacionController extends Controller
             'oferta' => $request->oferta,
             'descripcion' => $request->descripcion,
             'fecha_finalizacion' => $request->fecha_finalizacion,
+            'subcategoria_id' => $request->subcategoria_id,
+            'precio' => $request->precio,
             'proveedor_id' => $proveedor->id
         ]);
 
@@ -197,7 +200,8 @@ class PublicacionController extends Controller
 	    return $this->validate($request, 
 	        [
 	        	'titulo' => 'required|min:5', 
-	        	'descripcion' => 'required|min:20|max:30000'
+	        	'descripcion' => 'required|min:20|max:30000',
+                'precio' => 'required'
 	        ]);
     }
 

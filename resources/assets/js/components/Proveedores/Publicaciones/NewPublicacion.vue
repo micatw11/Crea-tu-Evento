@@ -71,8 +71,10 @@
 	                {
 	                    titulo: this.publicacion.titulo,
 	                    descripcion: this.publicacion.descripcion,
-	                    rubros_detalle_id: this.publicacion.rubros_detalle_id,
+	                    subcategoria_id: this.publicacion.subcategoria_id,
+	                    precio: this.publicacion.precio,
 	                    oferta: this.publicacion.oferta,
+	                    descuento: this.publicacion.descuento,
 	                    fecha_finalizacion: this.publicacion.fecha_finalizacion,
 	                    fotos: this.publicacion.fotos,
 	                    caracteristicas: this.publicacion.caracteristicas

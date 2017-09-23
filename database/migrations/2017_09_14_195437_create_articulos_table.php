@@ -16,12 +16,13 @@ class CreateArticulosTable extends Migration
         Schema::create('articulos', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('proveedor_id')->unsigned();
-            $table->enum('tipo', ['producto', 'salon','servicio']);
+            $table->integer('rubro_id')->unsigned();
             $table->string('nombre');//detalle
             $table->double('precio', 15,2)->nullable();
             $table->integer('stock');
             $table->integer('estado');
 
+            $table->foreign('rubro_id')->references('id')->on('rubros');
             $table->foreign('proveedor_id')->references('id')->on('proveedores');
             $table->timestamps();
         });
