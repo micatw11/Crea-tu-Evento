@@ -92,12 +92,12 @@
                                     tag="li"
                                     to="/caracteristicas">
                                         <a>
-                                            <i class="fa fa-th-list"></i> <span> Caracteristicas de Rubros</span>
+                                            <i class="fa fa-th-list"></i> <span> Caracteristicas</span>
                                         </a>
                             </router-link>
                         </ul>
                     </li>
-                    <li class="treeview">
+                    <li class="treeview" v-if="favourites > 0">
                           <router-link :to="'/?favorite='+ true" tag="a" @click="goToFavourites()">
                             <i class="fa fa-dashboard"></i>
                             <span>Favoritos</span>
@@ -176,7 +176,7 @@
                 categorias: [],
                 favoritos:[],
                 showCategories: false,
-                favourites: ''
+                favourites: 0
             }
         },
         beforeMount: function(){

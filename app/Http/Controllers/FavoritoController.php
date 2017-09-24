@@ -49,7 +49,9 @@ class FavoritoController extends Controller
      */
     public function show($id)
     {
-        $favoritos = Favorito::where('user_id', $id)->get()->pluck('publicacion_id');
+        $favoritos = Favorito::join('publicaciones', 'favoritos.publicacion_id', '=', 'publicaciones.id')
+                ->where('publicaciones.estado', 1)
+                ->where('user_id', $id)->get()->pluck('publicacion_id');
             return response()->json(['data' => $favoritos], 200);
             
         

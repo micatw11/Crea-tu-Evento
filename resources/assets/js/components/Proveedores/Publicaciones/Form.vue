@@ -54,6 +54,7 @@
                             name="categoria"                  
                             v-model="categoria_id"
                             class="form-control" 
+                            v-bind:disabled="categorias.length == 0"
                             v-validate="'required'"
                             @change="changeCategory()">
                             <option value="" disabled="">Seleccione una categoria</option>
@@ -69,6 +70,7 @@
                         <select
                             name="subcategoria"                  
                             v-model="publicacion.subcategoria_id"
+                            v-bind:disabled="subcategorias.length == 0"
                             class="form-control" 
                             v-validate="'required'">
                             <option value="" disabled="">Seleccione una subcategoria</option>
@@ -204,18 +206,14 @@
                         </div>
                     </div>
                 </div>
-
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('precio')&&validarPublicacion}">
-                    <div class="col-sm-2">
+                    <div class="col-sm-4">
                         <label for="precio" class="control-label">Precio</label><br>
                         <div class="input-group">
-                            <div class="input-group-addon">
-                                $
-                            </div>
-                            <input type="text" v-model="publicacion.precio" name="precio" class="form-control" v-validate="'required'">
+                            <money v-model="publicacion.precio" v-bind="money" v-validate="'required|min_value:1'" data-vv-name="precio"></money>
                         </div>
                         <!-- validacion vee-validation -->
-                        <span v-show="errors.has('precio')&&validarPublicacion" class="help-block">{{ errors.first('precio') }}</span>
+                        <span v-show="errors.has('precio')&&validarPublicacion" class="help-block"> El campo precio es requirido.</span>
                         <!-- validacion api-->
                         <div class="text-red" v-if="errorsApi.precio">
                             <div v-for="msj in errorsApi.precio">
@@ -282,6 +280,7 @@
 	import auth from '../../../auth.js'
 	import vSelect from "vue-select";
     import { VueEditor } from 'vue2-editor'
+    import Money from './../../Plugins/v-money/src/component'
 
 	export default {
 		props: {
@@ -303,6 +302,13 @@
 		},
 		data() {
 			return {
+                money: {
+                    decimal: ',',
+                    thousands: '.',
+                    prefix: '$ ',
+                    precision: 2,
+                    masked: false
+                },
 				auth: auth,
 				rubros: [],
                 src: [],
@@ -337,7 +343,7 @@
         created() {
             this.loadDefaultOptions();
         },
-		components: { vSelect, VueEditor },
+		components: { vSelect, VueEditor, Money },
 		methods: {
 			getOptionsRubros: function() {
 	            this.$http.get('api/proveedor/'+this.auth.user.profile.id+'/rubro/'
@@ -532,13 +538,12 @@
                     if(this.publicacion.oferta || this.publicacion.descuento){
                         this.ofertaChecked = true;
                     }
-                    this.subcategorias = [];
+                    this.categoria_id = this.publicacion.subcategoria.categoria_id
                     this.$http.get('api/subcategoria').then( response => {
                         var data = response.data;
                         for (let subcategoria of data) {
-                            this.subcategorias.push({ text: subcategoria.nombre, value: subcategoria.id});
-                            if(subcategoria.id == this.publicacion.subcategoria_id)
-                                this.categoria_id = subcategoria.categoria_id;
+                            if(subcategoria.categoria_id == this.categoria_id)
+                                this.subcategorias.push({ text: subcategoria.nombre, value: subcategoria.id});
                         }
                     })
                 }

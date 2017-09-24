@@ -137,6 +137,7 @@
                     },
                 ],
                 url: '/api/caracteristica',
+                listPath : [{route: '/', name: 'Inicio'}, {route: '/caracteristicas', name: 'Caracteristicas'}],
                 idCaracteristica: null,
                 showModificarCaracteristica: false,
                 showNewCaracteristica: false,
@@ -148,6 +149,7 @@
             VuetableCa, VuetablePaginationCa, VuetablePaginationInfoCa, NewCaracteristica, EditCaracteristica
         },
         mounted() {
+            this.$events.fire('changePath', this.listPath, 'Caracteristicas');
             this.$events.$on('filter-setCaracteristica', eventData => this.onFilterSet(eventData));
             this.$events.on('cerrar', () => this.closeModal());
             this.$events.on('reloadIndexCaracteristica', () => Vue.nextTick( () => this.$refs.vuetableCa.refresh()) );

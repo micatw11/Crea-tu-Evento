@@ -112,7 +112,7 @@ export default {
         getOptionsCategories: function() {
             this.$http.get('api/categoria/'
                 ).then(response => {
-                    let data = response.data.data
+                    let data = response.data
                     for (let categoria of data){
                         this.categorias.push({ value: categoria.id, text: categoria.nombre });
                     }
