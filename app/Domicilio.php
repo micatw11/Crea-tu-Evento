@@ -20,9 +20,9 @@ class Domicilio extends Model
         return $this->hasOne('App\Proveedor');
     }
 
-      public function rubros_detalle()
+      public function prestaciones()
     {
-        return $this->hasOne('App\RubrosDetalle');
+        return $this->hasOne('App\Prestacion');
     }
 
 	public function localidad()

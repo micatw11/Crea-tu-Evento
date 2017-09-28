@@ -113,7 +113,7 @@
             return {
                 css: Style,
                 noDataTemplate: 'No hay datos para visualizar',
-                info: 'Mirando de {from} a {to} de {total} subcategorias',
+                info: 'Mirando de {from} a {to} de {total} caracteristicas',
                 noData:'No hay datos',
                 moreParams: {},
                 tableColumns:  [

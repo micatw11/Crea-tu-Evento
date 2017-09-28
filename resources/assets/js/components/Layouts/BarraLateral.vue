@@ -95,6 +95,16 @@
                                             <i class="fa fa-th-list"></i> <span> Caracteristicas</span>
                                         </a>
                             </router-link>
+
+                              <router-link
+                                v-if="auth.user.profile.roles_id == role.ADMINISTRADOR ||
+                                    auth.user.profile.roles_id == role.SUPERVISOR"
+                                    tag="li"
+                                    to="/localidades">
+                                        <a>
+                                            <i class="fa fa-th-list"></i> <span> Localidades</span>
+                                        </a>
+                            </router-link>
                         </ul>
                     </li>
                     <li class="treeview" v-if="favourites > 0">

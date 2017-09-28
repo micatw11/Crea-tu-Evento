@@ -144,7 +144,7 @@
                     </div>                    
                 </div>
 
-                <div v-if="publicacion.rubros_detalle_id&&(caracteristicas.length>0||caracteristicas_no.length>0)">
+                <div v-if="publicacion.prestaciones_id&&(caracteristicas.length>0||caracteristicas_no.length>0)">
                     <div class="col-sm-12">
                         <label for="caracteristicas" class="control-label">Caracteristicas</label>
                         <div class="direct-chat-messages col-sm-12" style="height: 100px;">
@@ -360,7 +360,7 @@
                         }
                         if (!this.nuevo){
                             this.edit=true
-                            this.changeCaracteristicas(this.publicacion.rubros_detalle_id);
+                            this.changeCaracteristicas(this.publicacion.prestaciones_id);
                         }
                     })
 

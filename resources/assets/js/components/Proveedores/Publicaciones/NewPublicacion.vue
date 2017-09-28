@@ -105,7 +105,7 @@
 	        		'descripcion': '',
 	        		'oferta': '',
 	        		'fotos': null,
-	        		'rubros_detalle_id': '',
+	        		'prestaciones_id': '',
 	        		'fecha_finalizacion': null
 	        	}
 	        },

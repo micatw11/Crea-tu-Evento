@@ -17,9 +17,9 @@ class Rubro extends Model
     
     ///RELACIONES//
 
-    public function rubros_detalles()
+    public function prestaciones()
     {
-        return $this->hasMany('App\RubrosDetalle');
+        return $this->hasMany('App\Prestacion');
     }
 
     public function caracteristicas()

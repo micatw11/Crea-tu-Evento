@@ -9,10 +9,10 @@ use App\Http\Services\ProveedorService;
 use Illuminate\Support\Facades\Auth;
 use App\Proveedor;
 use App\Domicilio;
-use App\RubrosDetalle;
+use App\Prestacion;
 use App\Log;
 
-class RubrosDetalleController extends Controller
+class PrestacionController extends Controller
 {
 
     /**
@@ -42,7 +42,7 @@ class RubrosDetalleController extends Controller
      */
     public function create(Request $request,$proveedor,$domicilio)
     {
-        return RubrosDetalle::create([
+        return Prestacion::create([
                     'proveedor_id'=> $proveedor->id,
                     'rubro_id'=> $request->rubro_id,
                     'habilitacion'=> $request->habilitacion,
@@ -135,7 +135,7 @@ class RubrosDetalleController extends Controller
      */
     public function show($id)
     {
-        $rubro= RubrosDetalle::where('id', $id)->with('rubro','domicilio.localidad.provincia')->firstOrFail();
+        $rubro= Prestacion::where('id', $id)->with('rubro','domicilio.localidad.provincia')->firstOrFail();
 
         if ($rubro) {
             return response()->json(['rubro' => $rubro], 200);
@@ -164,7 +164,7 @@ class RubrosDetalleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $rubro = RubrosDetalle::where('id', $id)->firstOrFail();
+        $rubro = Prestacion::where('id', $id)->firstOrFail();
         $saveDomicilio = true;
 
         $this->validatorRubro($request);
@@ -207,7 +207,7 @@ class RubrosDetalleController extends Controller
     public function getAll(Request $request, $id){
         $proveedor = Proveedor::where('user_id', $id)->firstOrFail();
 
-        $rubros = RubrosDetalle::where('proveedor_id', $proveedor->id)
+        $rubros = Prestacion::where('proveedor_id', $proveedor->id)
             ->with('domicilio.localidad.provincia','rubro.caracteristicas')->get();
         return response()->json(['rubros' => $rubros], 200);
     }

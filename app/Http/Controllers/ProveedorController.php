@@ -11,7 +11,7 @@ use App\Proveedor;
 use App\Publicacion;
 use App\Rol;
 use App\Domicilio;
-use App\RubrosDetalle;
+use App\Prestacion;
 use App\Rubro;
 use App\Log;
 
@@ -272,7 +272,7 @@ class ProveedorController extends Controller
     }
 
     public function buscarRubro(Request $request, $proveedorId){
-        $query = DB::table('rubros_detalle')
+        $query = DB::table('prestaciones')
             ->select('id as value', 'denominacion as label')
             ->where('proveedor_id', $proveedorId);
         if($request->q){

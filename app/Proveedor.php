@@ -28,9 +28,9 @@ class Proveedor extends Model
         return $this->belongsTo('App\Domicilio');    
     }
 
-    public function rubros_detalles()
+    public function prestaciones()
     {
-        return $this->hasMany('App\RubrosDetalle');
+        return $this->hasMany('App\Prestacion');
     }
 
     public function publicaciones()

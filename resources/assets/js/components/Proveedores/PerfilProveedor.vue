@@ -73,7 +73,7 @@
 
 <script>
 
-    import IndexRubros from './RubrosDetalle/Index.vue';
+    import IndexRubros from './Prestaciones/Index.vue';
     import IndexPublicaciones from './Publicaciones/Index.vue';
 
     Vue.component('pagination-box', require('./../Plugins/pagination/pagination-v1.vue'));
