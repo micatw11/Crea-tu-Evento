@@ -22,12 +22,17 @@ class LocalidadController extends Controller
 
         if($request->filter){
                $query= $query->join('provincias', 'localidades.provincia_id', '=', 'provincias.id')
+                ->select('localidades.*')
                 ->where('localidades.nombre','like' ,'%'.$request->filter.'%')
                 ->orWhere('provincias.nombre','like' ,'%'.$request->filter.'%')
                 ->orderBy('localidades.nombre', 'asc');
         }
         $localidades = $query->paginate(15);
-        return response()->json($localidades);
+        if ($localidades){
+            return response($localidades, Response::HTTP_OK);
+        } else {
+           return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
      /**

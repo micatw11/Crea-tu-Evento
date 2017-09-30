@@ -83,9 +83,6 @@ export default {
     mounted() {
         this.$events.$on('validarFormLocalidad', () => this.validateBeforeSubmit());
     },
-    created(){
-        this.loadDefaultOption();  
-    },
     components: {
         vSelect
     },
@@ -112,11 +109,6 @@ export default {
                 ).then(response => {
                     this.provincias = response.data.data
                 })
-        },
-        loadDefaultOption: function(){
-            this.provincias.push({value: this.localidad.provincia_id, label: this.localidad.provincia.nombre})
-           // this.localidad.provincia_id = this.localidad.provincia_id
-
         }
     }
 }

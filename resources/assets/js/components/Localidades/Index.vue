@@ -55,7 +55,7 @@
 
                                             <!-- Eliminar Provincia -->
                                              <button class="btn-xs btn-danger"
-                                                @click="deleteP(event)">
+                                                @click="showDelete = true,  idLocalidad = props.rowData.id">
                                                 <i class="fa fa-fw fa-trash-o"></i> Eliminar
                                             </button>
                                         </div>
@@ -96,6 +96,32 @@
                 </div>
             </div>
         </div>
+        <template>
+            <!-- Modal Eliminar Localidad-->
+            <div class="modal" role="dialog" :style="{ display : showDelete  ? 'block' : 'none' }">
+                <div class="modal-dialog" style="width: 300px; text-align: center;">
+
+                    <!-- Modal content-->
+                    <div class="modal-content" style="width: 350px; text-align: center;">
+                        <div class="modal-body">
+                            <button type="button" class="close" @click="showDelete = false">&times;</button>
+                            <div class="box-body">
+                                <p>¿Esta seguro que desea </p>
+                                <p>eliminar la localidad?</p>
+                            </div>
+                             <button type="button" @click="showDelete = false" class="btn btn-default">
+                                    Atras
+                                </button>
+                                <button
+                                    @click="deleteP()" 
+                                    type="button" class="btn btn-danger">
+                                 Eliminar
+                                </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
     </div>
 </div>
         
@@ -148,6 +174,7 @@
                 showModificarLocalidad: false,
                 showNewLocalidad: false,
                 idLocalidad: null,
+                showDelete: false,
                 listPath : [{route: '/', name: 'Inicio'}, {route: '/localidades', name: 'Localidades'}]
             }
         },
@@ -159,7 +186,7 @@
             this.$events.fire('changePath', this.listPath, this.titlePath);
              this.$events.$on('cerrar', () =>this.closeModal());
              this.$events.on('reloadIndexLocalidad', () => Vue.nextTick( () => this.$refs.vuetableL.refresh()) );
-        },
+        }, 
         methods: {
              closeModal: function(){
                 this.showModificarLocalidad = false;
@@ -178,41 +205,25 @@
                 this.moreParams.filter = filterText
                 this.$nextTick( () => this.$refs.vuetableL.refresh() )
             },
-            deleteP(event){
-                  swal({ 
-                    title: "Are you sure ?",
-                    text: "You will not be able to recover this environment !",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "Yes, delete it !",
-                    cancelButtonText: "No, cancel !",
-                    closeOnConfirm: false,
-                    closeOnCancel: false 
-                }, 
-                isConfirm => { // <-- this guy here
-                    if (isConfirm) {
-                            this.$http.post(
-                            'api/localidad/'+ event.id, 
-                            {
-                                _method: 'DELETE'
-                            })
-                            .then(response => {
-                                this.$nextTick( () => this.$refs.vuetableL.refresh() )
-                                this.$toast.success({
-                                    title:'¡Cambios realizados!',
-                                    message:'Se han realizado correctamente los cambios. :D'
-                                });
-                            }, response => {
-                                this.$toast.error({
-                                    title:'¡Error!',
-                                    message:'No se han podido guardar los cambios. :('
-                                });
-                            })
-                          }
-                        }
-                    );
-                
+            deleteP(){
+                this.$http.post(
+                'api/localidad/'+this.idLocalidad, 
+                {
+                    _method: 'DELETE'
+                })
+                .then(response => {
+                    this.$nextTick( () => this.$refs.vuetableL.refresh() )
+                    this.$toast.success({
+                        title:'¡Cambios realizados!',
+                        message:'Se han realizado correctamente los cambios. :D'
+                    });
+                }, response => {
+                    this.$toast.error({
+                        title:'¡Error!',
+                        message:'No se ha podido eliminar la localidad por que esta en uso. :('
+                    });
+                })
+                this.showDelete = false
             }
         }
     }
