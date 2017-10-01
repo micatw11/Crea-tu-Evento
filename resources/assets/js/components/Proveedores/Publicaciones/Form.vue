@@ -1,280 +1,298 @@
 <template>
-        <form role="form" enctype="multipart/form-data">
-            <div class="col-sm-12">
-                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('titulo')&&validarPublicacion}">
-                    <div class="col-sm-12">
-                        <label for="titulo" class="control-label">Titulo (*) </label>
-                        <input 
-                            name="titulo"  
-                            v-validate:proveedor.nombre="'required|min:5'" 
-                            type="text" class="form-control" 
-                            v-model="publicacion.titulo" 
-                            placeholder="Titulo">
-                        <!-- validacion vee-validation -->
-                        <span v-show="errors.has('titulo')&&validarPublicacion" class="help-block">{{ errors.first('titulo') }}</span>
-                        <!-- validacion api-->
-                        <div class="text-red" v-if="errorsApi.titulo">
-                            <div v-for="msj in errorsApi.titulo">
-                                <p>{{ msj }}</p>
-                            </div>
+    <form role="form" enctype="multipart/form-data">
+
+        <!--
+        <div class="col-sm-12">
+            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('rubro')&&validarPublicacion}">
+                <div class="col-sm-6">
+                    <label class="control-label">Rubro (*)</label><br>
+                    <select
+                        name="rubro"                  
+                        v-model="publicacion.rubros_detalle_id"
+                        class="form-control" 
+                        v-validate="'required'"
+                        @change="changeCaracteristicas(publicacion.rubros_detalle_id)">
+                        <option value="" disabled="">Seleccione un rubro</option>
+                        <option v-for="option in rubros" v-bind:value="option.value">
+                            {{ option.text }}
+                        </option>
+                    </select>
+
+                    <span v-show="errors.has('rubro')&&validarPublicacion" class="help-block">{{ errors.first('rubro') }}</span>
+
+                    <div class="text-red" v-if="errorsApi.rubros_detalle_id">
+                        <div v-for="msj in errorsApi.rubros_detalle_id">
+                            <p>{{ msj }}</p>
                         </div>
                     </div>
                 </div>
-<!--
-                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('rubro')&&validarPublicacion}">
-                    <div class="col-sm-6">
-                        <label class="control-label">Rubro (*)</label><br>
-                        <select
-                            name="rubro"                  
-                            v-model="publicacion.rubros_detalle_id"
-                            class="form-control" 
-                            v-validate="'required'"
-                            @change="changeCaracteristicas(publicacion.rubros_detalle_id)">
-                            <option value="" disabled="">Seleccione un rubro</option>
-                            <option v-for="option in rubros" v-bind:value="option.value">
-                                {{ option.text }}
-                            </option>
-                        </select>
-                        validacion vee-validation
-                        <span v-show="errors.has('rubro')&&validarPublicacion" class="help-block">{{ errors.first('rubro') }}</span>
-                         validacion api
-                        <div class="text-red" v-if="errorsApi.rubros_detalle_id">
-                            <div v-for="msj in errorsApi.rubros_detalle_id">
-                                <p>{{ msj }}</p>
-                            </div>
+            </div>
+        </div>
+        -->
+    
+        <div class="col-sm-12">
+            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('titulo')&&validarPublicacion}">
+                <div class="col-sm-12">
+                    <label for="titulo" class="control-label">Titulo (*) </label>
+                    <input 
+                        name="titulo"  
+                        v-validate:proveedor.nombre="'required|min:5'" 
+                        type="text" class="form-control" 
+                        v-model="publicacion.titulo" 
+                        placeholder="Titulo">
+                    <!-- validacion vee-validation -->
+                    <span v-show="errors.has('titulo')&&validarPublicacion" class="help-block">{{ errors.first('titulo') }}</span>
+                    <!-- validacion api-->
+                    <div class="text-red" v-if="errorsApi.titulo">
+                        <div v-for="msj in errorsApi.titulo">
+                            <p>{{ msj }}</p>
                         </div>
                     </div>
                 </div>
--->
-                <div :class="{'form-group has-feedback': true, 'form-group has-error': (errors.has('categoria') || errors.has('subcategoria') ) &&validarPublicacion}">
-                    <div class="col-sm-12"><label class="control-label">Categoria (*)</label><br></div>
-                    <div class="col-sm-6">
+            </div>
 
-                        <select
-                            name="categoria"                  
-                            v-model="categoria_id"
-                            class="form-control" 
-                            v-bind:disabled="categorias.length == 0"
-                            v-validate="'required'"
-                            @change="changeCategory()">
-                            <option value="" disabled="">Seleccione una categoria</option>
-                            <option v-for="option in categorias" v-bind:value="option.value">
-                                {{ option.text }}
-                            </option>
-                        </select>
-                        <!-- validacion vee-validation -->
-                        <span v-show="errors.has('categoria')&&validarPublicacion" class="help-block">{{ errors.first('categoria') }}</span>
-                    </div>
-                    <div class="col-sm-6" v-if="categoria_id != ''">
+            <div :class="{'form-group has-feedback': true, 'form-group has-error': (errors.has('categoria') || errors.has('subcategoria') ) &&validarPublicacion}">
+                <div class="col-sm-12"><label class="control-label">Categoria (*)</label><br></div>
+                <div class="col-sm-6">
 
-                        <select
-                            name="subcategoria"                  
-                            v-model="publicacion.subcategoria_id"
-                            v-bind:disabled="subcategorias.length == 0"
-                            class="form-control" 
-                            v-validate="'required'">
-                            <option value="" disabled="">Seleccione una subcategoria</option>
-                            <option v-for="option in subcategorias" v-bind:value="option.value">
-                                {{ option.text }}
-                            </option>
-                        </select>
-                        
-                        <!-- validacion vee-validation -->
-                        <span v-show="errors.has('subcategoria')&&validarPublicacion" class="help-block">{{ errors.first('subcategoria') }}</span>
-                        <!-- validacion api-->
-                        <div class="text-red" v-if="errorsApi.subcategoria_id">
-                            <div v-for="msj in errorsApi.subcategoria_id">
-                                <p>{{ msj }}</p>
-                            </div>
+                    <select
+                        name="categoria"                  
+                        v-model="categoria_id"
+                        class="form-control" 
+                        v-bind:disabled="categorias.length == 0"
+                        v-validate="'required'"
+                        @change="changeCategory()">
+                        <option value="" disabled="">Seleccione una categoria</option>
+                        <option v-for="option in categorias" v-bind:value="option.value">
+                            {{ option.text }}
+                        </option>
+                    </select>
+                    <!-- validacion vee-validation -->
+                    <span v-show="errors.has('categoria')&&validarPublicacion" class="help-block">{{ errors.first('categoria') }}</span>
+                </div>
+                <div class="col-sm-6" v-if="categoria_id != ''">
+
+                    <select
+                        name="subcategoria"                  
+                        v-model="publicacion.subcategoria_id"
+                        v-bind:disabled="subcategorias.length == 0"
+                        class="form-control" 
+                        v-validate="'required'">
+                        <option value="" disabled="">Seleccione una subcategoria</option>
+                        <option v-for="option in subcategorias" v-bind:value="option.value">
+                            {{ option.text }}
+                        </option>
+                    </select>
+                    
+                    <!-- validacion vee-validation -->
+                    <span v-show="errors.has('subcategoria')&&validarPublicacion" class="help-block">{{ errors.first('subcategoria') }}</span>
+                    <!-- validacion api-->
+                    <div class="text-red" v-if="errorsApi.subcategoria_id">
+                        <div v-for="msj in errorsApi.subcategoria_id">
+                            <p>{{ msj }}</p>
                         </div>
                     </div>
                 </div>
-                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('fotos[]')}">
-                    <div class="col-sm-12">
-                        <label for="fotos" class="control-label" style="text-align: center;">Fotos <i class="fa fa-file-image-o"></i></label><br>
-                        <input v-if="nuevo"
-                            data-vv-as="fotos"
-                            type="file"
-                            accept="image/*"
-                            ref="files"
-                            v-validate.reject="'required|ext:jpg,png,jpeg|size:4096'" 
-                            @change="onFilesChange" 
-                            name="fotos[]">
+            </div>
+            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('fotos[]')}">
+                <div class="col-sm-12">
+                    <label for="fotos" class="control-label" style="text-align: center;">Fotos <i class="fa fa-file-image-o"></i></label><br>
+                    <input v-if="nuevo"
+                        data-vv-as="fotos"
+                        type="file"
+                        accept="image/*"
+                        ref="files"
+                        v-validate.reject="'required|ext:jpg,png,jpeg|size:4096'" 
+                        @change="onFilesChange" 
+                        name="fotos[]">
 
-                        <input v-else
-                            data-vv-as="fotos"
-                            type="file"
-                            accept="image/*"
-                            ref="files"
-                            v-validate.reject="isRequiredInputFile ? 'required|ext:jpg,png,jpeg|size:4096' : 'ext:jpg,png,jpeg|size:4096'" 
-                            @change="onFilesChange" 
-                            name="fotos[]"><br>
+                    <input v-else
+                        data-vv-as="fotos"
+                        type="file"
+                        accept="image/*"
+                        ref="files"
+                        v-validate.reject="isRequiredInputFile ? 'required|ext:jpg,png,jpeg|size:4096' : 'ext:jpg,png,jpeg|size:4096'" 
+                        @change="onFilesChange" 
+                        name="fotos[]"><br>
 
-                        <div v-if="publicacion.fotos" v-for="(fotos,index) in publicacion.fotos">
-                            <div v-if="fotos.nombre != null" class="col-sm-3">
-                                <div class="box" style="height: 120px; width: 100px;">
-                                    <div  class="box-body" style="display: block;">
-                                        <img :src="'/storage/proveedores/publicaciones/'+fotos.nombre" class="img-thumbnail" style="height: 80px; width: 80px;">
-                                        <button type="button" class="btn btn-box-tool pull-right" @click="deleteImage(index)">
-                                            <i class="fa fa-close"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3 with-border" v-if="src" v-for="(fotos,index) in src">
+                    <div v-if="publicacion.fotos" v-for="(fotos,index) in publicacion.fotos">
+                        <div v-if="fotos.nombre != null" class="col-sm-3">
                             <div class="box" style="height: 120px; width: 100px;">
-                                 <div class="box-body" style="display: block;">
-                                    <img :src="fotos" class="img-thumbnail" style="height: 80px; width: 80px;">
-                                    <button type="button" class="btn btn-box-tool pull-right" @click="deleteImageSrc(index)">
+                                <div  class="box-body" style="display: block;">
+                                    <img :src="'/storage/proveedores/publicaciones/'+fotos.nombre" class="img-thumbnail" style="height: 80px; width: 80px;">
+                                    <button type="button" class="btn btn-box-tool pull-right" @click="deleteImage(index)">
                                         <i class="fa fa-close"></i>
                                     </button>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- validacion vee-validation -->
-                        <span v-show="errors.has('fotos[]')" class="help-block">{{ errors.first('fotos[]') }}</span>
-                        <!-- validacion api-->
-                        <div class="text-red" v-if="errorsApi.fotos">
-                            <div v-for="msj in errorsApi.fotos">
-                                <p>{{ msj }}</p>
-                            </div>
-                        </div>
-                    </div>                    
-                </div>
-
-                <div v-if="publicacion.rubros_detalle_id&&(caracteristicas.length>0||caracteristicas_no.length>0)">
-                    <div class="col-sm-12">
-                        <label for="caracteristicas" class="control-label">Caracteristicas</label>
-                        <div class="direct-chat-messages col-sm-12" style="height: 100px;">
-                            <div class="direct-chat-msg">
-                                <div v-for="caracteristica in caracteristicas">
-                                    <div class="col-sm-6">
-                                        <div class="col-sm-6">
-                                            <input type="checkbox" id="checkbox1" @click="selected(caracteristica, $event)"
-                                                 checked> {{caracteristica.nombre}}
-                                        </div>
-                                        <div v-if="caracteristica.adicional==true" class="col-sm-6">
-                                            <input 
-                                                name="inf_adicional"
-                                                type="text" class="form-control"
-                                                :value="caracteristica.pivot.informacion"
-                                                @change="c_adicional(caracteristica,$event)"
-                                                >
-                                        </div>
-                                    </div>
-                                </div>
-                                <div v-for="caracteristica in caracteristicas_no">
-                                    <div class="col-sm-6">
-                                        <div class="col-sm-6">
-                                            <input type="checkbox" id="checkbox" @click="selected(caracteristica, $event)"> {{caracteristica.nombre}}
-                                        </div>
-                                        <div v-if="caracteristica.adicional==true" class="col-sm-6">
-                                            <input 
-                                                name="inf_adicional"
-                                                type="text" class="form-control"
-                                                @change="c_adicional(caracteristica,$event)" >
-                                       </div>
-                                    </div>
-                                </div>
+                    </div>
+                    <div class="col-sm-3 with-border" v-if="src" v-for="(fotos,index) in src">
+                        <div class="box" style="height: 120px; width: 100px;">
+                             <div class="box-body" style="display: block;">
+                                <img :src="fotos" class="img-thumbnail" style="height: 80px; width: 80px;">
+                                <button type="button" class="btn btn-box-tool pull-right" @click="deleteImageSrc(index)">
+                                    <i class="fa fa-close"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('descripcion')&&validarPublicacion}">
-                    <div class="col-sm-12">
-                        <label for="descripcion" class="control-label">Descripci&oacute;n (*)</label>
-
-                        <vue-editor 
-                            data-vv-name="descripcion"  
-                            v-model="publicacion.descripcion" 
-                            v-validate="'required|min:20|max:25000'"
-                            :editorToolbar="customToolbar">
-
-                            
-                        </vue-editor>
-
-                        <!-- validacion vee-validation -->
-                        <span v-show="errors.has('descripcion')&&validarPublicacion" class="help-block">{{ errors.first('descripcion') }}</span>
-                        <!-- validacion api-->
-                        <div class="text-red" v-if="errorsApi.descripcion">
-                            <div v-for="msj in errorsApi.descripcion">
-                                <p>{{ msj }}</p>
-                            </div>
+                    <!-- validacion vee-validation -->
+                    <span v-show="errors.has('fotos[]')" class="help-block">{{ errors.first('fotos[]') }}</span>
+                    <!-- validacion api-->
+                    <div class="text-red" v-if="errorsApi.fotos">
+                        <div v-for="msj in errorsApi.fotos">
+                            <p>{{ msj }}</p>
                         </div>
                     </div>
-                </div>
-                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('precio')&&validarPublicacion}">
-                    <div class="col-sm-4">
-                        <label for="precio" class="control-label">Precio</label><br>
-                        <div class="input-group">
-                            <money v-model="publicacion.precio" v-bind="money" v-validate="'required|min_value:1'" data-vv-name="precio"></money>
-                        </div>
-                        <!-- validacion vee-validation -->
-                        <span v-show="errors.has('precio')&&validarPublicacion" class="help-block"> El campo precio es requirido.</span>
-                        <!-- validacion api-->
-                        <div class="text-red" v-if="errorsApi.precio">
-                            <div v-for="msj in errorsApi.precio">
-                                <p>{{ msj }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group has-feedback">
-                    <div class="col-sm-12">
-                        <label class="control-label">Oferta</label><br>
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" v-model="ofertaChecked"> {{ ofertaChecked ? 'Si' : 'No'}}
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <template v-if="ofertaChecked">
-                    <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('descuento')&&validarPublicacion}">
-                        <div class="col-sm-3">
-                            
-                            <label for="descuento" class="control-label">Porsentaje de descuento </label>
-                            <div class="input-group">
-                                <input type="text" v-model="publicacion.descuento" name="descuento" class="form-control">
-                                <div class="input-group-addon">
-                                    %
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('fecha')&&validarPublicacion}">
-                        <div class="col-sm-12">
-                            <label for="fecha" class="control-label">Fecha de finalización de la promoción</label>
-                            <input
-                                name="fecha" 
-                                type="date"
-                                v-model="publicacion.fecha_finalizacion" 
-                                class="form-control">
-                        </div>
-                    </div>
-
-                    <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('oferta')&&validarPublicacion}">
-                        <div class="col-sm-12">
-                            <label for="oferta" class="control-label">Descripcion de la promoci&oacute;n</label>
-                            <textarea
-                                name="oferta" 
-                                type="text"
-                                style="min-height:100px;" 
-                                v-model="publicacion.oferta" 
-                                class="form-control">
-                            </textarea>
-                        </div>
-                    </div>
-                </template>
+                </div>                    
             </div>
-        </form>
+
+            <div v-if="(caracteristicas.length > 0 || caracteristicas_no.length > 0 )">
+                <div class="col-sm-12">
+                    <label for="caracteristicas" class="control-label">Caracteristicas</label>
+                    <div class="direct-chat-messages col-sm-12" style="height: 100px;">
+                        <div class="direct-chat-msg">
+                            <div v-for="caracteristica in caracteristicas">
+                                <div class="col-sm-6">
+                                    <div class="col-sm-6">
+                                        <input type="checkbox" id="checkbox1" @click="selected(caracteristica, $event)" checked> {{caracteristica.nombre}}
+                                    </div>
+                                    <div v-if="caracteristica.adicional==true" class="col-sm-6">
+                                        <input 
+                                            name="inf_adicional"
+                                            type="text" class="form-control"
+                                            :value="caracteristica.pivot.informacion"
+                                            @change="c_adicional(caracteristica,$event)">
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-for="caracteristica in caracteristicas_no">
+                                <div class="col-sm-6">
+                                    <div class="col-sm-6">
+                                        <input type="checkbox" id="checkbox" @click="selected(caracteristica, $event)"> {{caracteristica.nombre}}
+                                    </div>
+                                    <div v-if="caracteristica.adicional==true" class="col-sm-6">
+                                        <input 
+                                            name="inf_adicional"
+                                            type="text" class="form-control"
+                                            @change="c_adicional(caracteristica,$event)" >
+                                   </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('descripcion')&&validarPublicacion}">
+                <div class="col-sm-12">
+                    <label for="descripcion" class="control-label">Descripci&oacute;n (*)</label>
+
+                    <vue-editor 
+                        data-vv-name="descripcion"  
+                        v-model="publicacion.descripcion" 
+                        v-validate="'required|min:20|max:25000'"
+                        :editorToolbar="customToolbar">
+
+                        
+                    </vue-editor>
+
+                    <!-- validacion vee-validation -->
+                    <span v-show="errors.has('descripcion')&&validarPublicacion" class="help-block">{{ errors.first('descripcion') }}</span>
+                    <!-- validacion api-->
+                    <div class="text-red" v-if="errorsApi.descripcion">
+                        <div v-for="msj in errorsApi.descripcion">
+                            <p>{{ msj }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('precio')&&validarPublicacion}">
+                <div class="col-sm-4">
+                    <label for="precio" class="control-label">Precio</label><br>
+                    <div class="input-group">
+                        <money v-model="publicacion.precio" v-bind="money" v-validate="'required|min_value:1'" data-vv-name="precio"></money>
+                    </div>
+                    <!-- validacion vee-validation -->
+                    <span v-show="errors.has('precio')&&validarPublicacion" class="help-block"> El campo precio es requirido.</span>
+                    <!-- validacion api-->
+                    <div class="text-red" v-if="errorsApi.precio">
+                        <div v-for="msj in errorsApi.precio">
+                            <p>{{ msj }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group has-feedback">
+                <div class="col-sm-12">
+                    <label class="control-label">Oferta</label><br>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" v-model="ofertaChecked"> {{ ofertaChecked ? 'Si' : 'No'}}
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div v-if="ofertaChecked">
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('descuento')&&validarPublicacion}">
+                    <div class="col-sm-3">
+                        
+                        <label for="descuento" class="control-label">Porsentaje de descuento </label>
+                        <div class="input-group">
+                            <input type="text" v-model="publicacion.descuento" name="descuento" class="form-control">
+                            <div class="input-group-addon">
+                                %
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('fecha')&&validarPublicacion}">
+                    <div class="col-sm-12">
+                        <label for="fecha" class="control-label">Fecha de finalización de la promoción</label>
+                        <input
+                            name="fecha" 
+                            type="date"
+                            v-model="publicacion.fecha_finalizacion" 
+                            class="form-control">
+                    </div>
+                </div>
+
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('oferta')&&validarPublicacion}">
+                    <div class="col-sm-12">
+                        <label for="oferta" class="control-label">Descripcion de la promoci&oacute;n</label>
+                        <textarea
+                            name="oferta" 
+                            type="text"
+                            style="min-height:100px;" 
+                            v-model="publicacion.oferta" 
+                            class="form-control">
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 </template>
+<style type="text/css">
+    /* Enter and leave animations can use different */
+    /* durations and timing functions.              */
+    .slide-fade-enter-active {
+      transition: all .5s ease;
+    }
+    .slide-fade-leave-active {
+      transition: all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    }
+    .slide-fade-enter, .slide-fade-leave-to
+    /* .slide-fade-leave-active below version 2.1.8 */ {
+      transform: translateX(10px);
+      opacity: 0;
+    }
+</style>
 <script>
     import route from './../../../routes.js'
 	import auth from '../../../auth.js'
@@ -298,6 +316,9 @@
             nuevo: {
                 type: Boolean,
                 required: true
+            },
+            rubros_id: {
+                type: Array
             }
 		},
 		data() {
@@ -346,22 +367,36 @@
 		components: { vSelect, VueEditor, Money },
 		methods: {
 			getOptionsRubros: function() {
-	            this.$http.get('api/proveedor/'+this.auth.user.profile.id+'/rubro/'
+	            this.$http.get('api/rubro/'
 	                ).then(response => {
                         var data = response.data;
-
-                        if(data.length == 0){
-                            this.$emit('errorRubros'); 
+                        for (var rubro of data) {
+                            for (var id of this.rubros_id ) {
+                                if(rubro.id == id){
+                                    this.pushCaracteristicas(rubro.caracteristicas);
+                                }
+                            }
+                            
                         }
+                        if(this.nuevo){
+
+                            this.caracteristicas_no = this.caracteristicas;
+                            this.caracteristicas = [];
+                        }
+                        else
+                        {
+
+                        }
+                        /*
                         this.rubro_caracteristicas= data
 
-                        for (let rubro of data.rubros){
+                        for (let rubro of data){
                             this.rubros.push({ text: rubro.rubro.nombre, value: rubro.id });
                         }
                         if (!this.nuevo){
                             this.edit=true
                             this.changeCaracteristicas(this.publicacion.rubros_detalle_id);
-                        }
+                        }*/
                     })
 
             },
@@ -375,6 +410,28 @@
                         }
 
                     })
+            },
+            pushCaracteristicas(caracteristicas){
+                for (var caracteristica of caracteristicas) {
+                    if(this.caracteristicas.length == 0)
+                    {
+                        this.caracteristicas.push(caracteristica);
+                    }
+                    else
+                    {
+                        for(var i  =0; i < this.caracteristicas.length; i++){
+                            if(i == (this.caracteristicas.length - 1)
+                                && this.caracteristicas[i].id != caracteristica.id)
+                            {
+                                this.caracteristicas.push(caracteristica);
+                            }
+                            if(this.caracteristicas[i].id == caracteristica.id)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
             },
             onFilesChange(e) {
                 var files = e.target.files || e.dataTransfer.files;
@@ -463,12 +520,12 @@
                     .join('style="text-align:justify"')
             },
             changeCaracteristicas: function(rubro_id){
-                 this.options_caracteristicas= [] 
-                 this.caracteristicas= [] 
-                 this.caracteristicas_no= []
+                 this.options_caracteristicas = [] 
+                 this.caracteristicas = [] 
+                 this.caracteristicas_no = []
                 
                 for (var i = 0; i < this.rubro_caracteristicas.rubros.length; i++){
-                    if (this.rubro_caracteristicas.rubros[i].id==rubro_id){
+                    if (this.rubro_caracteristicas.rubros[i].id == rubro_id){
                         this.caracteristicas = this.rubro_caracteristicas.rubros[i].rubro.caracteristicas
                         break;
                     }
@@ -491,8 +548,10 @@
                 this.$forceUpdate()
             },
             selected(caracteristica,e){
+
                 if (e.toElement.checked){
                         this.options_caracteristicas.push({caracteristica_id: caracteristica.id, informacion: null})
+
                 }else{
                     for (var i = 0; i < this.options_caracteristicas.length; i++)
                     {
@@ -524,7 +583,7 @@
                     if(!igual)
                         option.push(data1[i]);
                 }
-                 return option
+                return option
             },
             agregarOptions: function(){
                 if (this.publicacion.caracteristicas){ 

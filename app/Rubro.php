@@ -26,5 +26,9 @@ class Rubro extends Model
     {
         return $this->belongsToMany('App\Caracteristica');
     }
+
+    public function articulos(){
+        return $this->hasMany('App\Articulo');
+    }
    
 }

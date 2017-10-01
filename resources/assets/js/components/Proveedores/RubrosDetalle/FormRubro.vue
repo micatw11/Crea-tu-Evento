@@ -1,48 +1,48 @@
 <template>
 <div>
+    <div v-if="ShowAdvertenciaSalon" class="col-md-6 col-md-offset-3">
+        <div class="alert alert-warning alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <p><i class="icon fa fa-warning"></i> Puede agregar solo un rubro de salones.</p>
+        </div>
+    </div>
     <form role="form">
 
-        <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('rubro')&&validarRubro}">
-            <div v-if="subcategoria_id != null" class="col-sm-12">
-                <label for="inputRubro" class="control-label">Denominación</label><br>
-                <select
-                    class="form-control"
-                    v-model="rubro_id"
-                    name='rubro'
-                    @change="cambiarRubro()"
-                    v-bind:disabled="optionsRubros.length == 0"
-                    v-validate="'required'"
-                    placeholder="Seleccione un Rubro" >
-                    <option disabled value="">Seleccione un Rubro</option>
-                    <option 
-                        v-for="option in optionsRubros" 
-                        v-bind:value="option.value">
-                        {{ option.text }}
-                    </option>
+        <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('rubros')&&validarRubro}">
+            <div class="col-sm-12">
+                <label for="inputRubro" class="control-label">Rubros</label><br>
+                <v-select 
+                    placeholder="Rubros"
+                    data-vv-name="rubros"
+                    v-validate="'required'" 
+                    v-model="rubrosSelect" 
+                    :on-change="callbackSelect"  
+                    :options="optionsRubros"
+                    multiple>
+                </v-select>
 
-                </select>
                 <!-- validacion vee-validation -->
-                <span v-show="errors.has('rubro')&&validarRubro" class="help-block">{{ errors.first('rubro') }}</span>
+                <span v-show="errors.has('rubros')&&validarRubro" class="help-block">{{ errors.first('rubros') }}</span>
                 <!-- validacion api-->
-                <div class="text-red" v-if="errorsApi.rubro_id">
-                    <div v-for="msj in errorsApi.rubro_id">
+                <div class="text-red" v-if="errorsApi.rubros_id">
+                    <div v-for="msj in errorsApi.rubros_id">
                         <p>{{ msj }}</p>
                     </div>
                 </div>
             </div>
         </div></br>
         <!--Datos de Habilitación y dirección del comercio-->
-        <div v-if="rubro_id != ''" class="col-sm-12">
+        <div v-if="rubro.rubros_id.length > 0 && salon == false" class="col-sm-12">
             <label class="control-label">Cuenta con Comercio de atención. </label> <br>  
             <input type="checkbox" id="checkbox" v-model="rubro.comercio" @click="$forceUpdate()" style="text-align:center;">
             <label for="checkbox">{{ rubro.comercio == true ? "Si" : "No" }}</label>
         </div>
-        <div v-if="rubro.comercio == true">
+        <div v-if="(rubro.comercio == true&&rubro.rubros_id.length > 0)||(salon == true)">
             <div>
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('habilitacion')&&validarRubro}">
                     <div class="col-sm-6">
                         <label for="inputHabilitacion" class="control-label">Habilitación</label><br>
-                         <input name="habilitacion" v-validate="'numeric'" type="text" v-model="rubro.habilitacion" value="habilitacion" class="form-control">
+                         <input name="habilitacion" v-validate="'numeric'" type="text" v-model="rubro.habilitacion" value="habilitacion" class="form-control" placeholder="Numero de habilitacion">
                         <!-- validacion vee-validation -->
                         <span v-show="errors.has('habilitacion')&&validarRubro" class="help-block">{{ errors.first('habilitacion') }}</span>
                         <!-- validacion api-->
@@ -111,7 +111,7 @@
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('calle')&&validarRubro}">
                     <div class="col-sm-8">
                         <label for="inputCalle" class="control-label">Direccion </label><br>
-                        <input name="calle"  v-validate:domicilio.calle="'required|min:4'" type="text" class="form-control" v-model="domicilio.calle" placeholder="calle">
+                        <input name="calle"  v-validate:domicilio.calle="'required|min:4'" type="text" class="form-control" v-model="domicilio.calle" placeholder="Calle">
                         <!-- validacion vee-validation -->
                         <span v-show="errors.has('calle')&&validarRubro" class="help-block">{{ errors.first('calle') }}</span>
                         <!-- validacion api-->
@@ -131,7 +131,8 @@
                                 v-validate="'numeric'" 
                                 type="text" v-model="domicilio.numero" 
                                 value="numero" 
-                                class="form-control">
+                                class="form-control"
+                                placeholder="Numero">
 
                             <!-- validacion vee-validation -->
                             <span v-show="errors.has('numero')&&validarRubro" class="help-block">{{ errors.first('numero') }}</span>
@@ -146,7 +147,7 @@
                     <div class="col-sm-2">
                         
                         <label for="inputPiso" class="control-label">Dpto. </label><br>
-                        <input name="piso" type="text" v-model="domicilio.piso" value="piso" class="form-control col-sm-12">
+                        <input name="piso" type="text" v-model="domicilio.piso" placeholder="Piso" class="form-control col-sm-12">
 
                         <!-- validacion vee-validation -->
                         <span v-show="errors.has('piso')&&validarRubro" class="help-block">{{ errors.first('piso') }}</span>
@@ -186,34 +187,27 @@ export default {
             },
             errorsApi: {
                 required: true
-            },
-            rubrosRegistrados: {
-                type: Array,
-                required: true
             }
     },
     data() {
         return {
             localidades: [],
-            validar: false,
             validarRubro: false,
-            error: false,
-            optionsCategorias: [],
-            categoria_id: '',
-            optionsSubcategorias: [],
-            subcategoria_id: '',
             optionsRubros: [],
-            rubro_id: ''
+            rubrosSelect: [],
+            estaCargado: true,
+            salon: false,
+            ShowAdvertenciaSalon: false
         }
     },
     components: {
         vSelect
     },
     beforeMount() {
+
         this.getOptionsRubros();
     },
     created: function() {
-        this.loadDefaultOptions();
     },
     mounted() {
         this.$events.$on('validarForm', () => this.validateBeforeSubmit());     
@@ -251,37 +245,50 @@ export default {
                 ).then(response => {
                     let options = response.data
                     for (let rubros of options){
-
-                        if(this.rubrosRegistrados.length > 0)
-                        {
-                            for (var i = 0; i < this.rubrosRegistrados.length; i++) {
-                                if(this.rubrosRegistrados[i].rubro_id == rubros.id && this.nuevo){break;}
-                                if((i+1) == this.rubrosRegistrados.length)
-                                {
-                                    this.optionsRubros.push({ text: rubros.nombre, value: rubros.id })
-                                }
+                        this.optionsRubros.push({ label: rubros.nombre,
+                             value: rubros.id, 
+                             salon: rubros.salon, 
+                             servicio: rubros.servicio,
+                             producto: rubros.producto })
+                        if(!this.nuevo){
+                            for (var id of this.rubro.rubros_id) {
+                                if(id == rubros.id)
+                                this.rubrosSelect.push({ label: rubros.nombre, 
+                                    value: rubros.id, 
+                                    salon: rubros.salon, 
+                                    servicio: rubros.servicio,
+                                    producto: rubros.producto });
                             }
-                        } else {
-                            this.optionsRubros.push({ text: rubros.nombre, value: rubros.id })
                         }
                     }
-                    if(this.optionsRubros.length == 0){
-                        this.$toast.error({
-                            title:'¡Vaya!',
-                            message:'Se encuentra registrado en estos rubros. Elija otra subcategoria o categoria'
-                        })
-                    }
+                    this.estaCargado = !this.estaCargado;
                 })
 
         },
-        cambiarRubro(){
-            this.rubro.rubro_id = this.rubro_id;
-        },
-        loadDefaultOptions: function(){
-            if(!this.nuevo){
-                this.rubro_id = this.rubro.rubro_id;
+        callbackSelect(val){
+            if(!this.estaCargado)
+            this.rubro.rubros_id=[];
+            this.salon= false;
+            for (var i = 0; i < val.length; i++) {
+                if(val[i].salon){
+                    if (this.salon){
+                    this.ShowAdvertenciaSalon = true;
+                    val.splice(i, 1)
+                    setTimeout(() => this.ShowAdvertenciaSalon = false, 6000);
+                    }else{
+                        this.salon= true
+                        this.rubro.comercio = true
+                        this.rubro.rubros_id.push(val[i].value)
+                    }
+                }else{
+                    this.rubro.rubros_id.push(val[i].value)
+                }
+                    
+
+                
             }
         }
     }
 }
+
 </script>

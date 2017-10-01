@@ -20,9 +20,16 @@ class ArticuloController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
+        $articulos = [];
         if($user->roles_id == Rol::roleId('proveedor')){
             $proveedor = Proveedor::where('user_id', $user->id)->firstOrFail();
-            $articulos = Articulo::where('proveedor_id', $proveedor->id)->paginate(10);
+            $query = Articulo::where('proveedor_id', $proveedor->id)->with('rubro')
+            ->orderBy('rubro_id', 'asc')->orderBy('nombre', 'asc');
+            if($request->has('page') || $request->has('per_page')){
+                $articulos = $query->paginate(10);
+            }else{
+                $articulos = $query->get();
+            }
 
             return response()->json($articulos, 200);
 
@@ -47,15 +54,15 @@ class ArticuloController extends Controller
             $articulo = Articulo::create([
                 'proveedor_id' => $proveedor->id,
                 'nombre' => $request->nombre,
-                'stock' => $request->cantidad,
-                'tipo' => $request->tipo,
+                'stock' => $request->stock,
+                'rubro_id' => $request->rubro_id,
                 'precio' => $request->precio,
                 'estado' => 1
             ]);
 
-            if($article->save())
+            if($articulo->save())
             {
-                return response(['id' => $article->id], Response::HTTP_OK);
+                return response(['id' => $articulo->id], Response::HTTP_OK);
             }
             else
             {
@@ -70,7 +77,7 @@ class ArticuloController extends Controller
     {
         return $this->validate($request, 
             [
-                'tipo' => 'required|in:producto,servicio,salon', 
+                'rubro_id' => 'required', 
                 'stock' => 'numeric|nullable', 
                 'nombre' => 'required|min:3|max:25',
                 'precio' => 'nullable'

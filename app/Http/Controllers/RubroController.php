@@ -20,6 +20,7 @@ class RubroController extends Controller
      */
     public function index(Request $request)
     {
+        $rubros = [];
         $query = Rubro::with('caracteristicas')->orderBy('nombre', 'asc');
 
         if ($request->filter) {
@@ -27,7 +28,10 @@ class RubroController extends Controller
             $query = $query->where('nombre','like',$like);
         }
 
-        $rubros = $query->paginate(10);
+        if( $request->has('page') || $request->has('per_page') ) 
+            $rubros = $query->paginate(10);
+        else
+            $rubros = $query->get();
 
         return response()->json($rubros);
     }

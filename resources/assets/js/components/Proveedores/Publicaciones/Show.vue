@@ -115,7 +115,7 @@
 								<div class="col-sm-4">
 									<li>
 										<div class="col-sm-6">{{item.nombre}}</div>
-										<div class="col-sm-6" v-if="((item.adicional)&&(item.pivot.informacion!=null))"> = {{item.pivot.informacion}}</div>
+										<div class="col-sm-6" v-if="((item.adicional)&&(item.pivot.informacion!=null))"> {{item.pivot.informacion}}</div>
 									</li>
 									
 								</div>

@@ -19,7 +19,9 @@ class CategoriaController extends Controller
     public function index(Request $request)
     {
         $categorias = [];
-        $query = Categoria::with('subcategorias.publicaciones')->orderBy('nombre', 'asc');
+        $query = Categoria::join('subcategorias', 'subcategorias.categoria_id', '=', 'categorias.id')
+        ->select('categorias.*', DB::raw('COUNT(subcategorias.categoria_id) as subcategorias_count'))
+        ->with('subcategorias.publicaciones')->orderBy('nombre', 'asc');
 
         //filtro
         if ($request->filter) {
@@ -32,10 +34,15 @@ class CategoriaController extends Controller
             $query->where('categorias.tipo_proveedor','like',$like);
         }
 
-        if( $request->has('page') || $request->has('per_page') ) 
+        if( $request->has('page') || $request->has('per_page') ){
             $categorias = $query->paginate(10);
+        }
         else
+        {
+            $query = $query->groupBy('subcategorias.categoria_id')
+            ->having('subcategorias_count', '>', 0);
             $categorias = $query->get();
+        }
         
         return response()->json($categorias, 200);
 

@@ -78,12 +78,25 @@ html, body {
             .profile-username {
                 margin-left: 23px;
             }
-            .fade-enter-active, .fade-leave-active {
-                transition: opacity .7s
-            }
-            .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
-                opacity: 0
-            }
+
             .main-sidebar{
                 height: 100%;
             }
+.box {
+
+    box-shadow: 0 0px 0px;
+}
+
+/* Enter and leave animations can use different */
+/* durations and timing functions.              */
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active below version 2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
+}

@@ -122,11 +122,6 @@
                                     <i class="fa fa-plus"></i> <span> Publicaci&oacute;n</span>
                                 </a>
                             </li>
-                            <li>
-                                <a v-if="auth.user.profile.roles_id == role.PROVEEDOR" @click="goToNewRubro()">
-                                    <i class="fa fa-plus"></i> <span> Rubro</span>
-                                </a>
-                            </li>
                         </ul>
                     </li>
                 </template>

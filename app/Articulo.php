@@ -1,4 +1,3 @@
-10.
 <?php
 
 namespace App;
@@ -15,7 +14,7 @@ class Articulo extends Model
      * @var array
      */
     protected $fillable = [
-        'proveedor_id', 'stock', 'nombre', 'precio', 'tipo', 'estado'
+        'proveedor_id', 'stock', 'nombre', 'precio', 'rubro_id', 'estado'
     ];
 
     public function proveedor()
@@ -26,5 +25,10 @@ class Articulo extends Model
     public function publicaciones()
     {
         return $this->belongsToMany('App\Publicacion');
+    }
+
+    public function rubro()
+    {
+        return $this->belongsTo('App\Rubro');
     }
 }

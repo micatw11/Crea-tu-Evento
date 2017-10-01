@@ -7,24 +7,71 @@
 		        		<div class="box-header with-border">
 		        			<h3 class="box-title">Crear Publicaci&oacute;n</h3>
 		        		</div>
-		        		<div class="box box-body">
-				        	<form-publicacion 
-				        		:publicacion="publicacion"
-				        		:nuevo="true"
-				        		:validarPublicacion="validarPublicacion"
-				        		@validadoNewPublicacion="sendNewForm()"
-				        		@errorRubros="errorRubrosVoid()"
-				        		@update:validarPublicacion="val => validarPublicacion = val"
-				        		:errorsApi="errorsApi">
-				        	</form-publicacion>
+		        		<div class="box-body">
+
+					            <template v-if="showFormRubro">
+					                <form-rubro :rubro="rubro" 
+					                	:domicilio="domicilio" 
+					                	:nuevo="nuevoRubro" 
+					                	:errorsApi="errorsApi" 
+					                	@validado="validoNextForm()"
+					                	@validadoEdit="validoNextForm()">	
+					                </form-rubro>
+
+					            </template>
+
+					        	<template v-if="showFormArticulo">
+					        		<form-articulo
+					        			:rubros="rubro.rubros_id">
+					        		</form-articulo>
+					        		<add-articulo :rubros="rubro.rubros_id" :articulosSelect="articulos">
+					        		</add-articulo>
+					        	</template>
+
+					            <template v-if="showFormPublicacion">
+						        	<form-publicacion 
+						        		:publicacion="publicacion"
+						        		:rubros_id="rubro.rubros_id"
+						        		:nuevo="true"
+						        		:validarPublicacion="validarPublicacion"
+						        		@validadoNewPublicacion="sendNewForm()"
+						        		@errorRubros="errorRubrosVoid()"
+						        		@update:validarPublicacion="val => validarPublicacion = val"
+						        		:errorsApi="errorsApi">
+						        	</form-publicacion>
+						        </template>
+
 				        </div>
-				        <div class="box box-footer">
+				        <div class="box-footer">
 				        	<div style="text-align:center;">
-					        	<button @click="goBack()" class="btn btn-default">
+					        	<!--<button @click="goBack()" class="btn btn-default">
 			                        <i class="glyphicon glyphicon-chevron-left"></i>
 			                        Atras
+			                    </button>-->
+			                    <button v-if="!showFormRubro && showFormArticulo && !showFormPublicacion" 
+			                    	class="btn btn-default" type="button" 
+			                    	@click.stop="showFormRubro = !showFormRubro; showFormArticulo = !showFormArticulo; articulos=[]">
+			                    	Atras
 			                    </button>
-				        		<button class="btn btn-primary" @click="validateBeforeSubmit()">Crear Publicaci&oacute;n</button>
+			                    <button v-if="!showFormRubro && !showFormArticulo && showFormPublicacion" 
+			                    	class="btn btn-default" type="button" 
+			                    	@click.stop="showFormArticulo = !showFormArticulo; showFormPublicacion = !showFormPublicacion">
+			                    	Atras
+			                    </button>
+			                    <button v-if="showFormRubro && !showFormArticulo && !showFormPublicacion"
+			                    	class="btn btn-default" type="button" 
+			                    	@click.stop="validarFormRubros()">
+			                    	Siguiente
+			                    </button>
+			                    <button v-if="!showFormRubro && showFormArticulo && !showFormPublicacion"
+			                    	class="btn btn-default" type="button" 
+			                    	@click.stop="showFormArticulo = !showFormArticulo; showFormPublicacion = !showFormPublicacion">
+			                    	Siguiente
+			                    </button>
+				        		<button v-if="showFormPublicacion" 
+				        			class="btn btn-primary" @click="validateBeforeSubmit()">
+				        			Crear Publicaci&oacute;n
+				        		</button>
 				        	</div>
 				        </div>
 		        	</div>
@@ -36,6 +83,9 @@
 <script> 
 	import FormPublicacion from './Form';
 	import route from './../../../routes.js';
+    import FormRubro from './../RubrosDetalle/FormRubro';
+    import FormArticulo from './../Articulos/New';
+    import AddArticulo from './AddArticulo';
 
 	export default {
 		data() {
@@ -47,6 +97,23 @@
 				errorsApi:[],
 				id: null,
 				listPath : [{route: '/', name: 'Inicio'}, {route: '/publicacion/new', name: 'Nueva Publicación'}],
+                showFormRubro: true,
+                showFormPublicacion: false,
+                showFormArticulo: false,
+                nuevoRubro: true,
+                articulos: [],
+                domicilio: {
+                    calle: null,
+                    numero: null,
+                    piso: null,
+                    localidad_id: null
+                },
+                rubro:{
+                    rubros_id: [],
+                    comercio: false,
+                    habilitacion: null,
+                    fecha_habilitacion: null
+                }
 			}
 		},
 		mounted(){
@@ -55,12 +122,21 @@
 			//this.$events.on("validadoFormPublicacion", () => this.sendNewForm());
 		},
 		components: {
-			FormPublicacion
+			FormPublicacion, FormRubro, FormArticulo, AddArticulo
 		},
 		methods: {
 			validateBeforeSubmit: function() {                 
 	            this.validarPublicacion = true;
 	            this.$events.fire('validarFormPublicacion')
+	        },
+	        validarFormRubros(){
+	        	this.$events.fire('validarForm');
+	        },
+	        validoNextForm(){
+	        	this.showFormPublicacion = false;
+	        	this.showFormRubro = false; 
+	        	this.showFormArticulo = true;
+	        	this.nuevoRubro = false
 	        },
 	        sendNewForm(){
 	        	if ((this.publicacion.fecha_finalizacion == '0000-00-00')||(this.publicacion.fecha_finalizacion == '')){
@@ -77,7 +153,10 @@
 	                    descuento: this.publicacion.descuento,
 	                    fecha_finalizacion: this.publicacion.fecha_finalizacion,
 	                    fotos: this.publicacion.fotos,
-	                    caracteristicas: this.publicacion.caracteristicas
+	                    caracteristicas: this.publicacion.caracteristicas,
+	                    rubro: this.rubro,
+	                    domicilio: this.domicilio,
+	                    articulos: this.articulos
 	                })
 	                .then(response => {
 	                    this.$toast.success({

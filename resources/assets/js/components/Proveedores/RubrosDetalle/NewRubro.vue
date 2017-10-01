@@ -7,7 +7,7 @@
                         <div class="box-header with-border">
                             <h3 class="box-title">Registrar un rubro</h3>
                         </div>
-                        <div class="box box-body">
+                        <div class="box-body">
                         	<form-rubro v-if="getRubros"
                                 :rubro="rubro" 
                                 :domicilio= "domicilio"
@@ -20,7 +20,7 @@
                         <div v-if="!getRubros" class="overlay">
                             <i class="fa fa-refresh fa-spin"></i>
                         </div>
-                        <div class="box box-footer">
+                        <div class="box-footer">
                             <div style="text-align:center;">
                                 <button @click="validateBeforeSubmit()" type="button" class="btn btn-primary">
                                     Guargar

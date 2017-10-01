@@ -5,7 +5,7 @@
         		<div class="box-header with-border">
         			<h3 class="box-title">Editar Publicaci&oacute;n</h3>
         		</div>
-        		<div class="box box-body">
+        		<div class="box-body">
 		        	<form-publicacion v-if="showForm"
 		        		:publicacion="publicacion" 
 		        		:nuevo="false"
@@ -18,7 +18,7 @@
                 <div v-if="!showForm" class="overlay">
                     <i class="fa fa-refresh fa-spin"></i>
                 </div>
-		        <div class="box box-footer">
+		        <div class="box-footer">
 		        	<div style="text-align:center;">
 			            <button @click="goBack()" class="btn btn-default">
 	                        <i class="glyphicon glyphicon-chevron-left"></i>

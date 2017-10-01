@@ -19,6 +19,7 @@ class CaracteristicaController extends Controller
      */
     public function index(Request $request)
     {
+        $caracteristicas = [];
         $query = Caracteristica::orderBy('nombre', 'asc');
 
         //filtro
@@ -27,9 +28,12 @@ class CaracteristicaController extends Controller
             $query = $query->where('caracteristicas.nombre','like',$like);
         }
 
-        $caracteristica = $query->paginate(10);
+        if( $request->has('page') || $request->has('per_page') ) 
+            $caracteristicas = $query->paginate(10);
+        else
+            $caracteristicas = $query->get();
 
-        return response()->json($caracteristica, 200);
+        return response()->json($caracteristicas, 200);
     }
 
     /**
