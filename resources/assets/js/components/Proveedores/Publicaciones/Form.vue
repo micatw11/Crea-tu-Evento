@@ -137,7 +137,6 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- validacion vee-validation -->
                     <span v-show="errors.has('fotos[]')" class="help-block">{{ errors.first('fotos[]') }}</span>
                     <!-- validacion api-->
@@ -149,13 +148,13 @@
                 </div>                    
             </div>
 
-            <div v-if="(caracteristicas.length > 0 || caracteristicas_no.length > 0 )">
+            <div v-if="publicacion.prestaciones_id&&(caracteristicas.length>0||caracteristicas_no.length>0)">
                 <div class="col-sm-12">
-                    <label for="caracteristicas" class="control-label">Caracteristicas</label>
-                    <div class="direct-chat-messages col-sm-12" style="height: 100px;">
-                        <div class="direct-chat-msg">
-                            <div v-for="caracteristica in caracteristicas">
-                                <div class="col-sm-6">
+                        <label for="caracteristicas" class="control-label">Caracteristicas</label>
+                        <div class="direct-chat-messages col-sm-12" style="height: 100px;">
+                            <div class="direct-chat-msg">
+                                <div v-for="caracteristica in caracteristicas">
+
                                     <div class="col-sm-6">
                                         <input type="checkbox" id="checkbox1" @click="selected(caracteristica, $event)" checked> {{caracteristica.nombre}}
                                     </div>
@@ -395,8 +394,9 @@
                         }
                         if (!this.nuevo){
                             this.edit=true
-                            this.changeCaracteristicas(this.publicacion.rubros_detalle_id);
+                            this.changeCaracteristicas(this.publicacion.prestaciones_id);
                         }*/
+
                     })
 
             },

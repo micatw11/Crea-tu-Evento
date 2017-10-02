@@ -10,7 +10,7 @@
 		        		<div class="box-body">
 
 					            <template v-if="showFormRubro">
-					                <form-rubro :rubro="rubro" 
+					                <form-rubro :rubro="prestacion" 
 					                	:domicilio="domicilio" 
 					                	:nuevo="nuevoRubro" 
 					                	:errorsApi="errorsApi" 
@@ -22,16 +22,16 @@
 
 					        	<template v-if="showFormArticulo">
 					        		<form-articulo
-					        			:rubros="rubro.rubros_id">
+					        			:rubros="prestacion.rubros_id">
 					        		</form-articulo>
-					        		<add-articulo :rubros="rubro.rubros_id" :articulosSelect="articulos">
+					        		<add-articulo :rubros="prestacion.rubros_id" :articulosSelect="articulos">
 					        		</add-articulo>
 					        	</template>
 
 					            <template v-if="showFormPublicacion">
 						        	<form-publicacion 
 						        		:publicacion="publicacion"
-						        		:rubros_id="rubro.rubros_id"
+						        		:rubros_id="prestacion.rubros_id"
 						        		:nuevo="true"
 						        		:validarPublicacion="validarPublicacion"
 						        		@validadoNewPublicacion="sendNewForm()"
@@ -83,7 +83,7 @@
 <script> 
 	import FormPublicacion from './Form';
 	import route from './../../../routes.js';
-    import FormRubro from './../RubrosDetalle/FormRubro';
+    import FormRubro from './../Prestaciones/FormRubro';
     import FormArticulo from './../Articulos/New';
     import AddArticulo from './AddArticulo';
 
@@ -108,7 +108,7 @@
                     piso: null,
                     localidad_id: null
                 },
-                rubro:{
+                prestacion:{
                     rubros_id: [],
                     comercio: false,
                     habilitacion: null,
@@ -154,7 +154,7 @@
 	                    fecha_finalizacion: this.publicacion.fecha_finalizacion,
 	                    fotos: this.publicacion.fotos,
 	                    caracteristicas: this.publicacion.caracteristicas,
-	                    rubro: this.rubro,
+	                    prestacion: this.prestacion,
 	                    domicilio: this.domicilio,
 	                    articulos: this.articulos
 	                })
@@ -184,7 +184,7 @@
 	        		'descripcion': '',
 	        		'oferta': '',
 	        		'fotos': null,
-	        		'rubros_detalle_id': '',
+	        		'prestaciones_id': '',
 	        		'fecha_finalizacion': null
 	        	}
 	        },

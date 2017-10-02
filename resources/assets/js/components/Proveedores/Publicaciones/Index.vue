@@ -23,7 +23,7 @@
                         </div>
                         <div class="col-sm-12">
                             <!--<div class="col-sm-8">
-                                <p><h6>{{item.rubros_detalle.domicilio.localidad.provincia.nombre}} - {{item.rubros_detalle.domicilio.localidad.nombre}}</h6></p>
+                                <p><h6>{{item.prestaciones.domicilio.localidad.provincia.nombre}} - {{item.prestaciones.domicilio.localidad.nombre}}</h6></p>
                             </div>-->
                             <div class="col-sm-4">
                                 <div>
@@ -37,7 +37,7 @@
                         </div>
                         <div class="col-sm-12">
                             <div class="col-sm-10">
-                                <p><h6>{{item.subcategoria.categoria.nombre}} - {{item.subcategoria.nombre}} </h6> <!--{{item.rubros_detalle.rubro.nombre}} </h6></p>-->
+                                <p><h6>{{item.subcategoria.categoria.nombre}} - {{item.subcategoria.nombre}} </h6> <!--{{item.prestaciones.rubro.nombre}} </h6></p>-->
                             </div>
                             <div v-if="!optionsProveedor" class="col-sm-2">
                                     <div v-if="verificar_favorite(item.id)">

@@ -17,7 +17,7 @@ use App\User;
 use App\Rol;
 use App\Log;
 use App\Proveedor;
-use App\RubrosDetalle;
+use App\Prestacion;
 use App\Rubro;
 
 
@@ -103,7 +103,7 @@ class UsuarioController extends Controller
     {
        
         $usuario = Usuario::where('user_id', $id)
-            ->with('localidad.provincia', 'user.rol', 'user.proveedor.rubros_detalles.domicilio', 'user.proveedor.domicilio','user.proveedor.publicaciones', 'user.proveedor.rubros_detalles')
+            ->with('localidad.provincia', 'user.rol', 'user.proveedor.prestaciones.domicilio', 'user.proveedor.domicilio','user.proveedor.publicaciones', 'user.proveedor.prestaciones')
                 ->firstOrFail();
 
         if (Gate::allows('show-profile', $usuario)) {

@@ -186,7 +186,7 @@
                     if(this.$route.query.with_subcategory != undefined){
                         this.subcategoria_id = this.$route.query.with_subcategory;
                         this.with_category = true;
-                        this.$events.fire('changeSubategory', this.subcategoria_id);
+                        this.$events.fire('changeSubcategory', this.subcategoria_id);
                         this.changePath(this.subcategoria_id, 'api/subcategoria/', 'subcategoria');
                     }
                     else

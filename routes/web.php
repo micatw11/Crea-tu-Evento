@@ -52,14 +52,18 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('proveedor/{id}', 'ProveedorController@proveedor');
 
 
-    Route::post('proveedor/rubro/', 'RubrosDetalleController@store')->middleware('role:administrador,supervisor,operador,proveedor');
-    Route::patch('proveedor/rubro/{id}', 'RubrosDetalleController@update')->middleware('role:administrador,supervisor,operador,proveedor');
-    Route::get('proveedor/rubro/{id}', 'RubrosDetalleController@show');
-    Route::get('proveedor/{id}/rubro', 'RubrosDetalleController@getAll');
+    Route::post('proveedor/rubro/', 'PrestacionController@store')->middleware('role:administrador,supervisor,operador,proveedor');
+    Route::patch('proveedor/rubro/{id}', 'PrestacionController@update')->middleware('role:administrador,supervisor,operador,proveedor');
+    Route::get('proveedor/rubro/{id}', 'PrestacionController@show');
+    Route::get('proveedor/{id}/rubro', 'PrestacionController@getAll');
 
-
-    Route::get('localidades', 'LocalidadController@index');
+    Route::get('localidadesAll', 'LocalidadController@index');
     Route::get('localidades/{id}', 'LocalidadController@show');
+    Route::get('provincias', 'LocalidadController@provincias');
+    Route::get('localidades', 'LocalidadController@list_options');
+    Route::post('localidad', 'LocalidadController@store');
+    Route::patch('localidad/{id}/edit', 'LocalidadController@update');
+    Route::delete('localidad/{id}', 'LocalidadController@destroy');
     Route::get('roles', 'UsuarioController@roles');
 
     Route::get('busqueda/usuarios', 'UsuarioController@buscarUsuarios');

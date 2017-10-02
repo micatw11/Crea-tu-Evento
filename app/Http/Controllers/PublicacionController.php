@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Publicacion;
+use App\Prestacion;
 use App\Proveedor;
 use App\Favorito;
 use App\Foto;
@@ -28,10 +29,10 @@ class PublicacionController extends Controller
 
                 ->join('proveedores', 'publicaciones.proveedor_id', '=', 'proveedores.id')
 
-                ->join('rubros_detalle', 'rubros_detalle.proveedor_id', '=', 'proveedores.id')
-                ->join('rubros', 'rubros_detalle.rubro_id', '=', 'rubros.id')
+                ->join('prestaciones', 'prestaciones.proveedor_id', '=', 'proveedores.id')
+                ->join('rubros', 'prestaciones.rubro_id', '=', 'rubros.id')
 
-                ->join('domicilios', 'rubros_detalle.domicilio_id', '=', 'domicilios.id')
+                ->join('domicilios', 'prestaciones.domicilio_id', '=', 'domicilios.id')
                 ->join('localidades', 'domicilios.localidad_id', '=', 'localidades.id')
 
                 ->join('subcategorias', 'publicaciones.subcategoria_id', '=', 'subcategorias.id')
@@ -77,8 +78,8 @@ class PublicacionController extends Controller
         }
 
         $query = Publicacion::whereIn('publicaciones.id', $ids)
-            ->with('proveedor.rubros_detalles.domicilio.localidad.provincia',
-             'proveedor.rubros_detalles.rubro', 'subcategoria.categoria', 'fotos', 'caracteristicas', 'favoritos')
+            ->with('proveedor.prestaciones.domicilio.localidad.provincia',
+             'proveedor.prestaciones.rubro', 'subcategoria.categoria', 'fotos', 'caracteristicas', 'favoritos')
 
 
         ->select(
@@ -98,7 +99,7 @@ class PublicacionController extends Controller
 
     public function show(Request $request, $id){
 
-        $publicacion = Publicacion::with('proveedor.rubros_detalles.rubro', 'proveedor.user.usuario','subcategoria.categoria','fotos', 'caracteristicas', 'favoritos')
+        $publicacion = Publicacion::with('proveedor.prestaciones.rubro', 'proveedor.user.usuario','subcategoria.categoria','fotos', 'caracteristicas', 'favoritos')
 
                         ->where('id', $id)->firstOrFail();
 
@@ -111,6 +112,28 @@ class PublicacionController extends Controller
         $user = Auth::user();
         $proveedor = Proveedor::where('user_id', $user->id)->firstOrFail();
 
+        
+        $domicilio = Domicilio::create([
+            'tipo_domicilio'=>'Social',
+            'calle'=> $request->domicilio['calle'],
+            'numero'=> $request->domicilio['numero'],
+            'piso'=> $request->domicilio['piso'],
+            'localidad_id'=> $request->domicilio['localidad_id']
+        ]);
+
+        $prestacion = Prestacion::create([
+            'proveedor_id'=> $proveedor->id,
+            'habilitacion'=> $request->prestacion['habilitacion'],
+            'fecha_habilitacion' => $request->prestacion['fecha_habilitacion'],
+            'domicilio_id'=> $domicilio->id,
+        ]);
+
+        $prestacion->rubros()->attach($request->prestacion['rubros_id']); 
+        
+        if($request->has('articulos') && size($request->articulos) > 0){
+            $publicacion->articulos()->attach($request->articulos);
+        }
+
     	$publicacion = Publicacion::create([
             'titulo' => $request->titulo,
             'oferta' => $request->oferta,
@@ -120,6 +143,10 @@ class PublicacionController extends Controller
             'precio' => $request->precio,
             'proveedor_id' => $proveedor->id
         ]);
+
+        if($request->has('articulos') && size($request->articulos) > 0){
+            $publicacion->articulos()->attach($request->articulos);
+        }
 
     	if($publicacion->save()){
             for ($i=0; $i < sizeof($request->fotos); $i++) { 
@@ -134,7 +161,7 @@ class PublicacionController extends Controller
                 $publicacion->caracteristicas()->attach($request->caracteristicas);
             }
  
-			return response(['id' => $publicacion->id, 'fecha' => $request->fecha_finalizacion], Response::HTTP_OK);
+			return response(['id' => $publicacion->id], Response::HTTP_OK);
     	} else {
 			return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     	}
@@ -238,13 +265,13 @@ class PublicacionController extends Controller
   
     public function publicacionesProveedor(Request $request, $idProveedor){
         /*$publicacionesId = DB::table('publicaciones')
-            ->join('rubros_detalle', 'rubros_detalle.id', '=', 'publicaciones.rubros_detalle_id')
-            ->join('rubros', 'rubros.id', '=', 'rubros_detalle.rubro_id')
+            ->join('prestaciones', 'prestaciones.id', '=', 'publicaciones.prestaciones_id')
+            ->join('rubros', 'rubros.id', '=', 'prestaciones.rubro_id')
                 ->select('publicaciones.id')
-                ->where('rubros_detalle.proveedor_id', $idProveedor)
+                ->where('prestaciones.proveedor_id', $idProveedor)
                 ->groupby('publicaciones.id')->distinct()->get()->pluck('id');*/
 
-        $query = Publicacion::with('proveedor.rubros_detalles.rubro', 'subcategoria.categoria', 'fotos', 'proveedor.rubros_detalles.domicilio.localidad.provincia', 'caracteristicas')
+        $query = Publicacion::with('proveedor.prestaciones.rubro', 'subcategoria.categoria', 'fotos', 'proveedor.prestaciones.domicilio.localidad.provincia', 'caracteristicas')
             ->where('proveedor_id', $idProveedor);
 
         if($request->has('with_estado') && ($request->with_estado == 0 || $request->with_estado == 1))

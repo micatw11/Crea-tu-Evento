@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RubrosDetalle extends Model
+class Prestacion extends Model
 {
-    protected $table = 'rubros_detalle';
+    protected $table = 'prestaciones';
 
     protected $fillable = [ 
     						'proveedor_id',

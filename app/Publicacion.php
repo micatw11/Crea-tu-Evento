@@ -26,9 +26,9 @@ class Publicacion extends Model
         return $this->belongsTo('App\Subcategoria');
     }
 
-    public function rubros_detalle()
+    public function prestaciones()
     {
-        return $this->belongsTo('App\RubrosDetalle');
+        return $this->belongsTo('App\Prestacion');
     }
 
     public function proveedor()
@@ -47,8 +47,8 @@ class Publicacion extends Model
     }
 
     public function scopeOfProveedor($query, $proveedor_id){
-        return $query->join('rubros_detalle', 'rubros_detalle.id','=','publicaciones.rubros_detalle_id')
-                ->join('proveedores', 'proveedores.id','=','rubros_detalle.proveedor_id')
+        return $query->join('prestaciones', 'prestaciones.id','=','publicaciones.prestaciones_id')
+                ->join('proveedores', 'proveedores.id','=','prestaciones.proveedor_id')
                 ->where('proveedores.id', '=', $proveedor_id)
                 ->select('publicaciones.*');
     }

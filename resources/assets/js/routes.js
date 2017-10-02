@@ -29,12 +29,13 @@ var ShowPublicacion = require('./components/Proveedores/Publicaciones/Show');
 var IndexRubro = require('./components/Proveedores/Rubros/Index');
 
 
-var NewRubro = require('./components/Proveedores/RubrosDetalle/NewRubro');
-var EditRubro = require('./components/Proveedores/RubrosDetalle/EditRubro');
+var NewRubro = require('./components/Proveedores/Prestaciones/NewRubro');
+var EditRubro = require('./components/Proveedores/Prestaciones/EditRubro');
 
 var IndexCategoria = require('./components/Proveedores/Categorias/Index');
 var IndexCaracteristica = require('./components/Proveedores/Caracteristicas/Index');
 
+var IndexLocalidad = require('./components/Localidades/Index');
 
 var InternalServerError = require('./components/Errors/500');
 var PageNotFound = require('./components/Errors/404');
@@ -133,6 +134,12 @@ let routes = [
 			beforeEnter: guardRoute,
 			meta: { requiresAuth: true }
 
+		},	
+		{
+			path: '/localidades',
+			component: IndexLocalidad,
+			beforeEnter: guardRoute,
+			meta: { Role: [role.ADMINISTRADOR, role.SUPERVISOR], requiresAuth: true }	
 		},
 		//publicaciones
 		{
