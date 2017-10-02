@@ -21,8 +21,8 @@ class AlterTables extends Migration
             $table->integer('proveedor_id')->unsigned();
             $table->integer('subcategoria_id')->unsigned();
 
-            $table->foreign('proveedor_id')->references('id')->on('proveedores');
-            $table->foreign('subcategoria_id')->references('id')->on('subcategorias');
+           // $table->foreign('proveedor_id')->references('id')->on('proveedores');
+            //$table->foreign('subcategoria_id')->references('id')->on('subcategorias');
 
             $table->double('precio', 15,2);
         });

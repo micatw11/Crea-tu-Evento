@@ -29,6 +29,11 @@ class CreatePrestacionRubroTable extends Migration
             $table->foreign('prestacion_id')->references('id')->on('prestaciones');
         });
 
+        Schema::table('prestaciones', function (Blueprint $table) {
+            $table->dropForeign('rubros_detalle_rubro_id_foreign');
+            $table->dropColumn('rubro_id');
+        });
+
     }
 
     /**
