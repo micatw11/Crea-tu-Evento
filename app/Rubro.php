@@ -19,7 +19,7 @@ class Rubro extends Model
 
     public function prestaciones()
     {
-        return $this->hasMany('App\Prestacion');
+        return $this->belongsToMany('App\Prestacion');
     }
 
     public function caracteristicas()
