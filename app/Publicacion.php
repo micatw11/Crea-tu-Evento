@@ -13,7 +13,7 @@ class Publicacion extends Model
      * @var array
      */
     protected $fillable = [
-        'titulo', 'oferta', 'descuento', 'descripcion', 'estado','proveedor_id', 'subcategoria_id', 'precio', 'fecha_finalizacion', 'created_at', 'updated_at'
+        'titulo', 'oferta', 'descuento', 'descripcion', 'estado','proveedor_id', 'subcategoria_id', 'precio', 'fecha_finalizacion', 'prestacion_id', 'created_at', 'updated_at'
     ];
 
     public function fotos()
@@ -26,7 +26,7 @@ class Publicacion extends Model
         return $this->belongsTo('App\Subcategoria');
     }
 
-    public function prestaciones()
+    public function prestacion()
     {
         return $this->belongsTo('App\Prestacion');
     }
@@ -38,7 +38,7 @@ class Publicacion extends Model
 
     public function articulos()
     {
-        return $this->belongsToMany('App\Articulos');
+        return $this->belongsToMany('App\Articulo');
     }
 
     public function caracteristicas()

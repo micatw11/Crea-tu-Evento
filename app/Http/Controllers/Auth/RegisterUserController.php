@@ -65,7 +65,7 @@ class RegisterUserController extends Controller
 
         event(new Registered($user = $this->create($request)));
         
-        if(!$request->('login') || ($request->('login') && $request->login))
+        if(!$request->has('login') || ($request->has('login') && $request->login))
             $this->guard()->login($user);
 
         $this->createUsuario($request, $user->id);

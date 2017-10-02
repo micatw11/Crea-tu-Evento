@@ -26,7 +26,7 @@ class Prestacion extends Model
         return $this->belongsTo('App\Domicilio');    
     }
 
-    public function rubro()
+    public function rubros()
     {
         return $this->belongsToMany('App\Rubro');
     }

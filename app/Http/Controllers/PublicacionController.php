@@ -9,6 +9,7 @@ use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Publicacion;
 use App\Prestacion;
+use App\Domicilio;
 use App\Proveedor;
 use App\Favorito;
 use App\Foto;
@@ -30,7 +31,6 @@ class PublicacionController extends Controller
                 ->join('proveedores', 'publicaciones.proveedor_id', '=', 'proveedores.id')
 
                 ->join('prestaciones', 'prestaciones.proveedor_id', '=', 'proveedores.id')
-                ->join('rubros', 'prestaciones.rubro_id', '=', 'rubros.id')
 
                 ->join('domicilios', 'prestaciones.domicilio_id', '=', 'domicilios.id')
                 ->join('localidades', 'domicilios.localidad_id', '=', 'localidades.id')
@@ -78,8 +78,8 @@ class PublicacionController extends Controller
         }
 
         $query = Publicacion::whereIn('publicaciones.id', $ids)
-            ->with('proveedor.prestaciones.domicilio.localidad.provincia',
-             'proveedor.prestaciones.rubro', 'subcategoria.categoria', 'fotos', 'caracteristicas', 'favoritos')
+            ->with('prestacion.proveedor.domicilio.localidad.provincia', 'prestacion.domicilio.localidad.provincia',
+             'prestacion.rubros', 'subcategoria.categoria', 'fotos', 'caracteristicas', 'favoritos')
 
 
         ->select(
@@ -99,7 +99,7 @@ class PublicacionController extends Controller
 
     public function show(Request $request, $id){
 
-        $publicacion = Publicacion::with('proveedor.prestaciones.rubro', 'proveedor.user.usuario','subcategoria.categoria','fotos', 'caracteristicas', 'favoritos')
+        $publicacion = Publicacion::with('prestacion.rubros', 'prestacion.domicilio.localidad.provincia', 'proveedor.user.usuario','subcategoria.categoria','fotos', 'caracteristicas', 'favoritos')
 
                         ->where('id', $id)->firstOrFail();
 
@@ -130,9 +130,6 @@ class PublicacionController extends Controller
 
         $prestacion->rubros()->attach($request->prestacion['rubros_id']); 
         
-        if($request->has('articulos') && size($request->articulos) > 0){
-            $publicacion->articulos()->attach($request->articulos);
-        }
 
     	$publicacion = Publicacion::create([
             'titulo' => $request->titulo,
@@ -141,10 +138,11 @@ class PublicacionController extends Controller
             'fecha_finalizacion' => $request->fecha_finalizacion,
             'subcategoria_id' => $request->subcategoria_id,
             'precio' => $request->precio,
+            'prestacion_id' => $prestacion->id,
             'proveedor_id' => $proveedor->id
         ]);
 
-        if($request->has('articulos') && size($request->articulos) > 0){
+        if($request->has('articulos') && sizeof($request->articulos) > 0){
             $publicacion->articulos()->attach($request->articulos);
         }
 
