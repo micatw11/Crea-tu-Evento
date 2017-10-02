@@ -28,7 +28,7 @@ class Prestacion extends Model
 
     public function rubro()
     {
-        return $this->belongsTo('App\Rubro');
+        return $this->belongsToMany('App\Rubro');
     }
 
     public function publicaciones()
