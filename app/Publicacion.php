@@ -71,4 +71,9 @@ class Publicacion extends Model
         return $this->hasMany('App\Favorito');
     }
 
+      public function horarios()
+    {
+        return $this->hasMany('App\Horario');
+    }
+
 }
