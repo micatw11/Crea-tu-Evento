@@ -15,10 +15,7 @@
                     </div><!-- /.box-header -->
                     <div class="box-body">
                         <p>
-                            <b>Tipo de Proveedor: </b>
-                            <div v-if="item.rubro.servicio"> Servicio </div>
-                            <div v-if="item.rubro.salon"> Salon </div>
-                            <div v-if="item.rubro.producto"> Servicio </div>
+                            <b>Rubro: </b> {{printRubros( item.rubros ) }}
                         </p>
                         <div v-if="item.habilitacion != null">
                             <p>
@@ -113,6 +110,21 @@ export default {
                 ).then(response => {
                     this.rubrosRegistrados = response.data.rubros
                 });
+        },
+        printRubros(rubros){
+            var list = '';
+            var primero = true;
+
+            for(var item of rubros){
+                if(primero)
+                    list = list + ' ' + item.nombre
+                else
+                    list = list + ', ' + item.nombre
+                primero = false
+            }
+            
+
+            return list;
         },
     }
 }

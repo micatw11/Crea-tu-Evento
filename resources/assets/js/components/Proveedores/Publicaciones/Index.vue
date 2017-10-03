@@ -22,9 +22,9 @@
                             </div>
                         </div>
                         <div class="col-sm-12">
-                            <!--<div class="col-sm-8">
-                                <p><h6>{{item.prestaciones.domicilio.localidad.provincia.nombre}} - {{item.prestaciones.domicilio.localidad.nombre}}</h6></p>
-                            </div>-->
+                            <div class="col-sm-8">
+                                <p><h6>{{item.prestacion.domicilio.localidad.provincia.nombre}} - {{item.prestacion.domicilio.localidad.nombre}}</h6></p>
+                            </div>
                             <div class="col-sm-4">
                                 <div>
                                     <i class="fa fa-fw fa-star"></i>

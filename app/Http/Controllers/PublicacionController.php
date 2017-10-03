@@ -99,7 +99,7 @@ class PublicacionController extends Controller
 
     public function show(Request $request, $id){
 
-        $publicacion = Publicacion::with('prestacion.rubros', 'prestacion.domicilio.localidad.provincia', 'proveedor.user.usuario','subcategoria.categoria','fotos', 'caracteristicas', 'favoritos')
+        $publicacion = Publicacion::with('prestacion.rubros', 'prestacion.domicilio.localidad.provincia', 'proveedor.user.usuario','subcategoria.categoria','fotos', 'caracteristicas', 'favoritos', 'articulos')
 
                         ->where('id', $id)->firstOrFail();
 
@@ -269,7 +269,7 @@ class PublicacionController extends Controller
                 ->where('prestaciones.proveedor_id', $idProveedor)
                 ->groupby('publicaciones.id')->distinct()->get()->pluck('id');*/
 
-        $query = Publicacion::with('proveedor.prestaciones.rubro', 'subcategoria.categoria', 'fotos', 'proveedor.prestaciones.domicilio.localidad.provincia', 'caracteristicas')
+        $query = Publicacion::with('proveedor', 'prestacion.rubros', 'subcategoria.categoria', 'fotos', 'prestacion.domicilio.localidad.provincia', 'caracteristicas')
             ->where('proveedor_id', $idProveedor);
 
         if($request->has('with_estado') && ($request->with_estado == 0 || $request->with_estado == 1))

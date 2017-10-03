@@ -6,9 +6,30 @@
         			<h3 class="box-title">Editar Publicaci&oacute;n</h3>
         		</div>
         		<div class="box-body">
-		        	<form-publicacion v-if="showForm"
+
+		            <template v-if="showFormPrestacion && showForm">
+		                <form-prestacion :rubro="prestacion" 
+		                	:domicilio="domicilio" 
+		                	:nuevo="false" 
+		                	:errorsApi="errorsApi" 
+		                	@validado="validoNextForm()"
+		                	@validadoEdit="validoNextForm()">	
+		                </form-prestacion>
+
+		            </template>
+
+		        	<template v-if="showFormArticulo && showForm">
+		        		<form-articulo
+		        			:rubros="prestacion.rubros_id">
+		        		</form-articulo>
+		        		<add-articulo :rubros="prestacion.rubros_id" :articulosSelect="articulos">
+		        		</add-articulo>
+		        	</template>
+
+		        	<form-publicacion v-if="showForm && showFormPublicacion"
 		        		:publicacion="publicacion" 
 		        		:nuevo="false"
+		        		:rubros_id="prestacion.rubros_id"
 		        		:validarPublicacion="validarPublicacion"
 		        		@validadoEditPublicacion="sendEditForm()"
 		        		@update:validarPublicacion="val => validarPublicacion = val"
@@ -20,11 +41,34 @@
                 </div>
 		        <div class="box-footer">
 		        	<div style="text-align:center;">
-			            <button @click="goBack()" class="btn btn-default">
+
+			            <button v-if="showFormPrestacion && !showFormArticulo && !showFormPublicacion" @click="goBack()" class="btn btn-default">
 	                        <i class="glyphicon glyphicon-chevron-left"></i>
 	                        Atras
 	                    </button>
-		        		<button class="btn btn-primary" @click="validateBeforeSubmit()">Editar Publicaci&oacute;n</button>
+
+	                    <button v-if="!showFormPrestacion && showFormArticulo && !showFormPublicacion" 
+	                    	class="btn btn-default" type="button" 
+	                    	@click.stop="showFormPrestacion = !showFormPrestacion; showFormArticulo = !showFormArticulo; articulos=[]">
+	                    	Atras
+	                    </button>
+	                    <button v-if="!showFormPrestacion && !showFormArticulo && showFormPublicacion" 
+	                    	class="btn btn-default" type="button" 
+	                    	@click.stop="showFormArticulo = !showFormArticulo; showFormPublicacion = !showFormPublicacion">
+	                    	Atras
+	                    </button>
+	                    <button v-if="showFormPrestacion && !showFormArticulo && !showFormPublicacion"
+	                    	class="btn btn-default" type="button" 
+	                    	@click.stop="validarFormRubros()">
+	                    	Siguiente
+	                    </button>
+	                    <button v-if="!showFormPrestacion && showFormArticulo && !showFormPublicacion"
+	                    	class="btn btn-default" type="button" 
+	                    	@click.stop="showFormArticulo = !showFormArticulo; showFormPublicacion = !showFormPublicacion">
+	                    	Siguiente
+	                    </button>
+
+		        		<button v-if="!showFormPrestacion && !showFormArticulo && showFormPublicacion" class="btn btn-primary" @click="validateBeforeSubmit()">Guardar</button>
 		        	</div>
 		        </div>
         	</div>
@@ -34,6 +78,10 @@
 <script>
 	import FormPublicacion from './Form';
 	import router from './../../../routes.js'
+    import FormPrestacion from './../Prestaciones/FormRubro';
+    import FormArticulo from './../Articulos/New';
+    import AddArticulo from './AddArticulo';
+
 
 	export default {
 		data() {
@@ -41,9 +89,19 @@
 				publicacion: {
 					type: Object
 				},
+				prestacion: {
+					type: Object
+				},
+				domicilio: {
+					type: Object
+				},
+				articulos: [],
 				validarPublicacion: false,
-				errorsApi:[],
+				errorsApi: [],
 				showForm: false,
+				showFormPrestacion: true,
+				showFormArticulo: false,
+				showFormPublicacion: false,
 				id: null
 			}
 		},
@@ -54,7 +112,7 @@
 			//this.$events.on("validadoFormPublicacion", () => this.sendEditForm());
 		},
 		components: {
-			FormPublicacion
+			FormPublicacion, FormPrestacion, FormArticulo, AddArticulo
 		},
 		methods: {
 			validateBeforeSubmit: function() {                 
@@ -104,10 +162,19 @@
 	                    }
 	                })
 	        },
+	        validarFormRubros(){
+	        	this.$events.fire('validarForm');
+	        },
+	        validoNextForm(){
+	        	this.showFormPublicacion = false;
+	        	this.showFormPrestacion = false; 
+	        	this.showFormArticulo = true;
+	        },
 	        getPublicacion: function(){
 	        	this.$http.get('api/publicacion/'+this.$route.params.publicacionId)
 	        	.then(response =>{
 		        		this.publicacion = response.data.publicacion
+		        		this.loadDefaultData();
 		        		this.showForm = true;
 		        	}, response => {
 	                    if(response.status === 404){
@@ -118,6 +185,27 @@
 		                    });
 	                    }
 		        	});
+	        },
+	        loadDefaultData(){
+	        	this.domicilio = this.publicacion.prestacion.domicilio;
+	        	this.prestacion = this.publicacion.prestacion;
+	        	this.prestacion.rubros_id = [];
+	            if(this.domicilio != null){
+	                this.domicilio.localidad_id = {
+	                   'value':this.domicilio.localidad_id,
+	                   'label':this.domicilio.localidad.nombre+' ('+this.domicilio.localidad.provincia.nombre+')'
+	                }
+	                this.prestacion.comercio = true;
+	            } else {
+	                this.prestacion.comercio = false;
+	            }
+
+	        	for (var articulo of this.publicacion.articulos) {
+					this.articulos.push(articulo.id);
+	        	}
+	        	for(var rubro of this.publicacion.prestacion.rubros){
+	        		this.prestacion.rubros_id.push(rubro.id);
+	        	}
 	        },
 	        goBack: function(){
 	            router.go(-1)
