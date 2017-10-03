@@ -208,7 +208,7 @@ class PrestacionController extends Controller
         $proveedor = Proveedor::where('user_id', $id)->firstOrFail();
 
         $rubros = Prestacion::where('proveedor_id', $proveedor->id)
-            ->with('domicilio.localidad.provincia','rubro.caracteristicas')->get();
+            ->with('domicilio.localidad.provincia','rubros.caracteristicas')->get();
         return response()->json(['rubros' => $rubros], 200);
     }
 
