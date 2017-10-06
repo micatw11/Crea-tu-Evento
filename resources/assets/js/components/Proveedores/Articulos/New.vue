@@ -1,16 +1,28 @@
 <template>
-		<div class="box">
-		<div class="box-header">
-			<h3 class="box-title">Agregar</h3>
-		</div>
-		<div class="box-body">
-			<form-rubro :rubros="rubros" :articulo="newArticulo" @validoForm="sendArticulo">
-				
-			</form-rubro>
-		</div>
-		<!-- /.box-body -->
-		<div class="box-footer">
-			<button @click.stop="validateBeforeSubmit" class="btn btn-info pull-right">Agregar</button>
+	<div class="pull-right">
+		<button class="btn btn-primary" @click="showModal = !showModal">Agregar Articulo</button>
+        <div v-if="showModal" class="modal" role="dialog" :style="{ display : showModal  ? 'block' : 'none' }">
+            <div class="modal-dialog">
+            <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" @click="closeModal()">&times;</button>
+                        <h4 class="modal-title">Agregar Articulo</h4>
+                    </div>
+					<div class="modal-body">
+			        	<div class="box-body">
+							<form-rubro 
+								:rubros="rubros" 
+								:articulo="newArticulo" 
+								@validoForm="sendArticulo">
+							</form-rubro>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button @click.stop="validateBeforeSubmit" class="btn btn-info pull-right">Agregar</button>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -25,6 +37,7 @@
 		},
 		data(){
 			return {
+				showModal: false,
 				newArticulo:{
 					nombre: '',
 					stock: null,
@@ -47,17 +60,21 @@
 					precio: this.newArticulo.precio,
 					rubro_id: this.newArticulo.rubro_id
 				}).then(response => {
-					this.newArticulo = {
-						nombre: '',
-						stock: null,
-						precio: null,
-						rubro_id: ''
-					}
+					this.closeModal();
 					this.$events.fire('reloadIndexArticulo'); 
 				}, response => {
 					console.log('Error en articulos');
 				});
 			},
+			closeModal(){
+				this.showModal = !this.showModal;
+				this.newArticulo = {
+					nombre: '',
+					stock: null,
+					precio: 0,
+					rubro_id: ''
+				}
+			}
 		}
 	}
 </script>

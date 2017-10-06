@@ -1,34 +1,5 @@
 <template>
     <form role="form" enctype="multipart/form-data">
-
-        <!--
-        <div class="col-sm-12">
-            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('rubro')&&validarPublicacion}">
-                <div class="col-sm-6">
-                    <label class="control-label">Rubro (*)</label><br>
-                    <select
-                        name="rubro"                  
-                        v-model="publicacion.rubros_detalle_id"
-                        class="form-control" 
-                        v-validate="'required'"
-                        @change="changeCaracteristicas(publicacion.rubros_detalle_id)">
-                        <option value="" disabled="">Seleccione un rubro</option>
-                        <option v-for="option in rubros" v-bind:value="option.value">
-                            {{ option.text }}
-                        </option>
-                    </select>
-
-                    <span v-show="errors.has('rubro')&&validarPublicacion" class="help-block">{{ errors.first('rubro') }}</span>
-
-                    <div class="text-red" v-if="errorsApi.rubros_detalle_id">
-                        <div v-for="msj in errorsApi.rubros_detalle_id">
-                            <p>{{ msj }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        -->
     
         <div class="col-sm-12">
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('titulo')&&validarPublicacion}">
@@ -386,17 +357,6 @@
                         {
 
                         }
-                        /*
-                        this.rubro_caracteristicas= data
-
-                        for (let rubro of data){
-                            this.rubros.push({ text: rubro.rubro.nombre, value: rubro.id });
-                        }
-                        if (!this.nuevo){
-                            this.edit=true
-                            this.changeCaracteristicas(this.publicacion.prestaciones_id);
-                        }*/
-
                     })
 
             },
@@ -484,9 +444,11 @@
                 }
             },
             validateSubmit: function() {
+                console.log('aca esta validateSubmit')
                 this.$validator.validateAll().then(() => {
                     this.remplaceStyle();
                     this.publicacion.caracteristicas = this.options_caracteristicas
+                    console.log('aca esta')
                     if(this.nuevo){
 
                         this.publicacion.fotos = []
@@ -507,6 +469,7 @@
                     }
                     this.$emit('update:validarPublicacion', false);             
                 }).catch(() => {
+                    console.log('se pudrio todo')
                     this.$emit('update:validarPublicacion', true);
                 });
             },

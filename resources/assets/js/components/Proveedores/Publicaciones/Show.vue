@@ -28,7 +28,7 @@
 		        <div class="box-body">
 		        	<div class="col-sm-12">
 				        <section>
-						  	<div class="col-md-offset-0.5 col-sm-7" v-if="showCarousel" >
+						  	<div class="col-md-offset-0.5 col-sm-7">
 						  		
 				          		<carousel 
 				          			:perPage="1" 
@@ -108,14 +108,17 @@
 	        		<i class="fa fa-bars margin-r-5"></i><h3 class="box-title">Informaci&oacute;n</h3>
 	        	</div>
 	        	<div class="box-body">
-					<div v-if="publicacion.caracteristicas.length!=0" class="col-sm-12">
-						<h4>Caracteristicas</h4>
+					<div v-if="publicacion.caracteristicas.length != 0" class="col-sm-12">
+						<h4><u>Caracteristicas</u></h4>
 						<ul>
 							<div v-for="item in publicacion.caracteristicas">
 								<div class="col-sm-4">
 									<li>
-										<div class="col-sm-6">{{item.nombre}}</div>
-										<div class="col-sm-6" v-if="((item.adicional)&&(item.pivot.informacion!=null))"> {{item.pivot.informacion}}</div>
+										<div class="col-sm-6">{{ strUpper(item.nombre) }}</div>
+										<div class="col-sm-6" 
+											v-if="item.adicional && item.pivot.informacion != null"> 
+											{{ strUpper(item.pivot.informacion) }}
+										</div>
 									</li>
 									
 								</div>
@@ -125,14 +128,25 @@
 					</div>
 
 			        <div v-if="publicacion.oferta != null && publicacion.oferta.length!=0" class="col-sm-12">
-			          	<h4>{{publicacion.oferta}}</h4>
-			          	<p v-if="(publicacion.fecha_finalizacion != '0000-00-00')&&(publicacion.fecha_finalizacion != null)">
-		          			Fecha Finalizacion: {{(publicacion.fecha_finalizacion)}}
+			          	<h4><u>Oferta</u></h4>
+			          	{{publicacion.oferta}}
+			          	<p v-if=" publicacion.fecha_finalizacion != '0000-00-00' && publicacion.fecha_finalizacion != null ">
+		          			Fecha Finalizacion: {{ publicacion.fecha_finalizacion }}
+		         		</p>
+		         		<p v-else>
+		         			Oferta permanente
 		         		</p>
 		         		<br><hr>
 			        </div>
+			        <div v-if="publicacion.articulos.length > 0" class="col-sm-12">
+			        	<h4><u>Servicios y Productos</u></h4>
+			        	<div class="col-sm-12" v-for="(rubro, index) in publicacion.prestacion.rubros" v-if=" showRubroInfo(rubro.id)">
+			        		<h5><b>{{ strUpper(rubro.nombre) }}</b></h5>
+			        		{{ printArticles(rubro.id)}}
+			        		<hr v-if="(index+1) == publicacion.prestacion.rubros.length">
+			        	</div>
+			        </div>
 			        <div class="col-sm-12">
-			        <br>
 		               	<div class="col-sm-12" v-html='publicacion.descripcion'></div>
 		            </div>
 	        	</div>
@@ -258,8 +272,7 @@
 				publicacion: null,
 				productoId: null,
 				auth: auth,
-				role: Role,
-				showCarousel: true
+				role: Role
 			}
 		},
 		mounted(){
@@ -361,33 +374,36 @@
 				if(estado == 1) return ' btn-danger';
 				else return ' btn-success';
 			},
-			handleResize: function(){
-				this.showCarousel = false;
-				setTimeout(this.showComponentCarousel, 100);
+			showRubroInfo(rubro_id){
+				for(var articulo of this.publicacion.articulos){
+					if(articulo.rubro_id == rubro_id){
+						return true;
+					}
+				}
+				return false;
 			},
-			showComponentCarousel: function(){
-				this.showCarousel = true
-				console.log('paso')
-			}
+			printArticles(rubro_id){
+				var list = '';
+				var primero = true;
+				for(var articulo of this.publicacion.articulos){
+					if(articulo.rubro_id == rubro_id){
+						if(primero){
+							list = this.strUpper(articulo.nombre)
+						} else {
+							list = list + ', ' + articulo.nombre;
+						}
+						primero = false;
+					}
+				}
+				return list+'.';
+			},
+	        strUpper: function(str){
+	                var res = str.substring(1, str.length);
+	                var res  = res.toLowerCase();
+	                var res1 = str.substring(0, 1);
+	                var res1 = res1.toUpperCase();
+	                return  res1+''+res;
+	        }
 		}
 	}
 </script>
-<style>
-
-.VueCarousel-slide {
-	position: relative;
-	color: #fff;
-	font-family: Arial;
-	font-size: 24px;
-	text-align: center;
-	min-height: 350px;
-	border-style: solid;
-	border-color: rgba(241, 242, 243, 0.8);
-	background: rgba(241, 242, 243, 0.8);
-}
-.VueCarousel {
-    max-width: 100%;
-    max-height: 100%;
-}
-
-</style>

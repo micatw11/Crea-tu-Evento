@@ -21,11 +21,17 @@
 					            </template>
 
 					        	<template v-if="showFormArticulo">
-					        		<form-articulo
-					        			:rubros="prestacion.rubros_id">
-					        		</form-articulo>
-					        		<add-articulo :rubros="prestacion.rubros_id" :articulosSelect="articulos">
-					        		</add-articulo>
+					        		<div class="col-sm-12">
+						        		<form-articulo
+						        			:rubros="prestacion.rubros_id">
+						        		</form-articulo>
+					        		</div>
+					        		<div class="col-sm-12">
+						        		<add-articulo 
+						        			:rubros="prestacion.rubros_id" 
+						        			:articulosSelect="articulos">
+						        		</add-articulo>
+						        	</div>
 					        	</template>
 
 					            <template v-if="showFormPublicacion">
@@ -138,8 +144,12 @@
 	        	this.nuevoRubro = false
 	        },
 	        sendNewForm(){
-	        	if ((this.publicacion.fecha_finalizacion == '0000-00-00')||(this.publicacion.fecha_finalizacion == '')){
+	        	if ( this.publicacion.fecha_finalizacion == '0000-00-00' || this.publicacion.fecha_finalizacion == '' ){
 	        		this.publicacion.fecha_finalizacion = null
+	        	}
+	        	var localidad_id = null;
+	        	if(this.domicilio.localidad_id != null){
+	        		localidad_id = this.domicilio.localidad_id.value;
 	        	}
 	            this.$http.post(
 	                'api/publicacion/', 
@@ -153,8 +163,17 @@
 	                    fecha_finalizacion: this.publicacion.fecha_finalizacion,
 	                    fotos: this.publicacion.fotos,
 	                    caracteristicas: this.publicacion.caracteristicas,
-	                    prestacion: this.prestacion,
-	                    domicilio: this.domicilio,
+
+	                    comercio: this.prestacion.comercio,
+	                    fecha_habilitacion: this.prestacion.fecha_habilitacion,
+	                    habilitacion: this.prestacion.habilitacion,
+	                    rubros_id: this.prestacion.rubros_id,
+
+	                    calle: this.domicilio.calle,
+						localidad_id: localidad_id,
+						numero: this.domicilio.numero,
+						piso: this.domicilio.piso,
+
 	                    articulos: this.articulos
 	                })
 	                .then(response => {
@@ -183,7 +202,6 @@
 	        		'descripcion': '',
 	        		'oferta': '',
 	        		'fotos': null,
-	        		'prestaciones_id': '',
 	        		'fecha_finalizacion': null
 	        	}
 	        },
