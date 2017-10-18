@@ -1,12 +1,8 @@
 <template>
-		<div class="box">
-		<div class="box-header">
-			<h3 class="box-title">Agregar</h3>
-		</div>
+	<div class="box" v-if="showForm">
 		<div class="box-body">
-			<form-rubro :rubros="rubros" :articulo="newArticulo" @validoForm="sendArticulo">
-				
-			</form-rubro>
+			<form-articulo :rubros="rubros" :articulo="newArticulo" @validoForm="sendArticulo">
+			</form-articulo>
 		</div>
 		<!-- /.box-body -->
 		<div class="box-footer">
@@ -15,7 +11,7 @@
 	</div>
 </template>
 <script>
-	import FormRubro from './Form'
+	import FormArticulo from './Form'
 	export default {
 		props: {
 			rubros:{
@@ -30,11 +26,15 @@
 					stock: null,
 					precio: 0,
 					rubro_id: ''
-				}
+				},
+				showForm: true
 			}
 		},
 		components:{
-			FormRubro
+			FormArticulo
+		},
+		mounted() {
+			this.$events.on('showForm', () => this.showForm = false);
 		},
 		methods:{
 			validateBeforeSubmit(){
@@ -57,7 +57,7 @@
 				}, response => {
 					console.log('Error en articulos');
 				});
-			},
+			}
 		}
 	}
 </script>

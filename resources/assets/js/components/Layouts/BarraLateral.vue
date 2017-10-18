@@ -119,7 +119,7 @@
 
                     <!-- Proveedores-->
                     <li class="treeview" v-if="auth.user.profile.roles_id == role.PROVEEDOR">
-                        <a v-if="auth.user.profile.roles_id == role.PROVEEDOR">
+                        <a v-if="auth.user.profile.roles_id == role.PROVEEDOR" style="cursor: pointer">
                             <i class="fa fa-dashboard"></i>
                             <span>Agregar</span>
                             <span class="pull-right-container">
@@ -128,7 +128,7 @@
                         </a>
                         <ul class="treeview-menu" v-if="auth.user.profile.roles_id == role.PROVEEDOR">
                             <li>
-                                <a v-if="auth.user.profile.roles_id == role.PROVEEDOR" @click="goToNewPublicacion()">
+                                <a v-if="auth.user.profile.roles_id == role.PROVEEDOR" @click="goToNewPublicacion()" style="cursor: pointer">
                                     <i class="fa fa-plus"></i> <span> Publicaci&oacute;n</span>
                                 </a>
                             </li>

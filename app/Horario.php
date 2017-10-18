@@ -22,4 +22,5 @@ class Horario extends Model
     {
         return $this->belongsTo('App\Publicacion');
     }
+
 }

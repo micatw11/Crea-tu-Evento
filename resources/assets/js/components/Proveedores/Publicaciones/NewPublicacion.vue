@@ -26,6 +26,12 @@
 					        		</form-articulo>
 					        		<add-articulo :rubros="prestacion.rubros_id" :articulosSelect="articulos">
 					        		</add-articulo>
+
+					        		<form-horario 
+					        			:publicacionId="publicacion.id">
+					        		</form-horario>
+					        		<!--<add-horario :rubros="prestacion.rubros_id" :horariosSelect="articulos">
+					        		</add-horario>-->
 					        	</template>
 
 					            <template v-if="showFormPublicacion">
@@ -84,6 +90,7 @@
 	import route from './../../../routes.js';
     import FormRubro from './../Prestaciones/FormRubro';
     import FormArticulo from './../Articulos/New';
+    import FormHorario from './../Horarios/New';
     import AddArticulo from './AddArticulo';
 
 	export default {
@@ -141,6 +148,7 @@
 	        	if ((this.publicacion.fecha_finalizacion == '0000-00-00')||(this.publicacion.fecha_finalizacion == '')){
 	        		this.publicacion.fecha_finalizacion = null
 	        	}
+	        	this.domicilio.localidad_id = this.domicilio.localidad_id.value;
 	            this.$http.post(
 	                'api/publicacion/', 
 	                {

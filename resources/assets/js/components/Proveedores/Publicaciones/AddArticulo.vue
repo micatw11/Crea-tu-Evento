@@ -1,5 +1,5 @@
 <template>
-		<div class="box">
+	<div class="box" v-if="articulos.length>0">
         <div class="box-header with-border">
         	<h3 class="box-title">Articulos</h3>
 				<!--<div class="pull-right box-tools">

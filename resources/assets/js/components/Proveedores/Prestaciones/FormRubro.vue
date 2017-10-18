@@ -219,7 +219,6 @@ export default {
             this.$validator.validateAll().then(() => {
                     this.validarRubro = false; 
                     if (this.nuevo){
-                        this.domicilio.localidad_id = this.domicilio.localidad_id.value;
                         this.$emit('validado')
                     }else{
 

@@ -24,6 +24,11 @@
 		        		</form-articulo>
 		        		<add-articulo :rubros="prestacion.rubros_id" :articulosSelect="articulos">
 		        		</add-articulo>
+		        		<form-horario
+		        			:publicacionId="publicacion.id">
+		        		</form-horario>
+		        		<add-horario :publicacionId="publicacion.id">
+		        		</add-horario>
 		        	</template>
 
 		        	<form-publicacion v-if="showForm && showFormPublicacion"
@@ -80,7 +85,9 @@
 	import router from './../../../routes.js'
     import FormPrestacion from './../Prestaciones/FormRubro';
     import FormArticulo from './../Articulos/New';
+    import FormHorario from './../Horarios/New';
     import AddArticulo from './AddArticulo';
+    import AddHorario from './../Horarios/Index';
 
 
 	export default {
@@ -112,7 +119,7 @@
 			//this.$events.on("validadoFormPublicacion", () => this.sendEditForm());
 		},
 		components: {
-			FormPublicacion, FormPrestacion, FormArticulo, AddArticulo
+			FormPublicacion, FormPrestacion, FormArticulo, AddArticulo, FormHorario, AddHorario
 		},
 		methods: {
 			validateBeforeSubmit: function() {                 

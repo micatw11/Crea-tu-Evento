@@ -22,6 +22,7 @@
   "dependencies": {
     "babel-polyfill": "^6.23.0",
     "cxlt-vue2-toastr": "^1.0.8",
+    "element-ui": "^1.4.6",
     "moment": "^2.18.1",
     "vue-carousel": "^0.6.5",
     "vue-events": "^3.0.1",

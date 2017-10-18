@@ -1,6 +1,9 @@
 <template>
 
-	<div class="row">
+	<div class="row" v-if="optionsRubros.length>0">
+		<div class="box-header">
+			<h3 class="box-title">Agregar</h3>
+		</div>
 		<div class="col-xs-3">
 			<div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('nombre')&&validarArticulo}">
 				<input type="text" v-model="articulo.nombre" v-validate="'required'" name="nombre" class="form-control" placeholder="Nombre">
@@ -28,7 +31,7 @@
 					<option value="" disabled>Selecione rubros</option>
 					<option v-for="option in optionsRubros" :value="option.id">{{option.nombre}}</option>
 				</select>
-				<!-- validacion vee-validation -->
+				<!-- validacion vee-validation --> 
 	            <span v-show="errors.has('rubro')&&validarArticulo" class="help-block">{{ errors.first('rubro') }}</span>
         	</div>
 		</div>
@@ -83,10 +86,16 @@
 				this.$http.get('api/rubro').then(response => {
 					for(var rubro of response.data){
 						for(var id of this.rubros){
-							if(id == rubro.id && !rubro.salon ){
+							if(id == rubro.id && !rubro.salon && rubro.producto ){
 								this.optionsRubros.push(rubro);
 							}
+							if(id == rubro.id && (rubro.salon || rubro.servicio) ){
+								this.$events.emit('showFormH');
+							}
 						}
+					}
+					if (this.optionsRubros.length == 0) {
+						this.$events.emit('showForm');
 					}
 				}, response => {
 					console.log('Error en rubros');

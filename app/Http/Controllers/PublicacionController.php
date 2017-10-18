@@ -79,7 +79,7 @@ class PublicacionController extends Controller
 
         $query = Publicacion::whereIn('publicaciones.id', $ids)
             ->with('prestacion.proveedor.domicilio.localidad.provincia', 'prestacion.domicilio.localidad.provincia',
-             'prestacion.rubros', 'subcategoria.categoria', 'fotos', 'caracteristicas', 'favoritos')
+             'prestacion.rubros', 'subcategoria.categoria', 'fotos', 'caracteristicas', 'favoritos', 'horarios')
 
 
         ->select(
@@ -99,7 +99,7 @@ class PublicacionController extends Controller
 
     public function show(Request $request, $id){
 
-        $publicacion = Publicacion::with('prestacion.rubros', 'prestacion.domicilio.localidad.provincia', 'proveedor.user.usuario','subcategoria.categoria','fotos', 'caracteristicas', 'favoritos', 'articulos')
+        $publicacion = Publicacion::with('prestacion.rubros', 'prestacion.domicilio.localidad.provincia', 'proveedor.user.usuario','subcategoria.categoria','fotos', 'caracteristicas', 'favoritos', 'articulos','horarios')
 
                         ->where('id', $id)->firstOrFail();
 

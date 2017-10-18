@@ -111,4 +111,9 @@ Route::group(['prefix' => 'api'], function () {
 
     Route::post('favoritos','FavoritoController@store');
     Route::get('favoritos/{user_id}', 'FavoritoController@show');
+
+    Route::post('horario','HorarioController@store');
+    Route::get('horarios/{publicacion_id}', 'HorarioController@index');
+    Route::get('horario/{horario_id}', 'HorarioController@show');
+    Route::patch('horario/{id}','HorarioController@update');
 });

@@ -47,13 +47,13 @@
 								<div class="col-sm-12">
 									<h3 class="text-uppercase">{{publicacion.titulo}}
 				                        <div class="pull-right">
-	                                       <div v-if="verificar_favorite()">
+	                                       <div style="cursor: pointer" v-if="verificar_favorite()">
 		                                        <div @click="favorite_icon(publicacion.id)">
 		                                            <i class="fa fa-fw fa-heart"></i>
 		                                        </div>
 		                                    </div>
 
-		                                    <div v-else>
+		                                    <div style="cursor: pointer" v-else>
 		                                        <div @click="favorite_icon(publicacion.id)">
 		                                            <i class="fa fa-fw fa-heart-o"></i>
 		                                        </div>
@@ -300,16 +300,19 @@
 	                })
 			},
 			verificar_favorite(){
-				if (this.publicacion.favoritos != null){
-	                for (var i = 0; i < this.publicacion.favoritos.length; i++) {
-	                    if (this.publicacion.favoritos[i].user_id == auth.user.profile.id){
-	                        return true
-	                    }
-	                }
-	            }
+				if (auth.user.authenticated){
+					if (this.publicacion.favoritos != null){
+		                for (var i = 0; i < this.publicacion.favoritos.length; i++) {
+		                    if (this.publicacion.favoritos[i].user_id == auth.user.profile.id){
+		                        return true
+		                    }
+		                }
+		            }
+		         }
                 return false
             },
 			favorite_icon(id){
+				if (auth.user.authenticated){
                 this.$http.post(
                     'api/favoritos/', 
                     {
@@ -324,7 +327,14 @@
                             title:'¡Error!',
                             message:'No se ha podido completar la accion. :('
                         });
-                    })   
+                    }) 
+                 }else{
+                    var listPath = [
+                        {route: '/login', name: 'Login'}
+                    ]
+                    this.$events.fire('changePath', listPath, 'Login');
+                    route.push('/login');
+                 }  
             },
 			modificar(id){
 				route.push('/publicacion/'+id+'/edit');

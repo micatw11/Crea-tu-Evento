@@ -40,14 +40,14 @@
                                 <p><h6>{{item.subcategoria.categoria.nombre}} - {{item.subcategoria.nombre}} </h6> <!--{{item.prestaciones.rubro.nombre}} </h6></p>-->
                             </div>
                             <div v-if="!optionsProveedor" class="col-sm-2">
-                                    <div v-if="verificar_favorite(item.id)">
+                                    <div style="cursor: pointer" v-if="verificar_favorite(item.id)">
                                         <div @click="favorite(item.id)">
                                             <i class="fa fa-fw fa-heart"></i>
                                         </div>
                                     </div>
 
                                     <div v-else>
-                                        <div @click="favorite(item.id)">
+                                        <div style="cursor: pointer" @click="favorite(item.id)">
                                             <i class="fa fa-fw fa-heart-o"></i>
                                         </div>
                                     </div>
