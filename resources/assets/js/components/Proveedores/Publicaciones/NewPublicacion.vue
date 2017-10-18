@@ -132,7 +132,7 @@
 		methods: {
 			validateBeforeSubmit: function() {                 
 	            this.validarPublicacion = true;
-	            this.$events.fire('validarFormPublicacion')
+	            this.$events.fire('validarFormPublicacion');
 	        },
 	        validarFormRubros(){
 	        	this.$events.fire('validarForm');

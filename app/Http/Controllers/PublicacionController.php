@@ -27,8 +27,7 @@ class PublicacionController extends Controller
     private $domicilioService;
 
     /**
-     * StudentsController constructor.
-     * @param StudentService $studentService
+     * PublicacionController constructor.
      */
     public function __construct(PrestacionService $prestacionService, DomicilioService $domicilioService)
     {
@@ -133,7 +132,7 @@ class PublicacionController extends Controller
         $proveedor = Proveedor::where('user_id', $user->id)->firstOrFail();
 
         $this->prestacionService->validatePrestacion($request);
-        if($request->has('comercio')){
+        if($request->has('comercio') && $request->comercio){
             $this->domicilioService->validateDomicilio($request);
             $domicilio = $this->domicilioService->createDomicilio($request, 'Social');
         } else {

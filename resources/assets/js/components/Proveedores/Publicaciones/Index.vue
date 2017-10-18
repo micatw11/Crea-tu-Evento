@@ -26,13 +26,12 @@
                                 <p><h6>{{item.prestacion.domicilio.localidad.provincia.nombre}} - {{item.prestacion.domicilio.localidad.nombre}}</h6></p>
                             </div>
                             <div class="col-sm-4">
-                                <div>
-                                    <i class="fa fa-fw fa-star"></i>
-                                    <i class="fa fa-fw fa-star"></i>
-                                    <i class="fa fa-fw fa-star-half-o"></i>
-                                    <i class="fa fa-fw fa-star-o"></i>
-                                    <i class="fa fa-fw fa-star-o"></i>
-                                </div> 
+                                <el-rate
+                                    v-model="puntos"
+                                    disabled
+                                    text-color="#ff9900"
+                                    text-template="{value} puntos.">
+                                </el-rate>
                             </div>
                         </div>
                         <div class="col-sm-12">
@@ -139,12 +138,11 @@
             return {
                 favoritos: false,
                 auth: auth,
+                puntos: 2.5,
                 showModalDelete: false,
                 role: role,
                 accion: '',
-                publicacion: {},
-                count: 0,
-                f:false
+                publicacion: {}
             }  
         },
         mounted(){

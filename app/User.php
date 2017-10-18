@@ -32,9 +32,19 @@ class User extends Authenticatable
         return $this->hasOne('App\Usuario');
     }
 
+    public function mensajes()
+    {
+        return $this->hasMany('App\Usuario');
+    }
+
     public function proveedor()
     {
         return $this->hasOne('App\Proveedor');
+    }
+
+    public function reservas()
+    {
+        return $this->belongsTo('App\Reserva');
     }
 
     public function rol()

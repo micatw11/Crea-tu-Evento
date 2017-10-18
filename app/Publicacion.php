@@ -26,6 +26,11 @@ class Publicacion extends Model
         return $this->belongsTo('App\Subcategoria');
     }
 
+    public function reservas()
+    {
+        return $this->belongsTo('App\Reserva');
+    }
+
     public function prestacion()
     {
         return $this->belongsTo('App\Prestacion');

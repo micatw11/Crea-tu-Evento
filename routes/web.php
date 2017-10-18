@@ -111,4 +111,7 @@ Route::group(['prefix' => 'api'], function () {
 
     Route::post('favoritos','FavoritoController@store');
     Route::get('favoritos/{user_id}', 'FavoritoController@show');
+
+    Route::post('publicacion/{publicacion_id}/reserva', 'ReservaController@store');
+    Route::post('publicacion/{publicacion_id}/presupuesto', 'ReservaController@presupuesto');
 });

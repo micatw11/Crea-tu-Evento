@@ -13,9 +13,7 @@ class Articulo extends Model
      *
      * @var array
      */
-    protected $fillable = [
-        'proveedor_id', 'stock', 'nombre', 'precio', 'rubro_id', 'estado'
-    ];
+    protected $fillable = ['proveedor_id', 'stock', 'nombre', 'precio', 'rubro_id', 'estado'];
 
     public function proveedor()
     {
@@ -30,5 +28,9 @@ class Articulo extends Model
     public function rubro()
     {
         return $this->belongsTo('App\Rubro');
+    }
+
+    public function reservas(){
+        return $this->belongsToMany('App\Reserva');
     }
 }

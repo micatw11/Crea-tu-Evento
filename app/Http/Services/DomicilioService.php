@@ -8,7 +8,7 @@ class DomicilioService
 {
     use ValidatesRequests;
 
-    public function createDomicilio(Request $request, $tipo)
+    public function createDomicilio($request, $tipo)
     {
         return Domicilio::create([
             'tipo_domicilio'=> $tipo,
@@ -31,7 +31,8 @@ class DomicilioService
     public function validateDomicilio($request)
     {
         return $this->validate($request, [
-            'numero'=> 'required|min:1|max:10',
+            'numero' => 'required|min:1|max:10',
+            'calle' =>'required|min:1',
             'localidad_id'=> 'required|exists:localidades,id'
             ]);
     }
