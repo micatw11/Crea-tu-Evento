@@ -3,11 +3,11 @@
 		<form role="form">
 			<template v-if="requiredDate">
 				<div class="col-sm-4">
-		            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('fecha')&&validarReserva}">
+		            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('fecha')&&validarPresupuesto}">
 		                <div class="col-sm-12">
 		                    <label for="fecha" class="control-label">Fecha del evento </label><br>
 		                    <el-date-picker
-						    	v-model="reserva.fecha"
+						    	v-model="presupuesto.fecha"
 						    	data-vv-name="fecha"
 						    	v-validate="'required'" 
 						    	@change="changeDate"
@@ -23,15 +23,15 @@
 
 		        <template v-if="showEstadoReserva">
 		        	<div v-if="opcionesReservas.length > 0" class="col-sm-8">
-		        		<div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('horario')&&validarReserva}">
+		        		<div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('horario')&&validarPresupuesto}">
 			        		<div class="col-sm-12">
 			        			<label for="horario" class="control-label">Horarios disponibles </label><br>
-				        		<el-select v-model="reserva.horario_id" placeholder="Seleccione un horario" 
-				        			data-vv-name="horario" v-validate="'required'" style="width:100%;" @change="calularCoste()">
+				        		<el-select v-model="presupuesto.horario_id" placeholder="Seleccione un horario" 
+				        			data-vv-name="horario" v-validate="'required'" style="width:100%;">
 									<el-option
 										v-for="item in opcionesReservas"
 										:key="item.id"
-										:label="'Desde ' + item.hora_inicio + ' hs Hasta ' + item.hora_finalizacion+ ' hs"
+										:label="'Desde ' + item.hora_inicio + ' hs Hasta ' + item.hora_finalizacion+ ' hs'"
 										:value="item.id">
 									</el-option>
 				        		</el-select>
@@ -49,7 +49,7 @@
 	        <template v-if="isRequiredDomicilio">
 				<div class="col-sm-12">
 					<hr>
-	                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('localidad')&&validarReserva}">
+	                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('localidad')&&validarPresupuesto}">
 	                    <div class="col-sm-12">
 	                        <label class="control-label">Localidad</label><br>
 	                        <v-select
@@ -63,20 +63,20 @@
 	                        </v-select>
 	                       
 	                        <!-- validacion vee-validation -->
-	                        <span v-show="errors.has('localidad')&&validarReserva" class="help-block">{{ errors.first('localidad') }}</span>
+	                        <span v-show="errors.has('localidad')&&validarPresupuesto" class="help-block">{{ errors.first('localidad') }}</span>
 	                    </div>
 	                </div>
 
-	                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('calle')&&validarReserva}">
+	                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('calle')&&validarPresupuesto}">
 	                    <div class="col-sm-8">
 	                        <label for="inputCalle" class="control-label">Direccion </label><br>
 	                        <input name="calle"  v-validate:domicilio.calle="'required|min:4'" type="text" class="form-control" v-model="domicilio.calle" placeholder="Calle">
 	                        <!-- validacion vee-validation -->
-	                        <span v-show="errors.has('calle')&&validarReserva" class="help-block">{{ errors.first('calle') }}</span>
+	                        <span v-show="errors.has('calle')&&validarPresupuesto" class="help-block">{{ errors.first('calle') }}</span>
 	                    </div>
 	                </div>
 	                
-	                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has(('numero')||('piso'))&&validarReserva}">
+	                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has(('numero')||('piso'))&&validarPresupuesto}">
 	                    <div class="col-sm-2">
 	                            <label for="inputNro" class="control-label col-sm-12">N° </label><br>
 	                            <input 
@@ -88,7 +88,7 @@
 	                                placeholder="Numero">
 
 	                            <!-- validacion vee-validation -->
-	                            <span v-show="errors.has('numero')&&validarReserva" class="help-block">{{ errors.first('numero') }}</span>
+	                            <span v-show="errors.has('numero')&&validarPresupuesto" class="help-block">{{ errors.first('numero') }}</span>
 	                    </div>
 
 	                    <div class="col-sm-2">
@@ -97,7 +97,7 @@
 	                        <input name="piso" type="text" v-model="domicilio.piso" placeholder="Piso" class="form-control col-sm-12">
 
 	                        <!-- validacion vee-validation -->
-	                        <span v-show="errors.has('piso')&&validarReserva" class="help-block">{{ errors.first('piso') }}</span>
+	                        <span v-show="errors.has('piso')&&validarPresupuesto" class="help-block">{{ errors.first('piso') }}</span>
 
 	                    </div>
 		            </div>
@@ -105,10 +105,10 @@
 	        </template>
 			<div class="col-sm-12">
 				<hr>
-	            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('rubros')&&validarReserva}">
+	            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('rubros')&&validarPresupuesto}">
 	                <div class="col-sm-12">
 	                    <label for="rubros" class="control-label">{{ nameRubro }}</label><br>
-						<el-select v-model="reserva.rubros" multiple placeholder="Seleccione" data-vv-name="rubros" v-validate="'required'" style="width:100%;" @change="callbackSelectRubros">
+						<el-select v-model="presupuesto.rubros" multiple placeholder="Seleccione" data-vv-name="rubros" v-validate="'required'" style="width:100%;" @change="callbackSelectRubros">
 							<el-option
 								v-for="item in opcionesRubros"
 								:key="item.value"
@@ -120,38 +120,39 @@
 	            </div>
 	        </div>
 	        <div class="col-sm-12" v-if="opcionesArticulos.length > 0">
-	        	<div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('articulos')&&validarReserva}">
+	        	<hr>
+	        	<div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('productos')&&validarPresupuesto}">
 	        		<div class="col-sm-12">
-	        			<label for="articulos">Articulos</label><br>
-	        			<div class="col-sm-12">
-	        				<div class="col-sm-offset-2 col-sm-3">
-	        					producto
-	        				</div>
-	        			</div>
-	        			<hr>
+	        			<label for="productos">Productos</label><br>	        			
 	        			<div v-for="opcion in opcionesArticulos">
 
-		        			<div class="col-sm-12">
-		        				<div class="col-sm-2">
-		        					<input type="checkbox" name="articulos" v-validate:articulosArray="'required'" 
+		        			<div class="col-sm-4 col-xs-12">
+		        				<div class="col-sm-2 col-xs-2">
+		        					<input type="checkbox" name="productos" v-validate:articulosArray="'required'" 
 		        					:value="opcion.id" @change="setOrSpliceArticulo(opcion.id)">
 								</div>
-								<div class="col-sm-3">
+								<div class="col-sm-10 col-xs-10">
 		        					{{  opcion.nombre }}
 		        				</div>
 		        			</div>
 		        		</div>
 		        		<!-- validacion vee-validation -->
-                    	<span v-show="errors.has('articulos') && validarReserva" class="help-block">{{ errors.first('articulos') }}</span>
+                    	<span v-show="errors.has('productos') && validarPresupuesto" class="help-block">{{ errors.first('productos') }}</span>
 	        		</div>
 	        	</div>
 	        </div>
-	       <div class="col-sm-12">
-	       		<div class="col-sm-12">
-	       			<label for="precio_total">Precio: ${{ reserva.precio_total }}
-	       			</label>
-	       		</div>
-	       	</div>
+	        <div class="col-sm-12">
+	        	<hr>
+	        	<div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('comentario')&&validarPresupuesto}">
+	        		<div class="col-sm-12">
+	        			<label for="comentario">Comentario</label><br>	
+	        			<textarea class="form-control" data-vv-name="comentario" v-validate="'required|min:10|max:400'" v-model="presupuesto.comentario" placeholder="Ingrese aqui un comentario.">
+	        				
+	        			</textarea>
+						<span v-show="errors.has('comentario') && validarPresupuesto" class="help-block">{{ errors.first('comentario') }}</span>
+	        		</div>
+	        	</div>
+	        </div>
 		</form>
 	</div>
 </template>
@@ -173,7 +174,7 @@
 				required: true,
 				type: String
 			},
-			reserva: {
+			presupuesto: {
 				required: true,
 				type: Object
 			},
@@ -189,7 +190,7 @@
 		},
 		data(){
 			return {
-				validarReserva: false,
+				validarPresupuesto: false,
 				localidades: [],
 				opcionesRubros: [],
 				rubrosSelect: [],
@@ -209,10 +210,10 @@
 	    	this.loadOpcions();
 	    },
 	    mounted(){
-	    	this.$events.on('validarFormReserva', () => this.validateBeforeSubmit());
+	    	this.$events.on('validarFormPresupuesto', () => this.validateBeforeSubmit());
 	    },
 	    beforeDestroy() {
-		    this.$events.$off('validarFormReserva');
+		    this.$events.$off('validarFormPresupuesto');
 		},
 		components: {
 			vSelect
@@ -220,10 +221,10 @@
 	    methods: {
 	    	validateBeforeSubmit: function() {
 		        this.$validator.validateAll().then(() => { 
-		                    this.validarReserva = false; 
+		                    this.validarPresupuesto = false; 
 		                    this.$emit('validado');
 		                }).catch(() => {
-		                    this.validarReserva = true;
+		                    this.validarPresupuesto = true;
 		                });
 		        },
 	    	callbackSelectRubros: function(val) {
@@ -240,15 +241,15 @@
 	    			}
 	    		}
 
-	    		for(var i = 0; i < this.reserva.articulos.length; i++){
+	    		for(var i = 0; i < this.presupuesto.articulos.length; i++){
 	    			var esta = false;
 	    			for(var articulo_id of selectableItems){
-	    				if(this.reserva.articulos[i].articulo_id == articulo_id){
+	    				if(this.presupuesto.articulos[i].articulo_id == articulo_id){
 	    					esta = true;
 			    		}
 	    			}
 	    			if(!esta){
-	    				this.reserva.articulos.splice(i, 1);
+	    				this.presupuesto.articulos.splice(i, 1);
 	    			}
 	    		}
 
@@ -256,7 +257,7 @@
 		    		for(var rubro of this.rubros){
 		    			if( rubro.salon )
 		    			{
-							this.reserva.rubros.push(rubro.id);
+							this.presupuesto.rubros.push(rubro.id);
 		    				break;
 		    			}
 		    		}
@@ -273,15 +274,15 @@
 	    	setOrSpliceArticulo(articulo_id){
 	    		var esta = false;
 	    		
-	    		for (var i = 0; i < this.reserva.articulos.length; i++) {
-	    			if(this.reserva.articulos[i].id == articulo_id){
+	    		for (var i = 0; i < this.presupuesto.articulos.length; i++) {
+	    			if(this.presupuesto.articulos[i].id == articulo_id){
 	    				esta = true;
-	    				this.reserva.articulos.splice(i, 1);
+	    				this.presupuesto.articulos.splice(i, 1);
 	    				break
 	    			}
 	    		}
 	    		if(!esta){
-	    			this.reserva.articulos.push({articulo_id: articulo_id, cantidad: 0});
+	    			this.presupuesto.articulos.push({articulo_id: articulo_id, cantidad: 0});
 	    		} 
 	    	},
 	    	changeDate(val){
@@ -310,7 +311,7 @@
 	    			{
 		    			var option = {value: rubro.id, label: rubro.nombre};
 		    			if(rubro.salon){
-		    				this.reserva.rubros.push(rubro.id);
+		    				this.presupuesto.rubros.push(rubro.id);
 		    			}
 		    			if(!rubro.servicio && !rubro.salon && rubro.producto)
 		    				rubrosArticulos.push(rubro.id);
@@ -326,33 +327,11 @@
 	    				}
 	    			}
 	    		}
-	    	},
-	    	calularCoste(){
-	    		var precie = 0.00;
-	    		for (var reservado of this.reserva.articulos) {
-
-	    			for (var articulo of this.articulos) {
-		    			if(reservado.articulo_id == articulo.id){
-		    				console.log(articulo);
-		    				precie = precie + (articulo.precio * reservado.cantidad);
-		    				break;
-		    			}
-	    			}
-	    		}
-	    		if(this.reserva.horario_id != ''){
-	    			for (var horario of this.opcionesReservas) {
-	    				if(horario.id == this.reserva.horario_id){
-	    					precie = precie + horario.precio;
-	    					break;
-	    				}
-	    			}
-	    		}
-	    		this.reserva.precio_total = precie;
 	    	}
 	    },
 	    computed:{
 	    	articulosArray(){
-	    		return this.reserva.articulos;
+	    		return this.presupuesto.articulos;
 	    	},
 	    	nameRubro(){
 	    		for(var rubro of this.rubros){
@@ -390,7 +369,7 @@
 	    				break;
 	    			}
 	    		}
-	    		for(var rubro of this.reserva.rubros){
+	    		for(var rubro of this.presupuesto.rubros){
 	    			if(rubro == rubro_id)
 	    				return true
 	    		}

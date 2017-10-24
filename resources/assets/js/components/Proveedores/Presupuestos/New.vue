@@ -3,6 +3,7 @@
 		<div class="box-body">
         	<form-presupuesto 
                 :rubros="publicacion.prestacion.rubros"
+                :domicilio="domicilio"
                 :articulos="publicacion.articulos"
                 :presupuesto="presupuesto"
                 :tipo="'tipo'"
@@ -16,7 +17,7 @@
                 Atras
             </button>
             <button @click="validateBeforeSubmit()" type="button" class="btn btn-primary">
-                Reservar
+                Solicitar
             </button>
 		</div>
 	</div>
@@ -40,9 +41,14 @@
 					articulos: [],
 					fecha: '',
 					horario_id: '',
-					estado: 'reserva',
-					precio_total: '',
+					estado: 'presupuesto',
 					comentario: ''
+				},
+				domicilio: {
+	                calle: null,
+	                numero: null,
+	                piso: null,
+	                localidad_id: null
 				},
 				errorsApi: []
 			}
@@ -53,29 +59,34 @@
 	            this.$events.fire('validarFormPresupuesto')
 	        },
 	        sendForm: function(){
+	        	if(this.domicilio.localidad_id != null){
+	        		var localidad_id = this.domicilio.localidad_id.value;
+	        	}
+	        	var data = {
+                	rubros: this.presupuesto.rubros,
+                	articulos: this.presupuesto.articulos,
+                	horario_id: this.presupuesto.horario_id,
+                	estado: this.presupuesto.estado,
+                	fecha: this.presupuesto.fecha,
+                	comentario: this.presupuesto.comentario,
+                    calle: this.domicilio.calle,
+                    numero: this.domicilio.numero,
+                    piso: this.domicilio.piso,
+                    localidad_id: localidad_id,
+                }
 	            this.$http.post(
-	                'api/publicacion/'+this.publicacion.id+'/presupuesto', 
-	                {
-	                	rubros: this.presupuesto.rubros,
-	                	articulos: this.presupuesto.articulos,
-	                	fecha_hora: this.presupuesto.fecha_hora,
-	                	hora_finalizacion: this.presupuesto.hora_finalizacion,
-	                	estado: this.presupuesto.estado,
-	                	precio_total: this.presupuesto.precio_total,
-	                	comentario: this.presupuesto.comentario
-	                })
+	                'api/publicacion/'+this.publicacion.id+'/presupuesto', data)
 	                .then(response => {
 	                    this.closeModal(),
 	                    this.errorsApi= {},
 	                    this.$toast.success({
-	                        title:'Reserva',
-	                        message:'Se ha realizado correctamente su reserva'
+	                        title:'Solicitud de Presupuesto',
+	                        message:'Se ha realizado correctamente su solicitud'
 	                    });
-	                    this.resetForm()
 	                }, response => {
 	                    this.$toast.error({
 	                        title:'¡Error!',
-	                        message:'No se ha podido realizado correctamente su reserva'
+	                        message:'No se ha podido realizado correctamente su solicitud'
 	                    });
 	                    if(response.status === 422)
 	                    {

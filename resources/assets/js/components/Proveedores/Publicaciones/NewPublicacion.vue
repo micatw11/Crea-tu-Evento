@@ -21,17 +21,22 @@
 					            </template>
 
 					        	<template v-if="showFormArticulo">
-					        		<div class="col-sm-12">
-						        		<form-articulo
-						        			:rubros="prestacion.rubros_id">
-						        		</form-articulo>
-					        		</div>
-					        		<div class="col-sm-12">
-						        		<add-articulo 
-						        			:rubros="prestacion.rubros_id" 
-						        			:articulosSelect="articulos">
-						        		</add-articulo>
-						        	</div>
+									<div class="col-sm-12">
+										<form-articulo
+											:rubros="prestacion.rubros_id">
+										</form-articulo>
+									</div>
+									<div class="col-sm-12">
+										<add-articulo :rubros="prestacion.rubros_id" :articulosSelect="articulos">
+										</add-articulo>
+									</div>
+									<div class="col-sm-12">
+					        			<form-horario 
+					        				:publicacionId="publicacion.id">
+					        			</form-horario>
+									</div>
+					        		<!--<add-horario :rubros="prestacion.rubros_id" :horariosSelect="articulos">
+					        		</add-horario>-->
 					        	</template>
 
 					            <template v-if="showFormPublicacion">
@@ -90,6 +95,7 @@
 	import route from './../../../routes.js';
     import FormRubro from './../Prestaciones/FormRubro';
     import FormArticulo from './../Articulos/New';
+    import FormHorario from './../Horarios/New';
     import AddArticulo from './AddArticulo';
 
 	export default {

@@ -27,7 +27,8 @@ var EditPublicacion = require('./components/Proveedores/Publicaciones/EditPublic
 var ShowPublicacion = require('./components/Proveedores/Publicaciones/Show');
 
 var IndexRubro = require('./components/Proveedores/Rubros/Index');
-
+var IndexMensajes = require('./components/Mensajes/Index');
+var ShowMensajes = require('./components/Mensajes/Show');
 
 var NewRubro = require('./components/Proveedores/Prestaciones/NewRubro');
 var EditRubro = require('./components/Proveedores/Prestaciones/EditRubro');
@@ -155,6 +156,20 @@ let routes = [
 			component: ShowPublicacion,
 			beforeEnter: guardRoute,
 			meta: { requiresAuth: false }
+		},
+		{
+			path: '/mensajes',
+			name: 'mensajes',
+			component: IndexMensajes,
+			beforeEnter: guardRoute,
+			meta: { requiresAuth: true }
+		},
+		{
+			path: '/mensaje/:mensajeId',
+			name: 'show-mensajes',
+			component: ShowMensajes,
+			beforeEnter: guardRoute,
+			meta: { requiresAuth: true }
 		},
 		{
 			path: '/publicacion/:publicacionId/edit',

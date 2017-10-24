@@ -19,14 +19,8 @@
 
     <link rel="stylesheet" href="/plugins/pace/pace.min.css">
 
-    <!-- fullCalendar 2.2.5
-    <link rel="stylesheet" href="/plugins/fullcalendar/fullcalendar.min.css">
-    <link rel="stylesheet" href="/plugins/fullcalendar/fullcalendar.print.css" media="print">
-    -->
-    <!-- iCheck 
-    <link rel="stylesheet" href="/plugins/iCheck/square/blue.css">
-    -->
-
+    <!-- timepicker-->
+     <link rel="stylesheet" href="/plugins/timepicker/element-timepicker.css">
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">

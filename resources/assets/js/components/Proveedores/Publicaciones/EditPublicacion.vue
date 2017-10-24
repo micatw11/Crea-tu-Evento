@@ -19,17 +19,24 @@
 		            </template>
 
 		        	<template v-if="showFormArticulo && showForm">
-		        		<div class="col-sm-12">
-			        		<form-articulo
-			        			:rubros="prestacion.rubros_id">
-			        		</form-articulo>
-			        	</div>
-			        	<div class="col-sm-12">
-			        		<add-articulo 
-			        			:rubros="prestacion.rubros_id" 
-			        			:articulosSelect="articulos">
-			        		</add-articulo>
-			        	</div>
+						<div class="col-sm-12">
+							<form-articulo
+								:rubros="prestacion.rubros_id">
+							</form-articulo>
+						</div>
+						<div class="col-sm-12">
+							<add-articulo :rubros="prestacion.rubros_id" :articulosSelect="articulos">
+							</add-articulo>
+						</div>
+						<div class="col-sm-12">
+							<form-horario
+								:publicacionId="publicacion.id">
+							</form-horario>
+						</div>
+						<div class="col-sm-12">
+							<add-horario :publicacionId="publicacion.id">
+							</add-horario>
+						</div>
 		        	</template>
 
 		        	<form-publicacion v-if="showForm && showFormPublicacion"
@@ -86,7 +93,9 @@
 	import router from './../../../routes.js'
     import FormPrestacion from './../Prestaciones/FormRubro';
     import FormArticulo from './../Articulos/New';
+    import FormHorario from './../Horarios/New';
     import AddArticulo from './AddArticulo';
+    import AddHorario from './../Horarios/Index';
 
 
 	export default {
@@ -115,7 +124,7 @@
 			this.getPublicacion();
 		},
 		components: {
-			FormPublicacion, FormPrestacion, FormArticulo, AddArticulo
+			FormPublicacion, FormPrestacion, FormArticulo, AddArticulo, FormHorario, AddHorario
 		},
 		methods: {
 			validateBeforeSubmit: function() {                 

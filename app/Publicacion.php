@@ -31,6 +31,10 @@ class Publicacion extends Model
         return $this->belongsTo('App\Reserva');
     }
 
+    public function mensajes(){
+        return $this->hasMany('App\Mensaje');
+    }
+
     public function prestacion()
     {
         return $this->belongsTo('App\Prestacion');
@@ -74,6 +78,11 @@ class Publicacion extends Model
        public function favoritos()
     {
         return $this->hasMany('App\Favorito');
+    }
+
+      public function horarios()
+    {
+        return $this->hasMany('App\Horario');
     }
 
 }

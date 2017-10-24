@@ -27,7 +27,7 @@
 	</div>
 </template>
 <script>
-	import FormRubro from './Form'
+	import FormArticulo from './Form'
 	export default {
 		props: {
 			rubros:{
@@ -43,11 +43,15 @@
 					stock: null,
 					precio: 0,
 					rubro_id: ''
-				}
+				},
+				showForm: true
 			}
 		},
 		components:{
-			FormRubro
+			FormArticulo
+		},
+		mounted() {
+			this.$events.on('showForm', () => this.showForm = false);
 		},
 		methods:{
 			validateBeforeSubmit(){

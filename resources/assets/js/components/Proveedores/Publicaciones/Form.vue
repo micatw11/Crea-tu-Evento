@@ -186,7 +186,7 @@
                         <money v-model="publicacion.precio" v-bind="money" v-validate="'required|min_value:1'" data-vv-name="precio"></money>
                     </div>
                     <!-- validacion vee-validation -->
-                    <span v-show="errors.has('precio')&&validarPublicacion" class="help-block"> El campo precio es requirido.</span>
+                    <span v-show="errors.has('precio')&&validarPublicacion" class="help-block"> El campo precio es requerido.</span>
                     <!-- validacion api-->
                     <div class="text-red" v-if="errorsApi.precio">
                         <div v-for="msj in errorsApi.precio">

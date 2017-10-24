@@ -13,7 +13,7 @@ class Reserva extends Model
      *
      * @var array
      */
-    protected $fillable = ['publicacion_id', 'user_id', 'fecha', 'hora_inicio', 'hora_finalizacion', 'estado', 'precio_total'];
+    protected $fillable = ['publicacion_id', 'user_id', 'domicilio_id','fecha', 'hora_inicio', 'hora_finalizacion', 'estado', 'precio_total'];
 
     public function publicacion(){
     	return $this->belongsTo('App\Publicacion');
@@ -21,6 +21,10 @@ class Reserva extends Model
 
     public function user(){
     	return $this->belongsTo('App\User');
+    }
+
+    public function mensajes(){
+        return $this->belongsToMany('App\Mensaje');
     }
 
     public function rubros(){

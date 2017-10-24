@@ -1,5 +1,5 @@
 <template>
-    <div v-bind:class="classWrapper">
+    <div v-bind:class="classWrapper" v-bind:style="{height: height+ 'px' ,width: width + 'px'}">
         <bar v-if="showComponent"></bar>
         <barra-lateral v-if="showComponent"></barra-lateral>
         <div v-bind:class="classContentWrapper">
@@ -24,11 +24,14 @@ export default {
         return {
             auth: auth,
             routes: routes,
-            showComponentLayout: true
+            showComponentLayout: true,
+            height: document.documentElement.clientHeight,
+            width: document.documentElement.clientWidth
         }
     },
     mounted() {
         this.$events.listen('reloadComponents', this.reloadComponents);
+        window.addEventListener('resize', this.handleResize)
         $(this).ajaxStart(function() { Pace.restart(); });
     },
     computed: {
@@ -50,6 +53,10 @@ export default {
     },
     components: {Bar, BarraLateral, Foo, PathContent },
     methods: {
+        handleResize(e){
+            this.height = document.documentElement.clientHeight
+            this.width = document.documentElement.clientWidth
+        },
         reloadComponents(){
             this.showComponentLayout = false;
             setTimeout(this.showComponentes, 1);

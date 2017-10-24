@@ -9,6 +9,7 @@ use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Publicacion;
 use App\Domicilio;
+use App\Mensaje;
 use App\Reserva;
 
 class ReservaController extends Controller
@@ -36,18 +37,37 @@ class ReservaController extends Controller
         //
     }
 
-    protected function validateReserva(Request $request)
+    public function reservasUser(Request $request, $user_id)
     {
-        return $this->validate($request, 
-            [
-                'horario_id' => 'required',
-                'fecha' => 'required',
-                'precio_total' => 'required|regex:/^\d*(\.\d{1,2})?$/',
-                'articulos.*.articulo_id' => 'required',
-                'articulos.*.cantidad' => 'required|min:1',
-                'rubros' => 'required',
-                'estado' => 'required|in:presupuesto,reservado,confirmado,cancelado'
-            ]);
+        $reservas = Reserva::where('user_id', $user_id)->where('estado', 'confirmado')
+            ->with('publicacion.proveedor','rubros','articulos')->get();
+
+        return response()->json($reservas, Response::HTTP_OK);
+    }
+
+    protected function validateReserva(Request $request, $is_presupuesto)
+    {
+        if($is_presupuesto){
+            return $this->validate($request, 
+                [
+                    'horario_id' => 'required',
+                    'fecha' => 'required',
+                    'articulos.*.articulo_id' => 'required',
+                    'rubros' => 'required',
+                    'estado' => 'required|in:presupuesto,reservado,confirmado,cancelado'
+                ]);
+        } else{
+            return $this->validate($request, 
+                [
+                    'horario_id' => 'required',
+                    'fecha' => 'required',
+                    'articulos.*.articulo_id' => 'required',
+                    'articulos.*.cantidad' => 'required|min:1',
+                    'rubros' => 'required',
+                    'precio_total' => 'required|regex:/^\d*(\.\d{2})?$/',
+                    'estado' => 'required|in:presupuesto,reservado,confirmado,cancelado'
+                ]);
+        }
     }
 
     protected function createReserva(Request $request, $publicacion, $user, $domicilio_id, $precio_total)
@@ -58,8 +78,8 @@ class ReservaController extends Controller
                 'fecha' => $request->fecha,
                 'hora_inicio' => '00:00:00',
                 'hora_finalizacion' => '00:00:00',
-                'precio_total' => $precio_total,
                 'domicilio_id' => $domicilio_id,
+                'precio_total' => $precio_total,
                 'estado' => $request->estado
             ]);
     }
@@ -80,7 +100,7 @@ class ReservaController extends Controller
 
         $user = Auth::user();
 
-        $this->validateReserva($request);
+        $this->validateReserva($request, false);
 
         foreach ($publicacion->prestacion->rubros as $rubro) { 
             if($rubro->salon){
@@ -119,7 +139,74 @@ class ReservaController extends Controller
         {
             return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         } 
+    }
 
+    public function storePresupuesto(Request $request, $publicacion_id)
+    {
+        $requiredDomicilio = false;
+        $domicilio = null;
+
+        $publicacion = Publicacion::where('id', $publicacion_id)
+                ->with('prestacion.rubros', 'prestacion.domicilio', 'articulos', 'proveedor')->firstOrFail();
+
+        $user = Auth::user();
+
+        $this->validateReserva($request, true);
+
+        foreach ($publicacion->prestacion->rubros as $rubro) { 
+            if($rubro->salon){
+                $requiredDomicilio = false;
+                break;
+            }
+        }
+
+        // precio mas precio horario
+
+        if( $requiredDomicilio ){
+            $this->domicilioService->validateDomicilio($request);
+            $domicilio = $this->domicilioService->createDomicilio($request, 'Social');
+        } else {
+            $domicilio = Domicilio::where('id', $publicacion->prestacion->domicilio_id )->firstOrFail();
+        }
+
+        $reserva = $this->createReserva($request, $publicacion, $user, $domicilio->id, 0.00);
+        $reserva->articulos()->attach($request->articulos);
+        $reserva->rubros()->attach($request->rubros);
+        $mensaje = Mensaje::create([ 'from_user_id' => Auth::id(), 'to_user_id' => $publicacion->proveedor->user_id, 
+                    'ancestro_id' => null, 'mensaje' => $request->comentario, 'reserva_id' => $reserva->id]);
+        if( $reserva->save() )
+        {
+            return response(null, Response::HTTP_OK);
+        }
+        else
+        {
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+        } 
+    }
+
+    public function cambiarEstado(Request $request, $id)
+    {
+        $this->validate($request, [
+                'estado' => 'required|in:presupuesto,reservado,confirmado,cancelado'
+            ]);
+        $reserva = Reserva::where('id', $id)->firstOrFail();
+        if(Auth::id() == $reserva->user_id)
+        {
+            $reserva->update(['estado' => $request->estado]);
+
+            if( $reserva->save() )
+            {
+                return response(null, Response::HTTP_OK);
+            }
+            else 
+            {
+                return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+        }
+        else
+        {
+            return response(null, Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -130,7 +217,7 @@ class ReservaController extends Controller
      */
     public function show($id)
     {
-        $reserva = Reserva::where('id', $id)->firstOrFail();
+        $reserva = Reserva::where('id', $id)->with('publicacion','user','rubros','articulos')->firstOrFail();
         return response()->json($reserva, Response::HTTP_OK);
     }
 
@@ -143,7 +230,31 @@ class ReservaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updatePresupuesto(Request $request, $id)
+    {
+        $reserva = Reserva::where('id', $id)->where('estado', 'presupuesto')->firstOrFail();
+        $reserva->articulos()->detach();
+        $reserva->articulos()->attach($request->articulos);
+        $reserva->precio_total = $reserva->precio_total + $request->precio_total;
+        
+        if( $reserva->save() )
+        {
+            return response(null, Response::HTTP_OK);
+        }
+        else 
+        {
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**

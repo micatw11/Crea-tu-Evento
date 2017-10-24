@@ -79,7 +79,6 @@ html, body {
                 height: 100%;
             }
             .box {
-
                 box-shadow: 0 0px 0px;
             }
             .VueCarousel-slide {
@@ -109,4 +108,8 @@ html, body {
             /* .slide-fade-leave-active below version 2.1.8 */ {
               transform: translateX(10px);
               opacity: 0;
+            }
+
+            .btn.bg-purple.margin.active{
+                background-color: #513163 !important;
             }

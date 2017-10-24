@@ -47,13 +47,13 @@
 								<div class="col-sm-12">
 									<h3 class="text-uppercase">{{publicacion.titulo}}
 				                        <div class="pull-right">
-	                                       <div v-if="verificar_favorite()">
+	                                       <div style="cursor: pointer" v-if="verificar_favorite()">
 		                                        <div @click="favorite_icon(publicacion.id)">
 		                                            <i class="fa fa-fw fa-heart"></i>
 		                                        </div>
 		                                    </div>
 
-		                                    <div v-else>
+		                                    <div style="cursor: pointer" v-else>
 		                                        <div @click="favorite_icon(publicacion.id)">
 		                                            <i class="fa fa-fw fa-heart-o"></i>
 		                                        </div>
@@ -94,16 +94,10 @@
 
 							        	<div class="col-sm-11 col-sm-offset-1">
 
-							                <button type="button" class="btn btn-block btn-success" @click.prevent="showReservaModal()"
-							                	v-if="!auth.user.authenticated ||
-							                	(auth.user.authenticated && !(auth.user.profile.roles_id != role.USUARIO))">
-							                	<i class="fa fa-calendar-check-o"></i> Reservar
-							                </button>
-
-									        <button type="button" class="btn btn-block btn-warning" @click.prevent="showPresupuestoModal()"
+									        <button type="button" class="btn btn-block btn-success" @click.prevent="showPresupuestoModal()"
 									        	v-if="!auth.user.authenticated ||
 							                	(auth.user.authenticated && !(auth.user.profile.roles_id != role.USUARIO))">
-									        	<i class="fa fa-money" aria-hidden="true"> Solicitar Presupuesto</i> 	
+									        	<i class="fa fa-calendar-check-o" aria-hidden="true"> Solicitar Presupuesto</i> 	
 									        </button>
 
 							        	</div>
@@ -180,7 +174,7 @@
              		<div v-if="auth.user.authenticated && (auth.user.profile.roles_id == role.PROVEEDOR && 
 				    	publicacion.proveedor.user_id == auth.user.profile.id)" class="tab-pane" id="proveedor">
 				    	<div class="box-body">
-							<index-reservas></index-reservas>
+							<index-reservas :publicacionId="publicacion.id"></index-reservas>
 						</div>
              		</div>
              	</div>
@@ -291,19 +285,6 @@
 	        <!-- /.box -->
 	    </section>
 
-	    <!-- modal reserva -->
-	    <div v-if="auth.user.authenticated && showReserva" id="modificar" class="modal" role="dialog" :style="{ display : showReserva  ? 'block' : 'none' }">
-	        <div class="modal-dialog modal-lg">
-	            <div class="modal-content">
-	                <div class="modal-header">
-	                    <button type="button" class="close" @click="closeModal()">&times;</button>
-	                    <h4 class="modal-title">Reservar - {{ publicacion.titulo }}</h4>
-	                </div>
-	                <new-reserva :publicacion="publicacion"></new-reserva>
-	            </div>
-	        </div>
-	    </div>
-
 	    <!-- modal presupuesto -->
 	    <div v-if="auth.user.authenticated && showPresupuesto" id="modificar" class="modal" role="dialog" :style="{ display : showPresupuesto  ? 'block' : 'none' }">
 	        <div class="modal-dialog modal-lg">
@@ -325,10 +306,9 @@
 	import Role from '../../../config.js'
 	import { Carousel, Slide } from 'vue-carousel';
 	import moment from 'moment';
-	import NewReserva from './../Reservas/New';
 	import NewPresupuesto from './../Presupuestos/New';
-	import IndexReservas from './../Reservas/index';
 
+	Vue.component('index-reservas', require('./../Reservas/Index'));
 	export default {
 		
 		data() {
@@ -338,7 +318,6 @@
 				productoId: null,
 				auth: auth,
 				role: Role,
-				showReserva: false,
 				showPresupuesto: false
 			}
 		},
@@ -350,7 +329,7 @@
 			
 		},
 		components: {
-        	Carousel, Slide, NewReserva, NewPresupuesto, IndexReservas
+        	Carousel, Slide, NewPresupuesto
     	},
 		methods: {
 			getPublicacion: function(){
@@ -380,15 +359,6 @@
 	                    });
 	                })
 			},
-			showReservaModal(){
-				if(auth.user.authenticated){
-					this.showReserva = true
-				}
-				else
-				{
-					route.push('/login');
-				}
-			},
 			showPresupuestoModal(){
 				if(auth.user.authenticated){
 					this.showPresupuesto = true
@@ -399,16 +369,19 @@
 				}
 			},
 			verificar_favorite(){
-				if (this.publicacion.favoritos != null){
-	                for (var i = 0; i < this.publicacion.favoritos.length; i++) {
-	                    if (this.publicacion.favoritos[i].user_id == auth.user.profile.id){
-	                        return true
-	                    }
-	                }
-	            }
+				if (auth.user.authenticated){
+					if (this.publicacion.favoritos != null){
+		                for (var i = 0; i < this.publicacion.favoritos.length; i++) {
+		                    if (this.publicacion.favoritos[i].user_id == auth.user.profile.id){
+		                        return true
+		                    }
+		                }
+		            }
+		         }
                 return false
             },
 			favorite_icon(id){
+				if (auth.user.authenticated){
                 this.$http.post(
                     'api/favoritos/', 
                     {
@@ -423,7 +396,14 @@
                             title:'¡Error!',
                             message:'No se ha podido completar la accion. :('
                         });
-                    })   
+                    }) 
+                 }else{
+                    var listPath = [
+                        {route: '/login', name: 'Login'}
+                    ]
+                    this.$events.fire('changePath', listPath, 'Login');
+                    route.push('/login');
+                 }  
             },
 			modificar(id){
 				route.push('/publicacion/'+id+'/edit');
@@ -484,7 +464,6 @@
 				return list+'.';
 			},
 			closeModal: function(){
-                this.showReserva = false;
                 this.showPresupuesto = false;
             },
 	        strUpper: function(str){

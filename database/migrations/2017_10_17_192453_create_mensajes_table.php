@@ -18,6 +18,7 @@ class CreateMensajesTable extends Migration
             $table->integer('from_user_id')->unsigned(); 
             $table->integer('to_user_id')->unsigned();
             $table->integer('ancestro_id')->unsigned()->nullable();
+            $table->integer('reserva_id')->unsigned();
             $table->string('mensaje', 400);
             $table->integer('estado')->default(1);
             $table->boolean('lectura')->default(false);
@@ -26,8 +27,10 @@ class CreateMensajesTable extends Migration
             $table->foreign('from_user_id')->references('id')->on('users');
             $table->foreign('to_user_id')->references('id')->on('users');
             $table->foreign('ancestro_id')->references('id')->on('mensajes');
+            $table->foreign('reserva_id')->references('id')->on('reservas');
 
         });
+      
     }
 
     /**

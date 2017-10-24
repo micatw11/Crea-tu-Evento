@@ -124,6 +124,20 @@
                     </div>
                     <!-- /.nav-tabs-custom -->
                 </div>
+
+                <div class="col-md-12" 
+                    v-if="(perfil !== null) && (perfil.user.roles_id == role.USUARIO) &&
+                        (perfil.user.id == auth.user.profile.id)">
+                 <div class="box box-primary">
+                        <div class="box-header">
+                            <h3 class="box-title">Mis eventos</h3>
+                        </div>
+                        <div class="box-body">
+                            <eventos-box></eventos-box>
+                        </div>
+                    </div>
+                </div>
+
                 <box-proveedor 
                     v-if="(perfil !== null) && (perfil.user.roles_id == role.PROVEEDOR) &&
                             (perfil.user.id == auth.user.profile.id)" 
@@ -146,6 +160,8 @@ import router from '../../routes.js';
 import auth from '../../auth.js';
 import Role from '../../config.js';
 import BoxProveedor from '../Proveedores/PerfilProveedor.vue';
+
+Vue.component('eventos-box', require('./../Proveedores/Reservas/Index'));
 
 export default {
     data(){

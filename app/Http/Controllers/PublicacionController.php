@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Publicacion;
+use App\Reserva;
 use App\Prestacion;
 use App\Domicilio;
 use App\Proveedor;
@@ -91,8 +92,11 @@ class PublicacionController extends Controller
 
         $query = Publicacion::whereIn('publicaciones.id', $ids)
             ->with('prestacion.proveedor.domicilio.localidad.provincia', 'prestacion.domicilio.localidad.provincia',
-             'prestacion.rubros', 'subcategoria.categoria', 'fotos', 'caracteristicas', 'favoritos')
-            ->select('*', 
+             'prestacion.rubros', 'subcategoria.categoria', 'fotos', 'caracteristicas', 'favoritos', 'horarios')
+
+
+        ->select(
+            '*', 
                 DB::raw('(CASE WHEN publicaciones.oferta IS NULL THEN FALSE ELSE TRUE END) as tiene_oferta'),
 
                 DB::raw('(SELECT CASE WHEN COUNT(caracteristica_publicacion.id) = 0 THEN FALSE ELSE TRUE END FROM caracteristica_publicacion WHERE caracteristica_publicacion.publicacion_id = publicaciones.id ) as tiene_caracteristicas') );
@@ -106,8 +110,9 @@ class PublicacionController extends Controller
 
     public function show(Request $request, $id){
 
-        $publicacion = Publicacion::with('prestacion.rubros', 'prestacion.domicilio.localidad.provincia', 'proveedor.user.usuario','subcategoria.categoria','fotos', 'caracteristicas', 'favoritos', 'articulos')
-            ->where('id', $id)->firstOrFail();
+        $publicacion = Publicacion::with('prestacion.rubros', 'prestacion.domicilio.localidad.provincia', 'proveedor.user.usuario','subcategoria.categoria','fotos', 'caracteristicas', 'favoritos', 'articulos','horarios')
+
+                        ->where('id', $id)->firstOrFail();
 
         return response()->json(['publicacion' => $publicacion], 200);
     }
@@ -319,6 +324,12 @@ class PublicacionController extends Controller
             }
         }
         return response(null, Response::HTTP_UNAUTHORIZED);
+    }
+
+    public function reservas(Request $request, $id){
+        $reservas = Reserva::where('publicacion_id', $id)->where('estado', 'confirmado')->with('publicacion.proveedor','user.usuario','rubros','articulos')->get();
+
+        return response()->json($reservas, Response::HTTP_OK);
     }
 
 }

@@ -112,6 +112,20 @@ Route::group(['prefix' => 'api'], function () {
     Route::post('favoritos','FavoritoController@store');
     Route::get('favoritos/{user_id}', 'FavoritoController@show');
 
+    Route::get('reserva/{id}', 'ReservaController@show');
+    Route::get('user/{user_id}/reserva', 'ReservaController@reservasUser');
     Route::post('publicacion/{publicacion_id}/reserva', 'ReservaController@store');
-    Route::post('publicacion/{publicacion_id}/presupuesto', 'ReservaController@presupuesto');
+    Route::get('publicacion/{id}/reserva', 'PublicacionController@reservas');
+    Route::post('publicacion/{publicacion_id}/presupuesto', 'ReservaController@storePresupuesto');
+    Route::patch('presupuesto/{id}', 'ReservaController@updatePresupuesto');
+    
+    Route::post('horario','HorarioController@store');
+    Route::get('horarios/{publicacion_id}', 'HorarioController@index');
+    Route::get('horario/{horario_id}', 'HorarioController@show');
+    Route::patch('horario/{id}','HorarioController@update');
+
+    Route::get('mensaje','MensajesController@index');
+    Route::get('mensaje/{id}','MensajesController@show');
+    Route::post('mensaje','MensajesController@store');
+    Route::patch('mensaje/{id}','MensajesController@update');
 });
