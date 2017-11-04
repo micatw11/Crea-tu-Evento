@@ -9,8 +9,10 @@ use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Publicacion;
 use App\Domicilio;
+use App\Horario;
 use App\Mensaje;
 use App\Reserva;
+use App\Rol;
 
 class ReservaController extends Controller
 {
@@ -45,12 +47,27 @@ class ReservaController extends Controller
         return response()->json($reservas, Response::HTTP_OK);
     }
 
+    public function reservasProveedor(Request $request, $id){
+        if(Auth::user()->roles_id == Rol::roleId('Proveedor') || Auth::user()->roles_id == Rol::roleId('Administrador')){
+            if($id == 'me' && Auth::user()->roles_id == Rol::roleId('Proveedor')){
+                $id = Auth::user()->proveedor->id;
+            }
+            $reservas = Reserva::join('publicaciones', 'publicaciones.id', '=', 'reservas.publicacion_id')
+                    ->join('proveedores', 'publicaciones.proveedor_id', '=', 'proveedores.id')
+                    ->where('proveedores.id', $id)->where('reservas.estado', 'confirmado')->select('reservas.*')
+                    ->with('user.usuario', 'publicacion')->get();
+
+            return response()->json($reservas, Response::HTTP_OK);
+        } else {
+            return response(null, Response::HTTP_UNAUTHORIZED);
+        }
+    }
+
     protected function validateReserva(Request $request, $is_presupuesto)
     {
         if($is_presupuesto){
             return $this->validate($request, 
                 [
-                    'horario_id' => 'required',
                     'fecha' => 'required',
                     'articulos.*.articulo_id' => 'required',
                     'rubros' => 'required',
@@ -59,7 +76,6 @@ class ReservaController extends Controller
         } else{
             return $this->validate($request, 
                 [
-                    'horario_id' => 'required',
                     'fecha' => 'required',
                     'articulos.*.articulo_id' => 'required',
                     'articulos.*.cantidad' => 'required|min:1',
@@ -74,10 +90,9 @@ class ReservaController extends Controller
     {
         return Reserva::create([
                 'publicacion_id' => $publicacion->id,
+                'presupuestado' => 0,
                 'user_id' => $user->id,
                 'fecha' => $request->fecha,
-                'hora_inicio' => '00:00:00',
-                'hora_finalizacion' => '00:00:00',
                 'domicilio_id' => $domicilio_id,
                 'precio_total' => $precio_total,
                 'estado' => $request->estado
@@ -110,7 +125,6 @@ class ReservaController extends Controller
         }
 
         foreach($request->articulos as $articuloSelect){
-                
             foreach ($publicacion->articulos as $articulo) {
                 if($articuloSelect['articulo_id'] == $articulo->id){
                     $precio_total = $precio_total + ($articulo->precio * $articuloSelect['cantidad']);
@@ -145,6 +159,7 @@ class ReservaController extends Controller
     {
         $requiredDomicilio = false;
         $domicilio = null;
+        $horario = null;
 
         $publicacion = Publicacion::where('id', $publicacion_id)
                 ->with('prestacion.rubros', 'prestacion.domicilio', 'articulos', 'proveedor')->firstOrFail();
@@ -153,14 +168,17 @@ class ReservaController extends Controller
 
         $this->validateReserva($request, true);
 
+        if($request->has('horario_id') && $request->horario_id != null)
+        {
+            $horario = Horario::where('id', $request->horario_id)->firstOrFail();;
+        }
+
         foreach ($publicacion->prestacion->rubros as $rubro) { 
             if($rubro->salon){
                 $requiredDomicilio = false;
                 break;
             }
         }
-
-        // precio mas precio horario
 
         if( $requiredDomicilio ){
             $this->domicilioService->validateDomicilio($request);
@@ -172,8 +190,22 @@ class ReservaController extends Controller
         $reserva = $this->createReserva($request, $publicacion, $user, $domicilio->id, 0.00);
         $reserva->articulos()->attach($request->articulos);
         $reserva->rubros()->attach($request->rubros);
-        $mensaje = Mensaje::create([ 'from_user_id' => Auth::id(), 'to_user_id' => $publicacion->proveedor->user_id, 
-                    'ancestro_id' => null, 'mensaje' => $request->comentario, 'reserva_id' => $reserva->id]);
+
+        if($horario != null)
+        {
+            $reserva->horario_id = $horario->id;
+            $reserva->hora_inicio = $horario->hora_inicio;
+            $reserva->hora_finalizacion = $horario->hora_fin;
+            $reserva->precio_total = $horario->precio;
+        }
+
+        $mensaje = Mensaje::create([ 
+            'from_user_id' => Auth::id(), 
+            'to_user_id' => $publicacion->proveedor->user_id, 
+            'ancestro_id' => null, 'mensaje' => $request->comentario, 
+            'reserva_id' => $reserva->id
+        ]);
+
         if( $reserva->save() )
         {
             return response(null, Response::HTTP_OK);
@@ -217,7 +249,7 @@ class ReservaController extends Controller
      */
     public function show($id)
     {
-        $reserva = Reserva::where('id', $id)->with('publicacion','user','rubros','articulos')->firstOrFail();
+        $reserva = Reserva::where('id', $id)->with('publicacion','user','rubros','articulos', 'domicilio.localidad.provincia', 'horario')->firstOrFail();
         return response()->json($reserva, Response::HTTP_OK);
     }
 
@@ -245,7 +277,18 @@ class ReservaController extends Controller
         $reserva = Reserva::where('id', $id)->where('estado', 'presupuesto')->firstOrFail();
         $reserva->articulos()->detach();
         $reserva->articulos()->attach($request->articulos);
-        $reserva->precio_total = $reserva->precio_total + $request->precio_total;
+        if($request->has('horario_id') && $request->horario_id != null){
+            $reserva->horario_id = $request->horario_id;
+        }
+        if(Auth::user()->roles_id == Rol::roleId('Proveedor'))
+        {
+            $reserva->presupuestado = 1;
+            $reserva->precio_total = $request->precio_total;
+        }
+        else if (Auth::user()->roles_id == Rol::roleId('Usuario')) {
+            $reserva->presupuestado = 0;
+        }
+       
         
         if( $reserva->save() )
         {

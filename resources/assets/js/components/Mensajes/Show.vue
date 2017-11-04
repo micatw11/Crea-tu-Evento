@@ -2,7 +2,7 @@
 	<div class="default-content">
 		<section class="content">
 			<div class="row">
-				<div class="col-md-12">
+				<div class="col-md-9">
 					<div class="box box-success" v-if="presupuesto != null">
 						<div class="box-header with-border">
 							<i class="fa fa-credit-card margin-r-5"></i>
@@ -22,8 +22,8 @@
 								</h4>
 							</div>
 							<div class="col-md-12" v-if="presupuesto.rubros.length > 0">
-								<h5><label>Servicios</label></h5>
-								<div v-for="rubro in presupuesto.rubros" v-if="rubro.servicio" class="col-sm-3 col-xs-6">
+								<h5><label>Servicios y/o Productos</label></h5>
+								<div v-for="rubro in presupuesto.rubros" v-if="rubro.servicio || rubro.producto" class="col-sm-3 col-xs-6">
 									<li>{{rubro.nombre}}</li>
 								</div>
 							</div>
@@ -34,26 +34,147 @@
 									<li>{{articulo.nombre}} <template v-if="articulo.pivot.cantidad > 0"> x {{articulo.pivot.cantidad}}</template></li>
 								</div>
 							</div>
-							<div class="col-md-12">
-								<hr>
-								<label>Conste total: </label> $ {{presupuesto.precio_total}}
+
+							<template v-if="presupuesto.presupuestado == true">
+								<div class="col-md-12">
+									<hr>
+									<small class="label bg-green">
+										Conste total: {{ formatMoney(presupuesto.precio_total) }}
+									</small>
+								</div>
+							</template> 
+
+							<div class="col-sm-12">
+								<template v-if="role.USUARIO == auth.user.profile.roles_id">
+									<template v-if="presupuesto.presupuestado == 0 && isAfterNow(presupuesto.fecha) && presupuesto.estado == 'presupuesto'">
+										<hr>
+										<div class="callout callout-success">
+											<h4><i class="icon fa fa-info"></i>    Estado</h4>
+											<p>En espera de respuesta del proveedor.</p>
+							      </div>
+									</template>
+									<template v-if="presupuesto.presupuestado == 0 && !isAfterNow(presupuesto.fecha) && presupuesto.estado == 'presupuesto'">
+										<div class="callout callout-warning">
+											<h4><i class="icon fa fa-warning"></i>   Atenci&oacute;n</h4>
+											<p>La fecha elegida para su evento en este presupuesto debe de ser actualizada.</p>
+							      </div>
+									</template>
+								</template>
+								<template v-if="role.PROVEEDOR == auth.user.profile.roles_id">
+									<template v-if="!isAfterNow(presupuesto.fecha) && presupuesto.estado != 'confirmado'">
+										<hr>
+										<div class="callout callout-warning">
+											<h4><i class="icon fa fa-warning"></i>   Atenci&oacute;n</h4>
+											<p>La fecha elegida para este evento debe de ser actualizada por el adquiriente.</p>
+							      		</div>
+									</template>
+									<template v-if="presupuesto.presupuestado == true && isAfterNow(presupuesto.fecha) && presupuesto.estado == 'presupuesto'">
+										<hr>
+										<div class="callout callout-success">
+											<h4><i class="icon fa fa-info"></i>   Estado</h4>
+											<p>En espera de respuesta del adquiriente.</p>
+							      		</div>
+									</template>
+								</template>
+								<template v-if="presupuesto.estado == 'confirmado' && !isAfterNow(presupuesto.fecha)">
+									<hr>
+									<div class="callout callout-success">
+										<h4><i class="icon fa fa-check"></i>   Estado</h4>
+										<p>Adquisición confirmada!.</p>										
+									</div>
+								</template>
+								<template v-if="presupuesto.estado == 'confirmado' && isAfterNow(presupuesto.fecha)">
+									<hr>
+									<div class="callout callout-success">
+										<h4><i class="icon fa fa-check"></i>   Estado</h4>
+										<p>Adquisición concretada!.</p>										
+									</div>
+								</template>
+								<template v-if="presupuesto.estado == 'cancelado'">
+									<hr>
+									<div class="callout callout-success">
+										<h4><i class="icon fa fa-ban"></i></i>   Estado</h4>
+										<p>Solicitud cancelada!.</p>										
+									</div>
+								</template>
 							</div>
+
 						</div>
-						<div class="box-footer clearfix">
+						<div class="box-footer clearfix"  v-if="presupuesto.estado != 'cancelado' && presupuesto.estado != 'confirmado'">
 							<div style="text-align: center;">
+								<!-- boton de modificacion de proveedor-->
 			            		<button class="btn btn-sm btn-primary btn-flat" 
-			            			v-if="role.PROVEEDOR == auth.user.profile.roles_id"
-			            			@click.prevent="getPublicacion()">
+			            			v-if="role.PROVEEDOR == auth.user.profile.roles_id && presupuesto.estado != 'reservado' && presupuesto.estado != 'cancelado' && presupuesto.estado != 'confirmado' && isAfterNow(presupuesto.fecha)"
+			            			@click.prevent="getPublicacion('presupuesto')">
 			            			Modificar Presupuesto
 			            		</button>
+
+								<!-- boton de modificacion de usuario-->
 			            		<button class="btn btn-sm btn-default btn-fla" 
-			            			v-if="role.USUARIO == auth.user.profile.roles_id"
-			            			@click.prevent>
+			            			v-if="role.USUARIO == auth.user.profile.roles_id &&presupuesto.estado == 'presupuesto'"
+			            			@click.prevent="getPublicacion('modificar')">
 			            			Modificar
+			            		</button>
+								<!-- boton de reserva de usuario-->
+			            		<button class="btn btn-sm btn-primary btn-fla" 
+			            			v-if="role.USUARIO == auth.user.profile.roles_id && presupuesto.estado == 'presupuesto' &&presupuesto.presupuestado && !isAfterNow(presupuesto.fecha)"
+			            			@click.prevent="changeEstadoPresupuesto('reservado')">
+			            			Reservar
+			            		</button>
+								<!-- boton de confirmacion reserva de usuario-->
+			            		<button class="btn btn-sm btn-primary btn-fla" 
+			            			v-if="role.USUARIO == auth.user.profile.roles_id && presupuesto.estado == 'reservado' && !isAfterNow(presupuesto.fecha)"
+			            			@click.prevent="changeEstadoPresupuesto('confirmado')">
+			            			Confirmar Reserva
+			            		</button>
+								<!-- boton de cancelar reserva o presupuesto de usuario-->
+			            		<button class="btn btn-sm btn-danger btn-fla" 
+			            			v-if="role.USUARIO == auth.user.profile.roles_id  && presupuesto.estado == 'reservado'"
+			            			@click.prevent="changeEstadoPresupuesto('cancelado')">
+			            			Cancelar
 			            		</button>
 			            	</div>
 			            </div>
 					</div>
+				</div>
+
+				<div class="col-md-3" v-if="presupuesto != null">
+					<div class="box box-success collapsed-box">
+						<div class="box-header with-border">
+							<h3 v-if="role.USUARIO == auth.user.profile.roles_id" class="box-title">Proveedor</h3>
+							<h3 v-if="role.PROVEEDOR == auth.user.profile.roles_id" class="box-title">Adquiriente</h3>
+							<div class="box-tools pull-right">
+								<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+								</button>
+							</div>
+							<!-- /.box-tools -->
+						</div>
+						<!-- /.box-header -->
+						<div class="box-body" style="display: none;">
+							<template v-if="role.USUARIO == auth.user.profile.roles_id">
+								<img class="profile-user-img img-responsive" 
+								:src="'/storage/avatars/' + presupuesto.publicacion.proveedor.user.usuario.avatar" alt="avatar">
+								<div class="text-center" style="margin-top: 65px">
+									<label>Nombre: </label>{{ presupuesto.publicacion.proveedor.nombre}}<br>
+									<label>Email: </label>{{ presupuesto.publicacion.proveedor.email}}
+								</div>
+							</template>
+							<template v-if="role.PROVEEDOR == auth.user.profile.roles_id">
+								<img class="profile-user-img img-responsive" 
+								:src="'/storage/avatars/' + presupuesto.user.usuario.avatar" alt="avatar">
+								<div class="text-center" style="margin-top: 60px">
+									<label>Nombre: </label>{{ presupuesto.user.usuario.nombre}} {{presupuesto.user.usuario.apellido}}<br>
+									<label>Email: </label>{{ presupuesto.user.email}}
+								</div>
+							</template>
+
+						</div>
+						<!-- /.box-body -->
+					</div>
+					<!-- /.box -->
+				</div>
+
+				<div class="col-sm-12" v-if="presupuesto != null && mensajes.length > 0">
 					<div class="box box-success direct-chat direct-chat-success">
 						<div class="box-header with-border">
 							<i class="fa fa-comments-o margin-r-5"></i>
@@ -73,7 +194,7 @@
 											{{ mensaje.mensaje }}
 											<div class="direct-chat-info clearfix">
 												<span class="direct-chat-timestamp pull-right" style="color:black">
-													{{ formatDateTime(mensaje.created_at) }}
+													{{ formatDateTime(mensaje.created_at) }} hs
 												</span>
 											</div>
 										</div>
@@ -85,7 +206,7 @@
 											{{ mensaje.mensaje }}
 											<div class="direct-chat-info clearfix">
 												<span class="direct-chat-timestamp pull-right" style="color:black">
-													{{ formatDateTime(mensaje.created_at) }}
+													{{ formatDateTime(mensaje.created_at) }} hs
 												</span>
 											</div>
 										</div>
@@ -97,9 +218,9 @@
 						<div class="box-footer">
 							<form action="#" method="post">
 							<div class="input-group">
-								<input type="text" name="message" v-model="newMensaje" v-validate="'required'" placeholder="Mensaje" class="form-control">
+								<input type="text" name="message" v-model="newMensaje" v-validate="'required'" placeholder="Mensaje" class="form-control" :disabled="presupuesto.estado == 'cancelado' || (presupuesto.estado == 'confirmado' && !isAfterNow(presupuesto.fecha))">
 								<span class="input-group-btn">
-									<button @click.prevent="validateBeforeSend" type="button" class="btn btn-success btn-flat">Enviar</button>
+									<button @click.prevent="validateBeforeSend" :disabled="presupuesto.estado == 'cancelado' || (presupuesto.estado == 'confirmado' && !isAfterNow(presupuesto.fecha))" type="button" class="btn btn-success btn-flat">Enviar</button>
 								</span>
 							</div>
 							</form>
@@ -111,7 +232,7 @@
 		</section>
 
 	    <!-- modal presupuesto -->
-	    <div v-if="showPresupuesto" id="modificar" class="modal" role="dialog" :style="{ display : showPresupuesto  ? 'block' : 'none' }">
+	    <div v-if="showPresupuesto && role.PROVEEDOR == auth.user.profile.roles_id" id="presupuesto" class="modal" role="dialog" :style="{ display : showPresupuesto  ? 'block' : 'none' }">
 	        <div class="modal-dialog modal-lg">
 	            <div class="modal-content">
 	                <div class="modal-header">
@@ -127,13 +248,32 @@
 	        </div>
 	    </div>
 
+	    <!-- modal modificar presupuesto -->
+	    <div v-if="showModificarPresupuesto && role.USUARIO == auth.user.profile.roles_id" id="modificar" class="modal" role="dialog" :style="{ display : showModificarPresupuesto  ? 'block' : 'none' }">
+	        <div class="modal-dialog modal-lg">
+	            <div class="modal-content">
+	                <div class="modal-header">
+	                    <button type="button" class="close" @click="closeModal()">&times;</button>
+	                    <h4 class="modal-title">Presupuesto - {{ publicacion.titulo }}</h4>
+	                </div>
+	                <edit-presupuesto 
+	                	:estado="presupuesto" 
+	                	:publicacion="publicacion" 
+	                	:presupuestoId="presupuesto.id">
+	                </edit-presupuesto>
+	            </div>
+	        </div>
+	    </div>
+
 	</div>
 </template>
 <script>
 	import auth from './../../auth';
 	import Role from './../../config';
 	import FormPresupuesto from './../Proveedores/Reservas/Edit';
+	import EditPresupuesto from './../Proveedores/Presupuestos/Edit';
 	import moment from 'moment';
+	import accounting from 'accounting-js';
 	export default {
 		data(){
 			return {
@@ -141,13 +281,14 @@
 				presupuesto: null,
 				publicacion: {},
 				showPresupuesto: false,
+				showModificarPresupuesto: false,
 				newMensaje: '',
 				auth: auth,
 				validar: false,
 				listPath: [
 					{route: '/', name: 'Inicio'}, 
 					{route: '/mensajes', name: 'Mensajes'}],
-					role: Role
+				role: Role
 			}
 		},
 		beforeMount(){
@@ -156,17 +297,24 @@
 		mounted() {
 			this.$events.on('cerrar', () => this.closeModal());
 		},
+		beforeDestroy() {
+			this.$events.$off('cerrar')
+    	},
 		components: {
-			FormPresupuesto
+			FormPresupuesto, EditPresupuesto
 		},
 		methods: {
 			getMenensajes(){
 	            this.$http.get('api/mensaje/'+this.$route.params.mensajeId )
 	                .then(response => {
-	                	this.mensajes = response.data.mensajes;
 	                	this.presupuesto = response.data.presupuesto;
-	                	this.listPath.push({route: 'mensaje/'+this.$route.params.mensajeId, name: this.getNameFromUser });
-						this.$events.fire('changePath', this.listPath, this.getNameFromUser );
+	                	this.mensajes = response.data.mensajes;
+	                	
+						this.listPath= [
+							{route: '/', name: 'Inicio'}, 
+							{route: '/mensajes', name: 'Mensajes'}];
+	                	this.listPath.push({route: 'mensaje/'+this.$route.params.mensajeId, name: this.presupuesto.publicacion.titulo });
+						this.$events.fire('changePath', this.listPath, this.presupuesto.publicacion.titulo );
 	                }, response => {
 	                    this.$toast.error({
 	                        title:'¡Error!',
@@ -174,17 +322,21 @@
 	                    });
 	                })
 			},
-			getPublicacion: function(){
+			getPublicacion: function(accion){
+
 	            this.$http.get('api/publicacion/'+this.presupuesto.publicacion.id )
 	                .then(response => {
 	                    this.publicacion = response.data.publicacion
-	                    this.showPresupuesto = true;
 	                }, response => {
 	                    this.$toast.error({
 	                        title:'¡Error!',
-	                        message:'No se ha podido cargar los datos. :('
+	                        message:'No se ha podido cargar los datos.'
 	                    });
 	                })
+	            if(accion == 'modificar')
+	            	this.showModificarPresupuesto = true;
+	            else
+	            	this.showPresupuesto = true;
 			},
 			formatTime (value) {
                 return (value == null)
@@ -224,17 +376,48 @@
 	                    });
 					})
 			},
+			changeEstadoPresupuesto(estado){
+				this.$http.patch('api/reserva/'+this.presupuesto.id+'/estado', {
+						estado: estado
+					}).then(response => {
+						this.presupuesto.estado = estado;
+	                    this.$toast.success({
+	                        title:'¡Cambios realizados!',
+	                        message:'Se ha realizado correctamente la operación'
+	                    });					
+                	}, response => {
+	                    this.$toast.error({
+	                        title:'¡Error!',
+	                        message:'No se ha podido realizar correctamente la operación'
+	                    });
+					})
+			},
 			closeModal(){
 				this.showPresupuesto = false;
-			}
+				this.showModificarPresupuesto = false;
+				this.getMenensajes();
+			},
+            formatMoney(value){
+            	return (value == null)
+                    ? ''
+            		: accounting.formatMoney(value, "$", 2, ".", ",");
+            },
+            isAfterNow(value){
+            	return moment(value, 'YYYY-MM-DD').isAfter(moment({}));
+            }
 		},
 		computed: {
 			getNameFromUser(){
-				for(var mensaje of this.mensajes){
-					if(mensaje.to_user_id != auth.user.profile.id){
-						return mensaje.to_user.usuario.nombre + ' ' +mensaje.to_user.usuario.apellido
-					} else{
-						return mensaje.from_user.usuario.nombre + ' ' +mensaje.from_user.usuario.apellido
+				if(auth.user.profile.roles_id == this.role.USUARIO)
+				{
+					return this.presupuesto.publicacion.proveedor.nombre;
+				} else {
+					for(var mensaje of this.mensajes){
+						if(mensaje.to_user_id != auth.user.profile.id){
+							return mensaje.to_user.usuario.nombre + ' ' +mensaje.to_user.usuario.apellido
+						} else{
+							return mensaje.from_user.usuario.nombre + ' ' +mensaje.from_user.usuario.apellido
+						}
 					}
 				}
 			}

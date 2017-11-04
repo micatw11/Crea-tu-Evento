@@ -1,56 +1,151 @@
 <template>
-	<div class="col-sm-12">
-		<vue-event-calendar 
-			:events="dataEvents">				
-	      <template scope="props">
-	        <div v-for="(event, index) in props.showEvents" class="event-item">
-	          	<!-- In here do whatever you want, make you owner event template -->
-	          	<h3 class="title"> 
-	          		<router-link :to="/publicacion/ + event.publicacion.id">
-	          			{{event.publicacion.titulo}}
-					</router-link>
-				</h3>
-		        <p v-if="event.hora_inicio != null">Desde {{ formatTime(event.hora_inicio) }}hs hasta {{ formatTime(event.hora_finalizacion) }} hs</p>
-		        <p>Total: ${{ event.precio_total}}</p>
-		        <p v-if="auth.user.profile.roles_id == role.PROVEEDOR"> 
-		        	Reservado por: {{event.user.usuario.nombre}} {{event.user.usuario.apellido}}
-		        </p>
-		        <p v-else>
-	          		Proveedor: {{event.publicacion.proveedor.nombre}}
-	            </p>
-	        </div>
-	      </template>
-		</vue-event-calendar>
+	<div>
+		<template v-if="loaded && !with_box">
+			<vue-event-calendar 
+				:events="dataEvents">				
+		      <template scope="props">
+		        <div v-for="(event, index) in props.showEvents" class="event-item">
+
+		          	<h3 class="title"> 
+		          		<router-link :to="/publicacion/ + event.publicacion.id">
+		          			{{event.publicacion.titulo}}
+						</router-link>
+					</h3>
+			        <p v-if="event.hora_inicio != null">Desde {{ formatTime(event.hora_inicio) }}hs hasta {{ formatTime(event.hora_finalizacion) }} hs</p>
+			        <p>Total: {{ formatMoney(event.precio_total) }}</p>
+			        <p v-if="auth.user.profile.roles_id == role.PROVEEDOR"> 
+			        	Reservado por: {{event.user.usuario.nombre}} {{event.user.usuario.apellido}}
+			        </p>
+			        <p v-else>
+		          		Proveedor: {{event.publicacion.proveedor.nombre}}
+		            </p>
+		            <el-collapse v-model="activeNames" @change="handleChange">
+						<el-collapse-item title="Detalles" name="1">
+
+							<div v-if="event.rubros.length > 0">
+								<h5><label>Servicios y/o Productos</label></h5>
+								<div v-for="rubro in event.rubros" v-if="rubro.servicio || rubro.producto">
+									<li>{{rubro.nombre}}</li>
+								</div>
+							</div>
+							<div v-if="event.articulos.length > 0">
+								<hr>
+								<h5><label>Articulos</label></h5>
+								<div v-for="articulo in event.articulos">
+									<li>{{articulo.nombre}} <template v-if="articulo.pivot.cantidad > 0"> x {{articulo.pivot.cantidad}}</template></li>
+								</div>
+							</div>
+						</el-collapse-item>
+					</el-collapse>
+		        </div>
+		      </template>
+			</vue-event-calendar>
+		</template>
+		<template v-if="loaded && with_box">
+			<div class="default-content">
+				<section class="content">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="box box-primary">
+								<div class="box-header with-border">
+									<h3 class="box-title">Reservas</h3>
+								</div>
+								<div class="box-body">
+									<vue-event-calendar 
+										:events="dataEvents">				
+								      <template scope="props">
+								        <div v-for="(event, index) in props.showEvents" class="event-item">
+
+								          	<h3 class="title"> 
+								          		<router-link :to="/publicacion/ + event.publicacion.id">
+								          			{{event.publicacion.titulo}}
+												</router-link>
+											</h3>
+									        <p v-if="event.hora_inicio != null">Desde {{ formatTime(event.hora_inicio) }}hs hasta {{ formatTime(event.hora_finalizacion) }} hs</p>
+									        <p>Total: {{ formatMoney(event.precio_total) }}</p>
+									        <p v-if="auth.user.profile.roles_id == role.PROVEEDOR"> 
+									        	Reservado por: {{event.user.usuario.nombre}} {{event.user.usuario.apellido}}
+									        </p>
+									        <p v-else>
+								          		Proveedor: {{event.publicacion.proveedor.nombre}}
+								            </p>
+								            <el-collapse v-model="activeNames" @change="handleChange">
+												<el-collapse-item title="Detalles" name="1">
+
+													<div v-if="event.rubros.length > 0">
+														<h5><label>Servicios y/o Productos</label></h5>
+														<div v-for="rubro in event.rubros" v-if="rubro.servicio || rubro.producto">
+															<li>{{rubro.nombre}}</li>
+														</div>
+													</div>
+													<div v-if="event.articulos.length > 0">
+														<hr>
+														<h5><label>Articulos</label></h5>
+														<div v-for="articulo in event.articulos">
+															<li>{{articulo.nombre}} <template v-if="articulo.pivot.cantidad > 0"> x {{articulo.pivot.cantidad}}</template></li>
+														</div>
+													</div>
+												</el-collapse-item>
+											</el-collapse>
+								        </div>
+								      </template>
+									</vue-event-calendar>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+			</div>
+		</template>
+
 	</div>
 </template>
 <script>
 	import moment from 'moment';
+	import accounting from 'accounting-js';
 	import auth from './../../../auth.js'
 	import role from '../../../config.js'
 	export default {
 		props: {
 			publicacionId:{
 				dafault: null
+			},
+			with_box:{
+				default: false
 			}
 		},
 		data(){
 		    return {
 				dataEvents: [],
+				activeNames: [],
 				auth: auth,
-				role: role
+				role: role,
+				loaded: false,
+				listPath: [
+					{route: '/', name: 'Inicio'}, 
+					{route: '/reservas', name: 'Reservas'}
+				]
 		    }
 		},
 		beforeMount(){
 			this.getReservas();
 		},
+		created() {
+			if(this.with_box){
+				this.$events.fire('changePath', this.listPath, 'Reservas' );
+			}
+		},
 		methods: {
 			getReservas() {
+				this.loaded = false;
 				var url = '';
 				this.dataEvents = [];
 				if(this.publicacionId != null)
 					url = 'api/publicacion/'+this.publicacionId+'/reserva';
-				else
+				else if( auth.user.profile.roles_id == role.USUARIO)
 					url = 'api/user/'+this.auth.user.profile.id+'/reserva';
+				else
+					url = 'api/proveedor/me/reserva';
 
 				this.$http.get(url).then(response => {
 					var data = response.data;
@@ -60,7 +155,8 @@
 							publicacion_id: reserva.publicacion_id,
 							user_id: reserva.user_id,
 							domicilio_id: reserva.domicilio_id,
-							date: reserva.fecha,
+							date: moment(reserva.fecha, 'YYYY-MM-DD').format('YYYY/MM/DD'),
+							title: moment(reserva.fecha, 'YYYY-MM-DD').format('DD MMM YYYY'),
 							hora_inicio: reserva.hora_inicio,
 							hora_finalizacion: reserva.hora_finalizacion,
 							estado: reserva.estado,
@@ -73,6 +169,7 @@
 							articulos: reserva.articulos
 						});
 					}
+					this.loaded = true;
 				}, response => {
 
 				});
@@ -81,6 +178,11 @@
                 return (value == null)
                     ? ''
                     : moment(value, 'hh:mm:ss').format('hh:mm')
+            },
+            formatMoney(value){
+            	return (value == null)
+                    ? ''
+            		: accounting.formatMoney(value, "$", 2, ".", ",");
             }
 		}
 	}

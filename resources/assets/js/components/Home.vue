@@ -22,7 +22,7 @@
             <div class="box">
                 <div class="box-body">
                     <search
-                        :publicaciones="publicaciones">
+                        :publicaciones="publicaciones" :loading="loading">
                     </search>  
                 </div>
                 <div class="box-footer">
@@ -63,6 +63,7 @@
                 titlePath: 'Inicio',
                 listaPath: [{route: '/', name: 'Inicio'}],
                 publicaciones : [],
+                loading: true,
                 localidad_id: null,
                 categoria_id: '',
                 subcategoria_id: '',
@@ -98,7 +99,7 @@
             * @ Param {String} filter Argumento 1 
             */
             managerSearch(filter){
-
+                this.loading = true;
                 let filtro = this.api+'?filter='+ filter; 
 
                 if(this.categoria_id != undefined && this.categoria_id != '' && this.with_category)
@@ -119,13 +120,16 @@
                     this.nombre=false;
                     this.q = '';
                     this.favorite_user=false;
+                    this.loading = false;
 
                 }, response => {
                     this.$toast.error({
                         title:'¡Error!',
                         message:'No se han podido cargar las publicaciones. :('
                     });
+                    this.loading = false;
                 })
+                
             },
 
             /** 

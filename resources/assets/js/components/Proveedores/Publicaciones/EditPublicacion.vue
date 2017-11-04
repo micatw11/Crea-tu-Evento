@@ -6,7 +6,6 @@
         			<h3 class="box-title">Editar Publicaci&oacute;n</h3>
         		</div>
         		<div class="box-body">
-
 		            <template v-if="showFormPrestacion && showForm">
 		                <form-prestacion :rubro="prestacion" 
 		                	:domicilio="domicilio" 

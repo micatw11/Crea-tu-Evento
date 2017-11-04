@@ -22,11 +22,14 @@ class CreateReservasTable extends Migration
             $table->time('hora_inicio')->nullable();
             $table->time('hora_finalizacion')->nullable();
             $table->enum('estado', ['presupuesto', 'reservado', 'confirmado', 'cancelado']);
+            $table->boolean('presupuestado')->default(false);
             $table->double('precio_total', 15,2);
+            $table->integer('horario_id')->unsigned()->nullable();
 
             $table->foreign('publicacion_id')->references('id')->on('publicaciones');
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('domicilio_id')->references('id')->on('domicilios');
+            $table->foreign('horario_id')->references('id')->on('horarios');
             $table->timestamps();
         });
 

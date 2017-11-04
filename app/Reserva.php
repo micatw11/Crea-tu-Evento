@@ -13,7 +13,7 @@ class Reserva extends Model
      *
      * @var array
      */
-    protected $fillable = ['publicacion_id', 'user_id', 'domicilio_id','fecha', 'hora_inicio', 'hora_finalizacion', 'estado', 'precio_total'];
+    protected $fillable = ['publicacion_id', 'presupuestado', 'precio_horario', 'user_id', 'domicilio_id','fecha', 'hora_inicio', 'hora_finalizacion', 'estado', 'precio_total', 'horario_id'];
 
     public function publicacion(){
     	return $this->belongsTo('App\Publicacion');
@@ -33,5 +33,14 @@ class Reserva extends Model
 
     public function articulos(){
     	return $this->belongsToMany('App\Articulo')->withPivot('cantidad');
+    }
+
+    public function domicilio(){
+        return $this->belongsTo('App\Domicilio');
+    }
+
+    public function horario()
+    {
+        return $this->belongsTo('App\Horario');
     }
 }

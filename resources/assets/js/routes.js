@@ -38,6 +38,8 @@ var IndexCaracteristica = require('./components/Proveedores/Caracteristicas/Inde
 
 var IndexLocalidad = require('./components/Localidades/Index');
 
+var IndexReserva = require('./components/Proveedores/Reservas/Index');
+
 var InternalServerError = require('./components/Errors/500');
 var PageNotFound = require('./components/Errors/404');
 
@@ -156,6 +158,14 @@ let routes = [
 			component: ShowPublicacion,
 			beforeEnter: guardRoute,
 			meta: { requiresAuth: false }
+		},
+		{
+			path: '/reservas',
+			name: 'reservas',
+			component: IndexReserva,
+			props: { default: true, with_box: true },
+			beforeEnter: guardRoute,
+			meta: { requiresAuth: true }
 		},
 		{
 			path: '/mensajes',

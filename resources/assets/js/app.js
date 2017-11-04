@@ -3,12 +3,12 @@
     import router from './routes';
 
     import App from './components/App.vue';
-
+    import moment from 'moment';
     /* validation componente */
     import messages from 'vee-validate/dist/locale/es';
     import VeeValidate, { Validator } from 'vee-validate';
 
-
+    Validator.installDateTimeValidators(moment);
 
     const config = {
         locale: 'es',

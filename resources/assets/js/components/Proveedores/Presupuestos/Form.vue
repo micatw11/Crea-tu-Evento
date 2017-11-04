@@ -1,51 +1,63 @@
 <template>
 	<div>
 		<form role="form">
-			<template v-if="requiredDate">
+			<input name="tomorrow" :value="fecha" type="hidden">
+			<template >
 				<div class="col-sm-4">
 		            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('fecha')&&validarPresupuesto}">
 		                <div class="col-sm-12">
 		                    <label for="fecha" class="control-label">Fecha del evento </label><br>
 		                    <el-date-picker
 						    	v-model="presupuesto.fecha"
+						    	name="fecha"
 						    	data-vv-name="fecha"
-						    	v-validate="'required'" 
+						    	v-validate="'required|date_format:YYYY-MM-DD|after:tomorrow'"
 						    	@change="changeDate"
 						    	type="date"
 						    	:picker-options="pickerOptions"
 						    	placeholder="Seleccione un dia">
 						    </el-date-picker>
-						    <!-- validacion vee-validation -->
-                    		<span v-show="errors.has('fecha')" class="help-block">{{ errors.first('fecha') }}</span>
+                    		<span v-show="errors.has('fecha:date_format')" class="help-block">
+                    			{{ errors.first('fecha:date_format') }}
+                    		</span>
+                    		<span v-show="errors.has('fecha:required')" class="help-block">
+                    			{{ errors.first('fecha:required') }}
+                    		</span>
+                    		<span v-show="errors.has('fecha:after')" class="help-block">
+                    			El campo fecha del evento debe de ser despues de {{ fecha }}
+                    		</span>
 		                </div>
 		            </div>
 		        </div>
 
-		        <template v-if="showEstadoReserva">
+		        <template v-if="showEstadoReserva && requiredDate">
 		        	<div v-if="opcionesReservas.length > 0" class="col-sm-8">
 		        		<div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('horario')&&validarPresupuesto}">
 			        		<div class="col-sm-12">
 			        			<label for="horario" class="control-label">Horarios disponibles </label><br>
 				        		<el-select v-model="presupuesto.horario_id" placeholder="Seleccione un horario" 
-				        			data-vv-name="horario" v-validate="'required'" style="width:100%;">
+				        			name="horario" v-validate="'required'" style="width:100%;">
 									<el-option
 										v-for="item in opcionesReservas"
 										:key="item.id"
-										:label="'Desde ' + item.hora_inicio + ' hs Hasta ' + item.hora_finalizacion+ ' hs'"
+										:label="'Desde ' + item.hora_inicio + ' hs Hasta ' + item.hora_finalizacion+ ' hs'+ ' - Coste: '+formatMoney(item.precio)"
 										:value="item.id">
 									</el-option>
 				        		</el-select>
-				        		<span v-show="errors.has('horario')" class="help-block">{{ errors.first('horario') }}</span>
+				        		<span v-show="errors.has('horario')" class="help-block">
+				        			{{ errors.first('horario') }}
+				        		</span>
 				        	</div>
 				        </div>
 		        	</div>
-		        	<div v-else class="col-sm-12">
+		        	<div v-else class="col-sm-8">
 		        		<div class="col-sm-12">
 		        			No se han encontrado horarios disponibles este d&iacute;a.
 		        		</div>	        		
 		        	</div>
 		        </template>
 		    </template>
+
 	        <template v-if="isRequiredDomicilio">
 				<div class="col-sm-12">
 					<hr>
@@ -63,7 +75,9 @@
 	                        </v-select>
 	                       
 	                        <!-- validacion vee-validation -->
-	                        <span v-show="errors.has('localidad')&&validarPresupuesto" class="help-block">{{ errors.first('localidad') }}</span>
+	                        <span v-show="errors.has('localidad')&&validarPresupuesto" class="help-block">
+	                        	{{ errors.first('localidad') }}
+	                        </span>
 	                    </div>
 	                </div>
 
@@ -88,7 +102,9 @@
 	                                placeholder="Numero">
 
 	                            <!-- validacion vee-validation -->
-	                            <span v-show="errors.has('numero')&&validarPresupuesto" class="help-block">{{ errors.first('numero') }}</span>
+	                            <span v-show="errors.has('numero')&&validarPresupuesto" class="help-block">
+	                            	{{ errors.first('numero') }}
+	                            </span>
 	                    </div>
 
 	                    <div class="col-sm-2">
@@ -119,25 +135,43 @@
 	                </div>
 	            </div>
 	        </div>
-	        <div class="col-sm-12" v-if="opcionesArticulos.length > 0">
+	        <div class="col-sm-12" v-if="opcionesArticulos.length > 0 || noOpcionesArticulos.length > 0">
 	        	<hr>
 	        	<div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('productos')&&validarPresupuesto}">
 	        		<div class="col-sm-12">
 	        			<label for="productos">Productos</label><br>	        			
-	        			<div v-for="opcion in opcionesArticulos">
+	        			<div v-for="opcion in opcionesArticulos" v-bind:key="opcion.id">
 
 		        			<div class="col-sm-4 col-xs-12">
-		        				<div class="col-sm-2 col-xs-2">
-		        					<input type="checkbox" name="productos" v-validate:articulosArray="'required'" 
-		        					:value="opcion.id" @change="setOrSpliceArticulo(opcion.id)">
+		        				<div class="col-sm-2 col-xs-2" >
+		        					<input type="checkbox"
+		        					v-validate:articulosArray="'required'" checked
+		        					:value="opcion.id" @click="setOrSpliceArticulo(opcion.id)" name="productos">
 								</div>
 								<div class="col-sm-10 col-xs-10">
 		        					{{  opcion.nombre }}
 		        				</div>
 		        			</div>
 		        		</div>
-		        		<!-- validacion vee-validation -->
-                    	<span v-show="errors.has('productos') && validarPresupuesto" class="help-block">{{ errors.first('productos') }}</span>
+	        			<div v-for="opcion in noOpcionesArticulos" v-bind:key="opcion.id">
+
+		        			<div class="col-sm-4 col-xs-12">
+		        				<div class="col-sm-2 col-xs-2" >
+		        					<input type="checkbox"
+		        					v-validate:articulosArray="'required'" 
+		        					:value="opcion.id" @click="setOrSpliceArticulo(opcion.id)" name="productos">
+								</div>
+								<div class="col-sm-10 col-xs-10">
+		        					{{  opcion.nombre }}
+		        				</div>
+		        			</div>
+		        		</div>
+	        		</div>
+	        		<div class="col-sm-12">
+	        			<!-- validacion vee-validation -->
+                    	<span v-show="errors.has('productos') && validarPresupuesto" class="help-block">
+                    		El campo productos es requerido
+                    	</span>
 	        		</div>
 	        	</div>
 	        </div>
@@ -159,13 +193,18 @@
 <script>
 	import auth from './../../../auth.js'
 	import vSelect from "vue-select";
+	import moment from 'moment';
+	import accounting from 'accounting-js';
+
 
 	export default {
 		props: {
+			/* Rubros disponibe para seleccion */
 			rubros: {
 				required: true,
 				type: Array
 			},
+			/* articulos disponibles para seleccion*/
 			articulos: {
 				required: true,
 				type: Array
@@ -174,9 +213,15 @@
 				required: true,
 				type: String
 			},
+			/* objeto Presupuesto a modificar*/
 			presupuesto: {
 				required: true,
 				type: Object
+			},
+			/* indica si se trata de formulario de edion o moificacion*/
+			isEdit:{
+				required: false,
+				default: false
 			},
 			domicilio: {
 				dafault: {
@@ -186,6 +231,9 @@
 	                localidad_id: null
 				},
 				required: true
+			},
+			publicacionId: {
+				required: true
 			}
 		},
 		data(){
@@ -193,10 +241,11 @@
 				validarPresupuesto: false,
 				localidades: [],
 				opcionesRubros: [],
-				rubrosSelect: [],
 				opcionesArticulos: [],
+				noOpcionesArticulos: [],
 				showEstadoReserva: false,
 				opcionesReservas: [],
+				fecha: moment({}).add(1, 'day').format('YYYY-MM-DD'),
 		        pickerOptions: {
 					disabledDate: function(date){
 						const tomorrow = new Date();
@@ -226,15 +275,25 @@
 		                }).catch(() => {
 		                    this.validarPresupuesto = true;
 		                });
-		        },
+		    },
+		    getHorarios(){
+		    	var fecha = moment(this.presupuesto.fecha, 'YYYY-MM-DD').format('YYYY-MM-DD');
+		    	this.$http.get('api/publicacion/'+this.publicacionId+'/horario/'+fecha+'?except_this_reserva='+this.presupuesto.id)
+		    		.then(response => {
+		    			this.showStatus(response.data);
+		    		}, response => {
+
+		    		});
+		    },
 	    	callbackSelectRubros: function(val) {
+	    		this.noOpcionesArticulos = [];
 	    		this.opcionesArticulos = [];
 	    		var selectableItems = [];
 	    		for(var articulo of this.articulos){
 	    			for(var rubro of val){
 	    				if(articulo.rubro_id == rubro){
 	    					selectableItems.push(articulo.id);
-	    					this.opcionesArticulos.push(
+	    					this.noOpcionesArticulos.push(
 	    							{id: articulo.id, nombre: articulo.nombre, stock: articulo.stock, precio: articulo.precio});
 	    					break;
 	    				}
@@ -273,9 +332,8 @@
         	},
 	    	setOrSpliceArticulo(articulo_id){
 	    		var esta = false;
-	    		
 	    		for (var i = 0; i < this.presupuesto.articulos.length; i++) {
-	    			if(this.presupuesto.articulos[i].id == articulo_id){
+	    			if(this.presupuesto.articulos[i].articulo_id == articulo_id){
 	    				esta = true;
 	    				this.presupuesto.articulos.splice(i, 1);
 	    				break
@@ -286,48 +344,138 @@
 	    		} 
 	    	},
 	    	changeDate(val){
-	    		this.showStatus(val)
+	    		this.showEstadoReserva = false;
+	    		this.presupuesto.horario_id = null;
+	    		if(this.requiredDate)
+	    			this.getHorarios();
 	    	},
-	    	showStatus(date){
-	    		this.showEstadoReserva = true;
-	    		this.opcionesReservas = [
-	    			{
-	    				id: 2,
-	    				hora_inicio: '12:00',
-	    				hora_finalizacion: '14:00',
-	    				precio: 400
-		    		},
-		    		{
-		    			id: 3,
-	    				hora_inicio: '15:00',
-	    				hora_finalizacion: '17:00',
-	    				precio: 700
-		    		}]
+	    	showStatus(horarios){
+	    		this.opcionesReservas = [];
+	    		this.showEstadoReserva = false;
+	    		for(var horario of horarios)
+	    		{
+	    			if(horario.estado == 'disponible')
+			    		this.opcionesReservas.push(
+			    			{
+			    				id: horario.id,
+			    				hora_inicio: horario.hora_inicio,
+			    				hora_finalizacion: horario.hora_fin,
+			    				precio: horario.precio
+				    		});
+	    		}
+		    	this.showEstadoReserva = true;
 	    	},
 	    	loadOpcions(){
-	    		var rubrosArticulos = [];
-	    		for(var rubro of this.rubros){
-	    			if(rubro.servicio || rubro.salon)
-	    			{
-		    			var option = {value: rubro.id, label: rubro.nombre};
-		    			if(rubro.salon){
-		    				this.presupuesto.rubros.push(rubro.id);
-		    			}
-		    			if(!rubro.servicio && !rubro.salon && rubro.producto)
-		    				rubrosArticulos.push(rubro.id);
 
-		    			this.opcionesRubros.push(option);
-		    		}
+	    		for(var rubro of this.rubros){
+
+	    			var option = {value: rubro.id, label: rubro.nombre};
+
+    				if(rubro.salon && !this.isEdit)
+    				{
+    					this.presupuesto.rubros.push(rubro.id);
+    				}
+
+	    			this.opcionesRubros.push(option);
 	    		}
-	    		for(var articulo of this.articulos){
-	    			for(rubro of rubrosArticulos){
-	    				if(articulo.rubro_id == rubro.id){
-	    					this.opcionesArticulos.push({articulo});
-	    					break;
-	    				}
+
+	    		if(this.isEdit){
+	    			if(this.requiredDate)
+	    			{
+	    				this.getHorarios();
 	    			}
+
+	    			if(this.domicilio.localidad_id != null)
+	    			{
+		    			//seteo datos del lugar del evento
+		    			this.domicilio.localidad_id = {
+		 						'value':this.domicilio.localidad_id,
+	               				'label':this.domicilio.localidad.nombre+' ('+this.domicilio.localidad.provincia.nombre+')'
+		    				}
+		    		}
+
+	    			//seteo valores para seleccionados de Articulos
+	    			var articulos = [];
+		    		for (var articulo of this.presupuesto.articulos) {
+
+		    			articulos.push(
+		    					{
+		    						articulo_id: articulo.id, 
+		    						cantidad: articulo.pivot.cantidad
+		    					});
+		    		}
+		    		this.presupuesto.articulos = articulos;
+
+		    		//seteo valores para seleccionados de Rubros
+	    			var rubros = [];
+		    		for (var i = 0; i < this.presupuesto.rubros.length; i++) {
+		    			rubros.push( this.presupuesto.rubros[i].id );
+		    		}
+		    		this.presupuesto.rubros = rubros;
+
+		    		//seteo opciones para select Articulos
+		    		this.noSelected(this.articulos,this.presupuesto.articulos);
+
 	    		}
-	    	}
+	    	},
+		    noSelected(data1, data2){
+	            let option = [];
+	            let option2 = [];
+	            if(!this.nuevo)
+	            {
+	                for (let i = 0; i < data1.length; i++) {
+	                    let igual=false;
+	                     for (let j = 0; j < data2.length & !igual; j++) {
+	                         if(data1[i].id == data2[j].articulo_id) 
+	                                 igual=true;
+	                     }
+	                    if(!igual)
+	                        option.push(data1[i]);
+	                    else
+	                    	option2.push(data1[i])
+	                }
+	                this.noOpcionesArticulos = option;
+	                this.opcionesArticulos = option2;
+					
+					for (var i = 0; i < this.noOpcionesArticulos.length; i++) {
+	                	var esta = false;
+	                	for (var rubro of this.presupuesto.rubros) {
+	                		if(this.noOpcionesArticulos[i].rubro_id == rubro){
+	                			esta = true; break;
+	                		}
+	                	}
+	                	if(!esta){
+                			this.noOpcionesArticulos.splice(i,1);
+                			i--;
+	                	}
+					}
+	            }
+		    },
+            formatMoney(value){
+        		return (value == null)
+                    ? ''
+            		: accounting.formatMoney(value, "$", 2, ".", ",");
+        	},
+	    	isChecked(articulo_id, e){
+
+	    		if(!this.isEdit)
+	    		{
+	    			return false;
+	    		}
+	    		else
+	    		{
+	    			for (var i = 0; i < this.presupuesto.articulos.length; i++) {
+	    				if(this.presupuesto.articulos[i].articulo_id = articulo_id)
+	    					return true;
+	    			}
+	    			return false;
+	    		}
+	    	},
+	    	dateTomorrow(){
+	    		var duration = moment.duration({'days' : 1});
+				var tomorrow = moment().add(duration);
+				return  tomorrow.format('YYYY-MM-DD');
+			}
 	    },
 	    computed:{
 	    	articulosArray(){

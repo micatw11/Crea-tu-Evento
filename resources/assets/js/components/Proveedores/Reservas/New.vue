@@ -7,6 +7,7 @@
                 :articulos="publicacion.articulos"
                 :reserva="reserva"
                 :tipo="'tipo'"
+                :isEdit="true"
                 :errorsApi="errorsApi"
                 @validado="sendForm()">
             </form-reserva>

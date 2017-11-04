@@ -88,6 +88,9 @@ export default {
     created(){
         this.loadDefaultOption();  
     },
+    beforeDestroy() {
+            this.$events.$off('validarFormSubcategoria')
+    },
     components: {
         vSelect
     },

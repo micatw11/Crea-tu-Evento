@@ -18,24 +18,29 @@ class MensajesController extends Controller
      */
     public function index(Request $request)
     {
-            $ancestrosId = DB::table('mensajes')
-                    ->join('users', 'mensajes.from_user_id', '=', 'users.id')
-                    ->join('usuarios', 'usuarios.user_id', '=', 'users.id')
-                    ->where('mensajes.estado', 1)
-                    ->where('from_user_id', Auth::id())
-                    ->orWhere('to_user_id', Auth::id())
-                    ->whereNotNull('mensajes.ancestro_id')
-                    ->groupBy('mensajes.reserva_id')
-                    ->select(DB::raw('MAX(mensajes.ancestro_id) as ancestro_id'))->pluck('ancestro_id');
-            
-            $mensajes = Mensaje::select('mensajes.*')->whereIn('mensajes.ancestro_id', $ancestrosId)
-                ->with('fromUser.usuario', 'toUser.usuario', 'reserva.publicacion')->orderBy('created_at', 'asc')->paginate(10);
+        $mensajesId = DB::table('mensajes')
+                ->join('users', 'mensajes.from_user_id', '=', 'users.id')
+                ->join('usuarios', 'usuarios.user_id', '=', 'users.id')
+                ->where('mensajes.estado', 1)
+                ->where('from_user_id', Auth::id())
+                ->orWhere('to_user_id', Auth::id())
+                ->groupBy('mensajes.reserva_id')
+                ->select(DB::raw('MAX(mensajes.ancestro_id) as ancestro_id'),DB::raw('MAX(mensajes.id) as id'))->pluck('id');
+                
+        $query = Mensaje::select('mensajes.*' )
+                ->whereIn('mensajes.id', $mensajesId)
+                ->with('fromUser.usuario', 'toUser.usuario', 'reserva.publicacion.proveedor')->orderBy('created_at', 'desc');
 
-                   
+        if( $request->has('page') || $request->has('per_page') ) 
+            $mensajes = $query->paginate(10);
+        else
+            $mensajes = $query->get();
+
+        $mensajes = $this->setCountLectura($mensajes);              
 
         return response()->json($mensajes, Response::HTTP_OK);
     }
-//SELECT MAX(ancestro_id), mensajes.* FROM `mensajes` WHERE ancestro_id IS NOT NULL GROUP BY reserva_id
+
     /**
      * Store a newly created resource in storage.
      *
@@ -78,10 +83,10 @@ class MensajesController extends Controller
     public function show($id)
     {
         $mensaje = Mensaje::where('id', $id)->firstOrFail();
-        $reserva = Reserva::where('id', $mensaje->reserva_id)->where('estado', 'presupuesto')
-                        ->with('publicacion','articulos', 'rubros')->first();
+        $reserva = Reserva::where('id', $mensaje->reserva_id)
+                        ->with('publicacion.proveedor.user.usuario','articulos', 'rubros', 'domicilio.localidad.provincia', 'user.usuario', 'horario')->first();
 
-        Mensaje::where('reserva_id', $mensaje->reserva_id)->update(['lectura' => true]);
+        Mensaje::where('reserva_id', $mensaje->reserva_id)->where('to_user_id', Auth::id())->update(['lectura' => true]);
 
 
         $mensajes = Mensaje::where('reserva_id', $mensaje->reserva_id)
@@ -101,6 +106,27 @@ class MensajesController extends Controller
     public function update(Request $request, $id)
     {
         //
+    }
+
+    protected function setCountLectura($mensajes){
+        $nuevosMensajes = DB::table('mensajes')
+            ->join('users', 'mensajes.from_user_id', '=', 'users.id')
+            ->join('usuarios', 'usuarios.user_id', '=', 'users.id')
+            ->where('mensajes.estado', 1)
+            ->where('to_user_id', Auth::id())
+            ->groupBy('mensajes.reserva_id')
+            ->select(DB::raw('MAX(mensajes.ancestro_id) as ancestro_id'),
+                DB::raw('MAX(mensajes.id) as id'), 
+                DB::raw('COUNT(case mensajes.lectura WHEN FALSE THEN 1 ELSE NULL END) as nuevos'))->get();
+        foreach ($mensajes as $mensaje) {
+           foreach ($nuevosMensajes as $nuevoMensaje) {
+                if($nuevoMensaje->id == $mensaje->id)
+                {
+                    $mensaje->nuevos = $nuevoMensaje->nuevos;
+                }
+           }
+        }
+        return $mensajes;
     }
 
     /**

@@ -131,7 +131,7 @@ export default {
                 }, response => {
                     this.$toast.error({
                         title:'¡Error!',
-                        message:'No se han podido cargar las caracteristicas. :('
+                        message:'No se han podido cargar las caracteristicas.'
                     });
                     this.closeModal();
                 })

@@ -225,6 +225,10 @@
             this.$events.on('reloadIndexProveedor', () => Vue.nextTick( () => this.$refs.vuetable.refresh()) );
 
         },
+        beforeDestroy() {
+            this.$events.$off('cerrar')
+            this.$events.$off('reloadIndexProveedor')
+        },
         methods: {
             onPaginationData (paginationData) {
                 this.$refs.pagination.setPaginationData(paginationData)

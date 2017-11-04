@@ -1,13 +1,14 @@
 <template>
 	<div class="modal-body">
 		<div class="box-body">
-        	<form-presupuesto 
+        	<form-presupuesto v-if="loaded"
                 :rubros="publicacion.prestacion.rubros"
                 :domicilio="domicilio"
                 :articulos="publicacion.articulos"
                 :presupuesto="presupuesto"
-                :publicacionId="publicacion.id"
                 :tipo="'tipo'"
+                :publicacionId="publicacion.id"
+                :isEdit="true"
                 :errorsApi="errorsApi"
                 @validado="sendForm()">
             </form-presupuesto>
@@ -32,30 +33,40 @@
 			publicacion: {
 				required: true,
 				type: Object
+			},
+			presupuestoId: {
+				required: true
 			}
 		},
 		data(){
 			return {
 				tipo: 'presupuesto',
-				presupuesto: {
-					rubros: [],
-					articulos: [],
-					fecha: '',
-					horario_id: '',
-					estado: 'presupuesto',
-					comentario: ''
-				},
-				domicilio: {
-	                calle: null,
-	                numero: null,
-	                piso: null,
-	                localidad_id: null
-				},
+				presupuesto: {},
+				loaded: false,
+				domicilio: {},
 				errorsApi: []
 			}
 		},
+		beforeMount(){
+			this.getPresupuesto();
+		},
 		components: { FormPresupuesto },
 		methods: {
+			getPresupuesto(){
+				this.loaded = false;
+				this.$http.get('api/reserva/'+ this.presupuestoId).then(response => {
+					this.presupuesto = response.data;
+					this.domicilio = response.data.domicilio;
+					this.loaded = true;
+				}, response => {
+					this.loaded = false;
+                    this.$toast.error({
+                        title:'¡Error!',
+                        message:'No se ha podido cargar correctamente la información'
+                    });
+                    this.closeModal();
+				})
+			},
 			validateBeforeSubmit: function() {                 
 	            this.$events.fire('validarFormPresupuesto')
 	        },
@@ -75,8 +86,8 @@
                     piso: this.domicilio.piso,
                     localidad_id: localidad_id,
                 }
-	            this.$http.post(
-	                'api/publicacion/'+this.publicacion.id+'/presupuesto', data)
+	            this.$http.patch(
+	                'api/presupuesto/'+ this.presupuestoId, data)
 	                .then(response => {
 	                    this.closeModal(),
 	                    this.errorsApi= {},

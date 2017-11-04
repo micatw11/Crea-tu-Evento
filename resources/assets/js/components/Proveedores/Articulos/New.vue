@@ -11,11 +11,11 @@
                     </div>
 					<div class="modal-body">
 			        	<div class="box-body">
-							<form-rubro 
+							<form-articulo 
 								:rubros="rubros" 
 								:articulo="newArticulo" 
 								@validoForm="sendArticulo">
-							</form-rubro>
+							</form-articulo>
 						</div>
 					</div>
 					<div class="modal-footer">

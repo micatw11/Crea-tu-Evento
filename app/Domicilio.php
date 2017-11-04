@@ -29,4 +29,8 @@ class Domicilio extends Model
     {
         return $this->belongsTo('App\Localidad');
     }
+
+    public function reservas(){
+        return $this->hasMany('App\Reserva');
+    }
 }

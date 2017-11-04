@@ -20,8 +20,11 @@
 
 	        	<div v-if="reserva.hora_inicio != null" class="col-sm-8">
 	        		<div class="col-sm-12">
-	        			<label for="horario" class="control-label">Horarios  </label><br>
-	        			Desde {{reserva.hora_inicio }}hs hasta {{reserva.hora_finalizacion}}hs
+						<div class="callout">
+							<label for="horario" class="control-label">Horarios  </label><br>
+
+							Desde {{reserva.hora_inicio }}hs hasta {{reserva.hora_finalizacion}}hs
+						</div>
 		        	</div>
 	        	</div>
 		    </template>
@@ -70,8 +73,9 @@
 		        				</div>
 								<div class="col-sm-6">
 									<div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('articulo' + opcion.id)&&validarReserva}">
-			        					<input class="form-control" type="number" min="0"
-			        						value="0"
+
+			        					<input class="form-control" type="number" min="0" 
+			        						:value="cantidadValue(opcion.id)"
 			        						:name="'articulo' + opcion.id"
 			        						@change="setCantidad(opcion.id, $event)">
 			        					<!-- validacion vee-validation 
@@ -126,6 +130,10 @@
 			reserva: {
 				required: true,
 				type: Object
+			},
+			isEdit: {
+				required: false,
+				default: false
 			}
 		},
 		data(){
@@ -211,20 +219,26 @@
 	    		}
 	    		this.calularCoste();
 	    	},
+	    	cantidadValue(articulo_id){
+	    		for (var i = 0; i < this.reserva.articulos.length; i++) {
+	    			if(articulo_id == this.reserva.articulos[i].articulo_id){
+	    				 return this.reserva.articulos[i].cantidad;
+	    			}
+	    		}
+	    		return 0;
+	    	},
 	    	loadOpcions(){
-	    		var rubrosArticulos = [];
+	    		//var rubrosArticulos = [];
+	    		console.log();
 	    		for(var rubro of this.rubros){
-	    			if(rubro.servicio || rubro.salon)
-	    			{
+
 		    			var option = {value: rubro.id, label: rubro.nombre};
-		    			if(rubro.salon){
-		    				this.reserva.rubros.push(rubro.id);
-		    			}
-		    			if(!rubro.servicio && !rubro.salon && rubro.producto)
-		    				rubrosArticulos.push(rubro.id);
+
+		    			//if(!rubro.servicio && !rubro.salon && rubro.producto)
+		    			//	rubrosArticulos.push(rubro.id);
 
 		    			this.opcionesRubros.push(option);
-		    		}
+
 	    		}
 	    		var articulos = [];
     			for(var articulo of this.reserva.articulos){
@@ -250,13 +264,8 @@
 		    			}
 	    			}
 	    		}
-	    		if(this.reserva.horario_id != ''){
-	    			for (var horario of this.opcionesReservas) {
-	    				if(horario.id == this.reserva.horario_id){
-	    					precie = precie + horario.precio;
-	    					break;
-	    				}
-	    			}
+	    		if(this.reserva.horario_id != null){
+	    			precie = precie + this.reserva.horario.precio;
 	    		}
 	    		this.reserva.precio_total = precie;
 	    	}

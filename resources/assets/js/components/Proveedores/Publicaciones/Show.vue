@@ -307,6 +307,7 @@
 	import { Carousel, Slide } from 'vue-carousel';
 	import moment from 'moment';
 	import NewPresupuesto from './../Presupuestos/New';
+	import accounting from 'accounting-js';
 
 	Vue.component('index-reservas', require('./../Reservas/Index'));
 	export default {
@@ -472,7 +473,12 @@
 	                var res1 = str.substring(0, 1);
 	                var res1 = res1.toUpperCase();
 	                return  res1+''+res;
-	        }
+	        },
+            formatMoney(value){
+            	return (value == null)
+                    ? ''
+            		: accounting.formatMoney(value, "$", 2, ",", ".");
+            }
 		}
 	}
 </script>

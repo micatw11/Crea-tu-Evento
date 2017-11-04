@@ -75,8 +75,9 @@
         </template>
         <template v-else>
             <div class="col-sm-12">
-                <h3 v-if="!optionsProveedor" class="text-center">No se encontraron resultados :(</h3>
-                <h3 v-else class="text-center">No se encontraron publicaciones realizadas :(</h3>
+                <h3 v-if="loading" class="text-center"> Cargando publicaciones... </h3>
+                <h3 v-else class="text-center">No se encontraron publicaciones.</h3>
+                
             </div>
         </template>
          <template>
@@ -123,6 +124,7 @@
     import auth from './../../../auth.js';
     import role from './../../../config.js';
     import moment from 'moment';
+    import accounting from 'accounting-js';
 
     export default {
         props: {
@@ -133,6 +135,9 @@
                 required: false,
                 default: false
             },
+            loading: {
+                default: true
+            }
         },
         data(){
             return {
