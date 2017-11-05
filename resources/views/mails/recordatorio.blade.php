@@ -44,7 +44,7 @@
 
                                         <!-- Intro -->
                                         <p style="margin-top: 0; color: #74787E; font-size: 16px; line-height: 1.5em;">
-                                            Usted ha recibido una nueva solicitud de presupuesto por su publicacion de <b>{{ $reserva->publicacion->titulo}}</b>.
+                                            Usted tiene <b>{{ $count}} reservas para esta semana.</b>.
                                         </p>
                                         
                                         <!-- Action Button -->
