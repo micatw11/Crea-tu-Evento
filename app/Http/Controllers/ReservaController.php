@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Services\DomicilioService;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Reserva as MailReserva;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
@@ -208,6 +210,7 @@ class ReservaController extends Controller
 
         if( $reserva->save() )
         {
+            Mail::to($publicacion->proveedor->email)->queue(new MailReserva($reserva));
             return response(null, Response::HTTP_OK);
         }
         else

@@ -181,7 +181,7 @@
             </div>
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('precio')&&validarPublicacion}">
                 <div class="col-sm-4">
-                    <label for="precio" class="control-label">Precio</label><br>
+                    <label for="precio" class="control-label">Precio desde</label><br>
                     <div class="input-group">
                         <money v-model="publicacion.precio" v-bind="money" v-validate="'required|min_value:1'" data-vv-name="precio"></money>
                     </div>

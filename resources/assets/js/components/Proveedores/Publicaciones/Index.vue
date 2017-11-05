@@ -13,12 +13,27 @@
                             style="width: 120px; height: 100px; cursor:pointer;" @click="ver(item.id)">
                     </div>
                     <div class="col-sm-9">
-                        <div class="col-sm-12">
+                        <div class="col-sm-11">
                             <div class="col-sm-9" @click="ver(item.id)">
                                 <strong style="color: rgb(139, 116, 178); cursor:pointer"><h4><p ref="descripcion" v-html="item.titulo" v-truncate="30"></p></h4></strong>
                             </div>
                             <div class="col-sm-3">
                                 <h6><p>{{formatData(item.created_at)}}</p></h6>
+                            </div>
+                        </div>
+                        <div class="col-sm-1">
+                            <div v-if="!optionsProveedor">
+                                <div style="cursor: pointer" v-if="verificar_favorite(item.id)">
+                                    <div @click="favorite(item.id)">
+                                        <i class="fa fa-fw fa-heart"></i>
+                                    </div>
+                                </div>
+
+                                <div v-else>
+                                    <div style="cursor: pointer" @click="favorite(item.id)">
+                                        <i class="fa fa-fw fa-heart-o"></i>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-sm-12">
@@ -35,21 +50,11 @@
                             </div>
                         </div>
                         <div class="col-sm-12">
-                            <div class="col-sm-10">
-                                <p><h6>{{item.subcategoria.categoria.nombre}} - {{item.subcategoria.nombre}} </h6> <!--{{item.prestaciones.rubro.nombre}} </h6></p>-->
+                            <div class="col-sm-8">
+                                <h6>{{item.subcategoria.categoria.nombre}} - {{item.subcategoria.nombre}} </h6>
                             </div>
-                            <div v-if="!optionsProveedor" class="col-sm-2">
-                                    <div style="cursor: pointer" v-if="verificar_favorite(item.id)">
-                                        <div @click="favorite(item.id)">
-                                            <i class="fa fa-fw fa-heart"></i>
-                                        </div>
-                                    </div>
-
-                                    <div v-else>
-                                        <div style="cursor: pointer" @click="favorite(item.id)">
-                                            <i class="fa fa-fw fa-heart-o"></i>
-                                        </div>
-                                    </div>
+                            <div class="col-sm-4">
+                                Desde: {{formatMoney(item.precio)}}
                             </div>
                         </div>
                     </div>
@@ -166,6 +171,11 @@
             },
             modificar(id){
                 route.push('/publicacion/'+id+'/edit');
+            },
+            formatMoney(value){
+                return (value == null)
+                    ? ''
+                    : accounting.formatMoney(value, "$", 2, ".", ",");
             },
             estado(publicacion){
                 this.$http.delete('api/publicacion/'+publicacion.id )
