@@ -74,17 +74,11 @@
 								<div class="col-sm-6">
 									<div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('articulo' + opcion.id)&&validarReserva}">
 
-			        					<input class="form-control" type="number" min="0" 
+			        					<input class="form-control" type="number" min="1" 
 			        						:value="cantidadValue(opcion.id)"
 			        						:name="'articulo' + opcion.id"
 			        						@change="setCantidad(opcion.id, $event)">
-			        					<!-- validacion vee-validation 
-			        						data-vv-name="'articulo' + opcion.id"
-			        						v-validate="'required|min_value:1'"
-                    					<span v-show="errors.has('articulo' + opcion.id) && validarReserva" class="help-block">
-                    						{{ errors.first('articulo' + opcion.id) }}
-                    					</span>
-                    					-->
+                    					
 			        				</div>
 		        				</div>
 		        			</div>
@@ -97,12 +91,12 @@
 	                <div class="col-sm-4">
 	                    <label for="precio" class="control-label">Precio</label><br>
 	                    <div class="input-group">
-	                        <money v-model="reserva.precio_total" v-bind="money"></money>
+	                        <money v-model="reserva.precio_total" v-bind="money" v-validate="'required|min_value:1'" data-vv-name="precio"></money>
 	                    </div>
-	                    <!-- validacion vee-validation 
-	                    	v-validate="'required'" data-vv-name="precio"
-	                    <span v-show="errors.has('precio')&&validarReserva" class="help-block"> El campo precio es requerido.</span>
-						-->
+	                    <!-- validacion vee-validation -->
+	                    <span v-show="errors.has('precio')&&validarReserva" class="help-block">
+	                    	 El campo precio es requerido.
+                    	</span>             	
 	                </div>
 	            </div>
 	       	</div>
@@ -173,15 +167,13 @@
 		},
 	    methods: {
 	    	validateBeforeSubmit: function() {
-	    		this.$emit('validado');/*
-			    this.$validator.validateAll().then((result) => {
-				        if (result) {
-			                this.validarReserva = false; 
-			                
-				          	return;
-				        }
+	    		
+			    this.$validator.validateAll().then(() => {
+		                this.validarReserva = false; 
+		                this.$emit('validado');
+				    }).catch(() => {
 			        	this.validarReserva = true;
-			      	});*/
+			      	});
 
 		    },
 	    	callbackSelectRubros: function(val) {
@@ -271,6 +263,9 @@
 	    	}
 	    },
 	    computed:{
+	    	valueMoney(){
+	    		return this.reserva.precio_total;
+	    	},
 	    	nameRubro(){
 	    		for(var rubro of this.rubros){
 	    			if(rubro.servicio)

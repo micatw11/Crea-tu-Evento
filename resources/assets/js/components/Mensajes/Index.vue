@@ -100,7 +100,7 @@
 											<small class="label pull-left bg-green">Finalizado</small>
 										</td>
 										<td v-else-if="mensaje.reserva.estado == 'confirmado' && isAfterNow(mensaje.reserva.fecha)">
-											<small class="label pull-left bg-green">Concretado</small>
+											
 										</td>
 										<td v-else-if="mensaje.reserva.estado == 'cancelado'">
 											<small class="label pull-left bg-red">>Cancelado</small>
