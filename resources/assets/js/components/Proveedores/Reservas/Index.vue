@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<template v-if="loaded && !with_box">
-			<vue-event-calendar 
+		<template v-if="!with_box">
+			<vue-event-calendar v-if="loaded"
 				:events="dataEvents">				
 		      <template scope="props">
 		        <div v-for="(event, index) in props.showEvents" class="event-item">
@@ -19,8 +19,8 @@
 			        <p v-else>
 		          		Proveedor: {{event.publicacion.proveedor.nombre}}
 		            </p>
-		            <el-collapse v-model="activeNames" @change="handleChange">
-						<el-collapse-item title="Detalles" name="1">
+		            <el-collapse v-model="activeNames">
+						<el-collapse-item title="Detalles" name="1" @change="handleChange">
 
 							<div v-if="event.rubros.length > 0">
 								<h5><label>Servicios y/o Productos</label></h5>
@@ -41,7 +41,7 @@
 		      </template>
 			</vue-event-calendar>
 		</template>
-		<template v-if="loaded && with_box">
+		<template v-if="with_box">
 			<div class="default-content">
 				<section class="content">
 					<div class="row">
@@ -51,7 +51,7 @@
 									<h3 class="box-title">Reservas</h3>
 								</div>
 								<div class="box-body">
-									<vue-event-calendar 
+									<vue-event-calendar v-if="loaded" 
 										:events="dataEvents">				
 								      <template scope="props">
 								        <div v-for="(event, index) in props.showEvents" class="event-item">
@@ -151,7 +151,7 @@
 					var data = response.data;
 					for(var reserva of data){
 						this.dataEvents.push({
-							id: reserva,
+							id: reserva.id,
 							publicacion_id: reserva.publicacion_id,
 							user_id: reserva.user_id,
 							domicilio_id: reserva.domicilio_id,
@@ -171,9 +171,15 @@
 					}
 					this.loaded = true;
 				}, response => {
-
+                    if(response.status === 404){
+                        router.push('/404');
+                    }
+                    if(response.status === 500){
+                        router.push('/500');
+                    }
 				});
 			},
+			handleChange(val){},
 			formatTime (value) {
                 return (value == null)
                     ? ''

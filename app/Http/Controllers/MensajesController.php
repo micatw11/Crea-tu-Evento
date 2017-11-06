@@ -28,8 +28,13 @@ class MensajesController extends Controller
                 ->select(DB::raw('MAX(mensajes.ancestro_id) as ancestro_id'),DB::raw('MAX(mensajes.id) as id'))->pluck('id');
                 
         $query = Mensaje::select('mensajes.*' )
+                ->join('reservas', 'mensajes.reserva_id', '=', 'reservas.id')
                 ->whereIn('mensajes.id', $mensajesId)
                 ->with('fromUser.usuario', 'toUser.usuario', 'reserva.publicacion.proveedor')->orderBy('created_at', 'desc');
+
+        if( $request->has('unanswered') && $request->unanswered){
+            $query->where('reservas.estado', 'presupuesto')->where('reservas.presupuestado', false);
+        }
 
         if( $request->has('page') || $request->has('per_page') ) 
             $mensajes = $query->paginate(10);

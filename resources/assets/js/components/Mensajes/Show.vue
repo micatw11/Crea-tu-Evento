@@ -316,6 +316,12 @@
 	                	this.listPath.push({route: 'mensaje/'+this.$route.params.mensajeId, name: this.presupuesto.publicacion.titulo });
 						this.$events.fire('changePath', this.listPath, this.presupuesto.publicacion.titulo );
 	                }, response => {
+	                    if(response.status === 404){
+	                        router.push('/404');
+	                    }
+	                    if(response.status === 500){
+	                        router.push('/500');
+	                    }
 	                    this.$toast.error({
 	                        title:'¡Error!',
 	                        message:'No se ha podido cargar los mensajes.'

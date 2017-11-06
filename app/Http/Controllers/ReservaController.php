@@ -57,7 +57,7 @@ class ReservaController extends Controller
             $reservas = Reserva::join('publicaciones', 'publicaciones.id', '=', 'reservas.publicacion_id')
                     ->join('proveedores', 'publicaciones.proveedor_id', '=', 'proveedores.id')
                     ->where('proveedores.id', $id)->where('reservas.estado', 'confirmado')->select('reservas.*')
-                    ->with('user.usuario', 'publicacion')->get();
+                    ->with('user.usuario', 'publicacion', 'rubros','articulos')->get();
 
             return response()->json($reservas, Response::HTTP_OK);
         } else {

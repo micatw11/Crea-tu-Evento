@@ -354,6 +354,12 @@
 							]
 						this.$events.fire('changePath', listPath, this.publicacion.titulo);
 	                }, response => {
+	                    if(response.status === 404){
+	                        router.push('/404');
+	                    }
+	                    if(response.status === 500){
+	                        router.push('/500');
+	                    }
 	                    this.$toast.error({
 	                        title:'¡Error!',
 	                        message:'No se ha podido cargar la publicacion. :('

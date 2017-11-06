@@ -7,10 +7,10 @@
 						<div class="box-header with-border">
 							<h3 class="box-title">Mensajes</h3>
 
-							<div class="box-tools pull-right">
+							<div class="box-tools pull-right"
+								 v-if="role.PROVEEDOR == auth.user.profile.roles_id">
 								<div class="has-feedback">
-									<input type="text" class="form-control input-sm" v-model="filter" @change="onFilterSet" placeholder="Buscar Mensajes">
-									<span class="glyphicon glyphicon-search form-control-feedback"></span>
+									<input type="checkbox" v-model="unanswered" name="unanswered" @change="onFilterSet"> Solicitudes no respondidas
 								</div>
 							</div>
 							<!-- /.box-tools -->
@@ -143,6 +143,7 @@
             	filter: '',
             	auth: auth,
             	role: Role,
+            	unanswered: false,
             	pageOne: {
                     total:0,
                     per_page:10,
@@ -167,18 +168,27 @@
             getMensajes: function(){
             	this.mensajes = [];
             	var api = 'api/mensaje'
+            	api = api + '?page='+this.pageOne.current_page+'&per_page='+this.pageOne.per_page+'&unanswered='+ this.unanswered;
             	if(this.filter != '')
             	{
             		api = api + '?filter=' + this.filter;
             	}
-            	api = api + '?page='+this.pageOne.current_page+'&per_page='+this.pageOne.per_page;
 
                 this.$http.get(api)
                 .then(response => {
                     this.mensajes = response.data.data;
                     this.setDataPagination(response.data);
                 }, response => {
-                    
+                    if(response.status === 404){
+                        router.push('/404');
+                    }
+                    if(response.status === 500){
+                        router.push('/500');
+                    }
+                    this.$toast.error({
+                        title:'¡Error!',
+                        message:'No se ha podido cargar los mensajes.'
+                    });
                 })
             },
             pageOneChanged (pageOne) {
