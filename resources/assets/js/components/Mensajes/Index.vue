@@ -52,6 +52,7 @@
 											</small>
 										</td>
 										<template v-if="role.USUARIO == auth.user.profile.roles_id">
+											<td v-if="isAfterNow(mensaje.reserva.fecha) && mensaje.reserva.estado == 'reservado'">
 											<td v-if="isAfterNow(mensaje.reserva.fecha) && 
 												mensaje.reserva.presupuestado == true && mensaje.reserva.estado == 'presupuesto'">
 												<el-tooltip class="item" effect="dark" 
@@ -74,6 +75,8 @@
 					                        </td>
 					                    </template>
 					                    <template v-if="role.PROVEEDOR == auth.user.profile.roles_id">
+					                    	<td v-if="isAfterNow(mensaje.reserva.fecha) && mensaje.reserva.estado == 'reservado'">
+											</td>
 					                    	<td v-if="!isAfterNow(mensaje.reserva.fecha) && mensaje.reserva.estado != 'confirmado'">
 					                    		<el-tooltip class="item" effect="dark" 
 					                   				content="La fecha elegida para este evento debe de ser actualizada por el adquiriente." placement="top-start">

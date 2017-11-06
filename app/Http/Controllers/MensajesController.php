@@ -32,7 +32,7 @@ class MensajesController extends Controller
                 ->whereIn('mensajes.id', $mensajesId)
                 ->with('fromUser.usuario', 'toUser.usuario', 'reserva.publicacion.proveedor')->orderBy('created_at', 'desc');
 
-        if( $request->has('unanswered') && $request->unanswered){
+        if( $request->has('unanswered') && $request->unanswered != 'false'){
             $query->where('reservas.estado', 'presupuesto')->where('reservas.presupuestado', false);
         }
 

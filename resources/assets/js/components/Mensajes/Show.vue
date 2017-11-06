@@ -117,13 +117,13 @@
 			            		</button>
 								<!-- boton de reserva de usuario-->
 			            		<button class="btn btn-sm btn-primary btn-fla" 
-			            			v-if="role.USUARIO == auth.user.profile.roles_id && presupuesto.estado == 'presupuesto' &&presupuesto.presupuestado && !isAfterNow(presupuesto.fecha)"
+			            			v-if="role.USUARIO == auth.user.profile.roles_id && presupuesto.estado == 'presupuesto' &&presupuesto.presupuestado && isAfterNow(presupuesto.fecha)"
 			            			@click.prevent="changeEstadoPresupuesto('reservado')">
 			            			Reservar
 			            		</button>
 								<!-- boton de confirmacion reserva de usuario-->
 			            		<button class="btn btn-sm btn-primary btn-fla" 
-			            			v-if="role.USUARIO == auth.user.profile.roles_id && presupuesto.estado == 'reservado' && !isAfterNow(presupuesto.fecha)"
+			            			v-if="role.USUARIO == auth.user.profile.roles_id && presupuesto.estado == 'reservado' && isAfterNow(presupuesto.fecha)"
 			            			@click.prevent="changeEstadoPresupuesto('confirmado')">
 			            			Confirmar Reserva
 			            		</button>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Services\DomicilioService;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Reserva as MailReserva;
+use App\Mail\ReservaConfirmacion;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
@@ -224,13 +225,16 @@ class ReservaController extends Controller
         $this->validate($request, [
                 'estado' => 'required|in:presupuesto,reservado,confirmado,cancelado'
             ]);
-        $reserva = Reserva::where('id', $id)->firstOrFail();
+        $reserva = Reserva::where('id', $id)->with('user.usuario', 'publicacion.proveedor', 'rubros','articulos')->firstOrFail();
         if(Auth::id() == $reserva->user_id)
         {
             $reserva->update(['estado' => $request->estado]);
 
             if( $reserva->save() )
             {
+                if($request->estado == 'confirmado'){
+                    Mail::to($reserva->publicacion->proveedor->email)->queue(new ReservaConfirmacion($reserva));
+                }
                 return response(null, Response::HTTP_OK);
             }
             else 
@@ -280,16 +284,17 @@ class ReservaController extends Controller
         $reserva = Reserva::where('id', $id)->where('estado', 'presupuesto')->firstOrFail();
         $reserva->articulos()->detach();
         $reserva->articulos()->attach($request->articulos);
-        if($request->has('horario_id') && $request->horario_id != null){
-            $reserva->horario_id = $request->horario_id;
-        }
+
         if(Auth::user()->roles_id == Rol::roleId('Proveedor'))
         {
-            $reserva->presupuestado = 1;
+            $reserva->presupuestado = true;
             $reserva->precio_total = $request->precio_total;
         }
         else if (Auth::user()->roles_id == Rol::roleId('Usuario')) {
-            $reserva->presupuestado = 0;
+            $reserva->presupuestado = false;
+            if($request->has('horario_id') && $request->horario_id != null){
+                $reserva->horario_id = $request->horario_id;
+            }
         }
        
         

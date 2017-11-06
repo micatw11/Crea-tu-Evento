@@ -269,18 +269,20 @@
                 //this.$events.fire('searchPublicacion', this.q);
             },
             getReservas(){
-                var url = 'api/proveedor/me/reserva';
-                this.eventosProximaSemana = 0;
-                this.$http.get(url).then(response => {
-                    for (var reserva of response.data) {
-                        if(moment(reserva.fecha, 'YYYY-MM-DD').isBetween(moment({}), moment().add(7, 'days')))
-                        {
-                            this.eventosProximaSemana++;
+                if(auth.user.profile.roles_id == this.role.PROVEEDOR){
+                    var url = 'api/proveedor/me/reserva';
+                    this.eventosProximaSemana = 0;
+                    this.$http.get(url).then(response => {
+                        for (var reserva of response.data) {
+                            if(moment(reserva.fecha, 'YYYY-MM-DD').isBetween(moment({}), moment().add(7, 'days')))
+                            {
+                                this.eventosProximaSemana++;
+                            }
                         }
-                    }
-                }, response => {
+                    }, response => {
 
-                });
+                    });
+                }
             },
             /** 
             * Consulta de todas las categorias.
