@@ -1,31 +1,27 @@
 <template>
-
-	<div class="row" v-if="optionsRubros.length>0">
-		<div class="box-header">
-			<h3 class="box-title">Agregar</h3>
-		</div>
-		<div class="col-xs-3">
+	<div class="row">
+		<div class="col-xs-6">
 			<div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('nombre')&&validarArticulo}">
 				<input type="text" v-model="articulo.nombre" v-validate="'required'" name="nombre" class="form-control" placeholder="Nombre">
 				<!-- validacion vee-validation -->
 	            <span v-show="errors.has('nombre')&&validarArticulo" class="help-block">{{ errors.first('nombre') }}</span>
         	</div>
 		</div>
-		<div class="col-xs-2">
+		<div class="col-xs-6">
 			<div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('stock')&&validarArticulo}">
 				<input type="text" name="stock" v-model="articulo.stock" v-validate="'numeric'" class="form-control" placeholder="Stock">
 				<!-- validacion vee-validation -->
 	            <span v-show="errors.has('stock')&&validarArticulo" class="help-block">{{ errors.first('stock') }}</span>
         	</div>
 		</div>
-		<div class="col-xs-2">
+		<div class="col-xs-6">
 			<div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('precio')&&validarArticulo}">
 				<money v-model="articulo.precio" v-bind="money" v-validate="'required|min_value:1'" data-vv-name="precio"></money>
 				<!-- validacion vee-validation -->
 	            <span v-show="errors.has('precio')&&validarArticulo" class="help-block">{{ errors.first('precio') }}</span>
 	        </div>
 		</div>
-		<div class="col-xs-5">
+		<div class="col-xs-6">
 			<div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('rubro')&&validarArticulo}">
 				<select name="rubro" v-model="articulo.rubro_id" class="form-control" v-validate="'required'">
 					<option value="" disabled>Selecione rubros</option>

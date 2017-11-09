@@ -43,7 +43,7 @@
     	                        @vuetable:pagination-data="onPaginationData"
                                 detail-row-component="detail-row-rubro"
     	                        @vuetable:cell-clicked="onCellClicked">
-    	                            <template slot="actions" scope="props">
+    	                            <template slot="actions" slot-scope="props">
     	                                <div class="custom-actions">
 
     	                                    <!-- Modificar Categoria -->

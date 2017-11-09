@@ -37,7 +37,7 @@
                                 </div>
                                 <div class="box-body">
                                     <index-publicaciones 
-                                        :publicaciones="publicaciones" :optionsProveedor="true">
+                                        :publicaciones="publicaciones" :optionsProveedor="true" :loading="loading">
                                     </index-publicaciones>
                                </div>
                                 <div class="box-footer">
@@ -88,6 +88,7 @@
         data(){
             return {
                 publicaciones: [],
+                loading: true,
                 pageOne: {
                     total:0,
                     per_page:10,
@@ -114,16 +115,18 @@
         }, 
         methods:{
             getProductos: function(){
+                this.loading = true;
                 this.$http.get('api/proveedor/'+this.perfil.user.proveedor.id+'/publicacion?with_estado='+this.selected+'&page='+this.pageOne.current_page+'&per_page='+this.pageOne.per_page )
                     .then(response => {
                         this.publicaciones = response.data.publicaciones.data
                         this.setDataPagination(response.data.publicaciones);
+                        this.loading = false;
                     }, response => {
                         this.$toast.error({
                             title:'¡Error!',
                             message:'No se han podido cargar los productos. :('
                         });
-
+                        this.loading = false;
                     })
             },
             changeFilter() {

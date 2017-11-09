@@ -6,12 +6,12 @@
             <div v-for="item in rubrosRegistrados" class="col-sm-6">
                 <div class="box box-default" style="height: 275px;">
                     <div class="box-header">
-
+                        <!--
                         <div class="box-tools pull-right">
                             <button class="btn btn-box-tool" data-toggle="tooltip" @click="modificar(item.id)" >
                                 <i class="fa fa-pencil"></i>
                             </button>
-                        </div><!-- /.box-tools -->
+                        </div> -->
                     </div><!-- /.box-header -->
                     <div class="box-body">
                         <p>
@@ -124,7 +124,7 @@ export default {
             }
             
 
-            return list;
+            return list+ '.';
         },
     }
 }

@@ -6,9 +6,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Horario;
+use App\Reserva;
 use App\Publicacion;
 use App\Proveedor;
 use App\Rol;
+use Carbon\Carbon;
 
 class HorarioController extends Controller
 {
@@ -206,6 +208,81 @@ class HorarioController extends Controller
             }
         }
         return response(null, Response::HTTP_UNAUTHORIZED);
+    }
+
+    public function horariosPorFecha(Request $request, $publicacion_id, $fecha){
+        $dia = $this->toDayOfWeek($fecha);
+        $horarios = Horario::where('publicacion_id', $publicacion_id)->where('dia', $dia)->get();
+        $reserva_id = null;
+        $reservas = Reserva::where('publicacion_id', $publicacion_id)
+            ->where('estado', 'reservado')->orWhere('estado', 'confirmado')
+            ->whereDate('fecha', '=', Carbon::createFromFormat('Y-m-d', $fecha)->toDateString())->get();
+        
+        if($request->has('except_this_reserva'))
+        {
+            $reserva_id = $request->except_this_reserva;
+        }
+        $auxHorarios = array();
+        $auxHorario = null;
+        foreach ($horarios as $horario) {
+            $esta = false;
+            foreach ($reservas as $reserva) {
+                if($reserva->horario_id == $horario->id)
+                {
+                    $auxHorario = $horario;
+                    if($reserva_id != null && $reserva_id == $reserva->id){
+                        $auxHorario->estado = 'disponible';
+                    }
+                    else
+                    {
+                        $auxHorario->estado = 'reservado';
+                    }
+                    $auxHorarios[] = $auxHorario;
+                    $auxHorario = null;
+                    $esta = true;
+                    break;
+                }
+            }
+            if(!$esta){
+                $auxHorario = $horario;
+                $auxHorario->estado = 'disponible';
+                $auxHorarios[] = $auxHorario;
+                $auxHorario = null;
+            }
+        }
+        return response()->json($auxHorarios, 200);
+    }
+
+    protected function toDayOfWeek($date){
+        $dt = Carbon::createFromFormat('Y-m-d', $date);
+        $dayOfWeek = $dt->format('l'); 
+        $dia = '';
+        switch ($dayOfWeek) {
+            case 'Monday':
+                $dia = 'lunes';
+                break;
+            case 'Tuesday':
+                $dia = 'martes';
+                break;
+            case 'Wednesday':
+                $dia = 'miercoles';
+                break;
+            case 'Thursday':
+                $dia = 'jueves';
+                break;
+            case 'Friday':
+                $dia = 'viernes';
+                break;
+            case 'Saturday':
+                $dia = 'sabado';
+                break;
+            case 'Sunday':
+                $dia = 'domingo';
+                break;
+            default:
+                break;
+        }
+        return $dia;
     }
 
     /**

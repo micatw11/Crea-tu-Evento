@@ -6,7 +6,6 @@
         			<h3 class="box-title">Editar Publicaci&oacute;n</h3>
         		</div>
         		<div class="box-body">
-
 		            <template v-if="showFormPrestacion && showForm">
 		                <form-prestacion :rubro="prestacion" 
 		                	:domicilio="domicilio" 
@@ -19,17 +18,25 @@
 		            </template>
 
 		        	<template v-if="showFormArticulo && showForm">
-		        		<form-articulo
-		        			:rubros="prestacion.rubros_id">
-		        		</form-articulo>
-		        		<add-articulo :rubros="prestacion.rubros_id" :articulosSelect="articulos">
-		        		</add-articulo>
-		        		<form-horario
-		        			:publicacionId="publicacion.id"
-					        :nuevo="false">
-		        		</form-horario>
-		        		<add-horario :publicacionId="publicacion.id">
-		        		</add-horario>
+						<div class="col-sm-12">
+							<form-articulo
+								:rubros="prestacion.rubros_id">
+							</form-articulo>
+						</div>
+						<div class="col-sm-12">
+							<add-articulo :rubros="prestacion.rubros_id" :articulosSelect="articulos">
+							</add-articulo>
+						</div>
+						<div class="col-sm-12">
+							<form-horario
+								:publicacionId="publicacion.id"
+								:nuevo="false">
+							</form-horario>
+						</div>
+						<div class="col-sm-12">
+							<add-horario :publicacionId="publicacion.id">
+							</add-horario>
+						</div>
 		        	</template>
 
 		        	<form-publicacion v-if="showForm && showFormPublicacion"
@@ -116,9 +123,6 @@
 		beforeMount: function(){
 			this.getPublicacion();
 		},
-		mounted(){
-			//this.$events.on("validadoFormPublicacion", () => this.sendEditForm());
-		},
 		components: {
 			FormPublicacion, FormPrestacion, FormArticulo, AddArticulo, FormHorario, AddHorario
 		},
@@ -135,7 +139,10 @@
 	        	if ((this.publicacion.fecha_finalizacion == '0000-00-00')||(this.publicacion.fecha_finalizacion == '')){
 	        		this.publicacion.fecha_finalizacion = null
 	        	}
-
+	        	var localidad_id = null;
+	        	if(this.domicilio.localidad_id != null){
+	        		localidad_id = this.domicilio.localidad_id.value;
+	        	}
 	            this.$http.patch('api/publicacion/'+this.$route.params.publicacionId,
 	                {
 	                    titulo: this.publicacion.titulo,
@@ -147,7 +154,18 @@
 	                    fecha_finalizacion: this.publicacion.fecha_finalizacion,
 	                    fotos: fotosIds,
 	                    fotosUpdate: this.publicacion.fotosUpdate,
-	                    caracteristicas: this.publicacion.caracteristicas
+	                    caracteristicas: this.publicacion.caracteristicas,
+	                    articulos: this.articulos,
+	                    
+	                    comercio: this.prestacion.comercio,
+	                    fecha_habilitacion: this.prestacion.fecha_habilitacion,
+	                    habilitacion: this.prestacion.habilitacion,
+	                    rubros_id: this.prestacion.rubros_id,
+
+	                    calle: this.domicilio.calle,
+						localidad_id: localidad_id,
+						numero: this.domicilio.numero,
+						piso: this.domicilio.piso,
 
 	                })
 	                .then(response => {

@@ -44,7 +44,7 @@
                                 api-url="/api/localidadesAll"
                                 pagination-path=""
                                 @vuetable:pagination-data="onPaginationData">
-                                 <template slot="actions" scope="props">
+                                 <template slot="actions" slot-scope="props">
                                         <div class="custom-actions">
 
                                           <!-- Modificar Provincia -->

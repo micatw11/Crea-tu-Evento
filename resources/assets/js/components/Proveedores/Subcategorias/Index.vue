@@ -34,7 +34,7 @@
 	                        @vuetable:pagination-data="onPaginationData"
 	                        @vuetable:cell-clicked="onCellClicked">
 
-	                            <template slot="actions" scope="props">
+	                            <template slot="actions" slot-scope="props">
 	                                <div class="custom-actions">
 
 	                                    <!-- Modificar Categoria -->

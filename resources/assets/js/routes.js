@@ -27,7 +27,8 @@ var EditPublicacion = require('./components/Proveedores/Publicaciones/EditPublic
 var ShowPublicacion = require('./components/Proveedores/Publicaciones/Show');
 
 var IndexRubro = require('./components/Proveedores/Rubros/Index');
-
+var IndexMensajes = require('./components/Mensajes/Index');
+var ShowMensajes = require('./components/Mensajes/Show');
 
 var NewRubro = require('./components/Proveedores/Prestaciones/NewRubro');
 var EditRubro = require('./components/Proveedores/Prestaciones/EditRubro');
@@ -36,6 +37,8 @@ var IndexCategoria = require('./components/Proveedores/Categorias/Index');
 var IndexCaracteristica = require('./components/Proveedores/Caracteristicas/Index');
 
 var IndexLocalidad = require('./components/Localidades/Index');
+
+var IndexReserva = require('./components/Proveedores/Reservas/Index');
 
 var InternalServerError = require('./components/Errors/500');
 var PageNotFound = require('./components/Errors/404');
@@ -155,6 +158,28 @@ let routes = [
 			component: ShowPublicacion,
 			beforeEnter: guardRoute,
 			meta: { requiresAuth: false }
+		},
+		{
+			path: '/reservas',
+			name: 'reservas',
+			component: IndexReserva,
+			props: { default: true, with_box: true },
+			beforeEnter: guardRoute,
+			meta: { requiresAuth: true }
+		},
+		{
+			path: '/mensajes',
+			name: 'mensajes',
+			component: IndexMensajes,
+			beforeEnter: guardRoute,
+			meta: { requiresAuth: true }
+		},
+		{
+			path: '/mensaje/:mensajeId',
+			name: 'show-mensajes',
+			component: ShowMensajes,
+			beforeEnter: guardRoute,
+			meta: { requiresAuth: true }
 		},
 		{
 			path: '/publicacion/:publicacionId/edit',

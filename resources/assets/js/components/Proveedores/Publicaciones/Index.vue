@@ -13,7 +13,7 @@
                             style="width: 120px; height: 100px; cursor:pointer;" @click="ver(item.id)">
                     </div>
                     <div class="col-sm-9">
-                        <div class="col-sm-12">
+                        <div class="col-sm-11">
                             <div class="col-sm-9" @click="ver(item.id)">
                                 <strong style="color: rgb(139, 116, 178); cursor:pointer"><h4><p ref="descripcion" v-html="item.titulo" v-truncate="30"></p></h4></strong>
                             </div>
@@ -21,36 +21,40 @@
                                 <h6><p>{{formatData(item.created_at)}}</p></h6>
                             </div>
                         </div>
+                        <div class="col-sm-1">
+                            <div v-if="!optionsProveedor">
+                                <div style="cursor: pointer" v-if="verificar_favorite(item.id)">
+                                    <div @click="favorite(item.id)">
+                                        <i class="fa fa-fw fa-heart"></i>
+                                    </div>
+                                </div>
+
+                                <div v-else>
+                                    <div style="cursor: pointer" @click="favorite(item.id)">
+                                        <i class="fa fa-fw fa-heart-o"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-sm-12">
                             <div class="col-sm-8">
                                 <p><h6>{{item.prestacion.domicilio.localidad.provincia.nombre}} - {{item.prestacion.domicilio.localidad.nombre}}</h6></p>
                             </div>
                             <div class="col-sm-4">
-                                <div>
-                                    <i class="fa fa-fw fa-star"></i>
-                                    <i class="fa fa-fw fa-star"></i>
-                                    <i class="fa fa-fw fa-star-half-o"></i>
-                                    <i class="fa fa-fw fa-star-o"></i>
-                                    <i class="fa fa-fw fa-star-o"></i>
-                                </div> 
+                                <el-rate
+                                    v-model="puntos"
+                                    disabled
+                                    text-color="#ff9900"
+                                    text-template="{value} puntos.">
+                                </el-rate>
                             </div>
                         </div>
                         <div class="col-sm-12">
-                            <div class="col-sm-10">
-                                <p><h6>{{item.subcategoria.categoria.nombre}} - {{item.subcategoria.nombre}} </h6> <!--{{item.prestaciones.rubro.nombre}} </h6></p>-->
+                            <div class="col-sm-8">
+                                <h6>{{item.subcategoria.categoria.nombre}} - {{item.subcategoria.nombre}} </h6>
                             </div>
-                            <div v-if="!optionsProveedor" class="col-sm-2">
-                                    <div style="cursor: pointer" v-if="verificar_favorite(item.id)">
-                                        <div @click="favorite(item.id)">
-                                            <i class="fa fa-fw fa-heart"></i>
-                                        </div>
-                                    </div>
-
-                                    <div v-else>
-                                        <div style="cursor: pointer" @click="favorite(item.id)">
-                                            <i class="fa fa-fw fa-heart-o"></i>
-                                        </div>
-                                    </div>
+                            <div class="col-sm-4">
+                                Desde: {{formatMoney(item.precio)}}
                             </div>
                         </div>
                     </div>
@@ -76,8 +80,9 @@
         </template>
         <template v-else>
             <div class="col-sm-12">
-                <h3 v-if="!optionsProveedor" class="text-center">No se encontraron resultados :(</h3>
-                <h3 v-else class="text-center">No se encontraron publicaciones realizadas :(</h3>
+                <h3 v-if="loading" class="text-center"> Cargando publicaciones... </h3>
+                <h3 v-else class="text-center">No se encontraron publicaciones.</h3>
+                
             </div>
         </template>
          <template>
@@ -124,6 +129,7 @@
     import auth from './../../../auth.js';
     import role from './../../../config.js';
     import moment from 'moment';
+    import accounting from 'accounting-js';
 
     export default {
         props: {
@@ -134,17 +140,19 @@
                 required: false,
                 default: false
             },
+            loading: {
+                default: true
+            }
         },
         data(){
             return {
                 favoritos: false,
                 auth: auth,
+                puntos: 2.5,
                 showModalDelete: false,
                 role: role,
                 accion: '',
-                publicacion: {},
-                count: 0,
-                f:false
+                publicacion: {}
             }  
         },
         mounted(){
@@ -163,6 +171,11 @@
             },
             modificar(id){
                 route.push('/publicacion/'+id+'/edit');
+            },
+            formatMoney(value){
+                return (value == null)
+                    ? ''
+                    : accounting.formatMoney(value, "$", 2, ".", ",");
             },
             estado(publicacion){
                 this.$http.delete('api/publicacion/'+publicacion.id )

@@ -134,6 +134,50 @@
                             </li>
                         </ul>
                     </li>
+                    <li>
+                        <router-link to="/mensajes" tag="a">
+                            <i class="fa fa-list-ul"></i> <span>Menasajes</span>
+                            <span class="pull-right-container" 
+                                v-if="mensajesSinLeer > 0 || mensajesPorActulizar > 0 || mensajesPresupuestados > 0 ">
+
+                                <el-tooltip class="item" effect="dark" 
+                                    content="Solicitudes de presupuestado nuevas." placement="top-start">
+                                    <small class="label pull-right bg-yellow" v-if="mensajesPresupuestados > 0">
+                                        {{mensajesPresupuestados}}
+                                    </small>
+                                </el-tooltip>
+
+                                <el-tooltip class="item" effect="dark" 
+                                    content="Fechas de presupuestos que deben de ser actualizadas." placement="top-start">
+                                    <small class="label pull-right bg-red" 
+                                        v-if="mensajesPorActulizar > 0 && auth.user.profile.roles_id == role.USUARIO">
+                                        {{mensajesPorActulizar}}
+                                    </small>
+                                </el-tooltip>
+
+                                <el-tooltip class="item" effect="dark" 
+                                    content="Nuevos mensajes." placement="top-start">
+                                    <small class="label pull-right bg-green" v-if="mensajesSinLeer > 0">
+                                        {{mensajesSinLeer}}
+                                    </small>
+                                </el-tooltip>
+
+                            </span>
+                        </router-link>
+                    </li>
+                    <li v-if="auth.user.profile.roles_id == role.PROVEEDOR">
+                        <router-link to="/reservas" tag="a">
+                            <i class="fa fa-calendar"></i> <span>Calendar</span>
+                            <span class="pull-right-container" v-if="eventosProximaSemana > 0">
+                                <el-tooltip class="item" effect="dark" 
+                                    content="Nuevos mensajes." placement="top-start">
+                                    <small class="label pull-right bg-blue">
+                                        {{eventosProximaSemana}}
+                                    </small>
+                                </el-tooltip>
+                            </span>
+                        </router-link>
+                    </li>
                 </template>
                 <template v-if="showFilter && categorias.length > 0 && showCategories">
                     <li class="treeview active">
@@ -170,6 +214,7 @@
     import auth from '../../auth.js';
     import route from '../../routes.js';
     import Role from '../../config.js';
+    import moment from 'moment';
 
     export default {
         data() {
@@ -178,6 +223,10 @@
                 srcUrl: '',
                 role: Role,
                 q: '',
+                mensajesSinLeer: 0,
+                mensajesPresupuestados: 0,
+                mensajesPorActulizar: 0,
+                eventosProximaSemana: 0,
                 categorias: [],
                 favoritos:[],
                 showCategories: false,
@@ -194,6 +243,8 @@
             if(auth.user.authenticated){
                 this.avatarUpdated();
                 this.getFavourite();
+                this.getMensajes();
+                this.getReservas();
             }
         },
         methods: {
@@ -217,11 +268,50 @@
                     route.push('/?q='+this.q)
                 //this.$events.fire('searchPublicacion', this.q);
             },
+            getReservas(){
+                if(auth.user.profile.roles_id == this.role.PROVEEDOR){
+                    var url = 'api/proveedor/me/reserva';
+                    this.eventosProximaSemana = 0;
+                    this.$http.get(url).then(response => {
+                        for (var reserva of response.data) {
+                            if(moment(reserva.fecha, 'YYYY-MM-DD').isBetween(moment({}), moment().add(7, 'days')))
+                            {
+                                this.eventosProximaSemana++;
+                            }
+                        }
+                    }, response => {
+
+                    });
+                }
+            },
             /** 
             * Consulta de todas las categorias.
             * 
             * @getCategorias 
             */
+            getMensajes: function(){
+                this.mensajesSinLeer = 0;
+                this.mensajesPresupuestados = 0;
+                this.mensajesPorActulizar = 0;
+                this.$http.get('api/mensaje')
+                .then(response => {
+                    for (let mensaje of response.data){
+                        if(mensaje.nuevos != undefined){
+                            this.mensajesSinLeer = this.mensajesSinLeer + mensaje.nuevos;
+                        }
+
+                        if(this.isAfterNow(mensaje.reserva.fecha) && mensaje.reserva.presupuestado == true && mensaje.reserva.estado == 'presupuesto')
+                        {
+                            this.mensajesPresupuestados++;
+                        }
+                        if(!this.isAfterNow(mensaje.reserva.fecha) && mensaje.reserva.estado != 'confirmado')
+                        {
+                            this.mensajesPorActulizar++;
+                        }
+
+                    }
+                })
+            },
             getCategorias: function(){
                 this.showCategories = false;
                 this.$http.get('api/categoria/')
@@ -279,6 +369,9 @@
                             this.favourites = this.favoritos.length
                         })
                 }
+            },
+            isAfterNow(value){
+                return moment(value, 'YYYY-MM-DD').isAfter(moment({}));
             }
         },
         computed: {
@@ -301,11 +394,18 @@
                     this.getCategorias();
                 }
             },
+            '$route.fullPath' (){
+                this.getMensajes();
+            },
             'favourites'(){
                 if (JSON.stringify(this.$route.query) === '{"favorite":"true"}'){
                     route.push('/')
                     this.goToFavourites();
                 }
+            },
+            'auth.user.authenticated'(){
+                if(auth.user.authenticated)
+                    this.getMensajes();
             }
 
         }

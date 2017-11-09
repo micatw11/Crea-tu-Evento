@@ -23,7 +23,7 @@
                                 detail-row-component="detail-row-usuario"
                                 @vuetable:cell-clicked="onCellClicked">
 
-                                    <template slot="actions" scope="props">
+                                    <template slot="actions" slot-scope="props">
                                         <div class="custom-actions">
 
                                             <select v-if="auth.user.profile.roles_id == 1"

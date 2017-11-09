@@ -19,9 +19,13 @@ class Horario extends Model
     					  ];
 
 
-   public function publicaciones()
+    public function publicaciones()
     {
         return $this->belongsTo('App\Publicacion');
     }
 
+    public function reservas()
+    {
+        return $this->hasMany('App\Reserva');
+    }
 }

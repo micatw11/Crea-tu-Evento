@@ -22,7 +22,7 @@
 
 <script>
 import auth from '../../../auth.js';
-import FormRubro from './Form.vue';
+import FormRubro from './Form';
 
 export default {
     data() {
@@ -74,15 +74,14 @@ export default {
         },
         //form validation
         validateBeforeSubmit: function() {                 
-                    this.$events.fire('validarFormRubro')
-
+            this.$events.fire('validarFormRubro')
         },
         resetForm() {
             this.rubro={
                 nombre: null
             }
         },
-         closeModal: function(){
+        closeModal: function(){
             this.$events.fire('cerrar')
         }
     }

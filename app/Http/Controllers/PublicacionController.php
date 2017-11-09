@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\PrestacionService;
+use App\Http\Services\DomicilioService;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Publicacion;
+use App\Reserva;
 use App\Prestacion;
 use App\Domicilio;
 use App\Proveedor;
@@ -17,7 +20,22 @@ use App\Rol;
 
 class PublicacionController extends Controller
 {
-    
+    /**
+     * @var PrestacionService
+     * @var DomicilioService
+     */
+    private $prestacionService;
+    private $domicilioService;
+
+    /**
+     * PublicacionController constructor.
+     */
+    public function __construct(PrestacionService $prestacionService, DomicilioService $domicilioService)
+    {
+        $this->prestacionService = $prestacionService;
+        $this->domicilioService = $domicilioService;
+    }
+
     public function index(Request $request){
         $ids = [];
         if($request->has('favorite') && $request->favorite && Auth::user())
@@ -27,17 +45,12 @@ class PublicacionController extends Controller
             
         } else {
             $query = Publicacion::where('publicaciones.estado', 1 )
-
                 ->join('proveedores', 'publicaciones.proveedor_id', '=', 'proveedores.id')
-
                 ->join('prestaciones', 'prestaciones.proveedor_id', '=', 'proveedores.id')
-
                 ->join('domicilios', 'prestaciones.domicilio_id', '=', 'domicilios.id')
                 ->join('localidades', 'domicilios.localidad_id', '=', 'localidades.id')
-
                 ->join('subcategorias', 'publicaciones.subcategoria_id', '=', 'subcategorias.id')
                 ->join('categorias', 'subcategorias.categoria_id', '=', 'categorias.id')
-
                 ->select('publicaciones.*')
                 ->where('publicaciones.estado', 1);
         
@@ -86,15 +99,13 @@ class PublicacionController extends Controller
             '*', 
                 DB::raw('(CASE WHEN publicaciones.oferta IS NULL THEN FALSE ELSE TRUE END) as tiene_oferta'),
 
-                DB::raw('(SELECT CASE WHEN COUNT(caracteristica_publicacion.id) = 0 THEN FALSE ELSE TRUE END FROM caracteristica_publicacion WHERE caracteristica_publicacion.publicacion_id = publicaciones.id ) as tiene_caracteristicas')
+                DB::raw('(SELECT CASE WHEN COUNT(caracteristica_publicacion.id) = 0 THEN FALSE ELSE TRUE END FROM caracteristica_publicacion WHERE caracteristica_publicacion.publicacion_id = publicaciones.id ) as tiene_caracteristicas') );
 
-                );
             $publicaciones = $query->orderBy('tiene_oferta', 'DESC')
                 ->orderBy('tiene_caracteristicas', 'DESC')
                     ->paginate(10);
 
         return response()->json(['publicaciones' => $publicaciones, 'idses' => $ids], 200);
-
     }
 
     public function show(Request $request, $id){
@@ -106,41 +117,39 @@ class PublicacionController extends Controller
         return response()->json(['publicacion' => $publicacion], 200);
     }
 
+    protected function createPublicacion($request, $proveedor, $prestacion){
+        return Publicacion::create([
+                'titulo' => $request->titulo,
+                'oferta' => $request->oferta,
+                'descripcion' => $request->descripcion,
+                'fecha_finalizacion' => $request->fecha_finalizacion,
+                'subcategoria_id' => $request->subcategoria_id,
+                'precio' => $request->precio,
+                'prestacion_id' => $prestacion->id,
+                'proveedor_id' => $proveedor->id
+            ]);
+    }
+
     public function store(Request $request){
     	$this->validatorPublicacion($request);
 
         $user = Auth::user();
         $proveedor = Proveedor::where('user_id', $user->id)->firstOrFail();
 
-        
-        $domicilio = Domicilio::create([
-            'tipo_domicilio'=>'Social',
-            'calle'=> $request->domicilio['calle'],
-            'numero'=> $request->domicilio['numero'],
-            'piso'=> $request->domicilio['piso'],
-            'localidad_id'=> $request->domicilio['localidad_id']
-        ]);
+        $this->prestacionService->validatePrestacion($request);
+        if($request->has('comercio') && $request->comercio){
+            $this->domicilioService->validateDomicilio($request);
+            $domicilio = $this->domicilioService->createDomicilio($request, 'Social');
+        } else {
+            $domicilio = Domicilio::where('id', $proveedor->domicilio_id)->first();
+        }
 
-        $prestacion = Prestacion::create([
-            'proveedor_id'=> $proveedor->id,
-            'habilitacion'=> $request->prestacion['habilitacion'],
-            'fecha_habilitacion' => $request->prestacion['fecha_habilitacion'],
-            'domicilio_id'=> $domicilio->id,
-        ]);
+        $prestacion = $this->prestacionService->createPrestacion($request, $proveedor, $domicilio);
 
-        $prestacion->rubros()->attach($request->prestacion['rubros_id']); 
+        $prestacion->rubros()->attach($request->rubros_id); 
         
 
-    	$publicacion = Publicacion::create([
-            'titulo' => $request->titulo,
-            'oferta' => $request->oferta,
-            'descripcion' => $request->descripcion,
-            'fecha_finalizacion' => $request->fecha_finalizacion,
-            'subcategoria_id' => $request->subcategoria_id,
-            'precio' => $request->precio,
-            'prestacion_id' => $prestacion->id,
-            'proveedor_id' => $proveedor->id
-        ]);
+    	$publicacion = $this->createPublicacion($request, $proveedor, $prestacion);
 
         if($request->has('articulos') && sizeof($request->articulos) > 0){
             $publicacion->articulos()->attach($request->articulos);
@@ -176,6 +185,9 @@ class PublicacionController extends Controller
 
     public function update(Request $request, $id){
         $this->validatorPublicacion($request);
+        if($request->has('comercio')){
+            $this->domicilioService->validateDomicilio($request);
+        }
         $ids = [];
         $idses = [];
         $photo_delete = null;
@@ -183,9 +195,28 @@ class PublicacionController extends Controller
     	$publicacion = Publicacion::where('id', $id)->firstOrFail();
 
         if($publicacion->proveedor_id == Auth::user()->proveedor->id)
+        {
 
-        {    	   
+            $prestacion = Prestacion::where('id', $publicacion->prestacion_id)->firstOrFail();
+
+            $domicilio = Domicilio::where('id', $prestacion->domicilio_id)->first();
+            if($domicilio && $request->has('comercio')){
+                $this->domicilioService->updateDomicilio($request, $domicilio);
+            }
+
+            $prestacion->rubros()->detach(); 
+
+            $this->prestacionService->updatePrestacion($request, $prestacion);
+
+            $prestacion->rubros()->attach($request->rubros_id);
+
             $publicacion->update($request->except(['fotos']));
+
+            $publicacion->articulos()->detach();
+            if( $request->has('articulos') && sizeof($request->articulos) > 0){
+                $publicacion->articulos()->attach($request->articulos);
+            }
+            
             if($publicacion->save())
             { 
                 $ids = $request->fotos;
@@ -270,12 +301,6 @@ class PublicacionController extends Controller
 
   
     public function publicacionesProveedor(Request $request, $idProveedor){
-        /*$publicacionesId = DB::table('publicaciones')
-            ->join('prestaciones', 'prestaciones.id', '=', 'publicaciones.prestaciones_id')
-            ->join('rubros', 'rubros.id', '=', 'prestaciones.rubro_id')
-                ->select('publicaciones.id')
-                ->where('prestaciones.proveedor_id', $idProveedor)
-                ->groupby('publicaciones.id')->distinct()->get()->pluck('id');*/
 
         $query = Publicacion::with('proveedor', 'prestacion.rubros', 'subcategoria.categoria', 'fotos', 'prestacion.domicilio.localidad.provincia', 'caracteristicas')
             ->where('proveedor_id', $idProveedor);
@@ -307,6 +332,12 @@ class PublicacionController extends Controller
             }
         }
         return response(null, Response::HTTP_UNAUTHORIZED);
+    }
+
+    public function reservas(Request $request, $id){
+        $reservas = Reserva::where('publicacion_id', $id)->where('estado', 'confirmado')->with('publicacion.proveedor','user.usuario','rubros','articulos')->get();
+
+        return response()->json($reservas, Response::HTTP_OK);
     }
 
 }

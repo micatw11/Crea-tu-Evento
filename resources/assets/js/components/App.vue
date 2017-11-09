@@ -1,5 +1,5 @@
 <template>
-    <div v-bind:class="classWrapper">
+    <div v-bind:class="classWrapper" >
         <bar v-if="showComponent"></bar>
         <barra-lateral v-if="showComponent"></barra-lateral>
         <div v-bind:class="classContentWrapper">
@@ -29,6 +29,7 @@ export default {
     },
     mounted() {
         this.$events.listen('reloadComponents', this.reloadComponents);
+
         $(this).ajaxStart(function() { Pace.restart(); });
     },
     computed: {

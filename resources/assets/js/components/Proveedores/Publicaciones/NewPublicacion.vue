@@ -8,6 +8,13 @@
 		        			<h3 class="box-title">Crear Publicaci&oacute;n</h3>
 		        		</div>
 		        		<div class="box-body">
+								<div class="col-sm-offset-2 col-sm-10" style="text-align:center">
+									<el-steps :active="active" finish-status="success">
+										<el-step title="Paso 1" description="Rurbos"></el-step>
+										<el-step title="Paso 2" description="Articulos y Horarios"></el-step>
+										<el-step title="Paso 3" description="Publicacion"></el-step>
+									</el-steps>
+								</div>
 
 					            <template v-if="showFormRubro">
 					                <form-rubro :rubro="prestacion" 
@@ -21,16 +28,19 @@
 					            </template>
 
 					        	<template v-if="showFormArticulo">
-					        		<form-articulo
-					        			:rubros="prestacion.rubros_id">
-					        		</form-articulo>
-					        		<add-articulo :rubros="prestacion.rubros_id" :articulosSelect="articulos">
-					        		</add-articulo>
-
-					        		<form-horario 
-					        			
-					        			:nuevo="true" :horariosId="horarios">
-					        		</form-horario>
+					        		<div class="col-sm-12">
+										<form-articulo
+											:rubros="prestacion.rubros_id">
+										</form-articulo>
+									</div>
+									<div class="col-sm-12">
+										<add-articulo :rubros="prestacion.rubros_id" :articulosSelect="articulos">
+										</add-articulo>
+						        		<form-horario 
+						        			:nuevo="true" :horariosId="horarios">
+						        		</form-horario>
+					        		</div>
+						
 					        	</template>
 
 					            <template v-if="showFormPublicacion">
@@ -54,12 +64,13 @@
 			                    </button>-->
 			                    <button v-if="!showFormRubro && showFormArticulo && !showFormPublicacion" 
 			                    	class="btn btn-default" type="button" 
-			                    	@click.stop="showFormRubro = !showFormRubro; showFormArticulo = !showFormArticulo; articulos=[]">
+			                    	@click.stop="showFormRubro = !showFormRubro; 
+			                    		showFormArticulo = !showFormArticulo; articulos=[]; active--">
 			                    	Atras
 			                    </button>
 			                    <button v-if="!showFormRubro && !showFormArticulo && showFormPublicacion" 
 			                    	class="btn btn-default" type="button" 
-			                    	@click.stop="showFormArticulo = !showFormArticulo; showFormPublicacion = !showFormPublicacion">
+			                    	@click.stop="showFormArticulo = !showFormArticulo; showFormPublicacion = !showFormPublicacion; active--">
 			                    	Atras
 			                    </button>
 			                    <button v-if="showFormRubro && !showFormArticulo && !showFormPublicacion"
@@ -69,7 +80,7 @@
 			                    </button>
 			                    <button v-if="!showFormRubro && showFormArticulo && !showFormPublicacion"
 			                    	class="btn btn-default" type="button" 
-			                    	@click.stop="showFormArticulo = !showFormArticulo; showFormPublicacion = !showFormPublicacion">
+			                    	@click.stop="showFormArticulo = !showFormArticulo; showFormPublicacion = !showFormPublicacion; active++">
 			                    	Siguiente
 			                    </button>
 				        		<button v-if="showFormPublicacion" 
@@ -91,6 +102,7 @@
     import FormArticulo from './../Articulos/New';
     import FormHorario from './../Horarios/New';
     import AddArticulo from './AddArticulo';
+    import AddHorario from './../Horarios/Index';
 
 	export default {
 		data() {
@@ -101,6 +113,7 @@
 				validarPublicacion: false,
 				errorsApi:[],
 				id: null,
+				active: 0,
 				listPath : [{route: '/', name: 'Inicio'}, {route: '/publicacion/new', name: 'Nueva Publicación'}],
                 showFormRubro: true,
                 showFormPublicacion: false,
@@ -136,7 +149,7 @@
 		methods: {
 			validateBeforeSubmit: function() {                 
 	            this.validarPublicacion = true;
-	            this.$events.fire('validarFormPublicacion')
+	            this.$events.fire('validarFormPublicacion');
 	        },
 	        validarFormRubros(){
 	        	this.$events.fire('validarForm');
@@ -145,13 +158,17 @@
 	        	this.showFormPublicacion = false;
 	        	this.showFormRubro = false; 
 	        	this.showFormArticulo = true;
-	        	this.nuevoRubro = false
+	        	this.nuevoRubro = false;
+	        	this.active++;
 	        },
 	        sendNewForm(){
-	        	if ((this.publicacion.fecha_finalizacion == '0000-00-00')||(this.publicacion.fecha_finalizacion == '')){
+	        	if ( this.publicacion.fecha_finalizacion == '0000-00-00' || this.publicacion.fecha_finalizacion == '' ){
 	        		this.publicacion.fecha_finalizacion = null
 	        	}
-	        	this.domicilio.localidad_id = this.domicilio.localidad_id.value;
+	        	var localidad_id = null;
+	        	if(this.domicilio.localidad_id != null){
+	        		localidad_id = this.domicilio.localidad_id.value;
+	        	}
 	            this.$http.post(
 	                'api/publicacion/', 
 	                {
@@ -164,10 +181,19 @@
 	                    fecha_finalizacion: this.publicacion.fecha_finalizacion,
 	                    fotos: this.publicacion.fotos,
 	                    caracteristicas: this.publicacion.caracteristicas,
-	                    prestacion: this.prestacion,
-	                    domicilio: this.domicilio,
-	                    articulos: this.articulos,
-	                    horariosId: this.horarios
+	                    horariosId: this.horarios,
+
+	                    comercio: this.prestacion.comercio,
+	                    fecha_habilitacion: this.prestacion.fecha_habilitacion,
+	                    habilitacion: this.prestacion.habilitacion,
+	                    rubros_id: this.prestacion.rubros_id,
+
+	                    calle: this.domicilio.calle,
+						localidad_id: localidad_id,
+						numero: this.domicilio.numero,
+						piso: this.domicilio.piso,
+
+	                    articulos: this.articulos
 	                })
 	                .then(response => {
 	                    this.$toast.success({
@@ -206,7 +232,6 @@
 	        		'descripcion': '',
 	        		'oferta': '',
 	        		'fotos': null,
-	        		'prestaciones_id': '',
 	        		'fecha_finalizacion': null
 	        	}
 	        },

@@ -27,7 +27,7 @@
                                 detail-row-component="detail-row-proveedor"
                                 @vuetable:cell-clicked="onCellClicked">
 
-                                    <template slot="actions" scope="props">
+                                    <template slot="actions" slot-scope="props">
                                         <div class="custom-actions">
 
                                             <!-- Ver perfil -->
@@ -224,6 +224,10 @@
             this.$events.on('cerrar', () => this.closeModal());
             this.$events.on('reloadIndexProveedor', () => Vue.nextTick( () => this.$refs.vuetable.refresh()) );
 
+        },
+        beforeDestroy() {
+            this.$events.$off('cerrar')
+            this.$events.$off('reloadIndexProveedor')
         },
         methods: {
             onPaginationData (paginationData) {

@@ -28,7 +28,7 @@
 		        <div class="box-body">
 		        	<div class="col-sm-12">
 				        <section>
-						  	<div class="col-md-offset-0.5 col-sm-7" v-if="showCarousel" >
+						  	<div class="col-md-offset-0.5 col-sm-7">
 						  		
 				          		<carousel 
 				          			:perPage="1" 
@@ -78,21 +78,28 @@
 						          	
 						          	<hr>
 
-	                                <div>
-	                                	<p>Opiniones</p>
-	                                    <i class="fa fa-fw fa-star fa-2x"></i>
-	                                    <i class="fa fa-fw fa-star fa-2x"></i>
-	                                    <i class="fa fa-fw fa-star-half-o fa-2x"></i>
-	                                    <i class="fa fa-fw fa-star-o fa-2x"></i>
-	                                    <i class="fa fa-fw fa-star-o fa-2x"></i>
+	                                <div class="col-sm-12 col-xs-12">
+
+	                                	<el-rate
+											v-model="puntos"
+											disabled
+											show-text
+											text-color="#ff9900"
+											text-template="{value} puntos.">
+										</el-rate>
+
 	                                </div> 
-						        </div>
-						        <div v-if="auth.user.authenticated">
-							        <div class="col-sm-12" v-if="auth.user.profile.roles_id == role.USUARIO">
-							        	<div class="col-sm-6 col-sm-offset-3">
-							                <button type="button" class="btn btn-block btn-success" @click.prevent>
-							                	<i class="fa fa-calendar-check-o"></i> Reservar
-							                </button>
+							        <div class="col-sm-12 col-xs-12">
+							        	<hr>
+
+							        	<div class="col-sm-11 col-sm-offset-1">
+
+									        <button type="button" class="btn btn-block btn-success" @click.prevent="showPresupuestoModal()"
+									        	v-if="!auth.user.authenticated ||
+							                	(auth.user.authenticated && !(auth.user.profile.roles_id != role.USUARIO))">
+									        	<i class="fa fa-calendar-check-o" aria-hidden="true"> Solicitar Presupuesto</i> 	
+									        </button>
+
 							        	</div>
 							        </div>
 						        </div>
@@ -103,42 +110,75 @@
 		        </div>
 		    </div>
 		    <!-- /.box -->
-	        <div class="box box-default">
-	        	<div class="box-header with-border">
-	        		<i class="fa fa-bars margin-r-5"></i><h3 class="box-title">Informaci&oacute;n</h3>
-	        	</div>
-	        	<div class="box-body">
-					<div v-if="publicacion.caracteristicas.length!=0" class="col-sm-12">
-						<h4>Caracteristicas</h4>
-						<ul>
-							<div v-for="item in publicacion.caracteristicas">
-								<div class="col-sm-4">
-									<li>
-										<div class="col-sm-6">{{item.nombre}}</div>
-										<div class="col-sm-6" v-if="((item.adicional)&&(item.pivot.informacion!=null))"> {{item.pivot.informacion}}</div>
-									</li>
-									
-								</div>
-							</div>
-						</ul>
-						<br><br><hr>
-					</div>
+			<div class="nav-tabs-custom">
+				<ul class="nav nav-tabs">
+					<li class="active"><a href="#informacion" @click.prevent data-toggle="tab">
+						Informaci&oacute;n</a>
+					</li>
+					<li><a href="#opiniones" @click.prevent data-toggle="tab">
+						Opiniones</a>
+					</li>
+					<li v-if="auth.user.authenticated && (auth.user.profile.roles_id == role.PROVEEDOR && 
+				    	publicacion.proveedor.user_id == auth.user.profile.id)"><a href="#proveedor" @click.prevent data-toggle="tab">Eventos y Estadisticas</a>
+				    </li>
+				</ul>
+				<div class="tab-content">
 
-			        <div v-if="publicacion.oferta != null && publicacion.oferta.length!=0" class="col-sm-12">
-			          	<h4>{{publicacion.oferta}}</h4>
-			          	<p v-if="(publicacion.fecha_finalizacion != '0000-00-00')&&(publicacion.fecha_finalizacion != null)">
-		          			Fecha Finalizacion: {{(publicacion.fecha_finalizacion)}}
-		         		</p>
-		         		<br><hr>
-			        </div>
-			        <div class="col-sm-12">
-			        <br>
-		               	<div class="col-sm-12" v-html='publicacion.descripcion'></div>
-		            </div>
-	        	</div>
-		        <!-- /.box-body -->
-	        </div>
-	        <!-- /.box -->
+             		<div class="tab-pane active" id="informacion">
+	             		<div class="box-body">
+							<div v-if="publicacion.caracteristicas.length != 0" class="col-sm-12">
+								<h4><u>Caracteristicas</u></h4>
+								<ul>
+									<div v-for="item in publicacion.caracteristicas">
+										<div class="col-sm-4">
+											<li>
+												<div class="col-sm-6">{{ strUpper(item.nombre) }}</div>
+												<div class="col-sm-6" 
+													v-if="item.adicional && item.pivot.informacion != null"> 
+													{{ strUpper(item.pivot.informacion) }}
+												</div>
+											</li>
+											
+										</div>
+									</div>
+								</ul>
+								<br><br><hr>
+							</div>
+
+					        <div v-if="publicacion.oferta != null && publicacion.oferta.length!=0" class="col-sm-12">
+					          	<h4><u>Oferta</u></h4>
+					          	{{publicacion.oferta}}
+					          	<p v-if=" publicacion.fecha_finalizacion != '0000-00-00' && publicacion.fecha_finalizacion != null ">
+				          			Fecha Finalizacion: {{ publicacion.fecha_finalizacion }}
+				         		</p>
+				         		<p v-else>
+				         			Oferta permanente
+				         		</p>
+				         		<br><hr>
+					        </div>
+					        <div v-if="publicacion.articulos.length > 0" class="col-sm-12">
+					        	<h4><u>Servicios y Productos</u></h4>
+					        	<div class="col-sm-12" v-for="(rubro, index) in publicacion.prestacion.rubros" v-if=" showRubroInfo(rubro.id)">
+					        		<h5><b>{{ strUpper(rubro.nombre) }}</b></h5>
+					        		{{ printArticles(rubro.id)}}
+					        		<hr v-if="(index+1) == publicacion.prestacion.rubros.length">
+					        	</div>
+					        </div>
+					        <div class="col-sm-12">
+				               	<div class="col-sm-12" v-html='publicacion.descripcion'></div>
+				            </div>
+				        </div>
+             		</div>
+             		<div class="tab-pane" id="opiniones">
+             		</div>
+             		<div v-if="auth.user.authenticated && (auth.user.profile.roles_id == role.PROVEEDOR && 
+				    	publicacion.proveedor.user_id == auth.user.profile.id)" class="tab-pane" id="proveedor">
+				    	<div class="box-body">
+							<index-reservas :publicacionId="publicacion.id"></index-reservas>
+						</div>
+             		</div>
+             	</div>
+            </div>
 
 	        <div <div class="box box-default">
 	        	<div class="box-header with-border">
@@ -148,13 +188,13 @@
 	        		<div class="col-sm-3" style="text-align:center;">
 		        			<h2>2,5</h2>
 		        			<p>
-	                            <i class="fa fa-fw fa-star"></i>
-	                            <i class="fa fa-fw fa-star"></i>
-	                            <i class="fa fa-fw fa-star-half-o"></i>
-	                            <i class="fa fa-fw fa-star-o"></i>
-	                            <i class="fa fa-fw fa-star-o"></i>
+                            	<el-rate
+									v-model="puntos"
+									disabled
+									text-color="#ff9900">
+								</el-rate>
 							</p>
-							<p><i class="fa fa-users" aria-hidden="true"></i> 1 en total.</p>
+							<p style="color:#ff9900"><i class="fa fa-users" aria-hidden="true"></i> 1 en total.</p>
 
 	        		</div>
 	        		<div class="col-md-9">
@@ -169,11 +209,13 @@
 							</div>
 							<!-- /.user-block -->
 							<p>
-	                            <i class="fa fa-fw fa-star"></i>
-	                            <i class="fa fa-fw fa-star"></i>
-	                            <i class="fa fa-fw fa-star-half-o"></i>
-	                            <i class="fa fa-fw fa-star-o"></i>
-	                            <i class="fa fa-fw fa-star-o"></i>
+                            	<el-rate
+									v-model="puntos"
+									disabled
+									show-text
+									text-color="#ff9900"
+									text-template="{value} puntos.">
+								</el-rate>
 							</p>
 							<p>
 								Lorem ipsum represents a long-held tradition for designers,
@@ -242,6 +284,20 @@
 	        </div>
 	        <!-- /.box -->
 	    </section>
+
+	    <!-- modal presupuesto -->
+	    <div v-if="auth.user.authenticated && showPresupuesto" id="modificar" class="modal" role="dialog" :style="{ display : showPresupuesto  ? 'block' : 'none' }">
+	        <div class="modal-dialog modal-lg">
+	            <div class="modal-content">
+	                <div class="modal-header">
+	                    <button type="button" class="close" @click="closeModal()">&times;</button>
+	                    <h4 class="modal-title">Solicitar presupuesto a {{ publicacion.proveedor.nombre }}</h4>
+	                </div>
+	                <new-presupuesto :publicacion="publicacion"></new-presupuesto>
+	            </div>
+	        </div>
+	    </div>
+
 	</div>
 </template>
 <script>
@@ -250,26 +306,31 @@
 	import Role from '../../../config.js'
 	import { Carousel, Slide } from 'vue-carousel';
 	import moment from 'moment';
+	import NewPresupuesto from './../Presupuestos/New';
+	import accounting from 'accounting-js';
 
+	Vue.component('index-reservas', require('./../Reservas/Index'));
 	export default {
 		
 		data() {
 			return {
 				publicacion: null,
+				puntos: 2.5,
 				productoId: null,
 				auth: auth,
 				role: Role,
-				showCarousel: true
+				showPresupuesto: false
 			}
 		},
 		mounted(){
+			this.$events.on('cerrar', () => this.closeModal());
 		    this.$nextTick(function() {
 		      this.getPublicacion();
 		    })
 			
 		},
 		components: {
-        	Carousel, Slide
+        	Carousel, Slide, NewPresupuesto
     	},
 		methods: {
 			getPublicacion: function(){
@@ -293,11 +354,26 @@
 							]
 						this.$events.fire('changePath', listPath, this.publicacion.titulo);
 	                }, response => {
+	                    if(response.status === 404){
+	                        router.push('/404');
+	                    }
+	                    if(response.status === 500){
+	                        router.push('/500');
+	                    }
 	                    this.$toast.error({
 	                        title:'¡Error!',
 	                        message:'No se ha podido cargar la publicacion. :('
 	                    });
 	                })
+			},
+			showPresupuestoModal(){
+				if(auth.user.authenticated){
+					this.showPresupuesto = true
+				}
+				else
+				{
+					route.push('/login');
+				}
 			},
 			verificar_favorite(){
 				if (auth.user.authenticated){
@@ -371,33 +447,44 @@
 				if(estado == 1) return ' btn-danger';
 				else return ' btn-success';
 			},
-			handleResize: function(){
-				this.showCarousel = false;
-				setTimeout(this.showComponentCarousel, 100);
+			showRubroInfo(rubro_id){
+				for(var articulo of this.publicacion.articulos){
+					if(articulo.rubro_id == rubro_id){
+						return true;
+					}
+				}
+				return false;
 			},
-			showComponentCarousel: function(){
-				this.showCarousel = true
-				console.log('paso')
-			}
+			printArticles(rubro_id){
+				var list = '';
+				var primero = true;
+				for(var articulo of this.publicacion.articulos){
+					if(articulo.rubro_id == rubro_id){
+						if(primero){
+							list = this.strUpper(articulo.nombre)
+						} else {
+							list = list + ', ' + articulo.nombre;
+						}
+						primero = false;
+					}
+				}
+				return list+'.';
+			},
+			closeModal: function(){
+                this.showPresupuesto = false;
+            },
+	        strUpper: function(str){
+	                var res = str.substring(1, str.length);
+	                var res  = res.toLowerCase();
+	                var res1 = str.substring(0, 1);
+	                var res1 = res1.toUpperCase();
+	                return  res1+''+res;
+	        },
+            formatMoney(value){
+            	return (value == null)
+                    ? ''
+            		: accounting.formatMoney(value, "$", 2, ",", ".");
+            }
 		}
 	}
 </script>
-<style>
-
-.VueCarousel-slide {
-	position: relative;
-	color: #fff;
-	font-family: Arial;
-	font-size: 24px;
-	text-align: center;
-	min-height: 350px;
-	border-style: solid;
-	border-color: rgba(241, 242, 243, 0.8);
-	background: rgba(241, 242, 243, 0.8);
-}
-.VueCarousel {
-    max-width: 100%;
-    max-height: 100%;
-}
-
-</style>
