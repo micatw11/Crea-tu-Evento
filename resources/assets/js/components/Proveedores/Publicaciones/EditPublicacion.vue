@@ -29,7 +29,8 @@
 						</div>
 						<div class="col-sm-12">
 							<form-horario
-								:publicacionId="publicacion.id">
+								:publicacionId="publicacion.id"
+								:nuevo="false">
 							</form-horario>
 						</div>
 						<div class="col-sm-12">

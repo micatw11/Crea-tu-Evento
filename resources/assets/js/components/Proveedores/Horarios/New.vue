@@ -18,7 +18,7 @@
 	                </div>
 	                <div class="modal-body">
 	        			<div class="box-body">
-							<form-horario :horario="newHorario" @validoFormHorario="sendHorario">
+							<form-horario :horario="newHorario" :nuevo="true" @validoFormHorario="sendHorario">
 							</form-horario>
 						</div>
 				        <div class="modal-footer" style="text-align:center;">
@@ -35,14 +35,22 @@
 				</div>
 			</div>
 		</div>
+		<index-horario 
+    		:publicacionId="null" :horariosId="horariosId" :horario="horario"
+    		>
+		</index-horario>
 	</div>
 </template>
 <script>
 	import FormHorario from './Form'
+	import IndexHorario from './../Horarios/Index';
 	export default {
 		props: {
-			publicacionId:{
-				required: true
+			nuevo: {
+				type: Boolean
+			},
+			horariosId:{
+				type: Array
 			}
 		},
 		data(){
@@ -59,10 +67,12 @@
 				},
 				showFormH: false,
 				showNewHorario: false,
+				
+				horario: [],
 			}
 		},
 		components:{
-			FormHorario
+			FormHorario, IndexHorario
 		},
 		mounted() {
 			this.$events.on('showFormH', () => this.showFormH = true);
@@ -72,25 +82,53 @@
 				this.$events.fire('validarFormHorario')
 			},
 			sendHorario(){
-				this.$http.post('api/horario',{
-					hora_inicio: this.newHorario.hora_inicio,
-					hora_fin: this.newHorario.hora_fin,
-					dia: this.newHorario.dias,
-					precio: this.newHorario.precio,
-					publicacion_id: this.publicacionId
-				}).then(response => {
-					this.newHorario = {
-						hora_inicio: '',
-						hora_fin: '',
-						dias: {},
-						precio: 0,
-						publicacion_id: ''
-					}
-					this.$events.fire('reloadIndexHorario');
-					this.showNewHorario= false; 
-				}, response => {
-					console.log('Error en Horario');
-				});
+				if (this.nuevo){ 
+					this.publicacionId = null
+				}
+					this.$http.post('api/horario',{
+						hora_inicio: this.newHorario.hora_inicio,
+						hora_fin: this.newHorario.hora_fin,
+						dia: this.newHorario.dias,
+						precio: this.newHorario.precio,
+						publicacion_id: this.publicacionId,
+						horariosId: this.horariosId
+					}).then(response => {
+						this.newHorario = {
+							hora_inicio: '',
+							hora_fin: '',
+							dias: {},
+							precio: 0,
+							publicacion_id: ''
+						}
+						if (response.data.idHorario){
+
+							for (var i = 0; i < response.data.idHorario.length; i++) {
+								if (response.data.idHorario[i] != null){
+									console.log(response.data.idHorario[i])
+									this.$events.fire('agregarIdH',response.data.idHorario[i])
+								}
+							}
+						}
+						if (response.data.horarioNo != []){
+								//var dias= ''
+								/*for (var i = 0; i < response.data.horarioNo.length; i++) {
+									//if (response.data.horarioNo[i] != null)
+									//dias= dias +', '+ response.data.horarioNo[i].dia
+								}*/
+								this.$toast.error({
+		                        title:'¡Error!',
+		                        message:'No se ha podido guardar el horario, ya existe un horario en ese rango. :('
+		                    });
+						}
+						this.$events.fire('reloadIndexHorario');
+						this.showNewHorario= false; 
+					}, response => {
+						this.$toast.error({
+		                        title:'¡Error!',
+		                        message:'No se ha podido guardar el horario. :('
+		                    })
+					});
+				
 			},
 			closeModal(){
 				this.showNewHorario= false;

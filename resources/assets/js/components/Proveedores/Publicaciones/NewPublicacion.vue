@@ -28,7 +28,7 @@
 					            </template>
 
 					        	<template v-if="showFormArticulo">
-									<div class="col-sm-12">
+					        		<div class="col-sm-12">
 										<form-articulo
 											:rubros="prestacion.rubros_id">
 										</form-articulo>
@@ -36,17 +36,11 @@
 									<div class="col-sm-12">
 										<add-articulo :rubros="prestacion.rubros_id" :articulosSelect="articulos">
 										</add-articulo>
-									</div>
-									<!--
-									<div class="col-sm-12">
-					        			<form-horario 
-					        				:publicacionId="publicacion.id">
-					        			</form-horario>
-									</div>
-									<div class="col-sm-12">
-										<add-horario :publicacionId="publicacion.id">
-										</add-horario>
-									</div>-->
+						        		<form-horario 
+						        			:nuevo="true" :horariosId="horarios">
+						        		</form-horario>
+					        		</div>
+						
 					        	</template>
 
 					            <template v-if="showFormPublicacion">
@@ -124,8 +118,10 @@
                 showFormRubro: true,
                 showFormPublicacion: false,
                 showFormArticulo: false,
+                showFormHorario: false,
                 nuevoRubro: true,
                 articulos: [],
+                horarios: [],
                 domicilio: {
                     calle: null,
                     numero: null,
@@ -144,9 +140,11 @@
 			this.resetForm();
 			this.$events.fire('changePath', this.listPath, 'Nueva Publicación');
 			//this.$events.on("validadoFormPublicacion", () => this.sendNewForm());
+			this.$events.on("agregarIdH", (id) => this.agregarIdH(id));
+			this.$events.on('deleteId', (id) => this.deleteId(id));
 		},
 		components: {
-			FormPublicacion, FormRubro, FormArticulo, AddArticulo, FormHorario, AddHorario
+			FormPublicacion, FormRubro, FormArticulo, AddArticulo, FormHorario
 		},
 		methods: {
 			validateBeforeSubmit: function() {                 
@@ -183,6 +181,7 @@
 	                    fecha_finalizacion: this.publicacion.fecha_finalizacion,
 	                    fotos: this.publicacion.fotos,
 	                    caracteristicas: this.publicacion.caracteristicas,
+	                    horariosId: this.horarios,
 
 	                    comercio: this.prestacion.comercio,
 	                    fecha_habilitacion: this.prestacion.fecha_habilitacion,
@@ -216,6 +215,17 @@
 	                    }
 	                })
 	        },
+	        agregarIdH(id){
+				this.horarios.push(id)
+			},
+			deleteId(id){
+			console.log('id .. '+id)
+				for (var i = 0; i < this.horarios.length; i++) {
+					if (this.horarios[i] == id){
+						this.horarios.splice(i,1)
+                    }
+				}
+			},
 	        resetForm(){
 	        	this.publicacion = {
 	        		'titulo':'',

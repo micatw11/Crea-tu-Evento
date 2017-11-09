@@ -1,9 +1,8 @@
 <template>
 
 	<div class="row">
-		<div>
+		<div v-if="nuevo">
 			<div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('dia')&&validarHorario}" style=" text-align: center;" data-toggle="buttons">
-				<!--<button v-for="item in dias" class="btn bg-purple margin" @click="AddDia(item.id)"> {{item.nombre}} </button>-->
 				 <label v-for="item in dias" class="btn bg-purple margin" @click="AddDia(item.id)">
 				    <input type="checkbox" autocomplete="off"> {{item.nombre}}
 				  </label>
@@ -11,21 +10,28 @@
 	            <span v-show="errors.has('dia')&&validarHorario" class="help-block">{{ errors.first('dia') }}</span>
         	</div>
 		</div>
-		<div class="col-sm-3">
+		<div v-else>
+			<div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('dia')&&validarHorario}" style=" text-align: center;" data-toggle="buttons">
+				     <h4>{{horario.dia.toUpperCase()}}</h4>
+				<!-- validacion vee-validation -->
+	            <span v-show="errors.has('dia')&&validarHorario" class="help-block">{{ errors.first('dia') }}</span>
+        	</div>
+		</div>
+		<div class="col-sm-3 col-sm-offset-1">
 			<label>Hora Inicio</label><br>
 			<el-time-select placeholder="Desde" style="width: 100%;" v-model="horario.hora_inicio" :picker-options="{
-		      start: '00:00',
+		      start: '01:00',
 		      step: '00:30',
-		      end: '23:00'
+		      end: '24:30'
 		    }">
 		  </el-time-select>
 		  </div>
 		  <div class="col-sm-3">
 		  <label>Hora Fin</label><br>
 		  <el-time-select placeholder="Hasta"  style="width: 100%;" v-model="horario.hora_fin" :picker-options="{
-		      start: '00:30',
+		      start: '01:30',
 		      step: '00:30',
-		      end: '23:30',
+		      end: '24:30',
 		      minTime: horario.hora_inicio
 		    }"></el-time-select>
 		</div>
@@ -50,6 +56,9 @@
 			horario:{
 				required: true,
 				type: Object
+			},
+			nuevo:{
+				required: true	
 			}
 		},
 		data(){
@@ -64,6 +73,7 @@
                     masked: false
                 },
                 dias: [],
+                showFormH: false,
                 diasSelect: [],
 			}
 		},
@@ -72,6 +82,7 @@
 		},
 		mounted(){
 			this.$events.on("validarFormHorario", () => this.validateSubmit())
+			this.$events.on('showFormH', () => this.showFormH = true);
 		},
 		components: {Money, ElTimeSelect},
 		methods:{
@@ -87,7 +98,6 @@
 	                });
 	        },
 	        AddDia(dia){
-	        	console.log(dia)
 	        	for (var i = 0; i < this.diasSelect.length; i++) {
 	        		if (dia == this.diasSelect[i]){
 	        			this.diasSelect.splice(i, 1)

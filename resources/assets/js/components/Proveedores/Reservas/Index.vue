@@ -3,7 +3,7 @@
 		<template v-if="!with_box">
 			<vue-event-calendar v-if="loaded"
 				:events="dataEvents">				
-		      <template scope="props">
+		      <template slot-scope="props">
 		        <div v-for="(event, index) in props.showEvents" class="event-item">
 
 		          	<h3 class="title"> 
@@ -53,7 +53,7 @@
 								<div class="box-body">
 									<vue-event-calendar v-if="loaded" 
 										:events="dataEvents">				
-								      <template scope="props">
+								      <template slot-scope="props">
 								        <div v-for="(event, index) in props.showEvents" class="event-item">
 
 								          	<h3 class="title"> 

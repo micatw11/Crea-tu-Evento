@@ -122,11 +122,13 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('proveedor/{id}/reserva', 'ReservaController@reservasProveedor');
     
     Route::post('horario','HorarioController@store');
-    Route::get('horarios/{publicacion_id}', 'HorarioController@index');
-    Route::get('horario/{horario_id}', 'HorarioController@show');
+    Route::get('horarios/{id}', 'HorarioController@index');
+    Route::get('publicacion/{publicacion_id}/horarios', 'HorarioController@indexPublicacion');
+    Route::get('horario/{id}', 'HorarioController@show');
     Route::patch('horario/{id}','HorarioController@update');
-    Route::get('publicacion/{publicacion_id}/horario/{fecha}', 'HorarioController@horariosPorFecha');
 
+    Route::delete('horario/{id}', 'HorarioController@destroy');
+    Route::get('publicacion/{publicacion_id}/horario/{fecha}', 'HorarioController@horariosPorFecha');
     Route::get('mensaje','MensajesController@index');
     Route::get('mensaje/{id}','MensajesController@show');
     Route::post('mensaje','MensajesController@store');

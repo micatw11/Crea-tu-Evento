@@ -27,7 +27,7 @@
                                 detail-row-component="detail-row-proveedor"
                                 @vuetable:cell-clicked="onCellClicked">
 
-                                    <template slot="actions" scope="props">
+                                    <template slot="actions" slot-scope="props">
                                         <div class="custom-actions">
 
                                             <!-- Ver perfil -->

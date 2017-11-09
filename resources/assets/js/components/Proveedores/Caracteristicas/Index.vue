@@ -43,12 +43,12 @@
         	                        pagination-path=""
         	                        @vuetable:pagination-data="onPaginationData"
         	                        @vuetable:cell-clicked="onCellClicked">
-                                        <template slot="aditional" scope="props">
+                                        <template slot="aditional" slot-scope="props">
                                             <div class="custom-aditional">
                                             {{props.rowData.adicional== 1 ? 'Sí': 'No'}}
                                             </div>
                                         </template>
-        	                            <template slot="actions" scope="props">
+        	                            <template slot="actions" slot-scope="props">
         	                                <div class="custom-actions">
 
         	                                    <!-- Modificar Categoria -->
