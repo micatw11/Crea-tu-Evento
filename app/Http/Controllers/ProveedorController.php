@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\DomicilioService;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -19,12 +20,18 @@ class ProveedorController extends Controller
 {
 
     /**
+     * @var DomicilioService
+     */
+    private $domicilioService;
+
+    /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(DomicilioService $domicilioService)
     {
+        $this->domicilioService = $domicilioService;
         $this->middleware('auth');
     }
     
@@ -39,22 +46,12 @@ class ProveedorController extends Controller
 
         if($request->filter){
             $like = '%'.$request->filter.'%';
-            $query->where('nombre','like', $like )
+             $query = $query->where('nombre','like', $like )
                     ->orWhere('email', 'like', $like);
         }
 
         $proveedores = $query->paginate(10);
         return response()->json($proveedores, 200);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -65,10 +62,11 @@ class ProveedorController extends Controller
      */
     public function store(Request $request)
     {   
-        $this->validatorDom($request);
+        $this->domicilioService->validateDomicilio($request);
         $this->validatorProveedor($request);
-        $domicilio= $this->createDomicilio($request);
-        $proveedor= $this->createProveedor($request,$domicilio);
+
+        $domicilio = $this->domicilioService->createDomicilio($request, 'Real');
+        $proveedor = $this->createProveedor($request,$domicilio);
         
         if ($proveedor && $domicilio ){
             return response(null, Response::HTTP_OK);
@@ -80,15 +78,15 @@ class ProveedorController extends Controller
 
     protected function validatorProveedor(Request $request)
     {
-      return $this->validate($request, 
-        [
-            'user_id' => 'required|exists:users,id',
-            'nombre' => 'required|min:4|max:55',
-            'cuit' => 'required|min:9|max:12',
-            'ingresos_brutos' => 'required|min:5|max:10',
-            'email' => 'required|email',
-            'dni' => 'required'
-        ]);
+        return $this->validate($request, 
+            [
+                'user_id' => 'required|exists:users,id',
+                'nombre' => 'required|min:4|max:55',
+                'cuit' => 'required|min:9|max:12',
+                'ingresos_brutos' => 'required|min:5|max:10',
+                'email' => 'required|email',
+                'dni' => 'required'
+            ]);
     }
 
     public function createProveedor(Request $request, $domicilio)
@@ -97,25 +95,15 @@ class ProveedorController extends Controller
         $filename= $this->storeImage($request);
 
         return Proveedor::create([
-                    'user_id' => $request->user_id,
-                    'nombre' => $request->nombre,
-                    'cuit' => $request->cuit,
-                    'ingresos_brutos' => $request->ingresos_brutos,
-                    'email' => $request->email,
-                    'estado' => "Tramite",
-                    'domicilio_id' => $domicilio->id,
-                    'dni' => $filename]);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+                'user_id' => $request->user_id,
+                'nombre' => $request->nombre,
+                'cuit' => $request->cuit,
+                'ingresos_brutos' => $request->ingresos_brutos,
+                'email' => $request->email,
+                'estado' => "Tramite",
+                'domicilio_id' => $domicilio->id,
+                'dni' => $filename
+            ]);
     }
 
     /**
@@ -128,23 +116,22 @@ class ProveedorController extends Controller
     public function update(Request $request, $id)
     {
         
-        $this->validatorDom($request);
+        $this->domicilioService->validateDomicilio($request);
         $this->validatorProveedor($request);
         $filename= $this->storeImage($request);
-        //$table_name= "rubro";
-        //$accion = "update";
         $proveedor = Proveedor::where('id', $id)->firstOrFail();
         $domicilio= Domicilio::where('id', $proveedor->domicilio_id)->firstOrFail();
         //Log::logs($id, $table_name, $accion , $rubro, 'Ha actualizado informacion personal');
-        $domicilio->update($request->all());
+        $this->domicilioService->updateDomicilio($request, $domicilio);
         $proveedor->update([
-                    'user_id' => $request->user_id,
-                    'nombre' => $request->nombre,
-                    'cuit' => $request->cuit,
-                    'ingresos_brutos' => $request->ingresos_brutos,
-                    'email' => $request->email,
-                    'domicilio_id' => $domicilio->id,
-                    'dni' => $filename]);
+                'user_id' => $request->user_id,
+                'nombre' => $request->nombre,
+                'cuit' => $request->cuit,
+                'ingresos_brutos' => $request->ingresos_brutos,
+                'email' => $request->email,
+                'domicilio_id' => $domicilio->id,
+                'dni' => $filename
+            ]);
 
         if($proveedor->save() && $domicilio->save()){
             return response(null, Response::HTTP_OK);
@@ -153,46 +140,13 @@ class ProveedorController extends Controller
         }
     }
 
-           /**
-     * @param $request
-     */
-    public function validatorDom(Request $request)
-    {
-      return $this->validate($request, 
-        [
-            'calle'=>'required|min:4|max:55',
-            'numero'=> 'required|min:1|max:10',
-            'piso'=> 'min:1|max:10',
-            'localidad_id'=> 'required|exists:localidades,id'
-        ]);
-    }
-
-         /**
-     * @param $request
-     */
-    public function createDomicilio(Request $request)
-    {
-        return Domicilio::create([
-                    'tipo_domicilio'=>'Real',
-                    'calle'=> $request->calle,
-                    'numero'=> $request->numero,
-                    'piso'=> $request->piso,
-                    'localidad_id'=> $request->localidad_id
-            ]);
-    }
-
-
     /**
-     * Remove the specified resource from storage.
+     * Update status.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
-    }
-
     public function cambiarEstado(Request $request, $id){
 
         $proveedor = Proveedor::where('user_id', $id)->with('user')->firstOrFail();
@@ -222,16 +176,17 @@ class ProveedorController extends Controller
         }
     }
 
-
+    /**
+     * Show the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function proveedor($id){
-        $proveedor= Proveedor::where('id', $id)->with('domicilio.localidad.provincia','user.usuario')->firstOrFail();
+        $proveedor = Proveedor::where('id', $id)
+            ->with('domicilio.localidad.provincia','user.usuario')->firstOrFail();
 
-
-        if ($proveedor) {
-            return response()->json(['data' => $proveedor], 200);
-        } else {
-            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return response()->json(['data' => $proveedor], 200);
     }
 
 

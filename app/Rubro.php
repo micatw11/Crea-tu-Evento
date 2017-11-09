@@ -31,4 +31,9 @@ class Rubro extends Model
         return $this->hasMany('App\Articulo');
     }
    
+    public function reservas()
+    {
+        return $this->belongsToMany('App\Reserva');
+    }
+
 }

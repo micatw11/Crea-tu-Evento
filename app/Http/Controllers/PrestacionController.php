@@ -64,7 +64,7 @@ class PrestacionController extends Controller
         $this->validatorRubro($request);
         if ($request->comercio == true){
             $this->validatorDomicilio($request);
-            $domicilio= $this->createDomicilio($request);
+            $domicilio = $this->createDomicilio($request);
             $rubro= $this->create($request,$proveedor, $domicilio);
         }
         else{
@@ -117,7 +117,6 @@ class PrestacionController extends Controller
 
     protected function validatorRubro(Request $request)
     {
-        $rules = array("rubro_id" => 'required|exists:rubros,id');
 
         if($request->comercio == true && $request->habilitacion !== "")
         {
@@ -135,7 +134,7 @@ class PrestacionController extends Controller
      */
     public function show($id)
     {
-        $rubro= Prestacion::where('id', $id)->with('rubro','domicilio.localidad.provincia')->firstOrFail();
+        $rubro= Prestacion::where('id', $id)->with('rubros','domicilio.localidad.provincia')->firstOrFail();
 
         if ($rubro) {
             return response()->json(['rubro' => $rubro], 200);

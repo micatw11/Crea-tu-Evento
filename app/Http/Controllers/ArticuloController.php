@@ -62,7 +62,7 @@ class ArticuloController extends Controller
 
             if($articulo->save())
             {
-                return response(['id' => $articulo->id], Response::HTTP_OK);
+                return response(null, Response::HTTP_OK);
             }
             else
             {

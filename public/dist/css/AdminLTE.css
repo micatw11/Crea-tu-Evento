@@ -10,8 +10,9 @@
  * Core: General Layout Style
  * -------------------------
  */
-html,
-body {
+html, body {
+  margin: 0;
+  padding: 0;
   height: 100%;
 }
 .layout-boxed html,

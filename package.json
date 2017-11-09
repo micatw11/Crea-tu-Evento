@@ -20,11 +20,13 @@
     "webpack": "^2.6.1"
   },
   "dependencies": {
+    "accounting-js": "^1.1.1",
     "babel-polyfill": "^6.23.0",
     "cxlt-vue2-toastr": "^1.0.8",
     "element-ui": "^1.4.6",
     "moment": "^2.18.1",
     "vue-carousel": "^0.6.5",
+    "vue-event-calendar": "^1.4.12",
     "vue-events": "^3.0.1",
     "vue2-editor": "^2.0.26",
     "vuetable-2": "^1.6.3"
