@@ -8,6 +8,7 @@ use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Calificacion;
 use App\Publicacion;
+use Carbon\Carbon;
 use App\Reserva;
 
 class CalificacionController extends Controller
@@ -17,9 +18,37 @@ class CalificacionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, $user_id)
     {
-        //
+        if ($user_id == 'me') {
+            $user_id = Auth::id();
+        }
+        $calificaciones = Calificacion::join('reservas', 'reservas.id', '=', 'calificaciones.reserva_id')
+                    ->where('reservas.user_id', $user_id)->orderBy('reservas.fecha', 'ASC')
+                    ->select('calificaciones.*')->with('publicacion.proveedor', 'reserva')->paginate(10);
+
+        return response()->json($calificaciones, Response::HTTP_OK);
+    }
+
+    public function indexPendientes(Request $request, $user_id){
+        if ($user_id == 'me') {
+            $user_id = Auth::id();
+        }
+        $now = Carbon::now();
+        $reservasId = Reserva::where('reservas.estado', 'confirmado')
+            ->where('fecha', '<',$now->toDateString())
+            ->where('reservas.user_id', $user_id)
+            ->get()->pluck('id');
+
+        $calificaciones = Calificacion::whereIn('reserva_id', $reservasId)->get()->pluck('reserva_id');
+
+        $reservasNoCalificadas = Reserva::whereNotIn('id', $calificaciones)
+            ->where('estado', 'confirmado')
+            ->where('fecha', '<',$now->toDateString())
+            ->orderBy('reservas.fecha', 'ASC')
+            ->with('publicacion.proveedor','rubros','articulos')->get();
+
+        return response()->json($reservasNoCalificadas,  Response::HTTP_OK);
     }
 
     protected function validateCalificacion(Request $request)
@@ -33,7 +62,7 @@ class CalificacionController extends Controller
                 'profesionalidad' => 'required|min:1|max:5',
                 'respuesta' => 'required|min:1|max:5',
                 'recomendar' => 'required|boolean',
-                'comentario' => 'required|min:5|max:100'
+                'comentario' => 'required|min:5|max:300'
             ]);
     }
 
@@ -86,10 +115,9 @@ class CalificacionController extends Controller
      */
     public function show($id)
     {
-        $calificacion = Calificacion::where('id' $id)->firstOrFail();
+        $calificacion = Calificacion::where('id', $id)->firstOrFail();
 
         return response()->json($calificacion, Response::HTTP_OK);
-
     }
 
     /**

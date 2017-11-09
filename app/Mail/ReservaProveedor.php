@@ -30,6 +30,6 @@ class ReservaProveedor extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.recordatorio', ['count', $this->count]);
+        return $this->view('mails.recordatorio', ['count' => $this->count]);
     }
 }

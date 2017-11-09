@@ -39,6 +39,7 @@ var IndexCaracteristica = require('./components/Proveedores/Caracteristicas/Inde
 var IndexLocalidad = require('./components/Localidades/Index');
 
 var IndexReserva = require('./components/Proveedores/Reservas/Index');
+var IndexCalificaciones = require('./components/Proveedores/Calificaciones/Index');
 
 var InternalServerError = require('./components/Errors/500');
 var PageNotFound = require('./components/Errors/404');
@@ -187,6 +188,13 @@ let routes = [
 			component: EditPublicacion,
 			beforeEnter: guardRoute,
 			meta: { Role: [role.PROVEEDOR], requiresAuth: true }	
+		},
+		{
+			path: '/calificaciones',
+			name: 'calificaciones',
+			component: IndexCalificaciones,
+			beforeEnter: guardRoute,
+			meta: { requiresAuth: true }
 		},
 		//errors
 		{

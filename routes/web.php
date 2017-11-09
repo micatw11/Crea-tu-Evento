@@ -131,4 +131,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('mensaje/{id}','MensajesController@show');
     Route::post('mensaje','MensajesController@store');
     Route::patch('mensaje/{id}','MensajesController@update');
+
+    Route::get('user/{user_id}/calificaciones/pendientes','CalificacionController@indexPendientes');
+    Route::get('user/{user_id}/calificaciones','CalificacionController@index');
 });

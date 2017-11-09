@@ -23,7 +23,7 @@ class CreateCalificacionesTable extends Migration
             $table->integer('respuesta');
             $table->boolean('recomendar')->nullbale();
             $table->string('comentario', 300 );
-            $table->decimal('puntuacion_total', 1, 1);
+            $table->float('puntuacion_total', 2, 2);
 
             $table->foreign('publicacion_id')->references('id')->on('publicaciones');
             $table->foreign('reserva_id')->references('id')->on('reservas');

@@ -42,7 +42,7 @@ class EmailsReservas extends Command
     public function handle()
     {
 
-        $to = Carbon::now()->addDays(29); 
+        $to = Carbon::now()->addDays(8); 
         $from = Carbon::now();
         $reservas = Reserva::join('publicaciones', 'publicaciones.id', '=', 'reservas.publicacion_id')
             ->join('proveedores', 'publicaciones.proveedor_id', '=', 'proveedores.id')
@@ -51,17 +51,21 @@ class EmailsReservas extends Command
             ->with('publicacion.proveedor')->orderBy('proveedores.id', 'ASC')->get();
         $count = 0;
         $proveedor_id = null;
-        foreach ($reservas as $reserva) {
-            if($proveedor_id != $reserva->proveedor->id){
-                Mail::to($reserva->publicacion->proveedor->email)->queue(new MailReserva($count));
+        for ($i=0; $i < count($reservas); $i++) { 
+            if($i == 0){
+                $proveedor_id = $reservas[$i]->publicacion->proveedor->id;
+                $count++;
+            } else if($proveedor_id != $reservas[$i]->publicacion->proveedor->id){
+                Mail::to($reservas[0]->publicacion->proveedor->email)->queue(new MailReserva($count));
                 $count = 0;
-                $proveedor_id = $reserva->publicacion->proveedor->id;
+                $proveedor_id = $reservas[$i]->publicacion->proveedor->id;
+                $count++;
+            } else {
                 $count++;
             }
-            else
-            {
-                $count++;
-            }
+        }
+        if(count($reservas) > 0){
+            Mail::to($reservas[count($reservas)-1]->publicacion->proveedor->email)->queue(new MailReserva($count));
         }
         $this->info('Los email de recordatorio de reservas han sido enviados correctamente!');
     }

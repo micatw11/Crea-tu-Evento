@@ -43,4 +43,9 @@ class Reserva extends Model
     {
         return $this->belongsTo('App\Horario');
     }
+
+    public function calificacion()
+    {
+        return $this->hasOne('App\Calificacion', 'reserva_id', 'id');
+    }
 }

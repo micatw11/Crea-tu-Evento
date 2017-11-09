@@ -85,4 +85,9 @@ class Publicacion extends Model
         return $this->hasMany('App\Horario');
     }
 
+    public function calificaciones()
+    {
+        return $this->hasMany('App\Calificacion');
+    }
+
 }

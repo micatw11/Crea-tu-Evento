@@ -1,5 +1,6 @@
 <template>
-    <div v-if="totalItems != 'undefined' && totalItems > 0 && totalPages > 1" class="vuetable-pagination pull-right">
+    <div v-if="totalItems != 'undefined' && totalItems > 0 && totalPages > 1" class="vuetable-pagination pull-right" style="
+    padding-right: 12px;">
         <ul class="pagination">
             <li>
                 <a href="#" @click.prevent="pageChanged(1)" aria-label="Previous">
