@@ -15,13 +15,15 @@ class CreateHorariosTable extends Migration
     {
          Schema::create('horarios', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('publicacion_id')->unsigned();
+            $table->integer('publicacion_id')->unsigned()->nullable();
+            $table->integer('proveedor_id')->unsigned();
             $table->time('hora_inicio')->default('00:00:00');
             $table->time('hora_fin')->default('00:00:00');
             $table->enum('dia', ['lunes','martes','miercoles','jueves','viernes','sabado','domingo']);
             $table->double('precio', 15,2)->nullable();
 
             $table->foreign('publicacion_id')->references('id')->on('publicaciones');
+            $table->foreign('proveedor_id')->references('id')->on('proveedores');
             $table->timestamps();
         });
     }

@@ -28,10 +28,9 @@
 					        		</add-articulo>
 
 					        		<form-horario 
-					        			:publicacionId="publicacion.id">
+					        			
+					        			:nuevo="true" :horariosId="horarios">
 					        		</form-horario>
-					        		<!--<add-horario :rubros="prestacion.rubros_id" :horariosSelect="articulos">
-					        		</add-horario>-->
 					        	</template>
 
 					            <template v-if="showFormPublicacion">
@@ -106,8 +105,10 @@
                 showFormRubro: true,
                 showFormPublicacion: false,
                 showFormArticulo: false,
+                showFormHorario: false,
                 nuevoRubro: true,
                 articulos: [],
+                horarios: [],
                 domicilio: {
                     calle: null,
                     numero: null,
@@ -126,9 +127,11 @@
 			this.resetForm();
 			this.$events.fire('changePath', this.listPath, 'Nueva Publicación');
 			//this.$events.on("validadoFormPublicacion", () => this.sendNewForm());
+			this.$events.on("agregarIdH", (id) => this.agregarIdH(id));
+			this.$events.on('deleteId', (id) => this.deleteId(id));
 		},
 		components: {
-			FormPublicacion, FormRubro, FormArticulo, AddArticulo
+			FormPublicacion, FormRubro, FormArticulo, AddArticulo, FormHorario
 		},
 		methods: {
 			validateBeforeSubmit: function() {                 
@@ -163,7 +166,8 @@
 	                    caracteristicas: this.publicacion.caracteristicas,
 	                    prestacion: this.prestacion,
 	                    domicilio: this.domicilio,
-	                    articulos: this.articulos
+	                    articulos: this.articulos,
+	                    horariosId: this.horarios
 	                })
 	                .then(response => {
 	                    this.$toast.success({
@@ -185,6 +189,17 @@
 	                    }
 	                })
 	        },
+	        agregarIdH(id){
+				this.horarios.push(id)
+			},
+			deleteId(id){
+			console.log('id .. '+id)
+				for (var i = 0; i < this.horarios.length; i++) {
+					if (this.horarios[i] == id){
+						this.horarios.splice(i,1)
+                    }
+				}
+			},
 	        resetForm(){
 	        	this.publicacion = {
 	        		'titulo':'',

@@ -14,6 +14,7 @@ class Horario extends Model
     						'dia',
     						'precio',
     						'publicacion_id',
+                            'proveedor_id',
     						'created_at', 'updated_at'
     					  ];
 

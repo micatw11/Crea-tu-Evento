@@ -25,7 +25,8 @@
 		        		<add-articulo :rubros="prestacion.rubros_id" :articulosSelect="articulos">
 		        		</add-articulo>
 		        		<form-horario
-		        			:publicacionId="publicacion.id">
+		        			:publicacionId="publicacion.id"
+					        :nuevo="false">
 		        		</form-horario>
 		        		<add-horario :publicacionId="publicacion.id">
 		        		</add-horario>

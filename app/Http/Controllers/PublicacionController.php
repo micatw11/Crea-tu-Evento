@@ -154,6 +154,14 @@ class PublicacionController extends Controller
                 $foto->publicacion_id = $publicacion->id;
                 $foto->save();
             }
+            if ($request->has('horariosId')){
+                $horarios = Horario::where('id', $request->horariosId)->get();
+                foreach ($horarios as $key) {
+                    $key->update([
+                    'publicacion_id' => $publicacion->id]);
+                    $key->save();
+                }
+            }
             if($request->has('caracteristicas')&&$publicacion)
             {
                 $publicacion->caracteristicas()->attach($request->caracteristicas);

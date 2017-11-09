@@ -1,7 +1,8 @@
 <template>
+	<div>
         <div class="modal-body">
 			<div class="box-body">
-				<form-horario v-if="showModificarHorario==true" :horario="Horario" @validoFormHorario="sendHorario">
+				<form-horario v-if="showModificarHorario==true" :horario="Horario" :nuevo="false" @validoFormHorario="sendHorario">
 				</form-horario>
 			</div>
 	        <div class="modal-footer" style="text-align:center;">
@@ -10,14 +11,40 @@
 	                Atras
 	            </button>
 	            <button @click="validateBeforeSubmit()" type="button" class="btn btn-primary">
-	                Agregar
+	                Modificar
 	            </button>
-	            <button @click="deleteH()" type="button" class="btn btn-danger">
+	            <button @click="showDeleteH = true" type="button" class="btn btn-danger">
 	                Eliminar
 	            </button>
 	        </div>
 		</div>
+        <!-- Modal Eliminar Horario-->
+        <div class="modal" role="dialog" :style="{ display : showDeleteH  ? 'block' : 'none' }">
+            <div class="modal-dialog" style="width: 300px; text-align: center;">
+
+                <!-- Modal content-->
+                <div class="modal-content" style="width: 350px; text-align: center;">
+                    <div class="modal-body">
+                        <button type="button" class="close" @click="showDeleteH = false">&times;</button>
+                        <div class="box-body">
+                            <p>¿Esta seguro que desea </p>
+                            <p>eliminar el horario?</p>
+                        </div>
+                            <button
+                                @click="deleteH()" 
+                                type="button" class="btn btn-danger">
+                             Aceptar
+                            </button>
+                               <button type="button" @click="showDeleteH = false" class="btn btn-default">
+                                Cancelar
+                            </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
+
 <script>
 	import FormHorario from './Form'
 	export default {
@@ -26,7 +53,10 @@
 				required: true
 			},
 			publicacionId:{
-				required: true
+				type: Number
+			},
+			horariosId:{
+				type: Array
 			}
 		},
 		data(){
@@ -34,14 +64,12 @@
 				Horario:{
 					hora_inicio: '',
 					hora_fin: '',
-					dias: {
-							id:'',
-							nombre: ''
-						},
+					dia: '',
 					precio: 0,
 					publicacion_id: ''
 				},
-				showModificarHorario: false
+				showModificarHorario: false,
+				showDeleteH: false
 			}
 		},
 		beforeMount: function(){
@@ -58,7 +86,7 @@
 				this.$http.patch('api/horario/'+this.horarioId,{
 					hora_inicio: this.Horario.hora_inicio,
 					hora_fin: this.Horario.hora_fin,
-					dia: this.Horario.dias,
+					dia: this.Horario.dia,
 					precio: this.Horario.precio,
 					publicacion_id: this.publicacionId
 				}).then(response => {
@@ -69,14 +97,17 @@
 						precio: 0,
 						publicacion_id: ''
 					}
-					this.$events.fire('reloadIndexHorario');
-					this.showModificarHorario= false; 
+					this.showModificarHorario= false;
+					this.$events.fire('reloadIndexHorario')
+	        		this.$events.fire('close'); 
 				}, response => {
-					console.log('Error en Horario');
+						this.$toast.error({
+	                        title:'¡Error!',
+	                        message:'No se ha guardado el horario. :('
+	                    });
 				});
 			},
 			getHorario: function(){
-				console.log(this.horarioId)
 	        	this.$http.get('api/horario/'+this.horarioId)
 	        	.then(response =>{
 	        		this.Horario = response.data
@@ -86,16 +117,38 @@
                         router.go(-1)
 	                    this.$toast.error({
 	                        title:'¡Error!',
-	                        message:'No se ha cargado su publicación. :('
+	                        message:'No se ha cargado los horarios. :('
 	                    });
                     }
 	        	});
 	        },
 			closeModal(){
 				this.$events.fire('close');
+
 			},
 			deleteH(){
-				console.log('hola')
+				
+	        	this.$http.post('api/horario/'+this.horarioId, 
+                {
+                    _method: 'DELETE'
+                })
+	        	.then(response =>{
+
+	        		this.showModificarHorario=false
+	        		this.showDeleteH=false
+	        		
+	        		this.$events.fire('deleteId', this.horarioId);
+		        	this.$events.fire('reloadIndexHorario');
+	        		this.$events.fire('close');
+	        	}, response => {
+                    if(response.status === 404){
+                        router.go(-1)
+	                    this.$toast.error({
+	                        title:'¡Error!',
+	                        message:'No se ha cargado su publicación. :('
+	                    });
+                    }
+	        	});
 			}
 
 		}
