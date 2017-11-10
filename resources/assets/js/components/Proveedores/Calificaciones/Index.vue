@@ -52,7 +52,7 @@
                                 tableClass="table table-bordered"
                                 :noDataTemplate="noDataTemplate"
                                 :css="css"
-                                ref="vuetableC"
+                                ref="vuetableCali"
                                 :api-url="url"
                                 pagination-path=""
                                 @vuetable:pagination-data="onPaginationData"
@@ -62,9 +62,9 @@
 							            <el-rate
 											v-model="props.rowData.puntuacion_total"
 											disabled
-											show-score
+											show-text
 											text-color="#ff9900"
-											score-template="{value} puntos">
+											text-template="{value} puntos.">
 										</el-rate>
                                 	</template>
                             </vuetable-calificacion>
@@ -112,15 +112,11 @@
                 tableColumns:  [
                     {
                         name: 'publicacion.titulo',
-                        title: 'Publicacion',
-                        titleClass: 'text-center',
-                        dataClass: 'text-center'           
+                        title: 'Publicacion'         
                     },
                     {
                         name: 'publicacion.proveedor.nombre',
-                        title: 'Proveedor',
-                        titleClass: 'text-center',
-                        dataClass: 'text-center'           
+                        title: 'Proveedor'         
                     },
                     {
                     	name: '__slot:puntuacion_total',
@@ -152,7 +148,10 @@
 		},
 		mounted(){
             this.$events.on('cerrar', () => this.closeModal());
-            this.$events.on('reloadIndexCalificacion', () => Vue.nextTick( () => this.$refs.vuetableC.refresh()) );
+            this.$events.on('reloadIndexCalificacion', () => Vue.nextTick( () => this.$refs.vuetableCali.refresh()) );
+		},
+		beforeDestroy() {
+			this.$events.$off('reloadIndexCalificacion')
 		},
 		methods: {
             getCalificacionesPendientes(){
@@ -176,10 +175,10 @@
                 this.$refs.paginationInfo.setPaginationData(paginationData)
             },
             onChangePage (page) {
-                this.$refs.vuetableC.changePage(page)
+                this.$refs.vuetableCali.changePage(page)
             },
             onCellClicked (data, field, event) {
-                this.$refs.vuetableC.toggleDetailRow(data.id)
+                this.$refs.vuetableCali.toggleDetailRow(data.id)
             },
 			formatDateEvent(value) {
                 return (value == null)
@@ -194,6 +193,12 @@
             	this.reservaSelect = null;
             	this.showModalCalificar = false;
 
+            },
+            reloadIndex(){
+            	Vue.nextTick( function () { 
+            		this.getCalificacionesPendientes();
+            		this.$refs.vuetableCali.refresh();
+            	});
             }
         }
 	}

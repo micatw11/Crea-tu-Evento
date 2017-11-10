@@ -89,7 +89,7 @@ export default {
 
         },
         resetForm() {
-            calificacion = {
+            this.calificacion = {
 	            calidad: null,
 	            calidad_precio: null,
 	            profesionalidad: null,

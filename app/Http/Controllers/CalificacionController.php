@@ -55,8 +55,8 @@ class CalificacionController extends Controller
     {
         return $this->validate($request, 
             [
-                'publicacion_id' => 'required|exists,publicaciones,id', 
-                'reserva_id' => 'required|exists,reservas,id', 
+                'publicacion_id' => 'required|exists:publicaciones,id', 
+                'reserva_id' => 'required|exists:reservas,id|unique:calificaciones,reserva_id', 
                 'calidad' => 'required|min:1|max:5',
                 'calidad_precio' => 'required|min:1|max:5',
                 'profesionalidad' => 'required|min:1|max:5',
@@ -77,7 +77,7 @@ class CalificacionController extends Controller
                 'respuesta' => $request->respuesta,
                 'recomendar' => $request->recomendar,
                 'comentario' => $request->comentario,
-                'puntuacion_total' => $request->puntuacion_total
+                'puntuacion_total' => (($request->calidad + $request->calidad_precio + $request->profesionalidad + $request->respuesta) / 4.0)
 
             ]);
     }
@@ -92,11 +92,11 @@ class CalificacionController extends Controller
     {
         $this->validateCalificacion($request);
 
+        $calificacionYa = Calificacion::where('reserva_id', $request->reserva_id)->first();
         $reserva = Reserva::where('id', $request->reserva_id)->firstOrFail();
         $publicacion = Publicacion::where('id', $request->publicacion_id)->firstOrFail();
 
-        $calificacion = $this->createCalificacion($request, publicacion, reserva);
-
+        $calificacion = $this->createCalificacion($request, $publicacion, $reserva);
         if($calificacion->save())
         {
             return response(null, Response::HTTP_OK);

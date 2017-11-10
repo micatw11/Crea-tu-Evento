@@ -165,6 +165,12 @@
             this.$events.on('reloadIndexRubro', () => Vue.nextTick( () => this.$refs.vuetableR.refresh()) );
             this.$events.fire('changePath', this.listPath, this.titlePath);
         },
+        beforeDestroy() {
+            this.$events.$off('reloadIndexRubro');
+            this.$events.$off('cerrar');
+            this.$events.$off('changePath');
+            this.$events.$off('filter-setRubro');
+        },
         methods: {
             onPaginationData (paginationData) {
                 this.$refs.pagination.setPaginationData(paginationData)

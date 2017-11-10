@@ -173,11 +173,16 @@
         },
         mounted() {
             this.$events.$on('filter-set', eventData => this.onFilterSet(eventData));
-
             this.$events.fire('changePath', this.listPath, this.titlePath);
             this.$events.on('cerrar', () => this.closeModal());
             this.$events.on('reloadIndexCategoria', () => Vue.nextTick( () => this.$refs.vuetableC.refresh()) );
 
+        },
+        beforeDestroy() {
+            this.$events.$off('reloadIndexCategoria');
+            this.$events.$off('cerrar');
+            this.$events.$off('changePath');
+            this.$events.$off('filter');
         },
         methods: {
             onPaginationData (paginationData) {
