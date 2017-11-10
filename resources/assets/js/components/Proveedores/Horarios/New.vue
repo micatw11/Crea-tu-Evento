@@ -98,9 +98,7 @@
 							precio: 0,
 							publicacion_id: ''
 						}
-
 						if ((response.data.idHorario)&&(this.nuevo)){
-
 							for (var i = 0; i < response.data.idHorario.length; i++) {
 								if (response.data.idHorario[i] != null){
 									console.log(response.data.idHorario[i])
