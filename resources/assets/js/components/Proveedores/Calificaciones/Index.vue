@@ -148,10 +148,11 @@
 		},
 		mounted(){
             this.$events.on('cerrar', () => this.closeModal());
-            this.$events.on('reloadIndexCalificacion', () => Vue.nextTick( () => this.$refs.vuetableCali.refresh()) );
+            this.$events.on('reloadIndexCalificacion', () => this.reloadIndex() );
 		},
 		beforeDestroy() {
-			this.$events.$off('reloadIndexCalificacion')
+			this.$events.$off('reloadIndexCalificacion');
+			this.$events.$off('cerrar');
 		},
 		methods: {
             getCalificacionesPendientes(){

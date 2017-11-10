@@ -91,12 +91,13 @@ class PublicacionController extends Controller
         }
 
         $query = Publicacion::whereIn('publicaciones.id', $ids)
-            ->with('prestacion.proveedor.domicilio.localidad.provincia', 'prestacion.domicilio.localidad.provincia',
+            ->with('calificaciones', 'prestacion.proveedor.domicilio.localidad.provincia', 'prestacion.domicilio.localidad.provincia',
              'prestacion.rubros', 'subcategoria.categoria', 'fotos', 'caracteristicas', 'favoritos', 'horarios')
+            ->groupBy('publicaciones.id')
 
 
         ->select(
-            '*', 
+            'publicaciones.*',
                 DB::raw('(CASE WHEN publicaciones.oferta IS NULL THEN FALSE ELSE TRUE END) as tiene_oferta'),
 
                 DB::raw('(SELECT CASE WHEN COUNT(caracteristica_publicacion.id) = 0 THEN FALSE ELSE TRUE END FROM caracteristica_publicacion WHERE caracteristica_publicacion.publicacion_id = publicaciones.id ) as tiene_caracteristicas') );
@@ -104,15 +105,34 @@ class PublicacionController extends Controller
             $publicaciones = $query->orderBy('tiene_oferta', 'DESC')
                 ->orderBy('tiene_caracteristicas', 'DESC')
                     ->paginate(10);
+            $this->setPromedio($publicaciones);
 
         return response()->json(['publicaciones' => $publicaciones, 'idses' => $ids], 200);
     }
 
+    private function setPromedio($publicaciones){
+        foreach ($publicaciones as $publicacion) {
+            if(count($publicacion->calificaciones) > 0)
+            {
+                $count = 0;
+                foreach ($publicacion->calificaciones as $calificacion) {
+                    $count = $count + $calificacion->puntuacion_total;
+                }
+                $publicacion->calificacion = number_format($count / count($publicacion->calificaciones), 2, '.', '');
+            } else {
+                $publicacion->calificacion = 0;
+            }
+
+        }
+    }
+
     public function show(Request $request, $id){
 
-        $publicacion = Publicacion::with('prestacion.rubros', 'prestacion.domicilio.localidad.provincia', 'proveedor.user.usuario','subcategoria.categoria','fotos', 'caracteristicas', 'favoritos', 'articulos','horarios')
-
-                        ->where('id', $id)->firstOrFail();
+        $publicacion = Publicacion::join('calificaciones', 'calificaciones.publicacion_id', '=', 'publicaciones.id')
+            ->with('prestacion.rubros', 'prestacion.domicilio.localidad.provincia', 'proveedor.user.usuario','subcategoria.categoria','fotos', 'caracteristicas', 'favoritos', 'articulos','horarios')
+            ->select('publicaciones.*',
+                DB::raw('TRUNCATE(AVG(calificaciones.puntuacion_total), 2) as calificacion'))
+                        ->where('publicaciones.id', $id)->firstOrFail();
 
         return response()->json(['publicacion' => $publicacion], 200);
     }
@@ -302,7 +322,7 @@ class PublicacionController extends Controller
   
     public function publicacionesProveedor(Request $request, $idProveedor){
 
-        $query = Publicacion::with('proveedor', 'prestacion.rubros', 'subcategoria.categoria', 'fotos', 'prestacion.domicilio.localidad.provincia', 'caracteristicas')
+        $query = Publicacion::with('proveedor', 'prestacion.rubros', 'subcategoria.categoria', 'fotos', 'prestacion.domicilio.localidad.provincia', 'caracteristicas', 'calificaciones')
             ->where('proveedor_id', $idProveedor);
 
         if($request->has('with_estado') && ($request->with_estado == 0 || $request->with_estado == 1))
@@ -312,6 +332,7 @@ class PublicacionController extends Controller
 
         $publicaciones = $query->orderBy('estado', 'desc')->orderBy('titulo', 'asc')->paginate(10);
 
+        $this->setPromedio($publicaciones);
         return response()->json(['publicaciones' => $publicaciones], 200);
     }
 

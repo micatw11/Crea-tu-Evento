@@ -40,9 +40,9 @@
                             <div class="col-sm-8">
                                 <p><h6>{{item.prestacion.domicilio.localidad.provincia.nombre}} - {{item.prestacion.domicilio.localidad.nombre}}</h6></p>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-4" v-if="item.calificacion > 0">
                                 <el-rate
-                                    v-model="puntos"
+                                    v-model="item.calificacion"
                                     disabled
                                     text-color="#ff9900"
                                     text-template="{value} puntos.">

@@ -76,12 +76,12 @@
 					                	<strong>Email:</strong> {{publicacion.proveedor.email}}
 						          	</p>
 						          	
-						          	<hr>
+						          	<hr v-if="publicacion.calificacion != null">
 
-	                                <div class="col-sm-12 col-xs-12">
+	                                <div class="col-sm-12 col-xs-12" v-if="publicacion.calificacion != null">
 
 	                                	<el-rate
-											v-model="puntos"
+											v-model="publicacion.calificacion"
 											disabled
 											show-text
 											text-color="#ff9900"
