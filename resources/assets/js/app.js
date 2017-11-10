@@ -7,8 +7,7 @@
     /* validation componente */
     import messages from 'vee-validate/dist/locale/es';
     import VeeValidate, { Validator } from 'vee-validate';
-
-    Validator.installDateTimeValidators(moment);
+    //Validator.installDateTimeValidators(moment);
 
     const config = {
         locale: 'es',

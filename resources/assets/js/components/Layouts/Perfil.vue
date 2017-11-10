@@ -82,11 +82,6 @@
                                     <li v-if="perfil !== null && perfil.user_id == auth.user.profile.id">
                                         <a href="#account" data-toggle="tab">Configuración</a>
                                     </li>
-                                    <li v-if="perfil !== null && 
-                                        (perfil.user_id == auth.user.profile.id 
-                                        || auth.user.profile.roles_id === role.ADMINISTRADOR)">
-                                        <a href="#timeline" data-toggle="tab">Actividades</a>
-                                    </li>
                                 </ul>
                             
 
@@ -101,21 +96,15 @@
                                         <show :usuario="perfil"></show>
                                     </div>
 
-                                    <div v-bind:class="classTabActive" id="timeline">
-                                        <time-line></time-line>
+                                    <div v-if="perfil !== null && perfil.user_id == auth.user.profile.id"  class="tab-pane content" id="account">
+                                        <div>
+                                            <form-perfil></form-perfil>
+                                        </div>
+                                        <br><hr>
+                                        <div>
+                                            <account></account>
+                                        </div>
                                     </div>
-
-                                     <div v-if="perfil !== null && perfil.user_id == auth.user.profile.id" 
-                                        class="tab-pane content" 
-                                        id="account">
-                                             <div>
-                                                <form-perfil></form-perfil>
-                                            </div>
-                                            <br><hr>
-                                            <div>
-                                                <account></account>
-                                            </div>
-                                     </div>
                                     <!-- /.tab-pane -->
                                 </div>
                             </div>
@@ -128,16 +117,32 @@
                 <div class="col-md-12" 
                     v-if="(perfil !== null) && (perfil.user.roles_id == role.USUARIO) &&
                         (perfil.user.id == auth.user.profile.id)">
-                 <div class="box box-primary">
-                        <div class="box-header">
-                            <h3 class="box-title">Mis eventos</h3>
+
+                    <div class="nav-tabs-custom">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#eventos" data-toggle="tab" aria-expanded="false">Eventos</a></li>
+                            <li class=""><a href="#calificaciones" data-toggle="tab" aria-expanded="false">Calificaciones</a></li>
+                            <li v-if="perfil !== null && (perfil.user_id == auth.user.profile.id 
+                                        || auth.user.profile.roles_id === role.ADMINISTRADOR)"
+                                class=""><a href="#actividades" data-toggle="tab" aria-expanded="false">Actividades</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="active tab-pane" id="eventos">
+                                <eventos-box></eventos-box>
+                            </div>
+                            <!-- /.tab-pane -->
+                            <div class="tab-pane" id="calificaciones">
+                                <index-calificacion></index-calificacion>
+                            </div>
+                            <!-- /.tab-pane -->
+                            <div v-bind:class="classTabActive" id="actividades">
+                                <time-line></time-line>
+                            </div>
+                            <!-- /.tab-pane -->
                         </div>
-                        <div class="box-body">
-                            <eventos-box></eventos-box>
-                        </div>
+                        <!-- /.tab-content -->
                     </div>
                 </div>
-
                 <box-proveedor 
                     v-if="(perfil !== null) && (perfil.user.roles_id == role.PROVEEDOR) &&
                             (perfil.user.id == auth.user.profile.id)" 
@@ -160,6 +165,7 @@ import router from '../../routes.js';
 import auth from '../../auth.js';
 import Role from '../../config.js';
 import BoxProveedor from '../Proveedores/PerfilProveedor.vue';
+import IndexCalificacion from './../Proveedores/Calificaciones/Index';
 
 Vue.component('eventos-box', require('./../Proveedores/Reservas/Index'));
 
@@ -195,7 +201,8 @@ export default {
         ImageInput,
         TimeLine,
         Show,
-        BoxProveedor
+        BoxProveedor,
+        IndexCalificacion
     },
     methods:{
 

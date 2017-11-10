@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="row">
 		<template v-if="!with_box">
 			<vue-event-calendar v-if="loaded"
 				:events="dataEvents">				
@@ -20,7 +20,7 @@
 		          		Proveedor: {{event.publicacion.proveedor.nombre}}
 		            </p>
 		            <el-collapse v-model="activeNames">
-						<el-collapse-item title="Detalles" name="1" @change="handleChange">
+						<el-collapse-item title="Detalles" :name="event.id" @change="handleChange">
 
 							<div v-if="event.rubros.length > 0">
 								<h5><label>Servicios y/o Productos</label></h5>
@@ -40,6 +40,11 @@
 		        </div>
 		      </template>
 			</vue-event-calendar>
+			<div class="col-md-12" v-if="!loaded">
+			    <div class="text-center">
+			        No se econtraron eventos!.
+			    </div>
+			</div>
 		</template>
 		<template v-if="with_box">
 			<div class="default-content">
@@ -90,6 +95,18 @@
 								        </div>
 								      </template>
 									</vue-event-calendar>
+									<div class="col-md-12" v-if="!loaded">
+									    <div class="text-center">
+									        No se econtraron eventos!.
+									    </div>
+									</div>
+								</div>
+								<div class="box-footer">
+									<div style="text-align:center;">
+										<button @click="goBack()" class="btn btn-default">
+											<i class="glyphicon glyphicon-chevron-left"></i> Atras
+										</button>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -103,8 +120,10 @@
 <script>
 	import moment from 'moment';
 	import accounting from 'accounting-js';
-	import auth from './../../../auth.js'
-	import role from '../../../config.js'
+	import auth from './../../../auth.js';
+	import role from '../../../config.js';
+	import route from './../../../routes.js';
+
 	export default {
 		props: {
 			publicacionId:{
@@ -189,7 +208,10 @@
             	return (value == null)
                     ? ''
             		: accounting.formatMoney(value, "$", 2, ".", ",");
-            }
+            },
+			goBack: function(){
+	            route.go(-1)
+	        }
 		}
 	}
 </script>

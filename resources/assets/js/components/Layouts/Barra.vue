@@ -1,14 +1,15 @@
 <template>
     <header class="main-header">
         <!-- Logo -->
-        <a href="#" class="logo">
-        <!-- logo for regular state and mobile devices -->
-        <span class="logo-mini">
-            <b>C</b>tu<b>E</b>
-        </span>
-            <span class="logo-lg">Crea tu Evento</span>
-
-        </a>
+        <router-link to="/">
+            <a href="#" class="logo">
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-mini">
+                    <b>C</b>tu<b>E</b>
+                </span>
+                <span class="logo-lg">Crea tu Evento</span>
+            </a>
+        </router-link>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top">
         <!-- Sidebar toggle button-->
