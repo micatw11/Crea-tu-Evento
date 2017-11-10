@@ -1,5 +1,5 @@
 <template>
-	<div class="pull-right">
+	<div v-if="showForm" class="pull-right">
 		<button class="btn btn-primary" @click="showModal = !showModal">Agregar Articulo</button>
         <div v-if="showModal" class="modal" role="dialog" :style="{ display : showModal  ? 'block' : 'none' }">
             <div class="modal-dialog">
@@ -44,14 +44,17 @@
 					precio: 0,
 					rubro_id: ''
 				},
-				showForm: true
+				showForm: false
 			}
 		},
 		components:{
 			FormArticulo
 		},
+		beforeMount: function(){
+           this.eventShow();
+        },
 		mounted() {
-			this.$events.on('showForm', () => this.showForm = false);
+			this.$events.on('showForm', () => this.showForm = true);
 		},
 		methods:{
 			validateBeforeSubmit(){
@@ -78,6 +81,22 @@
 					precio: 0,
 					rubro_id: ''
 				}
+			},
+			eventShow(){
+				this.$http.get('api/rubro').then(response => {
+					for(var rubro of response.data){
+						for(var id of this.rubros){
+							if(id == rubro.id && rubro.producto ){
+								this.$events.emit('showForm');
+							}
+							if(id == rubro.id && (rubro.salon || rubro.servicio)){
+								this.$events.emit('showFormH');
+							}
+						}
+					}
+				}, response => {
+					console.log('Error en rubros');
+				});
 			}
 		}
 	}

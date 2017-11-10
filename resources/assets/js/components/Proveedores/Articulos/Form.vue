@@ -69,7 +69,6 @@
 		components: {Money},
 		methods:{
 	        validateSubmit: function() {
-
 	            this.$validator.validateAll().then(() => {
 	                    this.validarArticulo = false; 
 	                    this.$emit('validoForm'); 
@@ -82,16 +81,10 @@
 				this.$http.get('api/rubro').then(response => {
 					for(var rubro of response.data){
 						for(var id of this.rubros){
-							if(id == rubro.id && !rubro.salon && rubro.producto ){
+							if(id == rubro.id && rubro.producto ){
 								this.optionsRubros.push(rubro);
 							}
-							if(id == rubro.id && (rubro.salon || rubro.servicio) ){
-								this.$events.emit('showFormH');
-							}
 						}
-					}
-					if (this.optionsRubros.length == 0) {
-						this.$events.emit('showForm');
 					}
 				}, response => {
 					console.log('Error en rubros');

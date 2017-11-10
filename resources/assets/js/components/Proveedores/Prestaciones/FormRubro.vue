@@ -216,18 +216,19 @@ export default {
         //form validation
         validateBeforeSubmit: function() {
 
-            this.$validator.validateAll().then(() => {
-                    this.validarRubro = false; 
+            this.$validator.validateAll().then((result) => {
+                if (result){
+                     this.validarRubro = false; 
                     if (this.nuevo){
                         this.$emit('validado')
                     }else{
 
                         this.$emit('validadoEdit')
                     }
-                }).catch(() => {
-
-                    this.validarRubro = true;
-                });
+                }else{
+                     this.validarRubro = true;
+                }
+                })
         },
         //obtiene lista de localidades 
         getOptions: function(search, loading) {

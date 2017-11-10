@@ -95,25 +95,7 @@
             getHorarios: function(){
                this.endHandle=false;
                this.horario=[];
-               if ((this.publicacionId == null)&&(this.horariosId!=[])){
-                      for (var i = 0; i < this.horariosId.length; i++) {
-                      this.$http.get('api/horarios/'+this.horariosId[i])
-                        .then(response =>{
-                              this.horario.push(response.data)
-                              
-                              this.showFormH = true;
-                          }, response => {
-                              if(response.status === 404){
-                                  this.$toast.error({
-                                      title:'¡Error!',
-                                      message:'No se han cargado sus horarios. :('
-                                  });
-                              }
-                          });
-                      }
-                      this.loadH =true;
-                  }else{
-                    if (this.publicacionId != null){
+                 if (this.publicacionId != null){
                     this.$http.get('api/publicacion/'+this.publicacionId+'/horarios')
                     .then(response =>{
                           this.horario = response.data.horarios
@@ -127,7 +109,26 @@
                               });
                           }
                       });
-                    }
+                    } else{   
+                        if ((this.publicacionId == null)&&(this.horariosId!=[])){
+                          for (var i = 0; i < this.horariosId.length; i++) {
+                          this.$http.get('api/horarios/'+this.horariosId[i])
+                            .then(response =>{
+                                  this.horario.push(response.data)
+                                  
+                                  this.showFormH = true;
+                              }, response => {
+                                  if(response.status === 404){
+                                      this.$toast.error({
+                                          title:'¡Error!',
+                                          message:'No se han cargado sus horarios. :('
+                                      });
+                                  }
+                              });
+                          }
+                        }
+                      this.loadH =true;
+                  
                 }
 
             },
@@ -182,7 +183,6 @@
                                     if (moment(hora+':30', 'HH:mm').isSame(moment(this.horario[j].hora_inicio, 'HH:mm')) && media)
                                     {
                                       this.horario[j].diff=this.horario[j].diff+1
-                                      console.log(this.horario[j].diff)
                                     }
                                     if (moment(hora_final+':30', 'HH:mm').isSame(moment(this.horario[j].hora_fin, 'HH:mm')) && this.horario[j].diff != 0 ) {
                                       this.horario[j].diff=this.horario[j].diff+1
@@ -190,7 +190,6 @@
                                     }
                               }
                               if (this.horario[j].diff != null){
-                                console.log(this.horario[j].id+' diff' +this.horario[j].diff+ 'hora' + hora +' diaa ' +this.dias[i].nombre)
                                     this.diff= this.diff +'<td id="'+this.horario[j].id+'" style="text-align: center;vertical-align: middle;background-color:rgba('+this.red+','+ this.green+', '+this.blue+', 0.30);cursor: pointer; width: 120px; border-color: #FFFFFF; border-width:1px; border-style: solid" rowspan="'+this.horario[j].diff +'">Inicio '+this.horario[j].hora_inicio+'hs. - Fin  '+this.horario[j].hora_fin+'hs. Precio: $'+this.horario[j].precio+'</td>'
                                     mostrar = true
                                   }
@@ -231,7 +230,6 @@
             {
                 'this.horariosSelect'(){
                     this.horario= this.horariosSelect
-                    console.log(this.horario)
                 }
             }
     }

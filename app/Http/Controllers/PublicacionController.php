@@ -15,6 +15,7 @@ use App\Prestacion;
 use App\Domicilio;
 use App\Proveedor;
 use App\Favorito;
+use App\Horario;
 use App\Foto;
 use App\Rol;
 
@@ -184,11 +185,11 @@ class PublicacionController extends Controller
                 $foto->save();
             }
             if ($request->has('horariosId')){
-                $horarios = Horario::where('id', $request->horariosId)->get();
-                foreach ($horarios as $key) {
-                    $key->update([
+                 foreach ($request->horariosId as $key) {
+                    $horarios = Horario::where('id', $key )->get();
+                    $horarios->update([
                     'publicacion_id' => $publicacion->id]);
-                    $key->save();
+                    $horarios->save();
                 }
             }
             if($request->has('caracteristicas')&&$publicacion)
