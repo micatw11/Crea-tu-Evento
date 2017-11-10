@@ -118,6 +118,13 @@
 						</div>
 						<!-- /.box-body -->
 						<div class="box-footer no-padding">
+
+							<div style="text-align:center;">
+								<button @click="goBack()" class="btn btn-default">
+									<i class="glyphicon glyphicon-chevron-left"></i> Atras
+								</button>
+							</div>
+
 		                    <pagination-mensajes
 		                        ref="paginationH"
 		                        :current-page="pageOne.current_page"
@@ -126,6 +133,7 @@
 		                        :total-items="pageOne.total"
 		                        @page-changed="pageOneChanged">
 		                    </pagination-mensajes> 
+
 						</div>
 					</div>
 					<!-- /. box -->
@@ -136,6 +144,7 @@
 </template>
 <script>
 	import auth from './../../auth';
+	import route from './../../routes';
 	import Role from './../../config';
 	import moment from 'moment';
 	Vue.component('pagination-mensajes', require('./../Plugins/pagination/pagination-v1.vue'));
@@ -236,7 +245,10 @@
 				{
 					return mensaje.reserva.publicacion.proveedor.nombre;
 				}
-			}
+			},
+			goBack: function(){
+	            route.go(-1)
+	        }
         },
         directives: {
             truncate: {

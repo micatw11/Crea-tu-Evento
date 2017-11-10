@@ -115,7 +115,7 @@
 					<li class="active"><a href="#informacion" @click.prevent data-toggle="tab">
 						Informaci&oacute;n</a>
 					</li>
-					<li><a href="#opiniones" @click.prevent data-toggle="tab">
+					<li><a href="#opiniones" @click.prevent data-toggle="tab" v-if="publicacion.calificaciones.length > 0">
 						Opiniones</a>
 					</li>
 					<li v-if="auth.user.authenticated && (auth.user.profile.roles_id == role.PROVEEDOR && 
@@ -169,8 +169,73 @@
 				            </div>
 				        </div>
              		</div>
+
              		<div class="tab-pane" id="opiniones">
+             			<div class="row">
+             				<div class="col-sm-12">
+             					<div v-for="(calificacion, index) in publicacion.calificaciones">
+								    <div class="col-sm-12">
+								    	<hr v-if="index > 0">
+								    	<div class="col-sm-12">
+											<div class="user-block">
+												<img class="img-circle img-bordered-sm" :src="'/storage/avatars/' + calificacion.reserva.user.usuario.avatar" alt="avatar">
+												<span class="username">
+													{{ calificacion.reserva.user.usuario.nombre }}
+													{{ calificacion.reserva.user.usuario.apellido }}
+												</span>
+												<span class="description">{{ formatDataNow(calificacion.created_at) }}</span>
+											</div>
+										</div>
+								        <div class="col-sm-6">
+								            <label>Calidad: </label> 
+								            <el-rate
+												v-model="calificacion.calidad"
+												disabled
+												show-score
+												text-color="#ff9900"
+												score-template="{value} puntos">
+											</el-rate>
+								        </div>
+								        <div class="col-sm-6">
+								            <label>Relacion Precio Calidad: </label>
+								            <el-rate
+												v-model="calificacion.calidad_precio"
+												disabled
+												show-score
+												text-color="#ff9900"
+												score-template="{value} puntos">
+											</el-rate>
+								        </div>
+								        <div class="col-sm-6">
+								            <label>Profesionalidad: </label>
+								            <el-rate
+												v-model="calificacion.profesionalidad"
+												disabled
+												show-score
+												text-color="#ff9900"
+												score-template="{value} puntos">
+											</el-rate>
+								        </div>
+								        <div class="col-sm-6">
+								            <label>Respuesta: </label>
+								            <el-rate
+												v-model="calificacion.respuesta"
+												disabled
+												show-score
+												text-color="#ff9900"
+												score-template="{value} puntos">
+											</el-rate>
+								        </div>
+								        <div class="col-sm-12">
+								            <label>Comentario: </label><br>
+								            <p>{{calificacion.comentario}}</p>
+								        </div>
+								    </div>
+             					</div>
+             				</div>
+             			</div>
              		</div>
+
              		<div v-if="auth.user.authenticated && (auth.user.profile.roles_id == role.PROVEEDOR && 
 				    	publicacion.proveedor.user_id == auth.user.profile.id)" class="tab-pane" id="proveedor">
 				    	<div class="box-body">
@@ -180,37 +245,38 @@
              	</div>
             </div>
 
-	        <div <div class="box box-default">
+	        <div <div class="box box-default" v-if="publicacion.calificaciones.length > 0">
 	        	<div class="box-header with-border">
 	        		<i class="fa fa-fw fa-star-o margin-r-5"></i><h3 class="box-title">Opiniones</h3>
 	        	</div>
 	        	<div class="box-body">
 	        		<div class="col-sm-3" style="text-align:center;">
-		        			<h2>2,5</h2>
+		        			<h2>{{publicacion.calificacion}}</h2>
 		        			<p>
                             	<el-rate
-									v-model="puntos"
+									v-model="publicacion.calificacion"
 									disabled
 									text-color="#ff9900">
 								</el-rate>
 							</p>
-							<p style="color:#ff9900"><i class="fa fa-users" aria-hidden="true"></i> 1 en total.</p>
+							<p style="color:#ff9900"><i class="fa fa-users" aria-hidden="true"></i> {{publicacion.calificaciones.length}} en total.</p>
 
 	        		</div>
 	        		<div class="col-md-9">
 						<!-- Post -->
 						<div class="post clearfix">
 							<div class="user-block">
-								<img class="img-circle img-bordered-sm" src="" alt="avatar">
+								<img class="img-circle img-bordered-sm" :src="'/storage/avatars/' + publicacion.calificaciones[publicacion.calificaciones.length-1].reserva.user.usuario.avatar" alt="avatar">
 								<span class="username">
-									Sarah Ross
+									{{ publicacion.calificaciones[publicacion.calificaciones.length-1].reserva.user.usuario.nombre }}
+									{{ publicacion.calificaciones[publicacion.calificaciones.length-1].reserva.user.usuario.apellido }}
 								</span>
-								<span class="description">Sent you a message - 3 days ago</span>
+								<span class="description">{{ formatDataNow(publicacion.calificaciones[publicacion.calificaciones.length-1].created_at) }}</span>
 							</div>
 							<!-- /.user-block -->
 							<p>
                             	<el-rate
-									v-model="puntos"
+									v-model="publicacion.calificaciones[publicacion.calificaciones.length-1].puntuacion_total"
 									disabled
 									show-text
 									text-color="#ff9900"
@@ -218,62 +284,17 @@
 								</el-rate>
 							</p>
 							<p>
-								Lorem ipsum represents a long-held tradition for designers,
-								typographers and the like. Some people hate it and argue for
-								its demise, but others ignore the hate as they create awesome
-								tools to help create filler text for everyone from bacon lovers
-								to Charlie Sheen fans.
+								{{ publicacion.calificaciones[publicacion.calificaciones.length-1].comentario }}
 							</p>
 
 						</div>
 						<!-- /.post -->
 	        		</div>
 	        	</div>
-	        </div>
-
-	        <div <div class="box box-default">
-	        	<div class="box-header with-border">
-	        		<i class="fa fa-comments-o margin-r-5"></i><h3 class="box-title">Comentarios</h3>
-	        	</div>
-	        	<div class="box-body">
-	        		<div class="col-sm-10 col-sm-offset-1">
-						<!-- Post -->
-						<div class="post clearfix">
-							<div class="user-block">
-								<img class="img-circle img-bordered-sm" src="" alt="avatar">
-									<span class="username">
-										Sarah Ross
-										<a href="#" class="pull-right btn-box-tool"><i class="fa fa-times"></i></a>
-									</span>
-									<span class="description">Sent you a message - 3 days ago</span>
-							</div>
-							<!-- /.user-block -->
-							<p>
-								Lorem ipsum represents a long-held tradition for designers,
-								typographers and the like. Some people hate it and argue for
-								its demise, but others ignore the hate as they create awesome
-								tools to help create filler text for everyone from bacon lovers
-								to Charlie Sheen fans.
-							</p>
-
-							<form class="form-horizontal">
-								<div class="form-group margin-bottom-none">
-									<div class="col-sm-9">
-										<textarea class="form-control"></textarea>
-									</div>
-									<div class="col-sm-3">
-										<button type="submit" class="btn btn-default pull-right btn-block btn-sm">Comentar</button>
-									</div>
-								</div>
-							</form>
-						</div>
-						<!-- /.post -->
-					</div>
-	        	</div>
 		        <!-- /.box-body -->
 		        <div  class="box-footer">
 		          	<div style="text-align:center;">
-		          		<div class="col-sm-4">
+		          		<div class="col-sm-12">
 		          			<button @click="goBack()" class="btn btn-default">
 		                        <i class="glyphicon glyphicon-chevron-left"></i> Atras
 		                    </button>
@@ -282,7 +303,6 @@
 		        </div>
 		        <!-- /.box-footer-->
 	        </div>
-	        <!-- /.box -->
 	    </section>
 
 	    <!-- modal presupuesto -->
@@ -300,6 +320,14 @@
 
 	</div>
 </template>
+<style type="text/css">
+	.fa-heart-o {
+		color: #3c8dbc;
+	}
+	.fa-heart {
+		color: #3c8dbc;
+	}
+</style>
 <script>
 	import route from './../../../routes.js'
 	import auth from './../../../auth.js'
@@ -484,7 +512,17 @@
             	return (value == null)
                     ? ''
             		: accounting.formatMoney(value, "$", 2, ",", ".");
-            }
+            },
+            getUltimaCalificacion(){
+            	var len = this.publicacion.calificaciones.length;
+            	this.ultimaCalificacion = this.publicacion.calificaciones[len-1];
+            },
+            formatDataNow: function(value){
+                moment.locale('es');
+                return (value == null)
+                    ? ''
+                    : moment(value, 'YYYY-MM-DD').fromNow();
+            },
 		}
 	}
 </script>

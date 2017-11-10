@@ -1,93 +1,143 @@
 <template>
-	<div class="default-content">
-		<section class="content">
-			<div class="row">
-				<div class="col-md-12" v-if="reservasPendientes.length > 0">
-					<div class="box box-primary">
-						<div class="box-header with-border">
-							<h3 class="box-title">Calificaciones Pendientes</h3>
+	<div>
+		<template v-if="with_box">
+			<div class="default-content">
+				<section class="content">
+					<div class="row">
+						<div class="col-md-12" v-if="reservasPendientes.length > 0">
+							<div class="box box-primary">
+								<div class="box-header with-border">
+									<h3 class="box-title">Calificaciones Pendientes</h3>
+								</div>
+								<div class="box-body no-padding">
+									<table class="table table-condensed">
+										<tbody>
+											<tr>
+												<th style="width: 10px">#</th>
+												<th>Publicaci&oacute;n</th>
+												<th>Proveedor</th>
+												<th>Fecha</th>
+												<th style="width: 40px">Accion</th>
+							                </tr>
+											<tr v-for="(pendiente, index) in reservasPendientes">
+												<td>{{ index+1 }}.</td>
+												<td>{{ pendiente.publicacion.titulo }}</td>
+												<td>{{ pendiente.publicacion.proveedor.nombre }}</td>
+												<td><span class="badge bg-red">{{ formatDateEvent(pendiente.fecha) }}</span></td>
+												<td><button class="btn btn-primary btn-xs" @click="showModal(pendiente)">Calificar</button></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						    <!-- modal presupuesto -->
+						    <div v-if="showModalCalificar" id="modificar" class="modal" role="dialog" :style="{ display : showModalCalificar  ? 'block' : 'none' }">
+						        <div class="modal-dialog modal-lg">
+						            <div class="modal-content">
+						                <div class="modal-header">
+						                    <button type="button" class="close" @click="closeModal()">&times;</button>
+						                    <h4>{{reservaSelect.publicacion.titulo}}</h4>
+						                </div>
+						                <new-form :reserva="reservaSelect" :publicacion="reservaSelect.publicacion"></new-form>
+						            </div>
+						        </div>
+						    </div>
 						</div>
-						<div class="box-body no-padding">
-							<table class="table table-condensed">
-								<tbody>
-									<tr>
-										<th style="width: 10px">#</th>
-										<th>Publicaci&oacute;n</th>
-										<th>Proveedor</th>
-										<th>Fecha</th>
-										<th style="width: 40px">Accion</th>
-					                </tr>
-									<tr v-for="(pendiente, index) in reservasPendientes">
-										<td>{{ index+1 }}.</td>
-										<td>{{ pendiente.publicacion.titulo }}</td>
-										<td>{{ pendiente.publicacion.proveedor.nombre }}</td>
-										<td><span class="badge bg-red">{{ formatDateEvent(pendiente.fecha) }}</span></td>
-										<td><button class="btn btn-primary btn-xs" @click="showModal(pendiente)">Calificar</button></td>
-									</tr>
-								</tbody>
-							</table>
+						<div class="col-md-12">
+							<div class="box box-primary">
+								<div class="box-header with-border">
+									<h3 class="box-title">Historico de mis calificaciones</h3>
+								</div>
+								<div class="box-body no-padding">
+									<vuetable-calificacion
+		                                :fields="tableColumns"
+		                                tableClass="table table-bordered"
+		                                :noDataTemplate="noDataTemplate"
+		                                :css="css"
+		                                ref="vuetableCali"
+		                                :api-url="url"
+		                                pagination-path=""
+		                                @vuetable:pagination-data="onPaginationData"
+		                                detail-row-component="detail-row-calificaciones"
+		                                @vuetable:cell-clicked="onCellClicked">
+		                                	<template slot="puntuacion_total" slot-scope="props">
+									            <el-rate
+													v-model="props.rowData.puntuacion_total"
+													disabled
+													show-text
+													text-color="#ff9900"
+													text-template="{value} puntos.">
+												</el-rate>
+		                                	</template>
+		                            </vuetable-calificacion>
+								</div>
+		                        <div class="box-footer clearfix">
+
+		                            <vuetable-pagination-info-calificacion 
+		                                ref="paginationInfo"
+		                                :info-template='info'
+		                                :no-data-template='noData'>
+		                            </vuetable-pagination-info-calificacion>
+
+		                            <vuetable-pagination-calificacion 
+		                                ref="pagination"
+		                                :css="css.pagination"
+		                                @vuetable-pagination:change-page="onChangePage">
+		                            </vuetable-pagination-calificacion>
+
+		          					<div style="text-align:center;">
+						          		<div class="col-sm-12">
+						          			<button @click="goBack()" class="btn btn-default">
+						                        <i class="glyphicon glyphicon-chevron-left"></i> Atras
+						                    </button>
+							            </div>
+						          	</div>
+
+		                        </div>
+							</div>
 						</div>
 					</div>
-				    <!-- modal presupuesto -->
-				    <div v-if="showModalCalificar" id="modificar" class="modal" role="dialog" :style="{ display : showModalCalificar  ? 'block' : 'none' }">
-				        <div class="modal-dialog modal-lg">
-				            <div class="modal-content">
-				                <div class="modal-header">
-				                    <button type="button" class="close" @click="closeModal()">&times;</button>
-				                    <h4>{{reservaSelect.publicacion.titulo}}</h4>
-				                </div>
-				                <new-form :reserva="reservaSelect" :publicacion="reservaSelect.publicacion"></new-form>
-				            </div>
-				        </div>
-				    </div>
-				</div>
-				<div class="col-md-12">
-					<div class="box box-primary">
-						<div class="box-header with-border">
-							<h3 class="box-title">Historico de mis calificaciones</h3>
-						</div>
-						<div class="box-body no-padding">
-							<vuetable-calificacion
-                                :fields="tableColumns"
-                                tableClass="table table-bordered"
-                                :noDataTemplate="noDataTemplate"
-                                :css="css"
-                                ref="vuetableCali"
-                                :api-url="url"
-                                pagination-path=""
-                                @vuetable:pagination-data="onPaginationData"
-                                detail-row-component="detail-row-calificaciones"
-                                @vuetable:cell-clicked="onCellClicked">
-                                	<template slot="puntuacion_total" scope="props">
-							            <el-rate
-											v-model="props.rowData.puntuacion_total"
-											disabled
-											show-text
-											text-color="#ff9900"
-											text-template="{value} puntos.">
-										</el-rate>
-                                	</template>
-                            </vuetable-calificacion>
-						</div>
-                        <div class="box-footer clearfix">
-
-                            <vuetable-pagination-info-calificacion 
-                                ref="paginationInfo"
-                                :info-template='info'
-                                :no-data-template='noData'>
-                            </vuetable-pagination-info-calificacion>
-
-                            <vuetable-pagination-calificacion 
-                                ref="pagination"
-                                :css="css.pagination"
-                                @vuetable-pagination:change-page="onChangePage">
-                            </vuetable-pagination-calificacion>
-
-                        </div>
-					</div>
-				</div>
+				</section>
 			</div>
-		</section>
+		</template>
+		<template v-if="!with_box">
+
+			<vuetable-calificacion
+                :fields="tableColumns"
+                tableClass="table table-bordered"
+                :noDataTemplate="noDataTemplate"
+                :css="css"
+                ref="vuetableCali"
+                :api-url="url"
+                pagination-path=""
+                @vuetable:pagination-data="onPaginationData"
+                detail-row-component="detail-row-calificaciones"
+                @vuetable:cell-clicked="onCellClicked">
+                	<template slot="puntuacion_total" slot-scope="props">
+			            <el-rate
+							v-model="props.rowData.puntuacion_total"
+							disabled
+							show-text
+							text-color="#ff9900"
+							text-template="{value} puntos.">
+						</el-rate>
+                	</template>
+            </vuetable-calificacion>
+
+
+            <vuetable-pagination-info-calificacion 
+                ref="paginationInfo"
+                :info-template='info'
+                :no-data-template='noData'>
+            </vuetable-pagination-info-calificacion>
+
+            <vuetable-pagination-calificacion 
+                ref="pagination"
+                :css="css.pagination"
+                @vuetable-pagination:change-page="onChangePage">
+            </vuetable-pagination-calificacion>
+
+		</template>
 	</div>
 </template>
 <script>
@@ -104,6 +154,11 @@
 
     Vue.component('detail-row-calificaciones', DetailRow);
 	export default {
+		props: {
+			with_box: {
+				default: false
+			}
+		},
 		data(){
 			return {
 				reservasPendientes: [],
@@ -134,7 +189,11 @@
                 noDataTemplate: 'No hay datos para visualizar',
                 info: 'Mirando de {from} a {to} de {total} calificaciones',
                 noData:'No hay datos',
-                reservaSelect: null
+                reservaSelect: null,
+				listPath: [
+					{route: '/', name: 'Inicio'}, 
+					{route: '/calificaciones', name: 'Calificaciones'}
+				]
 			}
 		},
 		components: {
@@ -149,6 +208,11 @@
 		mounted(){
             this.$events.on('cerrar', () => this.closeModal());
             this.$events.on('reloadIndexCalificacion', () => this.reloadIndex() );
+		},
+		created() {
+			if(this.with_box){
+				this.$events.fire('changePath', this.listPath, 'Calificaciones' );
+			}
 		},
 		beforeDestroy() {
 			this.$events.$off('reloadIndexCalificacion');
@@ -200,7 +264,10 @@
             		this.getCalificacionesPendientes();
             		this.$refs.vuetableCali.refresh();
             	});
-            }
+            },
+            goBack: function(){
+	            route.go(-1)
+	        },
         }
 	}
 </script>

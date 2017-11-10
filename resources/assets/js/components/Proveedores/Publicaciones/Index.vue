@@ -250,7 +250,6 @@
                     route.push('/login');
                  }
             },
-
             styleButton: function(estado){
                 if(estado == 1) return ' btn-danger';
                 else return ' btn-success';

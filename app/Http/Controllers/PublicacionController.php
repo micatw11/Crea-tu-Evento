@@ -118,7 +118,7 @@ class PublicacionController extends Controller
                 foreach ($publicacion->calificaciones as $calificacion) {
                     $count = $count + $calificacion->puntuacion_total;
                 }
-                $publicacion->calificacion = number_format($count / count($publicacion->calificaciones), 2, '.', '');
+                $publicacion->calificacion = round($count / count($publicacion->calificaciones), 2);
             } else {
                 $publicacion->calificacion = 0;
             }
@@ -129,9 +129,9 @@ class PublicacionController extends Controller
     public function show(Request $request, $id){
 
         $publicacion = Publicacion::join('calificaciones', 'calificaciones.publicacion_id', '=', 'publicaciones.id')
-            ->with('prestacion.rubros', 'prestacion.domicilio.localidad.provincia', 'proveedor.user.usuario','subcategoria.categoria','fotos', 'caracteristicas', 'favoritos', 'articulos','horarios')
+            ->with('prestacion.rubros', 'prestacion.domicilio.localidad.provincia', 'proveedor.user.usuario','subcategoria.categoria','fotos', 'caracteristicas', 'favoritos', 'articulos','horarios', 'calificaciones.reserva.user.usuario')
             ->select('publicaciones.*',
-                DB::raw('TRUNCATE(AVG(calificaciones.puntuacion_total), 2) as calificacion'))
+                DB::raw('TRUNCATE(AVG(calificaciones.puntuacion_total), 1) as calificacion'))
                         ->where('publicaciones.id', $id)->firstOrFail();
 
         return response()->json(['publicacion' => $publicacion], 200);

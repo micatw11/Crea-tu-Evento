@@ -193,6 +193,7 @@ let routes = [
 			path: '/calificaciones',
 			name: 'calificaciones',
 			component: IndexCalificaciones,
+			props: { default: true, with_box: true },
 			beforeEnter: guardRoute,
 			meta: { requiresAuth: true }
 		},

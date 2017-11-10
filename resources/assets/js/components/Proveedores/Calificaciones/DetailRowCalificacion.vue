@@ -40,10 +40,10 @@
 				score-template="{value} puntos">
 			</el-rate>
         </div>
-        <p class="inline-block">
+        <div class="col-sm-12">
             <label>Comentario: </label>
             <span>{{rowData.comentario}}</span>
-        </p>
+        </div>
     </div>
 </template>
 

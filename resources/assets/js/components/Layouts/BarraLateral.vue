@@ -135,14 +135,8 @@
                         </ul>
                     </li>
                     <li>
-                        <router-link to="/calificaciones" tag="a">
-                            <i class="fa fa-dashboard"></i>
-                            <span>prueba calificaicones</span>
-                        </router-link>
-                    </li>
-                    <li>
                         <router-link to="/mensajes" tag="a">
-                            <i class="fa fa-envelope-o"></i> <span>Menasajes</span>
+                            <i class="fa fa-envelope-o"></i> <span>Reservas</span>
                             <span class="pull-right-container" 
                                 v-if="mensajesSinLeer > 0 || mensajesPorActulizar > 0 || mensajesPresupuestados > 0 ">
 
