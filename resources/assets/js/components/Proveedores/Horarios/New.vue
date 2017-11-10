@@ -108,7 +108,7 @@
 								}
 							}
 						}
-						if (response.data.horarioNo != []){
+						if (response.data.horarioNo == []){
 								//var dias= ''
 								/*for (var i = 0; i < response.data.horarioNo.length; i++) {
 									//if (response.data.horarioNo[i] != null)

@@ -76,11 +76,11 @@ class HorarioController extends Controller
         $horarioRepetido= null;
         $proveedor= Proveedor::where('user_id', $user->id)->firstOrFail();
         if ($request->horariosId != []){
-                Horario::where('publicacion_id', $request->publicacion_id)
+                Horario::where('publicacion_id', null)
                             ->where('proveedor_id', $proveedor->id)
                             ->whereNotIn('id', $request->horariosId)->delete();
         }else{
-                Horario::where('publicacion_id', $request->publicacion_id)
+                Horario::where('publicacion_id', null)
                             ->where('proveedor_id', $proveedor->id)->delete();
         } 
          
