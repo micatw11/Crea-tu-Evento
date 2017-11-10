@@ -7,7 +7,7 @@
                     <label for="titulo" class="control-label">Titulo (*) </label>
                     <input 
                         name="titulo"  
-                        v-validate:proveedor.nombre="'required|min:5'" 
+                        v-validate="'required|min:5'" 
                         type="text" class="form-control" 
                         v-model="publicacion.titulo" 
                         placeholder="Titulo">
@@ -445,33 +445,35 @@
             },
             validateSubmit: function() {
                 console.log('aca esta validateSubmit')
-                this.$validator.validateAll().then(() => {
-                    this.remplaceStyle();
-                    this.publicacion.caracteristicas = this.options_caracteristicas
-                    console.log('aca esta')
-                    if(this.nuevo){
+                this.$validator.validateAll().then((result) => {
+                    if(result){
+                        this.remplaceStyle();
+                        this.publicacion.caracteristicas = this.options_caracteristicas
+                        console.log('aca esta')
+                        if(this.nuevo){
 
-                        this.publicacion.fotos = []
-                        for (var i = 0; i < this.src.length; i++){
-                            this.publicacion.fotos.push(this.src[i]);
+                            this.publicacion.fotos = []
+                            for (var i = 0; i < this.src.length; i++){
+                                this.publicacion.fotos.push(this.src[i]);
+                            }
+                            
+                            this.$emit('validadoNewPublicacion'); 
                         }
-                        
-                        this.$emit('validadoNewPublicacion'); 
-                    }
-                    else
-                    {
-                        this.publicacion.fotosUpdate = []
-                        for (var i = 0; i < this.src.length; i++){
-                            this.publicacion.fotosUpdate.push(this.src[i]);
+                        else
+                        {
+                            this.publicacion.fotosUpdate = []
+                            for (var i = 0; i < this.src.length; i++){
+                                this.publicacion.fotosUpdate.push(this.src[i]);
+                            }
+                            //this.src = []
+                            this.$emit('validadoEditPublicacion'); 
                         }
-                        //this.src = []
-                        this.$emit('validadoEditPublicacion'); 
-                    }
-                    this.$emit('update:validarPublicacion', false);             
-                }).catch(() => {
-                    console.log('se pudrio todo')
+                        this.$emit('update:validarPublicacion', false); 
+                    }else{
+                        console.log('se pudrio todo')
                     this.$emit('update:validarPublicacion', true);
-                });
+                    }         
+                })
             },
             //
             remplaceStyle: function(){

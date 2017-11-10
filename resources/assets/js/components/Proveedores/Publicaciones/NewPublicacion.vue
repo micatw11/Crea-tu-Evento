@@ -10,7 +10,7 @@
 		        		<div class="box-body">
 								<div class="col-sm-offset-2 col-sm-10" style="text-align:center">
 									<el-steps :active="active" finish-status="success">
-										<el-step title="Paso 1" description="Rurbos"></el-step>
+										<el-step title="Paso 1" description="Rubros"></el-step>
 										<el-step title="Paso 2" description="Articulos y Horarios"></el-step>
 										<el-step title="Paso 3" description="Publicacion"></el-step>
 									</el-steps>
@@ -37,7 +37,7 @@
 										<add-articulo :rubros="prestacion.rubros_id" :articulosSelect="articulos">
 										</add-articulo>
 						        		<form-horario 
-						        			:nuevo="true" :horariosId="horarios">
+						        			:publicacionId="null" :nuevo="true" :horariosId="horarios">
 						        		</form-horario>
 					        		</div>
 						
@@ -102,7 +102,6 @@
     import FormArticulo from './../Articulos/New';
     import FormHorario from './../Horarios/New';
     import AddArticulo from './AddArticulo';
-    import AddHorario from './../Horarios/Index';
 
 	export default {
 		data() {

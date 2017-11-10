@@ -58,7 +58,7 @@
                                 @vuetable:pagination-data="onPaginationData"
                                 detail-row-component="detail-row-calificaciones"
                                 @vuetable:cell-clicked="onCellClicked">
-                                	<template slot="puntuacion_total" scope="props">
+                                	<template slot="puntuacion_total" slot-scope="props">
 							            <el-rate
 											v-model="props.rowData.puntuacion_total"
 											disabled

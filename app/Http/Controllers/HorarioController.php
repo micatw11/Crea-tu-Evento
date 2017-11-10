@@ -36,7 +36,7 @@ class HorarioController extends Controller
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
-     */
+     */ 
     public function indexPublicacion($publicacion_id)
     {
         $horarios= Publicacion::where('id', $publicacion_id)->with('horarios')->get();

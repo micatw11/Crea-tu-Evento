@@ -14,7 +14,7 @@
 		                	@validado="validoNextForm()"
 		                	@validadoEdit="validoNextForm()">	
 		                </form-prestacion>
-
+ 
 		            </template>
 
 		        	<template v-if="showFormArticulo && showForm">
@@ -23,19 +23,16 @@
 								:rubros="prestacion.rubros_id">
 							</form-articulo>
 						</div>
-						<div class="col-sm-12">
+						<div class="col-sm-12"> 
 							<add-articulo :rubros="prestacion.rubros_id" :articulosSelect="articulos">
 							</add-articulo>
 						</div>
 						<div class="col-sm-12">
 							<form-horario
 								:publicacionId="publicacion.id"
-								:nuevo="false">
+								:nuevo="false"
+								:horariosId="null">
 							</form-horario>
-						</div>
-						<div class="col-sm-12">
-							<add-horario :publicacionId="publicacion.id">
-							</add-horario>
 						</div>
 		        	</template>
 
@@ -95,7 +92,6 @@
     import FormArticulo from './../Articulos/New';
     import FormHorario from './../Horarios/New';
     import AddArticulo from './AddArticulo';
-    import AddHorario from './../Horarios/Index';
 
 
 	export default {
@@ -124,7 +120,7 @@
 			this.getPublicacion();
 		},
 		components: {
-			FormPublicacion, FormPrestacion, FormArticulo, AddArticulo, FormHorario, AddHorario
+			FormPublicacion, FormPrestacion, FormArticulo, AddArticulo, FormHorario
 		},
 		methods: {
 			validateBeforeSubmit: function() {                 

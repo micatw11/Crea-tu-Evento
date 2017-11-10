@@ -36,7 +36,7 @@
 			</div>
 		</div>
 		<index-horario 
-    		:publicacionId="null" :horariosId="horariosId" :horario="horario"
+    		:publicacionId="publicacionId" :horariosId="horariosId"
     		>
 		</index-horario>
 	</div>
@@ -51,6 +51,9 @@
 			},
 			horariosId:{
 				type: Array
+			},
+			publicacionId:{
+				type: Number
 			}
 		},
 		data(){
@@ -66,9 +69,7 @@
 					publicacion_id: ''
 				},
 				showFormH: false,
-				showNewHorario: false,
-				
-				horario: [],
+				showNewHorario: false
 			}
 		},
 		components:{
@@ -82,9 +83,6 @@
 				this.$events.fire('validarFormHorario')
 			},
 			sendHorario(){
-				if (this.nuevo){ 
-					this.publicacionId = null
-				}
 					this.$http.post('api/horario',{
 						hora_inicio: this.newHorario.hora_inicio,
 						hora_fin: this.newHorario.hora_fin,
@@ -100,7 +98,8 @@
 							precio: 0,
 							publicacion_id: ''
 						}
-						if (response.data.idHorario){
+
+						if ((response.data.idHorario)&&(this.nuevo)){
 
 							for (var i = 0; i < response.data.idHorario.length; i++) {
 								if (response.data.idHorario[i] != null){
