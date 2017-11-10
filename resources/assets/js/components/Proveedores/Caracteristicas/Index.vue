@@ -155,6 +155,12 @@
             this.$events.on('reloadIndexCaracteristica', () => Vue.nextTick( () => this.$refs.vuetableCa.refresh()) );
 
         },
+        beforeDestroy() {
+            this.$events.$off('reloadIndexCaracteristica');
+            this.$events.$off('cerrar');
+            this.$events.$off('changePath');
+            this.$events.$off('filter-setCaracteristica');
+        },
         methods: {
             onPaginationData (paginationData) {
                 this.$refs.pagination.setPaginationData(paginationData)

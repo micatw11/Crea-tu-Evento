@@ -136,4 +136,5 @@ Route::group(['prefix' => 'api'], function () {
 
     Route::get('user/{user_id}/calificaciones/pendientes','CalificacionController@indexPendientes');
     Route::get('user/{user_id}/calificaciones','CalificacionController@index');
+    Route::post('calificacion', 'CalificacionController@store');
 });
