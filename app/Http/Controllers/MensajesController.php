@@ -30,7 +30,7 @@ class MensajesController extends Controller
         $query = Mensaje::select('mensajes.*' )
                 ->join('reservas', 'mensajes.reserva_id', '=', 'reservas.id')
                 ->whereIn('mensajes.id', $mensajesId)
-                ->with('fromUser.usuario', 'toUser.usuario', 'reserva.publicacion.proveedor')->orderBy('created_at', 'desc');
+                ->with('fromUser.usuario', 'toUser.usuario', 'reserva.publicacion.proveedor', 'reserva.publicacion.fotos')->orderBy('created_at', 'desc');
 
         if( $request->has('unanswered') && $request->unanswered != 'false'){
             $query->where('reservas.estado', 'presupuesto')->where('reservas.presupuestado', false);

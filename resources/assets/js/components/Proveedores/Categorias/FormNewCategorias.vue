@@ -259,12 +259,17 @@ export default {
 
         //form validation
         validateBeforeSubmit: function() {
-            this.$validator.validateAll().then(() => {
+            this.$validator.validateAll().then((result) => {
+                if (result) {
                     this.validarCategorias = false;
                     this.sendForm();
-                }).catch(() => {
+                } else {
                     this.validarCategorias = true;
-                });
+                }
+                return;
+            }).catch(() => {
+                
+            });
         },
         getCategorias: function(){
             this.$http.get('api/categoria/')

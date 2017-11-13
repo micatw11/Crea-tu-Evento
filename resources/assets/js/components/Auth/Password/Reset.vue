@@ -114,8 +114,11 @@ export default {
         //form validation
         validateBeforeSubmit: function(e) {
             this.clearErrors();
-            this.$validator.validateAll().then(() => {
-                this.sendForm();
+            this.$validator.validateAll().then((result) => {
+                if (result) {
+                    this.sendForm();
+                    return;
+                }
             }).catch(() => {
                 // failed
             });

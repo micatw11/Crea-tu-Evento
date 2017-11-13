@@ -13,11 +13,11 @@
             </form-presupuesto>
 		</div>
 		<div class="modal-footer" style="text-align:center;">
-            <button class="btn btn-default" @click="closeModal()">
+            <button class="btn btn-default" @click="closeModal()" ref="buttonAtras">
                 <i class="glyphicon glyphicon-chevron-left"></i>
                 Atras
             </button>
-            <button @click="validateBeforeSubmit()" type="button" class="btn btn-primary">
+            <button @click="validateBeforeSubmit()" type="button" class="btn btn-primary" ref="button">
                 Solicitar
             </button>
 		</div>
@@ -75,6 +75,8 @@
                     piso: this.domicilio.piso,
                     localidad_id: localidad_id,
                 }
+                this.$refs.button.disabled = true;
+                this.$refs.buttonAtras.disabled = false;
 	            this.$http.post(
 	                'api/publicacion/'+this.publicacion.id+'/presupuesto', data)
 	                .then(response => {
@@ -84,6 +86,8 @@
 	                        title:'Solicitud de Presupuesto',
 	                        message:'Se ha realizado correctamente su solicitud'
 	                    });
+	                    this.$refs.button.disabled = false;
+	                    this.$refs.buttonAtras.disabled = false;
 	                }, response => {
 	                    this.$toast.error({
 	                        title:'¡Error!',
@@ -93,6 +97,8 @@
 	                    {
 	                        this.errorsApi = response.body;
 	                    }
+	                    this.$refs.button.disabled = false;
+	                    this.$refs.buttonAtras.disabled = false;
 	                })
 	        },
 			closeModal: function(){

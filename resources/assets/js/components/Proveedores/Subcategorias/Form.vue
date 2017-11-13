@@ -97,16 +97,21 @@ export default {
     methods: {
         //form validation
         validateBeforeSubmit: function() {
-         this.$validator.validateAll().then(() => {
+            this.$validator.validateAll().then((result) => {
+                if (result){
                     this.validarSubcategoria = false;
                     if (this.nuevo){
                         this.$emit('validadoNewSubcategoria')
                     }else{
                         this.$emit('validadoEditSubcategoria')
                     }
-                }).catch(() => {
+                } else {
                     this.validarSubcategoria = true;
-                });
+                }
+                return;
+            }).catch(() => {
+                
+            });
         },
         changeCategory: function(){
             this.subcategoria.categoria_id = this.categoria_id;

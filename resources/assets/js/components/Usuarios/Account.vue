@@ -141,11 +141,16 @@ export default {
     methods: {
         //validacion de formulario de contraseña
         validateBeforeSubmit: function(){
-            this.$validator.validateAll().then(() => {
-                this.sendChangePaswword();
-                }).catch(() => {
+            this.$validator.validateAll().then((result) => {
+                if (result){
+                    this.sendChangePaswword();
+                } else {
                     this.validar = true;
-                });
+                }
+                return;
+            }).catch(() => {
+               
+            });
         },
         //envia formulario de cambio de contraseña
         sendChangePaswword: function(){

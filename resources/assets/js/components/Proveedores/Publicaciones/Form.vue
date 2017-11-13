@@ -444,12 +444,11 @@
                 }
             },
             validateSubmit: function() {
-                console.log('aca esta validateSubmit')
+
                 this.$validator.validateAll().then((result) => {
                     if(result){
                         this.remplaceStyle();
                         this.publicacion.caracteristicas = this.options_caracteristicas
-                        console.log('aca esta')
                         if(this.nuevo){
 
                             this.publicacion.fotos = []
@@ -470,9 +469,9 @@
                         }
                         this.$emit('update:validarPublicacion', false); 
                     }else{
-                        console.log('se pudrio todo')
-                    this.$emit('update:validarPublicacion', true);
-                    }         
+                        this.$emit('update:validarPublicacion', true);
+                    }
+                    return;
                 })
             },
             //

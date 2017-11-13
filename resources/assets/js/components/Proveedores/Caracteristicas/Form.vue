@@ -75,16 +75,21 @@ export default {
     methods: {
         //form validation
         validateBeforeSubmit: function() {
-         this.$validator.validateAll().then(() => {
+            this.$validator.validateAll().then((result) => {
+                if (result) {
                     this.validarCaracteristica = false; 
                     if (this.nuevo){
                         this.$emit('validadoNewCaracteristica')
                     }else{
                         this.$emit('validadoEditCaracteristica')
                     }
-                }).catch(() => {
+                } else {
                     this.validarcaracteristica = true;
-                });
+                }
+                return;
+            }).catch(() => {
+                
+            });
         }
     }
 }

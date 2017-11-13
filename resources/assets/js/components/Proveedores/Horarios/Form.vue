@@ -87,15 +87,18 @@
 		components: {Money, ElTimeSelect},
 		methods:{
 	        validateSubmit: function() {
-
-	            this.$validator.validateAll().then(() => {
+	            this.$validator.validateAll().then((result) => {
+	                if (result) {
 	                    this.validarHorario = false; 
 	                    this.horario.dias = this.diasSelect
 	                    this.$emit('validoFormHorario'); 
-	                }).catch(() => {
-
-	                    this.validarHorario = true;
-	                });
+	                } else {
+	                	this.validarHorario = true;
+	                }
+	                return;
+                }).catch(() => {
+                    
+                });
 	        },
 	        AddDia(dia){
 	        	for (var i = 0; i < this.diasSelect.length; i++) {

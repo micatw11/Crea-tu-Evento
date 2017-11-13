@@ -119,8 +119,8 @@
 						<!-- /.box-body -->
 						<div class="box-footer no-padding">
 
-							<div style="text-align:center;">
-								<button @click="goBack()" class="btn btn-default">
+							<div class="pull-left" style="margin: 20px 0;">
+								<button @click="goBack()" class="btn btn-default" style="margin-left: 15px;">
 									<i class="glyphicon glyphicon-chevron-left"></i> Atras
 								</button>
 							</div>

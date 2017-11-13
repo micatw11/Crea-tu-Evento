@@ -236,9 +236,11 @@ export default {
         },
         validateBeforeSubmit: function(e) {
             this.clearErrors();
-            this.$validator.validateAll().then(() => {
-
-                this.register();
+            this.$validator.validateAll().then((result) => {
+                if (result) {
+                    this.register();
+                    return;
+                }
             }).catch(() => {
                 this.validar = true;
             });

@@ -89,16 +89,19 @@ export default {
     methods: {
         //form validation
         validateBeforeSubmit: function() {
-         this.$validator.validateAll().then(() => {
+            this.$validator.validateAll().then((result) => {
+                if (result) {
                     this.validarLocalidad = false;
                     if (this.nuevo){
                         this.$emit('validadoNewLocalidad')
                     }else{
                         this.$emit('validadoEditLocalidad')
                     }
-                }).catch(() => {
-                    this.validarLocalidad= true;
-                });
+                    return;
+                }
+            }).catch(() => {
+                this.validarLocalidad= true;
+            });
         },
         changeProvincia: function(){
             this.localidad.provincia_id = this.provincia_id;

@@ -44,12 +44,17 @@
 		},
 		methods:{
 			validateBeforeSubmit(){
-	            this.$validator.validateAll().then(() => {
+            	this.$validator.validateAll().then((result) => {
+                	if (result) {
 	                    this.validarArticulo = false; 
 	                    this.sendArticulo();
-	                }).catch(() => {
-	                    this.validarArticulo = true;
-	                });
+	                } else {
+						this.validarArticulo = true;
+	                }
+	                return;
+                }).catch(() => {
+                    
+                });
 			},
 			getArticulo(){
 				this.$http.get('api/articulo/'+this.id

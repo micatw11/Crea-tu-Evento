@@ -203,11 +203,16 @@ export default {
         },
         //form validation
         validateBeforeSubmit: function() {
-            this.$validator.validateAll().then(() => {
+            this.$validator.validateAll().then((result) => {
+                if (result){
                     this.sendForm();
-                }).catch(() => {
+                } else {
                     this.validar = true;
-                });
+                }
+                return;
+            }).catch(() => {
+                
+            });
         },
         //obtiene lista de localidades segun correponda
         getOptions: function(search, loading) {

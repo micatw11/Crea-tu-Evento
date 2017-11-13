@@ -69,13 +69,16 @@
 		components: {Money},
 		methods:{
 	        validateSubmit: function() {
-	            this.$validator.validateAll().then(() => {
+            	this.$validator.validateAll().then((result) => {
+                	if (result) {
 	                    this.validarArticulo = false; 
 	                    this.$emit('validoForm'); 
-	                }).catch(() => {
-
-	                    this.validarArticulo = true;
-	                });
+	                } else {
+	                	this.validarArticulo = true;
+	                }
+	                return;
+                }).catch(() => {
+                });
 	        },
 			getRubros(){
 				this.$http.get('api/rubro').then(response => {

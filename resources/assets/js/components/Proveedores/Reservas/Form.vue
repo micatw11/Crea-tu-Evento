@@ -167,13 +167,17 @@
 		},
 	    methods: {
 	    	validateBeforeSubmit: function() {
-	    		
-			    this.$validator.validateAll().then(() => {
-		                this.validarReserva = false; 
-		                this.$emit('validado');
-				    }).catch(() => {
-			        	this.validarReserva = true;
-			      	});
+	            this.$validator.validateAll().then((result) => {
+	                if (result){
+			                this.validarReserva = false; 
+			                this.$emit('validado');
+			        } else {
+						this.validarReserva = true;
+			        }
+			        return;
+			    }).catch(() => {
+		        	
+		      	});
 
 		    },
 	    	callbackSelectRubros: function(val) {
