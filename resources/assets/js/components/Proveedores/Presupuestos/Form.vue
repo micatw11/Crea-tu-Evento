@@ -17,13 +17,13 @@
 						    	:picker-options="pickerOptions"
 						    	placeholder="Seleccione un dia">
 						    </el-date-picker>
-                    		<span v-show="errors.has('fecha:date_format')" class="help-block">
+                    		<span v-show="errors.has('fecha:date_format')&&validarPresupuesto" class="help-block">
                     			{{ errors.first('fecha:date_format') }}
                     		</span>
-                    		<span v-show="errors.has('fecha:required')" class="help-block">
+                    		<span v-show="errors.has('fecha:required')&&validarPresupuesto" class="help-block">
                     			{{ errors.first('fecha:required') }}
                     		</span>
-                    		<span v-show="errors.has('fecha:after')" class="help-block">
+                    		<span v-show="errors.has('fecha:after')&&validarPresupuesto" class="help-block">
                     			El campo fecha del evento debe de ser despues de {{ fecha }}
                     		</span>
 		                </div>
@@ -91,8 +91,8 @@
 	                </div>
 	                
 	                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has(('numero')||('piso'))&&validarPresupuesto}">
-	                    <div class="col-sm-2">
-	                            <label for="inputNro" class="control-label col-sm-12">N° </label><br>
+	                    <div class="col-sm-2 col-xs-6">
+	                            <label for="inputNro" class="control-label">N° </label><br>
 	                            <input 
 	                                name="numero" 
 	                                v-validate="'numeric'" 
@@ -107,7 +107,7 @@
 	                            </span>
 	                    </div>
 
-	                    <div class="col-sm-2">
+	                    <div class="col-sm-2 col-xs-6">
 	                        
 	                        <label for="inputPiso" class="control-label">Dpto. </label><br>
 	                        <input name="piso" type="text" v-model="domicilio.piso" placeholder="Piso" class="form-control col-sm-12">
@@ -269,12 +269,17 @@
 		},
 	    methods: {
 	    	validateBeforeSubmit: function() {
-		        this.$validator.validateAll().then(() => { 
-		                    this.validarPresupuesto = false; 
-		                    this.$emit('validado');
-		                }).catch(() => {
-		                    this.validarPresupuesto = true;
-		                });
+                this.$validator.validateAll().then((result) => {
+                    if (result) {
+	                    this.validarPresupuesto = false; 
+	                    this.$emit('validado');
+	                } else {
+	                	this.validarPresupuesto = true;
+	                }
+	                return;
+                }).catch(() => {
+                    
+                });
 		    },
 		    getHorarios(){
 		    	var fecha = moment(this.presupuesto.fecha, 'YYYY-MM-DD').format('YYYY-MM-DD');
@@ -371,12 +376,24 @@
 
 	    			var option = {value: rubro.id, label: rubro.nombre};
 
-    				if(rubro.salon && !this.isEdit)
+    				if(!this.isEdit)
     				{
+    					this.presupuesto.rubros.push(rubro.id);
     					this.presupuesto.rubros.push(rubro.id);
     				}
 
 	    			this.opcionesRubros.push(option);
+	    		}
+	    		if(!this.isEdit){
+	    			for (var articulo of this.articulos) {
+		    			this.presupuesto.articulos.push(
+							{
+							articulo_id: articulo.id, 
+								cantidad: 0
+	    					});
+		    			this.opcionesArticulos.push(
+	    							{id: articulo.id, nombre: articulo.nombre, stock: articulo.stock, precio: articulo.precio});
+	    			}
 	    		}
 
 	    		if(this.isEdit){

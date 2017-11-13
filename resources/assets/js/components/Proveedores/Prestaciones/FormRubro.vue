@@ -215,7 +215,6 @@ export default {
     methods: {
         //form validation
         validateBeforeSubmit: function() {
-
             this.$validator.validateAll().then((result) => {
                 if (result){
                      this.validarRubro = false; 
@@ -228,7 +227,8 @@ export default {
                 }else{
                      this.validarRubro = true;
                 }
-                })
+                return;
+            })
         },
         //obtiene lista de localidades 
         getOptions: function(search, loading) {

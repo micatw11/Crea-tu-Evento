@@ -82,16 +82,21 @@ export default {
     methods: {
         //form validation
         validateBeforeSubmit: function() {
-         this.$validator.validateAll().then(() => {
+            this.$validator.validateAll().then((result) => {
+                if (result) {
                     this.validarCategoria = false; 
                     if (this.nuevo){
                         this.$emit('validadoNewCategoria')
                     }else{
                         this.$emit('validadoEditCategoria')
                     }
-                }).catch(() => {
+                } else {
                     this.validarCategoria = true;
-                });
+                }
+                return;
+            }).catch(() => {
+
+            });
         }
     }
 }

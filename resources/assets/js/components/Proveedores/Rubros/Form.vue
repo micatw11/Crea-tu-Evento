@@ -110,7 +110,8 @@ export default {
     methods: {
         //form validation
         validateBeforeSubmit: function() {
-         this.$validator.validateAll().then(() => { 
+            this.$validator.validateAll().then((result) => {
+                if (result){
                     this.validarRubro = false; 
                     if (this.nuevo){
                         this.$emit('validadoNewRubro')
@@ -119,9 +120,13 @@ export default {
                         this.$emit('validadoEditRubro')
 
                     }
-                }).catch(() => {
+                } else {
                     this.validarRubro = true;
-                });
+                }
+                return;
+            }).catch(() => {
+                
+            });
         },
         getCaracteristicas: function(){
             this.$http.get('api/caracteristica')

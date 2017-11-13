@@ -292,14 +292,17 @@
                 this.validar = false;
             },
             validateBeforeSubmit: function(action, data) {
-                    this.$validator.validateAll().then(() => {
-                        
+                this.$validator.validateAll().then((result) => {
+                    if (result) {
                         this.onActionEstado(action, data); 
                         this.clearForm();
-
-                    }).catch(() => {
+                    } else {
                         this.validar = true;
-                    });
+                    }
+                    return;
+                }).catch(() => {
+                    
+                });
             }
         },
 

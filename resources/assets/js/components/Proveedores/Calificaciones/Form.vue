@@ -141,11 +141,16 @@
 		},
 		methods: {
 			validateBeforeSubmit(){
-         		this.$validator.validateAll().then(() => {
-                    this.validarCalificacion = false; 
-                    this.$emit('validadoCalificacion')
+            	this.$validator.validateAll().then((result) => {
+                	if (result) {
+	                    this.validarCalificacion = false; 
+	                    this.$emit('validadoCalificacion')
+	                } else {
+	                	this.validarCalificacion = true;
+	                }
+	                return;
                 }).catch(() => {
-                    this.validarCalificacion = true;
+                    
                 });
 			},
 			changeRate(){

@@ -145,8 +145,11 @@ export default {
             //elimino errors si los hubo anteriormente
             this.internalServerError = false;
             this.block = false;
-            this.$validator.validateAll().then(() => {
-                this.sendForm();
+            this.$validator.validateAll().then((result) => {
+                if (result) {
+                    this.sendForm();
+                    return;
+                }
             }).catch(() => {
                 // failed
             });

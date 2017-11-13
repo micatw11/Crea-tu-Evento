@@ -251,16 +251,21 @@ export default {
     methods: {
        
         validateBeforeSubmit: function() {
-                this.$validator.validateAll().then(() => {
+            this.$validator.validateAll().then((result) => {
+                if (result) {
                     this.validarProveedor = false;
                     if (this.nuevo){
                         this.$emit('validadoProveedor'); 
                     }else{
                         this.$emit('validadoEditProveedor');  
-                    }                 
-                }).catch(() => {
+                    }
+                } else {
                     this.validarProveedor = true;
-                });
+                }
+                return;
+            }).catch(() => {
+                
+            });
         },
         //obtiene lista de usuarios segun requiera
         getOptionsUsuario: function(search, loading) {

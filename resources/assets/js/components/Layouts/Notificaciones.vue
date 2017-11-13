@@ -3,7 +3,7 @@
     <li class="dropdown notifications-menu">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
             <i class="fa fa-bell-o"></i>
-            <span class="label label-warning">1</span>
+            <span v-if="pendientes > 0" class="label label-warning">1</span>
         </a>
         <ul class="dropdown-menu">
             <li class="header"> {{pendientes == 0 ? 'Sin Notificaciones' : '1 Notificaci&oacute;n' }}</li>
@@ -24,6 +24,8 @@
     </li>
 </template>
 <script>
+    import auth from '../../auth.js';
+    import role from '../../config.js';
     export default {
         data() {
             return {
@@ -31,7 +33,10 @@
             }
         },
         beforeMount(){
-            this.calificacionesPendientes();
+            if(auth.user.profile.roles_id = role.USUARIO)
+            {
+                this.calificacionesPendientes();
+            }
         },
         methods: {
             calificacionesPendientes(){

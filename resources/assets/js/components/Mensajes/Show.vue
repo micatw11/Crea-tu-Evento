@@ -360,11 +360,16 @@
                     : moment(value, 'YYYY-MM-DD hh:mm:ss').format('D MMM YYYY hh:mm')
             },
 			validateBeforeSend(){
-                this.$validator.validateAll().then(() => {
-                	this.validar = false;
-           			this.sendNewMensaje();
+            this.$validator.validateAll().then((result) => {
+                	if (result) {
+	                	this.validar = false;
+	           			this.sendNewMensaje();
+	           		} else {
+	           			this.validar = true;
+	           		}
+					return;
                 }).catch(() => {
-                    this.validar = true;
+                    
                 });
 			},
 			sendNewMensaje(){
