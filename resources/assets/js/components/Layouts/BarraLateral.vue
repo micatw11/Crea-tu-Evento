@@ -285,9 +285,9 @@
                 }
             },
             /** 
-            * Consulta de todas las categorias.
+            * Consulta de todas los mensajes.
             * 
-            * @getCategorias 
+            * @getMensajes 
             */
             getMensajes: function(){
                 this.mensajesSinLeer = 0;
@@ -312,6 +312,11 @@
                     }
                 })
             },
+            /** 
+            * Consulta de todas las categorias.
+            * 
+            * @getCategorias 
+            */
             getCategorias: function(){
                 this.showCategories = false;
                 this.$http.get('api/categoria/')
