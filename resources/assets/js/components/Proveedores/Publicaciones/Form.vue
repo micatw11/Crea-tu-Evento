@@ -1,6 +1,5 @@
 <template>
     <form role="form" enctype="multipart/form-data">
-    
         <div class="col-sm-12">
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('titulo')&&validarPublicacion}">
                 <div class="col-sm-12">
@@ -65,6 +64,7 @@
                     </div>
                 </div>
             </div>
+
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('fotos[]')}">
                 <div class="col-sm-12">
                     <label for="fotos" class="control-label" style="text-align: center;">Fotos <i class="fa fa-file-image-o"></i></label><br>
@@ -121,35 +121,34 @@
 
             <div v-if="publicacion.prestaciones_id&&(caracteristicas.length>0||caracteristicas_no.length>0)">
                 <div class="col-sm-12">
-                        <label for="caracteristicas" class="control-label">Caracteristicas</label>
-                        <div class="direct-chat-messages col-sm-12" style="height: 100px;">
-                            <div class="direct-chat-msg">
-                                <div v-for="caracteristica in caracteristicas">
+                    <label for="caracteristicas" class="control-label">Caracteristicas</label>
+                    <div class="direct-chat-messages col-sm-12" style="height: 100px;">
+                        <div class="direct-chat-msg">
+                            <div v-for="caracteristica in caracteristicas">
 
-                                    <div class="col-sm-6">
-                                        <input type="checkbox" id="checkbox1" @click="selected(caracteristica, $event)" checked> {{caracteristica.nombre}}
-                                    </div>
-                                    <div v-if="caracteristica.adicional==true" class="col-sm-6">
-                                        <input 
-                                            name="inf_adicional"
-                                            type="text" class="form-control"
-                                            :value="caracteristica.pivot.informacion"
-                                            @change="c_adicional(caracteristica,$event)">
-                                    </div>
+                                <div class="col-sm-6">
+                                    <input type="checkbox" id="checkbox1" @click="selected(caracteristica, $event)" checked> {{caracteristica.nombre}}
+                                </div>
+                                <div v-if="caracteristica.adicional==true" class="col-sm-6">
+                                    <input 
+                                        name="inf_adicional"
+                                        type="text" class="form-control"
+                                        :value="caracteristica.pivot.informacion"
+                                        @change="c_adicional(caracteristica,$event)">
                                 </div>
                             </div>
-                            <div v-for="caracteristica in caracteristicas_no">
+                        </div>
+                        <div v-for="caracteristica in caracteristicas_no">
+                            <div class="col-sm-6">
                                 <div class="col-sm-6">
-                                    <div class="col-sm-6">
-                                        <input type="checkbox" id="checkbox" @click="selected(caracteristica, $event)"> {{caracteristica.nombre}}
-                                    </div>
-                                    <div v-if="caracteristica.adicional==true" class="col-sm-6">
-                                        <input 
-                                            name="inf_adicional"
-                                            type="text" class="form-control"
-                                            @change="c_adicional(caracteristica,$event)" >
-                                   </div>
+                                    <input type="checkbox" id="checkbox" @click="selected(caracteristica, $event)"> {{caracteristica.nombre}}
                                 </div>
+                                <div v-if="caracteristica.adicional==true" class="col-sm-6">
+                                    <input 
+                                        name="inf_adicional"
+                                        type="text" class="form-control"
+                                        @change="c_adicional(caracteristica,$event)" >
+                               </div>
                             </div>
                         </div>
                     </div>
@@ -165,8 +164,6 @@
                         v-model="publicacion.descripcion" 
                         v-validate="'required|min:20|max:25000'"
                         :editorToolbar="customToolbar">
-
-                        
                     </vue-editor>
 
                     <!-- validacion vee-validation -->
@@ -179,11 +176,12 @@
                     </div>
                 </div>
             </div>
+
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('precio')&&validarPublicacion}">
                 <div class="col-sm-4">
                     <label for="precio" class="control-label">Precio desde</label><br>
                     <div class="input-group">
-                        <money v-model="publicacion.precio" v-bind="money" v-validate="'required|min_value:1'" data-vv-name="precio"></money>
+                        <vue-numeric currency="$" separator="," v-bind:precision="2" v-bind:min="1"v-model="publicacion.precio"  v-validate="'required|min_value:1'" data-vv-name="precio"></vue-numeric>
                     </div>
                     <!-- validacion vee-validation -->
                     <span v-show="errors.has('precio')&&validarPublicacion" class="help-block"> El campo precio es requerido.</span>
@@ -206,6 +204,7 @@
                     </div>
                 </div>
             </div>
+
             <div v-if="ofertaChecked">
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('descuento')&&validarPublicacion}">
                     <div class="col-sm-3">
@@ -268,7 +267,6 @@
 	import auth from '../../../auth.js'
 	import vSelect from "vue-select";
     import { VueEditor } from 'vue2-editor'
-    import Money from './../../Plugins/v-money/src/component'
 
 	export default {
 		props: {
@@ -293,13 +291,6 @@
 		},
 		data() {
 			return {
-                money: {
-                    decimal: ',',
-                    thousands: '.',
-                    prefix: '$ ',
-                    precision: 2,
-                    masked: false
-                },
 				auth: auth,
 				rubros: [],
                 src: [],
@@ -334,7 +325,7 @@
         created() {
             this.loadDefaultOptions();
         },
-		components: { vSelect, VueEditor, Money },
+		components: { vSelect, VueEditor },
 		methods: {
 			getOptionsRubros: function() {
 	            this.$http.get('api/rubro/'

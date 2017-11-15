@@ -31,7 +31,7 @@
 								</div>
 							</div>
 						    <!-- modal presupuesto -->
-						    <div v-if="showModalCalificar" id="modificar" class="modal" role="dialog" :style="{ display : showModalCalificar  ? 'block' : 'none' }">
+						    <div v-if="showCalificar" id="modificar" class="modal" role="dialog" :style="{ display : showCalificar  ? 'block' : 'none' }">
 						        <div class="modal-dialog modal-lg">
 						            <div class="modal-content">
 						                <div class="modal-header">
@@ -85,12 +85,10 @@
 		                                @vuetable-pagination:change-page="onChangePage">
 		                            </vuetable-pagination-calificacion>
 
-		          					<div style="text-align:center;">
-						          		<div class="col-sm-12">
-						          			<button @click="goBack()" class="btn btn-default">
-						                        <i class="glyphicon glyphicon-chevron-left"></i> Atras
-						                    </button>
-							            </div>
+		          					<div class="pull-left" style="margin: 20px 0;">
+					          			<button @click="goBack()" class="btn btn-default" style="margin-left: 15px;">
+					                        <i class="glyphicon glyphicon-chevron-left"></i> Atras
+					                    </button>
 						          	</div>
 
 		                        </div>
@@ -163,7 +161,7 @@
 			return {
 				reservasPendientes: [],
 				css: Style,
-				showModalCalificar: false,
+				showCalificar: false,
                 tableColumns:  [
                     {
                         name: 'publicacion.titulo',
@@ -252,16 +250,17 @@
             },
             showModal(reserva){
             	this.reservaSelect = reserva;
-            	this.showModalCalificar = true;
+            	this.showCalificar = true;
             },
             closeModal(){
             	this.reservaSelect = null;
-            	this.showModalCalificar = false;
+            	this.showCalificar = false;
 
             },
             reloadIndex(){
+            	this.getCalificacionesPendientes();
             	Vue.nextTick( function () { 
-            		this.getCalificacionesPendientes();
+            		
             		this.$refs.vuetableCali.refresh();
             	});
             },

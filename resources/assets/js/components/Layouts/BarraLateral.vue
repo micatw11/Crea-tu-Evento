@@ -134,7 +134,8 @@
                             </li>
                         </ul>
                     </li>
-                    <li>
+
+                    <li v-if="auth.user.profile.roles_id == role.PROVEEDOR || auth.user.profile.roles_id == role.USUARIO">
                         <router-link to="/mensajes" tag="a">
                             <i class="fa fa-envelope-o"></i> <span>Reservas</span>
                             <span class="pull-right-container" 
@@ -165,6 +166,7 @@
                             </span>
                         </router-link>
                     </li>
+
                     <li v-if="auth.user.profile.roles_id == role.PROVEEDOR">
                         <router-link to="/reservas" tag="a">
                             <i class="fa fa-calendar"></i> <span>Calendar</span>
@@ -178,6 +180,7 @@
                             </span>
                         </router-link>
                     </li>
+                    
                 </template>
                 <template v-if="showFilter && categorias.length > 0 && showCategories">
                     <li class="treeview active">

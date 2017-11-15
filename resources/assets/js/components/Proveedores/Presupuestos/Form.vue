@@ -52,7 +52,9 @@
 		        	</div>
 		        	<div v-else class="col-sm-8">
 		        		<div class="col-sm-12">
-		        			No se han encontrado horarios disponibles este d&iacute;a.
+		        			<div class="alert alert-warning alert-dismissible">
+		        				No se han encontrado horarios disponibles este d&iacute;a.
+		        			</div>
 		        		</div>	        		
 		        	</div>
 		        </template>
@@ -351,7 +353,7 @@
 	    	changeDate(val){
 	    		this.showEstadoReserva = false;
 	    		this.presupuesto.horario_id = null;
-	    		if(this.requiredDate)
+	    		if(this.requiredDate && this.presupuesto.fecha != null && this.presupuesto.fecha != '')
 	    			this.getHorarios();
 	    	},
 	    	showStatus(horarios){
@@ -379,7 +381,6 @@
     				if(!this.isEdit)
     				{
     					this.presupuesto.rubros.push(rubro.id);
-    					this.presupuesto.rubros.push(rubro.id);
     				}
 
 	    			this.opcionesRubros.push(option);
@@ -388,7 +389,7 @@
 	    			for (var articulo of this.articulos) {
 		    			this.presupuesto.articulos.push(
 							{
-							articulo_id: articulo.id, 
+								articulo_id: articulo.id, 
 								cantidad: 0
 	    					});
 		    			this.opcionesArticulos.push(

@@ -89,7 +89,7 @@
 			</div>
 			<div class="col-sm-12">
 				<div class="col-sm-12">
-					<div class="alert alert-warning alert-dismissible" style="background-color: rgba(243, 156, 18, 0.4) !important; border-color: rgba(243, 156, 18, 0.4);">
+					<div class="alert alert-warning alert-dismissible">
 	                	<i class="icon fa fa-warning"></i>
 	                	Por favor, sé fiel a los hechos y evita comentarios inapropiados.
 	              	</div>

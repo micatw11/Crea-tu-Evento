@@ -27,90 +27,90 @@
 							<div class="table-responsive mailbox-messages">
 								<table class="table table-hover table-striped">
 									<tbody>
-									<tr v-for="mensaje in mensajes">
-										<td v-if="mensaje.nuevos > 0">
-											<el-tooltip class="item" effect="dark" 
-												content="Nuevos mensajes." placement="top-start">
-												<small class="label pull-right bg-green">{{mensaje.nuevos}}</small> 
-											</el-tooltip>
-										</td>
-										<td v-else></td>
-										<td class="mailbox-name">
-				 							De: <router-link  tag="a" v-bind:to="'/mensaje/'+ mensaje.id">
-												{{ getNameFromUser(mensaje) }}
-											</router-link>
-										</td>
-										<td class="mailbox-subject">
-											<b>{{ mensaje.reserva.publicacion.titulo}}</b> - 
-											<router-link v-bind:to="'/mensaje/'+ mensaje.id">
-												<a v-truncate="30">{{mensaje.mensaje}}</a>
-											</router-link>
-										</td>
-										<td class="mailbox-attachment">
-											<small class="label pull-left bg-green">
-												{{mensaje.reserva.estado}}
-											</small>
-										</td>
-										<template v-if="role.USUARIO == auth.user.profile.roles_id">
-											<td v-if="isAfterNow(mensaje.reserva.fecha) && mensaje.reserva.estado == 'reservado'">
-											<td v-if="isAfterNow(mensaje.reserva.fecha) && 
-												mensaje.reserva.presupuestado == true && mensaje.reserva.estado == 'presupuesto'">
+										<tr v-for="mensaje in mensajes">
+											<td v-if="mensaje.nuevos > 0">
 												<el-tooltip class="item" effect="dark" 
-													content="El proveedor a respondido a su solicitud de presupuesto." placement="top-start">
-					                            	<small class="label pull-left bg-yellow">Presupuestado</small>
-					                            </el-tooltip>
-					                   		</td>
-											<td v-else-if="isAfterNow(mensaje.reserva.fecha) && 
-												mensaje.reserva.presupuestado == false && mensaje.reserva.estado == 'presupuesto'">
-												<el-tooltip class="item" effect="dark" 
-													content="Esperando respuesta del proveedor." placement="top-start">
-					                            	<small class="label pull-left bg-yellow">Sin respuesta</small>
-					                            </el-tooltip>
-					                   		</td>
-					                   		<td v-else-if="!isAfterNow(mensaje.reserva.fecha) && mensaje.reserva.estado != 'confirmado'">
-					                   			<el-tooltip class="item" effect="dark" 
-					                   				content="La fecha de esta solicitud debe ser actuliazda." placement="top-start">
-					                            	<small class="label pull-left bg-red">Actulizar</small>
-					                            </el-tooltip>
-					                        </td>
-					                    </template>
-					                    <template v-if="role.PROVEEDOR == auth.user.profile.roles_id">
-					                    	<td v-if="isAfterNow(mensaje.reserva.fecha) && mensaje.reserva.estado == 'reservado'">
-											</td>
-					                    	<td v-if="!isAfterNow(mensaje.reserva.fecha) && mensaje.reserva.estado != 'confirmado'">
-					                    		<el-tooltip class="item" effect="dark" 
-					                   				content="La fecha elegida para este evento debe de ser actualizada por el adquiriente." placement="top-start">
-													<small class="label pull-left bg-red">Actulizar</small>
+													content="Nuevos mensajes." placement="top-start">
+													<small class="label pull-right bg-green">{{mensaje.nuevos}}</small> 
 												</el-tooltip>
 											</td>
-					                    	<td  v-if="mensaje.reserva.presupuestado == true && isAfterNow(mensaje.reserva.fecha) && mensaje.reserva.estado == 'presupuesto'">
-												<el-tooltip class="item" effect="dark" 
-													content="Esperando respuesta del adquiriente." placement="top-start">
-					                            	<small class="label pull-left bg-yellow">Esperando respuesta</small>
-					                            </el-tooltip>
-					                    	</td>
-					                    	<td v-if="mensaje.reserva.presupuestado == false && isAfterNow(mensaje.reserva.fecha) && mensaje.reserva.estado == 'presupuesto'">
-												<el-tooltip class="item" effect="dark" 
-													content="Solicitud pendiente de respuesta." placement="top-start">
-					                            	<small class="label pull-left bg-yellow">Pendiente</small>
-					                            </el-tooltip>
-					                    	</td>
-					                    </template>
-										<td v-if="mensaje.reserva.estado == 'confirmado' && !isAfterNow(mensaje.reserva.fecha)">
-											<small class="label pull-left bg-green">Finalizado</small>
-										</td>
-										<td v-else-if="mensaje.reserva.estado == 'confirmado' && isAfterNow(mensaje.reserva.fecha)">
-											
-										</td>
-										<td v-else-if="mensaje.reserva.estado == 'cancelado'">
-											<small class="label pull-left bg-red">>Cancelado</small>
-										</td>
-										<td class="mailbox-date">{{formatData(mensaje.created_at)}}</td>
-									</tr>
-									<tr v-if="mensajes.length == 0">
-										<td style="text-align:center">Sin mensajes...</td>
-									</tr>
-								</tbody>
+											<td v-else></td>
+											<td class="mailbox-name">
+					 							De: <router-link  tag="a" v-bind:to="'/mensaje/'+ mensaje.id">
+													{{ getNameFromUser(mensaje) }}
+												</router-link>
+											</td>
+											<td class="mailbox-subject">
+												<b>{{ mensaje.reserva.publicacion.titulo}}</b> - 
+												<router-link v-bind:to="'/mensaje/'+ mensaje.id">
+													<a v-truncate="30">{{mensaje.mensaje}}</a>
+												</router-link>
+											</td>
+											<td class="mailbox-attachment">
+												<small class="label pull-left bg-green">
+													{{mensaje.reserva.estado}}
+												</small>
+											</td>
+											<template v-if="role.USUARIO == auth.user.profile.roles_id">
+												<td v-if="isAfterNow(mensaje.reserva.fecha) && mensaje.reserva.estado == 'reservado'">
+												<td v-if="isAfterNow(mensaje.reserva.fecha) && 
+													mensaje.reserva.presupuestado == true && mensaje.reserva.estado == 'presupuesto'">
+													<el-tooltip class="item" effect="dark" 
+														content="El proveedor a respondido a su solicitud de presupuesto." placement="top-start">
+						                            	<small class="label pull-left bg-yellow">Presupuestado</small>
+						                            </el-tooltip>
+						                   		</td>
+												<td v-else-if="isAfterNow(mensaje.reserva.fecha) && 
+													mensaje.reserva.presupuestado == false && mensaje.reserva.estado == 'presupuesto'">
+													<el-tooltip class="item" effect="dark" 
+														content="Esperando respuesta del proveedor." placement="top-start">
+						                            	<small class="label pull-left bg-yellow">Sin respuesta</small>
+						                            </el-tooltip>
+						                   		</td>
+						                   		<td v-else-if="!isAfterNow(mensaje.reserva.fecha) && mensaje.reserva.estado != 'confirmado'">
+						                   			<el-tooltip class="item" effect="dark" 
+						                   				content="La fecha de esta solicitud debe ser actuliazda." placement="top-start">
+						                            	<small class="label pull-left bg-red">Actulizar</small>
+						                            </el-tooltip>
+						                        </td>
+						                    </template>
+						                    <template v-if="role.PROVEEDOR == auth.user.profile.roles_id">
+						                    	<td v-if="isAfterNow(mensaje.reserva.fecha) && mensaje.reserva.estado == 'reservado'">
+												</td>
+						                    	<td v-if="!isAfterNow(mensaje.reserva.fecha) && mensaje.reserva.estado != 'confirmado'">
+						                    		<el-tooltip class="item" effect="dark" 
+						                   				content="La fecha elegida para este evento debe de ser actualizada por el adquiriente." placement="top-start">
+														<small class="label pull-left bg-red">Actulizar</small>
+													</el-tooltip>
+												</td>
+						                    	<td  v-if="mensaje.reserva.presupuestado == true && isAfterNow(mensaje.reserva.fecha) && mensaje.reserva.estado == 'presupuesto'">
+													<el-tooltip class="item" effect="dark" 
+														content="Esperando respuesta del adquiriente." placement="top-start">
+						                            	<small class="label pull-left bg-yellow">Esperando respuesta</small>
+						                            </el-tooltip>
+						                    	</td>
+						                    	<td v-if="mensaje.reserva.presupuestado == false && isAfterNow(mensaje.reserva.fecha) && mensaje.reserva.estado == 'presupuesto'">
+													<el-tooltip class="item" effect="dark" 
+														content="Solicitud pendiente de respuesta." placement="top-start">
+						                            	<small class="label pull-left bg-yellow">Pendiente</small>
+						                            </el-tooltip>
+						                    	</td>
+						                    </template>
+											<td v-if="mensaje.reserva.estado == 'confirmado' && !isAfterNow(mensaje.reserva.fecha)">
+												<small class="label pull-left bg-green">Finalizado</small>
+											</td>
+											<td v-else-if="mensaje.reserva.estado == 'confirmado' && isAfterNow(mensaje.reserva.fecha)">
+												
+											</td>
+											<td v-else-if="mensaje.reserva.estado == 'cancelado'">
+												<small class="label pull-left bg-red">>Cancelado</small>
+											</td>
+											<td class="mailbox-date">{{formatData(mensaje.created_at)}}</td>
+										</tr>
+										<tr v-if="mensajes.length == 0">
+											<td style="text-align:center">Sin mensajes...</td>
+										</tr>
+									</tbody>
 								</table>
 								<!-- /.table -->
 							</div>

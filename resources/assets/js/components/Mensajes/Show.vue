@@ -43,6 +43,14 @@
 									</small>
 								</div>
 							</template> 
+							<template v-if="showConflict == true">
+								<div class="col-md-12">
+									<hr>
+									<div class="callout callout-warning">
+										¡Vaya! Ya hay una reserva para el horario elejido.
+									</div>
+								</div>
+							</template>
 
 							<div class="col-sm-12">
 								<template v-if="role.USUARIO == auth.user.profile.roles_id">
@@ -284,6 +292,7 @@
 				showModificarPresupuesto: false,
 				newMensaje: '',
 				auth: auth,
+				showConflict: false,
 				validar: false,
 				listPath: [
 					{route: '/', name: 'Inicio'}, 
@@ -360,7 +369,7 @@
                     : moment(value, 'YYYY-MM-DD hh:mm:ss').format('D MMM YYYY hh:mm')
             },
 			validateBeforeSend(){
-            this.$validator.validateAll().then((result) => {
+            	this.$validator.validateAll().then((result) => {
                 	if (result) {
 	                	this.validar = false;
 	           			this.sendNewMensaje();
@@ -397,6 +406,9 @@
 	                        message:'Se ha realizado correctamente la operación'
 	                    });					
                 	}, response => {
+                		if(response.status == 409){
+                			this.showConflict = true;
+                		}
 	                    this.$toast.error({
 	                        title:'¡Error!',
 	                        message:'No se ha podido realizar correctamente la operación'

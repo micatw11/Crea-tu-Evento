@@ -180,7 +180,7 @@ let routes = [
 			name: 'show-mensajes',
 			component: ShowMensajes,
 			beforeEnter: guardRoute,
-			meta: { requiresAuth: true }
+			meta: { Role: [role.USUARIO, role.PROVEEDOR], requiresAuth: true }
 		},
 		{
 			path: '/publicacion/:publicacionId/edit',
@@ -195,7 +195,7 @@ let routes = [
 			component: IndexCalificaciones,
 			props: { default: true, with_box: true },
 			beforeEnter: guardRoute,
-			meta: { requiresAuth: true }
+			meta: { Role: [role.USUARIO], requiresAuth: true }	
 		},
 		//errors
 		{

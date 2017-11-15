@@ -25,7 +25,7 @@
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
 
-                    <notificaciones v-if="auth.user.authenticated"></notificaciones>
+                    <notificaciones v-if="auth.user.authenticated && (auth.user.profile.roles_id == role.PROVEEDOR || auth.user.profile.roles_id == role.USUARIO)"></notificaciones>
 
                     <!-- Control Sidebar Toggle Button -->
                     
@@ -42,6 +42,7 @@
 </template>
 <script>
 import auth from '../../auth.js';
+import role from '../../config.js';
 import router from '../../routes.js';
 import MenuUser from './MenuUser.vue';
 import Notificaciones from './Notificaciones.vue';
@@ -50,7 +51,8 @@ import Notificaciones from './Notificaciones.vue';
 export default {
     data() {
         return {
-            auth: auth
+            auth: auth,
+            role: role
         }
     },
     components:{ MenuUser, Notificaciones }
