@@ -259,10 +259,7 @@
             },
             reloadIndex(){
             	this.getCalificacionesPendientes();
-            	Vue.nextTick( function () { 
-            		
-            		this.$refs.vuetableCali.refresh();
-            	});
+            	Vue.nextTick( () => this.$refs.vuetableCali.refresh() );
             },
             goBack: function(){
 	            route.go(-1)

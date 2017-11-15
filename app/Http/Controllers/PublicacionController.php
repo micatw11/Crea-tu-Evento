@@ -192,11 +192,10 @@ class PublicacionController extends Controller
                 $foto->save();
             }
             if ($request->has('horariosId')){
-                 foreach ($request->horariosId as $key) {
-                    $horarios = Horario::where('id', $key )->get();
-                    $horarios->update([
+                foreach ($request->horariosId as $key) {
+                    Horario::where('id', $key )->update([
                     'publicacion_id' => $publicacion->id]);
-                    $horarios->save();
+
                 }
             }
             if($request->has('caracteristicas')&&$publicacion)

@@ -250,6 +250,7 @@ class HorarioController extends Controller
                 $auxHorario = null;
             }
         }
+        
         return response()->json($auxHorarios, 200);
     }
 

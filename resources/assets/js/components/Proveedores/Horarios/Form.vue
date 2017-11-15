@@ -38,7 +38,7 @@
 		<div class="col-sm-4 col-xs-4">
 			<label>Precio</label><br>
 			<div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('precio')&&validarHorario}">
-				<vue-numeric currency="$" separator="," v-bind:precision="2" v-model="horario.precio" v-validate="'required|min_value:1'" data-vv-name="precio"></vue-numeric>
+				<vue-numeric currency="$" separator="," v-bind:precision="2" v-model="horario.precio" v-validate="'required|min_value:1'" data-vv-name="precio" class="form-control"></vue-numeric>
 				<!-- validacion vee-validation -->
 	            <span v-show="errors.has('precio')&&validarHorario" class="help-block">{{ errors.first('precio') }}</span>
 	        </div>
