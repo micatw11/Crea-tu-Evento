@@ -90,8 +90,12 @@ class HorarioController extends Controller
                             ->where('proveedor_id', $proveedor->id)
                             ->where('dia', $diaUnico)
                             ->where(function ($q) use ($request){
-                                     $q->whereBetween('hora_inicio', [$request->hora_inicio, $request->hora_fin])
-                                    ->orWhereBetween('hora_fin', [$request->hora_inicio, $request->hora_fin])->get();
+                                     //->whereBetween('hora_inicio', [$request->hora_inicio, $request->hora_fin])
+                                     $q->where('hora_inicio','<=',$request->hora_inicio)
+                                     ->where('hora_inicio','>=',$request->hora_fin)
+                                     ->OrWhere('hora_fin','<=',$request->hora_inicio)
+                                     ->where('hora_fin','>=',$request->hora_fin)->get();
+                                    //->orWhereBetween('hora_fin', [$request->hora_inicio, $request->hora_fin])->get();
                             })->first();
         
                    if ($horarioRepetido) {

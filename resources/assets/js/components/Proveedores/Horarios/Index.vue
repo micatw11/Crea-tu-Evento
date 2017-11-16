@@ -127,7 +127,8 @@
                               });
                           }
                         }
-                      this.loadH =true;
+                        setTimeout(() => this.loadH = true, 2000);
+                      //this.loadH =true;
                   
                 }
 
@@ -169,7 +170,7 @@
                         ) ||  ((moment(hora+':30', 'HH:mm').isSame(moment(this.horario[j].hora_inicio, 'HH:mm'))) && media) )
                         { 
                           
-                          
+                           console.log(this.dias[i].nombre +' diff '+this.horario[j].diff)
                            if (this.horario[j].diff == null || this.horario[j].diff =='undefined' || this.horario[j].diff == 0)
                            {
                               var ms = moment(this.horario[j].hora_fin, 'HH:mm').diff(moment(this.horario[j].hora_inicio, 'HH:mm'))
@@ -178,19 +179,25 @@
                               diferencia_hora = s._i._data.hours
                               var hora_final= hora+diferencia_hora
                               this.horario[j].diff= diferencia_hora*2;
+                              
                               if (moment(hora+':30', 'HH:mm').isSame(moment(this.horario[j].hora_inicio, 'HH:mm')) && (moment(hora_final+':30', 'HH:mm').isSame(moment(this.horario[j].hora_fin, 'HH:mm')))){
+                                
                               }else{
+                                  console.log(this.dias[i].nombre +' diff '+this.horario[j].diff+'  ' + hora+':30', 'HH:mm' + this.horario[j].hora_inicio, 'HH:mm' + hora_final+':30', 'HH:mm'+ this.horario[j].hora_fin, 'HH:mm' )
+                                  console.log (' ghfgdhhd'+ moment(hora+':30', 'HH:mm').isSame(moment(this.horario[j].hora_inicio, 'HH:mm')) && media)
                                     if (moment(hora+':30', 'HH:mm').isSame(moment(this.horario[j].hora_inicio, 'HH:mm')) && media)
                                     {
                                       this.horario[j].diff=this.horario[j].diff+1
+                                      console.log(this.dias[i].nombre +' diff '+this.horario[j].diff)
                                     }
-                                    if (moment(hora_final+':30', 'HH:mm').isSame(moment(this.horario[j].hora_fin, 'HH:mm')) && this.horario[j].diff != 0 ) {
+                                    if (moment(hora_final+':30', 'HH:mm').isSame(moment(this.horario[j].hora_fin, 'HH:mm')) && this.horario[j].diff != 0&& media )  {
                                       this.horario[j].diff=this.horario[j].diff+1
                                       hora_final = 0
+                                      console.log(this.dias[i].nombre +' diff '+this.horario[j].diff)
                                     }
                               }
                               if (this.horario[j].diff != null){
-                                    this.diff= this.diff +'<td id="'+this.horario[j].id+'" style="text-align: center;vertical-align: middle;background-color:rgba('+this.red+','+ this.green+', '+this.blue+', 0.30);cursor: pointer; width: 120px; border-color: #FFFFFF; border-width:1px; border-style: solid" rowspan="'+this.horario[j].diff +'">Inicio '+this.horario[j].hora_inicio+'hs. - Fin  '+this.horario[j].hora_fin+'hs. Precio: $'+this.horario[j].precio+'</td>'
+                                    this.diff= this.diff +'<td id="'+this.horario[j].id+'" style="text-align: center;vertical-align: middle;background-color:rgba('+this.red+','+ this.green+', '+this.blue+', 0.30);cursor: pointer; width: 120px; border-color: #FFFFFF; border-width:1px; border-style: solid" rowspan="'+this.horario[j].diff +'">Inicio '+this.horario[j].hora_inicio+'hs. - Fin  '+this.horario[j].hora_fin+'hs. Precio: $'+this.horario[j].precio+'</td>',
                                     mostrar = true
                                   }
                           }else{

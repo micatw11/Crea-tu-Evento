@@ -16,6 +16,9 @@
 	                    <button type="button" class="close" @click="closeModal()">&times;</button>
 	                    <h4 class="modal-title">Agregar Horario</h4>
 	                </div>
+	                <div v-if= "horarioNo =! []" >
+	                	<h6>No se pudo Cargar El horario del {{horarioNo.dia}} </h6>
+	                </div>
 	                <div class="modal-body">
 	        			<div class="box-body">
 							<form-horario :horario="newHorario" :nuevo="true" @validoFormHorario="sendHorario">
@@ -98,6 +101,7 @@
 							precio: 0,
 							publicacion_id: ''
 						}
+
 						if ((response.data.idHorario)&&(this.nuevo)){
 							for (var i = 0; i < response.data.idHorario.length; i++) {
 								if (response.data.idHorario[i] != null){
@@ -106,24 +110,32 @@
 								}
 							}
 						}
-						if (response.data.horarioNo == []){
+
+						console.log(response.data)
+						console.log(response.data.horarioNo)
+						if (response.data.horarioNo != []){
 								//var dias= ''
 								/*for (var i = 0; i < response.data.horarioNo.length; i++) {
 									//if (response.data.horarioNo[i] != null)
 									//dias= dias +', '+ response.data.horarioNo[i].dia
-								}*/
+								}
 								this.$toast.error({
 		                        title:'¡Error!',
 		                        message:'No se ha podido guardar el horario, ya existe un horario en ese rango. :('
-		                    });
+		                    });*/
+							this.horarioNo 
+							this.showNewHorario= false; 
 						}
 						this.$events.fire('reloadIndexHorario');
 						this.showNewHorario= false; 
 					}, response => {
-						this.$toast.error({
-		                        title:'¡Error!',
-		                        message:'No se ha podido guardar el horario. :('
-		                    })
+							if(response.status === 404){
+		                        this.showNewHorario= false; 
+								this.$toast.error({
+				                        title:'¡Error!',
+				                        message:'No se ha podido guardar el horario. :('
+				                    })
+							}
 					});
 				
 			},
