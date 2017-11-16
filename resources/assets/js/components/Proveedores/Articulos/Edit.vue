@@ -18,7 +18,7 @@
 			</div>
 			<div class="col-xs-6">
 				<div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('precio')&&validarArticulo}">
-					<money v-model="articulo.precio" v-bind="money" v-validate="'required|min_value:1'" data-vv-name="precio"></money>
+					<vue-numeric currency="$" separator="," v-bind:precision="2" v-model="articulo.precio" v-validate="'required|min_value:1'" data-vv-name="precio"></vue-numeric>
 					<!-- validacion vee-validation -->
 		            <span v-show="errors.has('precio')&&validarArticulo" class="help-block">{{ errors.first('precio') }}</span>
 		        </div>

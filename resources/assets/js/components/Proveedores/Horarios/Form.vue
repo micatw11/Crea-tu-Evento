@@ -36,9 +36,9 @@
 		    }"></el-time-select>
 		</div>
 		<div class="col-sm-4 col-xs-4">
-		<label>Precio</label><br>
+			<label>Precio</label><br>
 			<div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('precio')&&validarHorario}">
-				<money v-model="horario.precio" v-bind="money" v-validate="'required|min_value:1'" data-vv-name="precio"></money>
+				<vue-numeric currency="$" separator="," v-bind:precision="2" v-model="horario.precio" v-validate="'required|min_value:1'" data-vv-name="precio" class="form-control"></vue-numeric>
 				<!-- validacion vee-validation -->
 	            <span v-show="errors.has('precio')&&validarHorario" class="help-block">{{ errors.first('precio') }}</span>
 	        </div>
@@ -48,7 +48,6 @@
 </template>
 
 <script>
-	import Money from './../../Plugins/v-money/src/component'
 	import ElTimeSelect from 'element-ui/lib/time-select.js'
 
 	export default {
@@ -65,13 +64,6 @@
 			return {
 				optionsRubros:[],
 				validarHorario: false,
-				money: {
-                    decimal: ',',
-                    thousands: '.',
-                    prefix: '$ ',
-                    precision: 2,
-                    masked: false
-                },
                 dias: [],
                 showFormH: false,
                 diasSelect: [],
@@ -84,7 +76,7 @@
 			this.$events.on("validarFormHorario", () => this.validateSubmit())
 			this.$events.on('showFormH', () => this.showFormH = true);
 		},
-		components: {Money, ElTimeSelect},
+		components: {ElTimeSelect},
 		methods:{
 	        validateSubmit: function() {
 	            this.$validator.validateAll().then((result) => {

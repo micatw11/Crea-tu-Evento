@@ -226,20 +226,27 @@ class ReservaController extends Controller
                 'estado' => 'required|in:presupuesto,reservado,confirmado,cancelado'
             ]);
         $reserva = Reserva::where('id', $id)->with('user.usuario', 'publicacion.proveedor', 'rubros','articulos')->firstOrFail();
+        $yaReservado = Reserva::where('publicacion_id', $reserva->publicacion_id)
+            ->where('fecha', $reserva->fecha)->where('horario_id', $reserva->horario_id)->where('id', '!=', $reserva->id)->first();
+
         if(Auth::id() == $reserva->user_id)
         {
-            $reserva->update(['estado' => $request->estado]);
+            if($yaReservado){
+                return response(null, Response::HTTP_CONFLICT);
+            } else {
+                $reserva->update(['estado' => $request->estado]);
 
-            if( $reserva->save() )
-            {
-                if($request->estado == 'confirmado'){
-                    Mail::to($reserva->publicacion->proveedor->email)->queue(new ReservaConfirmacion($reserva));
+                if( $reserva->save() )
+                {
+                    if($request->estado == 'confirmado'){
+                        Mail::to($reserva->publicacion->proveedor->email)->queue(new ReservaConfirmacion($reserva));
+                    }
+                    return response(null, Response::HTTP_OK);
                 }
-                return response(null, Response::HTTP_OK);
-            }
-            else 
-            {
-                return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+                else 
+                {
+                    return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+                }
             }
         }
         else

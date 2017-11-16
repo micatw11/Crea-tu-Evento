@@ -135,7 +135,14 @@ class PublicacionController extends Controller
                 DB::raw('TRUNCATE(AVG(calificaciones.puntuacion_total), 1) as calificacion'))
                         ->where('publicaciones.id', $id)->firstOrFail();
 
-        return response()->json(['publicacion' => $publicacion], 200);
+        $publicacionesProveedor = Publicacion::with('prestacion.rubros', 'prestacion.domicilio.localidad.provincia', 'proveedor.user.usuario','subcategoria.categoria','fotos', 'caracteristicas', 'favoritos', 'articulos','horarios', 'calificaciones.reserva.user.usuario')
+            ->where('publicaciones.id', '!=' ,$id)
+            ->where('publicaciones.proveedor_id', $publicacion->proveedor_id)
+            ->where('publicaciones.estado', 1)->limit(5)->get();
+            $this->setPromedio($publicacionesProveedor);
+
+        return response()->json(
+            ['publicacion' => $publicacion, 'publicacionesProveedor' => $publicacionesProveedor], 200);
     }
 
     protected function createPublicacion($request, $proveedor, $prestacion){
@@ -185,11 +192,10 @@ class PublicacionController extends Controller
                 $foto->save();
             }
             if ($request->has('horariosId')){
-                 foreach ($request->horariosId as $key) {
-                    $horarios = Horario::where('id', $key )->get();
-                    $horarios->update([
+                foreach ($request->horariosId as $key) {
+                    Horario::where('id', $key )->update([
                     'publicacion_id' => $publicacion->id]);
-                    $horarios->save();
+
                 }
             }
             if($request->has('caracteristicas')&&$publicacion)

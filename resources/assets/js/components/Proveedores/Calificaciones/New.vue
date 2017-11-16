@@ -72,6 +72,7 @@ export default {
                         message:'Se han realizado correctamente los cambios. :D'
                     });
                     this.resetForm()
+                    this.$events.fire('reloadIndexCalificacion');
                 }, response => {
                     this.$toast.error({
                         title:'¡Error!',

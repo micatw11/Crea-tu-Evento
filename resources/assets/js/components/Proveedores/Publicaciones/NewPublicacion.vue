@@ -107,7 +107,15 @@
 		data() {
 			return {
 				publicacion: {
-					type: Object
+	                    titulo: '',
+	                    descripcion: '',
+	                    subcategoria_id: '',
+	                    precio: 0,
+	                    oferta: false,
+	                    descuento: null,
+	                    fecha_finalizacion: null,
+	                    fotos: [],
+	                    caracteristicas: []
 				},
 				validarPublicacion: false,
 				errorsApi:[],

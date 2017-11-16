@@ -91,7 +91,7 @@
 	                <div class="col-sm-4">
 	                    <label for="precio" class="control-label">Precio</label><br>
 	                    <div class="input-group">
-	                        <money v-model="reserva.precio_total" v-bind="money" v-validate="'required|min_value:1'" data-vv-name="precio"></money>
+	                        <vue-numeric currency="$" separator="," v-bind:precision="2" v-model="reserva.precio_total" v-validate="'required|min_value:1'" data-vv-name="precio"></vue-numeric>
 	                    </div>
 	                    <!-- validacion vee-validation -->
 	                    <span v-show="errors.has('precio')&&validarReserva" class="help-block">
@@ -105,7 +105,6 @@
 </template>
 <script>
 	import auth from './../../../auth.js'
-    import Money from './../../Plugins/v-money/src/component'
 
 	export default {
 		props: {
@@ -132,13 +131,6 @@
 		},
 		data(){
 			return {
-                money: {
-                    decimal: ',',
-                    thousands: '.',
-                    prefix: '$ ',
-                    precision: 2,
-                    masked: false
-                },
 				validarReserva: false,
 				localidades: [],
 				opcionesRubros: [],
@@ -161,9 +153,6 @@
 	    },
 	    beforeDestroy() {
 		    this.$events.$off('validarFormReserva');
-		},
-		components: {
-			Money
 		},
 	    methods: {
 	    	validateBeforeSubmit: function() {

@@ -42,6 +42,12 @@
 
     Vue.use(ElementUI, { locale })
 
+    import VueNumeric from 'vue-numeric'
+     
+    // register directive v-money and component <money>
+    Vue.use(VueNumeric)
+
+
     var app = new Vue({
         el: '#app',
         render: h => h(App),

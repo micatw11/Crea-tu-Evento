@@ -93,43 +93,49 @@
         },
         methods: {
             getHorarios: function(){
-               this.endHandle=false;
-               this.horario=[];
-                 if (this.publicacionId != null){
+                this.endHandle=false;
+                this.horario=[];
+                if (this.publicacionId != null){
                     this.$http.get('api/publicacion/'+this.publicacionId+'/horarios')
-                    .then(response =>{
-                          this.horario = response.data.horarios
-                          this.loadH =true;
-                           this.showFormH = true;
-                      }, response => {
-                          if(response.status === 404){
-                              this.$toast.error({
-                                  title:'¡Error!',
-                                  message:'No se han cargado sus horarios. :('
-                              });
-                          }
-                      });
-                    } else{   
-                        if ((this.publicacionId == null)&&(this.horariosId!=[])){
-                          for (var i = 0; i < this.horariosId.length; i++) {
-                          this.$http.get('api/horarios/'+this.horariosId[i])
-                            .then(response =>{
-                                  this.horario.push(response.data)
-                                  
-                                  this.showFormH = true;
-                              }, response => {
-                                  if(response.status === 404){
-                                      this.$toast.error({
-                                          title:'¡Error!',
-                                          message:'No se han cargado sus horarios. :('
-                                      });
-                                  }
-                              });
-                          }
+                        .then(response =>{
+                            this.horario = response.data.horarios
+                            this.loadH =true;
+                            this.showFormH = true;
+                        }, response => {
+                            if(response.status === 404){
+                                this.$toast.error({
+                                    title:'¡Error!',
+                                    message:'No se han cargado sus horarios.'
+                                });
+                            }
+                        });
+                } else{
+                    this.showFormH = false;
+                    this.loadH = false;
+                    var lengthIds = this.horariosId.length;
+                    if ( this.publicacionId == null && this.horariosId.length > 0 ){
+                        for (var i = 0; i < this.horariosId.length; i++) {
+                            this.$http.get('api/horarios/'+this.horariosId[i])
+                                .then(response =>{
+                                    this.horario.push(response.data)
+                                    lengthIds--;
+                                    if(lengthIds == 0)
+                                    {
+                                        this.showFormH = true;
+                                        this.loadH =true;
+                                    }
+                                }, response => {
+                                    if(response.status === 404){
+                                        this.$toast.error({
+                                            title:'¡Error!',
+                                            message:'No se han cargado sus horarios.'
+                                        });
+                                    }
+                                });
                         }
-                        setTimeout(() => this.loadH = true, 2000);
-                      //this.loadH =true;
-                  
+                    }
+
+
                 }
 
             },

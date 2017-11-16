@@ -14,13 +14,13 @@
 
 			        	<div class="pull-right">
 
-				        		<button class="btn btn-primary" @click="modificar(publicacion.id)">
-				        			<i class="glyphicon glyphicon-pencil"></i>
-				        			Editar Publicaci&oacute;n</button>
-				        		<button class="btn" v-bind:class="btnStyle(publicacion.estado)" @click="baja(publicacion.id)">
-				        			<i class="glyphicon glyphicon-trash"></i>
-				        			{{ publicacion.estado == 1 ? 'Dar de baja' : 'Dar de alta'}}
-				        		</button>
+			        		<button class="btn btn-primary" @click="modificar(publicacion.id)">
+			        			<i class="glyphicon glyphicon-pencil"></i>
+			        			Editar Publicaci&oacute;n</button>
+			        		<button class="btn" v-bind:class="btnStyle(publicacion.estado)" @click="baja(publicacion.id)">
+			        			<i class="glyphicon glyphicon-trash"></i>
+			        			{{ publicacion.estado == 1 ? 'Dar de baja' : 'Dar de alta'}}
+			        		</button>
 
 			        	</div>
 					</div>
@@ -245,6 +245,28 @@
              	</div>
             </div>
 
+            <div class="box box-default" v-if="publicacacionesProveedor.length > 0 && auth.user.profile.roles_id == role.USUARIO">
+            	<div class="box-header with-border">
+            		<h3 class="box-title">Más publicaciones del proveedor</h3>
+            	</div>
+            	<div class="box-body">
+					<div class="col-sm-3 col-md-3" v-for="(publi, index) in publicacacionesProveedor">
+						<router-link 
+							tag="a" 
+							:to="'/publicacion/+ publi+id'">
+							<div class="thumbnail">
+								<img v-for="(foto, index) in publi.fotos" v-if="index == 0" :src="'/storage/proveedores/publicaciones/'+foto.nombre" alt="foto" style="max-height: 200px;" class="img-responsive">
+								<div class="caption">
+									<p>{{ formatMoney(publi.precio) }}</p>
+									<h3 style="text-align:center;">{{ publi.titulo }}</h3>
+									
+								</div>
+							</div>
+						</router-link>
+					</div>
+            	</div>
+            </div>
+
 	        <div <div class="box box-default" v-if="publicacion.calificaciones.length > 0">
 	        	<div class="box-header with-border">
 	        		<i class="fa fa-fw fa-star-o margin-r-5"></i><h3 class="box-title">Opiniones</h3>
@@ -347,7 +369,8 @@
 				productoId: null,
 				auth: auth,
 				role: Role,
-				showPresupuesto: false
+				showPresupuesto: false,
+				publicacacionesProveedor: []
 			}
 		},
 		mounted(){
@@ -365,6 +388,7 @@
 	            this.$http.get('api/publicacion/'+this.$route.params.publicacionId )
 	                .then(response => {
 	                    this.publicacion = response.data.publicacion
+	                    this.publicacacionesProveedor = response.data.publicacionesProveedor
 						var listPath = [
 								{route: '/', name: 'Inicio'}, 
 								{

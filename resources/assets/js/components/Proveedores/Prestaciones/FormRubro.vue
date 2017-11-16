@@ -124,7 +124,7 @@
                 </div>
                 
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has(('numero')||('piso'))&&validarRubro}">
-                    <div class="col-sm-2">
+                    <div class="col-sm-2 col-md-2 col-xs-6">
                             <label for="inputNro" class="control-label col-sm-12">N° </label><br>
                             <input 
                                 name="numero" 
@@ -144,7 +144,7 @@
                             </div>
                     </div>
 
-                    <div class="col-sm-2">
+                    <div class="col-sm-2 col-md-2 col-xs-6">
                         
                         <label for="inputPiso" class="control-label">Dpto. </label><br>
                         <input name="piso" type="text" v-model="domicilio.piso" placeholder="Piso" class="form-control col-sm-12">
