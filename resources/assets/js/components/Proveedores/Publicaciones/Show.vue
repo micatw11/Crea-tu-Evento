@@ -170,7 +170,7 @@
 				        </div>
              		</div>
 
-             		<div class="tab-pane" id="opiniones">
+             		<div class="tab-pane" id="opiniones" name="opiniones">
              			<div class="row">
              				<div class="col-sm-12">
              					<div v-for="(calificacion, index) in publicacion.calificaciones">
@@ -245,7 +245,7 @@
              	</div>
             </div>
 
-            <div class="box box-default" v-if="publicacacionesProveedor.length > 0 && auth.user.profile.roles_id == role.USUARIO">
+            <div class="box box-default" v-if="publicacacionesProveedor.length > 0 && (!auth.user.authenticated || (auth.user.authenticated && auth.user.profile.roles_id != role.PROVEEDOR))">
             	<div class="box-header with-border">
             		<h3 class="box-title">Más publicaciones del proveedor</h3>
             	</div>
@@ -253,9 +253,11 @@
 					<div class="col-sm-3 col-md-3" v-for="(publi, index) in publicacacionesProveedor">
 						<router-link 
 							tag="a" 
-							:to="'/publicacion/+ publi+id'">
+							:to="'/publicacion/'+ publi.id">
 							<div class="thumbnail">
-								<img v-for="(foto, index) in publi.fotos" v-if="index == 0" :src="'/storage/proveedores/publicaciones/'+foto.nombre" alt="foto" style="max-height: 200px;" class="img-responsive">
+								<div style="min-height:200px;">
+									<img v-for="(foto, index) in publi.fotos" v-if="index == 0" :src="'/storage/proveedores/publicaciones/'+foto.nombre" alt="foto" style="max-height: 200px;" class="img-responsive">
+								</div>
 								<div class="caption">
 									<p>{{ formatMoney(publi.precio) }}</p>
 									<h3 style="text-align:center;">{{ publi.titulo }}</h3>
@@ -267,11 +269,11 @@
             	</div>
             </div>
 
-	        <div <div class="box box-default" v-if="publicacion.calificaciones.length > 0">
+	        <div <div class="box box-default">
 	        	<div class="box-header with-border">
-	        		<i class="fa fa-fw fa-star-o margin-r-5"></i><h3 class="box-title">Opiniones</h3>
+	        		<i class="fa fa-fw fa-star-o margin-r-5" style="color: rgb(247, 186, 42);"></i><h3 class="box-title">Opiniones</h3>
 	        	</div>
-	        	<div class="box-body">
+	        	<div class="box-body" v-if="publicacion.calificaciones.length > 0">
 	        		<div class="col-sm-3" style="text-align:center;">
 		        			<h2>{{publicacion.calificacion}}</h2>
 		        			<p>
@@ -311,6 +313,11 @@
 
 						</div>
 						<!-- /.post -->
+	        		</div>
+	        	</div>
+	        	<div class="box-body" v-else>
+	        		<div class="text-center">
+	        			Esta publicaci&oacute;n no tiene ninguna calificaci&oacute;n aun.
 	        		</div>
 	        	</div>
 		        <!-- /.box-body -->
@@ -547,6 +554,11 @@
                     ? ''
                     : moment(value, 'YYYY-MM-DD').fromNow();
             },
-		}
+		},
+		watch: {
+	        '$route.params.publicacionId' (){
+	            this.getPublicacion();
+	        }
+	    }
 	}
 </script>

@@ -24,7 +24,15 @@ class ArticuloController extends Controller
         if($user->roles_id == Rol::roleId('proveedor')){
             $proveedor = Proveedor::where('user_id', $user->id)->firstOrFail();
             $query = Articulo::where('proveedor_id', $proveedor->id)->with('rubro')
-            ->orderBy('rubro_id', 'asc')->orderBy('nombre', 'asc');
+                ->orderBy('rubro_id', 'asc')->orderBy('nombre', 'asc');
+
+            if($request->has('filter') && $request->filter != ''){
+                $like = '%'.$request->filter.'%';
+                $query->where(function($query) use ($like){
+                        $query->where('nombre','like', $like );
+                    });
+            }
+
             if($request->has('page') || $request->has('per_page')){
                 $articulos = $query->paginate(10);
             }else{

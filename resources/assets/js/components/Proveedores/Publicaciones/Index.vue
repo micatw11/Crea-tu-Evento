@@ -263,13 +263,13 @@
             }
         },
         watch:
-            {
-                'auth.user.authenticated'(){
-                    if (auth.user.authenticated){
-                        this.favoriteIcon()
-                    }
+        {
+            'auth.user.authenticated'(){
+                if (auth.user.authenticated){
+                    this.favoriteIcon()
                 }
             }
+        }
  }
 
 </script>
