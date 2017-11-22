@@ -32,7 +32,7 @@ class Reserva extends Mailable
      */
     public function build()
     {
-        $address = 'crea-tu-ento@service.com';
+        $address = 'crea-tu-evento@service.com';
         $name = 'Crea Tu Evento';
         $subject = 'Nueva solicitud de Presupuesto ';
         return $this->view('mails.new-reserva',  ['reserva' => $this->reserva])

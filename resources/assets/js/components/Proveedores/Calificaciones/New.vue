@@ -2,6 +2,7 @@
     <div class="modal-body">
         <div class="box-body">
         	<form-calificacion 
+                :rubros="reserva.rubros"
                 :calificacion="calificacion"  
                 :errorsApi="errorsApi"
                 @validadoCalificacion="sendForm()">

@@ -106,7 +106,7 @@ export default {
             this.showModificar = true
         },
         getRubrosRegistrados: function() {
-            this.$http.get('api/proveedor/'+auth.user.profile.id+'/rubro/'
+            this.$http.get('api/proveedor/'+this.$route.params.userId+'/rubro/'
                 ).then(response => {
                     this.rubrosRegistrados = response.data.rubros
                 });

@@ -181,7 +181,7 @@
                 <div class="col-sm-4">
                     <label for="precio" class="control-label">Precio desde</label><br>
                     <div class="input-group">
-                        <vue-numeric currency="$" class="form-control" separator="," v-bind:precision="2" v-bind:min="1"v-model="publicacion.precio"  v-validate="'required|min_value:1'" data-vv-name="precio"></vue-numeric>
+                        <vue-numeric currency="$" class="form-control" separator="," v-bind:precision="2" v-model="publicacion.precio"  v-validate="'required|min_value:1'" data-vv-name="precio"></vue-numeric>
                     </div>
                     <!-- validacion vee-validation -->
                     <span v-show="errors.has('precio')&&validarPublicacion" class="help-block"> El campo precio es requerido.</span>

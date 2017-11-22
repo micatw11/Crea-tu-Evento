@@ -15,6 +15,17 @@
                 pagination-path=""
                 @vuetable:pagination-data="onPaginationData"
                 @vuetable:cell-clicked="onCellClicked">
+
+                    <template slot="actions" slot-scope="props" v-if="roleProveedor">
+                        <div class="custom-actions">
+                            <!-- Modificar Articulo -->
+                            <button class="btn-xs btn-default"
+                                @click="showModificarArticulo = true, articuloId = props.rowData.id">
+                                <i class="glyphicon glyphicon-pencil"></i> Modificar
+                            </button>
+                        </div>
+                    </template>
+
             </vuetable-articulos>
 
             <vuetable-pagination-info-articulos
@@ -29,6 +40,19 @@
                 @vuetable-pagination:change-page="onChangePage">
             </vuetable-pagination-articulos>
 
+            <!-- Modal Articulo-->
+            <div v-if="showModificarArticulo" id="modificar" class="modal" role="dialog" :style="{ display : showModificarArticulo  ? 'block' : 'none' }">
+                <div class="modal-dialog">
+                  <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" @click="closeModal()">&times;</button>
+                            <h4 class="modal-title">Modificar</h4>
+                        </div>
+                        <edit-articulo :articulo_id="articuloId"></edit-articulo>
+                    </div>
+                </div>
+            </div>
 		</section>
 	</div>
 </template>
@@ -40,8 +64,10 @@
     import Style from './../../Layouts/Style-css.js';
     import FilterBar from './FilterBarArticulos';
     import route from '../../../routes.js';
+    import auth from '../../../auth.js';
+    import role from '../../../config.js';
     import accounting from 'accounting-js';
-
+    import EditArticulo from './Edit';
     Vue.component('filter-bar-articulos', FilterBar);
 
 	export default {
@@ -55,9 +81,7 @@
                 tableColumns:  [
                     {
                         name: 'nombre',
-                        title: 'Nombre',
-                        titleClass: 'text-center',
-                        dataClass: 'text-center'           
+                        title: 'Nombre'      
                     },
                     {
                         name: 'precio',
@@ -78,13 +102,26 @@
                         titleClass: 'text-center',
                         dataClass: 'text-center'           
                     },
-
+                    {
+                         name: '__slot:actions',   // <----
+                         title: 'Acciones',
+                         titleClass: 'center aligned',
+                         dataClass: 'center aligned'
+                    },
                 ],
-                url: '/api/articulo'
+                url: '/api/articulo',
+                articuloId: null,
+                showModificarArticulo: false
             }
         },
         components: {
-            VuetableArticulos, VuetablePaginationArticulos, VuetablePaginationInfoArticulos
+            VuetableArticulos, VuetablePaginationArticulos, VuetablePaginationInfoArticulos, EditArticulo
+        },
+        beforeMount(){
+
+            if(auth.user.profile.roles_id == role.ADMINISTRADOR || auth.user.profile.roles_id == role.SUPERVISOR)
+                this.moreParams = {'user_id' : this.$route.params.userId }
+
         },
         mounted() {
             this.$events.$on('filter-set', eventData => this.onFilterSet(eventData));
@@ -116,11 +153,25 @@
 
             //filtros de busqueda
             onFilterSet (filterText) {
-                this.moreParams.filter = filterText
-
+                this.moreParams = {'filter' : filterText, 'user_id' : this.$route.params.userId }
                 this.$nextTick( () => this.$refs.vuetableArticulo.refresh() )
+            },
+            closeModal(){
+                this.articuloId = null;
+                this.showModificarArticulo = false;
+            }
+        },
+        computed: {
+            roleProveedor(){
+                if(auth.user.authenticated && (auth.user.profile.roles_id == role.PROVEEDOR))
+                    return true;
+                return false;
+            },
+            roleAdminOrSuper(){
+                if(auth.user.authenticated && (auth.user.profile.roles_id == role.ADMINISTRADOR || auth.user.profile.roles_id == role.SUPERVISOR))
+                    return true;
+                return false;
             }
         }
-
     }
 </script>

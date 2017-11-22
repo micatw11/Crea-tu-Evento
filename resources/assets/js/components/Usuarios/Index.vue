@@ -4,6 +4,7 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="box box-primary">
+
                         <div class="box-header">
                             <filter-bar></filter-bar>
                         </div>
@@ -186,8 +187,8 @@
                 this.$nextTick( () => this.$refs.vuetableU.refresh() )
             },
             //cambiar rol
-            changeItemRol(action, data, index) {
-                this.selected = `${event.target.value}`
+            changeItemRol(event, data, index) {
+                this.selected = event.target.value;
                 this.$http.post('api/user/'+ data.id+'/rol',
                 {
                     _method: 'PATCH',

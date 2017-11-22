@@ -36,7 +36,7 @@
 						            <div class="modal-content">
 						                <div class="modal-header">
 						                    <button type="button" class="close" @click="closeModal()">&times;</button>
-						                    <h4>{{reservaSelect.publicacion.titulo}}</h4>
+						                    <h4>Calificar a {{reservaSelect.publicacion.titulo}}</h4>
 						                </div>
 						                <new-form :reserva="reservaSelect" :publicacion="reservaSelect.publicacion"></new-form>
 						            </div>

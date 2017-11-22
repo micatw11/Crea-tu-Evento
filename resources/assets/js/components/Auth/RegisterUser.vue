@@ -23,11 +23,11 @@
                                 <p class="text-red">Error al registrar</p> 
                             </div>
 
-                            <form role="form" @submit.prevent="validateBeforeSubmit">
+                            <form role="form">
                                 <div class="col-xs-12">
                                     <div class="col-xs-6">
                                         <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('nombre')&&validar}">
-                                            <input name="nombre" v-model="usuario.nombre" v-validate:nombre="'required|min:4|max:55'"type="text" class="form-control" placeholder="Ingresar nombre">
+                                            <input name="nombre" v-model="usuario.nombre" v-validate="'required|min:4|max:55'"type="text" class="form-control" placeholder="Ingresar nombre">
                                             <span class="glyphicon glyphicon-user form-control-feedback"></span>
                                             <!-- validacion vee-validation -->
                                             <span  v-show="errors.has('nombre')&&validar" class="help-block">{{ errors.first('nombre') }}</span>
@@ -40,7 +40,7 @@
                                         </div>
 
                                         <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('apellido')&&validar}">
-                                            <input name="apellido" v-model="usuario.apellido" v-validate:apelido="'required|min:4|max:55'"type="text" class="form-control" placeholder="Ingresar apellido">
+                                            <input name="apellido" v-model="usuario.apellido" v-validate="'required|min:4|max:55'"type="text" class="form-control" placeholder="Ingresar apellido">
                                             <span class="glyphicon glyphicon-user form-control-feedback"></span>
                                             <!-- validacion vee-validation -->
                                             <span   v-show="errors.has('apellido') && validar" class="help-block">{{ errors.first('apellido') }}</span>
@@ -83,7 +83,7 @@
                                     </div>
                                     <div class="col-xs-6">
                                         <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('confirmation')&&validar}">
-                                            <input name="confirmation" v-model="password_confirmation" type="password" v-validate:confirmation="'required|confirmed:password'" class="form-control" placeholder="Confirmar contraseña">
+                                            <input name="confirmation" v-model="password_confirmation" type="password" v-validate:password_confirmation="'required|confirmed:password'" class="form-control" placeholder="Confirmar contraseña">
                                             <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
                                             <!-- validacion vee-validation -->
                                             <span v-show="errors.has('confirmation')&&validar" class="help-block">{{ errors.first('confirmation') }}</span>
@@ -154,7 +154,7 @@
                                         <div class="form-group has-feedback text-center row">
                                             <!-- /.col -->
                                             <div class="col-xs-12">
-                                                <button type="submit" class="btn btn-primary btn-flat">Crear cuenta</button>
+                                                <button type="button" @click="validateBeforeSubmit()"class="btn btn-primary btn-flat">Crear cuenta</button>
                                             </div>
                                             <!-- /.col -->
                                         </div>
@@ -236,13 +236,16 @@ export default {
         },
         validateBeforeSubmit: function(e) {
             this.clearErrors();
+            console.log('entro');
             this.$validator.validateAll().then((result) => {
                 if (result) {
                     this.register();
-                    return;
+                } else {
+                    this.validar = true;
                 }
+                return;
             }).catch(() => {
-                this.validar = true;
+                
             });
 
         },

@@ -140,6 +140,13 @@ class CalificacionController extends Controller
         }
     }
 
+    public function reportar(Request $request, $id){
+        $calificacion = Calificacion::where('id', $id)->firstOrFail();
+        $calificacion->update(['reportado' => 1]);
+        $calificacion->save();
+        return response(null, Response::HTTP_OK);
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -148,6 +155,9 @@ class CalificacionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $calificacion = Calificacion::where('id', $id)->firstOrFail();
+        $calificacion->update(['estado' => 0]);
+        $calificacion->save();
+        return response(null, Response::HTTP_OK);
     }
 }
