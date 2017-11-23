@@ -68,9 +68,16 @@
 					rubro_id: this.newArticulo.rubro_id
 				}).then(response => {
 					this.closeModal();
+                    this.$toast.success({
+                        title:'¡Cambios realizados!',
+                        message:'Se han realizado correctamente los cambios.'
+                    });
 					this.$events.fire('reloadIndexArticulo'); 
 				}, response => {
-					console.log('Error en articulos');
+                    this.$toast.error({
+                        title:'¡Error!',
+                        message:'No se han podido guardar los cambios.'
+                    });
 				});
 			},
 			closeModal(){

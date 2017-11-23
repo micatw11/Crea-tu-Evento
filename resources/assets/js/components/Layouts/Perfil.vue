@@ -25,8 +25,8 @@
                     </div>
                     <!-- /.box -->
 
-                    <!-- About Me Box -->
-                    <div class="box box-primary" >
+                    <!-- About Me Box --> 
+                    <div class="box box-primary">
                         <div class="box-header with-border">
                             <h3 class="box-title">Informaci&oacute;n</h3>
                         </div>
@@ -58,64 +58,79 @@
                         </div>
                         <!-- /.box-body -->
                     </div>
-
                     <!-- /.box -->
                 </div>
                 <!-- /.col -->
 
-                <div class="col-md-9">
-                    <div class="box">
-                        <div class="box-header">
-                            <h3 class="box-title">Cuenta</h3>
-                            <div class="box-tools pull-right">
-                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                            </div>
-                        </div>
-
-                        <div class="box-body" style="display: block;">
-                            <div class="nav-tabs-custom">
-                                <ul class="nav nav-tabs">
-                                    <!--<li class="active"><a href="#activity" data-toggle="tab">Activity</a></li>-->
-                                    <li class="active" v-if="perfil !== null && perfil.user_id == auth.user.profile.id">
-                                        <a href="#info" data-toggle="tab">Informaci&oacute;n</a>
-                                    </li>
-                                    <li v-if="perfil !== null && perfil.user_id == auth.user.profile.id">
-                                        <a href="#account" data-toggle="tab">Configuración</a>
-                                    </li>
-                                </ul>
-                            
-
-                                <div class="tab-content">
-                                    
-                                    <!--<div class="active tab-pane" id="activity">
-                                        <activity></activity>
-                                    </div>-->
-
-                                    <div v-if="perfil !== null && perfil.user_id == auth.user.profile.id" 
-                                        class="active tab-pane" id="info">
-                                        <show :usuario="perfil"></show>
-                                    </div>
-
-                                    <div v-if="perfil !== null && perfil.user_id == auth.user.profile.id"  class="tab-pane content" id="account">
-                                        <div>
-                                            <form-perfil></form-perfil>
-                                        </div>
-                                        <br><hr>
-                                        <div>
-                                            <account></account>
-                                        </div>
-                                    </div>
-                                    <!-- /.tab-pane -->
+                <template v-if="perfil !== null && perfil.user_id == auth.user.profile.id">
+                    <div class="col-md-9">
+                        <div class="box">
+                            <div class="box-header">
+                                <h3 class="box-title">Cuenta</h3>
+                                <div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                                 </div>
                             </div>
-                        <!-- /.tab-content -->
+
+                            <div class="box-body" style="display: block;">
+                                <div class="nav-tabs-custom">
+                                    <ul class="nav nav-tabs">
+                                        <!--<li class="active"><a href="#activity" data-toggle="tab">Activity</a></li>-->
+                                        <li class="active" v-if="perfil !== null && perfil.user_id == auth.user.profile.id">
+                                            <a href="#info" data-toggle="tab">Informaci&oacute;n</a>
+                                        </li>
+                                        <li v-if="perfil !== null && perfil.user_id == auth.user.profile.id">
+                                            <a href="#account" data-toggle="tab">Configuración</a>
+                                        </li>
+                                    </ul>
+                                
+
+                                    <div class="tab-content">
+                                        
+                                        <!--<div class="active tab-pane" id="activity">
+                                            <activity></activity>
+                                        </div>-->
+
+                                        <div v-if="perfil !== null && perfil.user_id == auth.user.profile.id" 
+                                            class="active tab-pane" id="info">
+                                            <show :usuario="perfil"></show>
+                                        </div>
+
+                                        <div v-if="perfil !== null && perfil.user_id == auth.user.profile.id"  class="tab-pane content" id="account">
+                                            <div>
+                                                <form-perfil></form-perfil>
+                                            </div>
+                                            <br><hr>
+                                            <div>
+                                                <account></account>
+                                            </div>
+                                        </div>
+                                        <!-- /.tab-pane -->
+                                    </div>
+                                </div>
+                            <!-- /.tab-content -->
+                            </div>
+                        </div>
+                        <!-- /.nav-tabs-custom -->
+                    </div>
+                </template>
+                <template v-if="perfil !== null && perfil.user_id != auth.user.profile.id">
+                    <div class="col-md-9">
+                        <div class="nav-tabs-custom">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#actividades" data-toggle="tab" aria-expanded="false">Actividades</a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="active tab-pane" id="actividades">
+                                    <time-line></time-line>
+                                </div>
+                                <!-- /.tab-pane -->
+                            </div>
+                            <!-- /.tab-content -->
                         </div>
                     </div>
-                    <!-- /.nav-tabs-custom -->
-                </div>
-
-                <div class="col-md-12" 
-                    v-if="(perfil !== null) && (perfil.user.roles_id == role.USUARIO) &&
+                </template>
+                <div class="col-md-12" v-if="(perfil !== null) && (perfil.user.roles_id == role.USUARIO) &&
                         (perfil.user.id == auth.user.profile.id)">
 
                     <div class="nav-tabs-custom">
@@ -142,10 +157,10 @@
                         </div>
                         <!-- /.tab-content -->
                     </div>
+
                 </div>
                 <box-proveedor 
-                    v-if="(perfil !== null) && (perfil.user.roles_id == role.PROVEEDOR) &&
-                            (perfil.user.id == auth.user.profile.id)" 
+                    v-if="perfil !== null && auth.user.authenticated && ((perfil.user.roles_id == role.PROVEEDOR && perfil.user.id == auth.user.profile.id) || (auth.user.profile.roles_id == role.ADMINISTRADOR && perfil.user.roles_id == role.PROVEEDOR) || (auth.user.profile.roles_id == role.SUPERVISOR && perfil.user.roles_id == role.PROVEEDOR))" 
                     :perfil="perfil">    
                 </box-proveedor>
             </div>
@@ -246,6 +261,7 @@ export default {
     },
     watch: {
         '$route.params.userId' (){
+            if(auth.user.authenticated && (this.$route.params.userId == auth.user.profile.id || auth.user.profile.roles_id == role.ADMINISTRADOR || auth.user.profile.roles_id == role.SUPERVISOR ))
             this.getUserPerfil();
         }
     },

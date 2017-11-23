@@ -118,8 +118,8 @@
 					<li><a href="#opiniones" @click.prevent data-toggle="tab" v-if="publicacion.calificaciones.length > 0">
 						Opiniones</a>
 					</li>
-					<li v-if="auth.user.authenticated && (auth.user.profile.roles_id == role.PROVEEDOR && 
-				    	publicacion.proveedor.user_id == auth.user.profile.id)"><a href="#proveedor" @click.prevent data-toggle="tab">Eventos y Estadisticas</a>
+					<li v-if="auth.user.authenticated && ((auth.user.profile.roles_id == role.PROVEEDOR && 
+				    	publicacion.proveedor.user_id == auth.user.profile.id) || auth.user.profile.roles_id == role.ADMINISTRADOR || auth.user.profile.roles_id == role.SUPERVISOR)"><a href="#proveedor" @click.prevent data-toggle="tab">Eventos y Estadisticas</a>
 				    </li>
 				</ul>
 				<div class="tab-content">
@@ -170,12 +170,37 @@
 				        </div>
              		</div>
 
-             		<div class="tab-pane" id="opiniones">
+             		<div class="tab-pane" id="opiniones" name="opiniones">
              			<div class="row">
              				<div class="col-sm-12">
-             					<div v-for="(calificacion, index) in publicacion.calificaciones">
+             					<div v-for="(calificacion, index) in publicacion.calificaciones" v-if="index <= quantityCalificaciones">
 								    <div class="col-sm-12">
 								    	<hr v-if="index > 0">
+								    	<div class="pull-right" v-if="calificacion.reportado == false && auth.user.authenticated && (auth.user.profile.roles_id == role.PROVEEDOR)">
+											<el-dropdown @command="handleCommand">
+												<span class="el-dropdown-link">
+													<i class="el-icon-arrow-down el-icon--right"></i>
+												</span>
+												<el-dropdown-menu slot="dropdown">
+													<el-dropdown-item v-bind:command="calificacion">Reportar</el-dropdown-item>
+												</el-dropdown-menu>
+											</el-dropdown>
+								    	</div>
+								    	<div class="pull-right" v-if="auth.user.authenticated && (auth.user.profile.roles_id == role.SUPERVISOR || auth.user.profile.roles_id == role.ADMINISTRADOR)">
+											<el-dropdown @command="handleCommandDelete">
+												<span class="el-dropdown-link">
+													<i class="el-icon-arrow-down el-icon--right"></i>
+												</span>
+												<el-dropdown-menu slot="dropdown">
+													<el-dropdown-item v-bind:command="calificacion">Eliminar</el-dropdown-item>
+												</el-dropdown-menu>
+											</el-dropdown>
+								    	</div>
+								    	<div v-if="calificacion.reportado == true">
+											<span class="pull-right-container">
+												<small class="label pull-right bg-red">reportado</small>
+											</span>
+								    	</div>
 								    	<div class="col-sm-12">
 											<div class="user-block">
 												<img class="img-circle img-bordered-sm" :src="'/storage/avatars/' + calificacion.reserva.user.usuario.avatar" alt="avatar">
@@ -231,21 +256,104 @@
 								            <p>{{calificacion.comentario}}</p>
 								        </div>
 								    </div>
+								    <div class="col-sm-12">
+										<div v-if="index == quantityCalificaciones">
+					                        <button class="btn 23btn-default btn-block" @click="verMas">Ver Mas</button>
+					                    </div>
+								    </div>
              					</div>
              				</div>
              			</div>
              		</div>
 
-             		<div v-if="auth.user.authenticated && (auth.user.profile.roles_id == role.PROVEEDOR && 
-				    	publicacion.proveedor.user_id == auth.user.profile.id)" class="tab-pane" id="proveedor">
+             		<div v-if="auth.user.authenticated && ((auth.user.profile.roles_id == role.PROVEEDOR && 
+				    	publicacion.proveedor.user_id == auth.user.profile.id) || auth.user.profile.roles_id == role.ADMINISTRADOR || auth.user.profile.roles_id == role.SUPERVISOR)" class="tab-pane" id="proveedor">
 				    	<div class="box-body">
-							<index-reservas :publicacionId="publicacion.id"></index-reservas>
+				    		<div class="row">
+					    		<div class="col-sm-12">
+					    			<index-reservas :publicacionId="publicacion.id"></index-reservas><br>
+					    		</div>
+								<div class="col-sm-12" v-if="loadedData">
+									<div class="col-md-offset-1 col-md-5">
+										<div class="info-box bg-aqua">
+											<span class="info-box-icon"><i class="fa fa-heart-o" style="color: white;"></i></span>
+											<div class="info-box-content">
+												<span class="info-box-text">Favoritos</span>
+												<span class="info-box-number">{{publicacion.favoritos.length}}</span>
+												<div class="progress">
+													<div class="progress-bar" v-bind:style="'width: '+publicacion.favoritos.length+'%'"></div>
+												</div>
+												<span class="progress-description">
+													{{publicacion.favoritos.length}} tienen en sus favoritos.
+												</span>
+											</div>
+											<!-- /.info-box-content -->
+										</div>
+										<!-- /.info-box -->
+									</div>
+									<div class="col-md-5">
+										<div class="info-box bg-yellow">
+											<span class="info-box-icon"><i class="fa fa-calendar"></i></span>
+											<div class="info-box-content">
+												<span class="info-box-text">Eventos</span>
+												<span class="info-box-number">{{ reservasCount }}</span>
+												<div class="progress">
+													<div class="progress-bar" v-bind:style="'width: '+reservaAumento+'%'"></div>
+												</div>
+												<span class="progress-description">
+													{{reservaAumento}}% Incremento en los ultimos 30 dias.
+												</span>
+											</div>
+											<!-- /.info-box-content -->
+										</div>
+										<!-- /.info-box -->
+									</div>
+									<div class="col-md-4">
+										<!-- small box -->
+										<div class="small-box bg-aqua">
+											<div class="inner">
+												<h3>{{reservasNuevas}}</h3>
+												<p>Nuevas reservas</p>
+											</div>
+											<div class="icon">
+												<i class="fa fa-shopping-cart"></i>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<!-- small box -->
+										<div class="small-box bg-red">
+											<div class="inner">
+												<h3>65</h3>
+
+												<p>Vistas</p>
+											</div>
+											<div class="icon">
+												<i class="ion ion-pie-graph"></i>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<!-- small box -->
+										<div class="small-box bg-green">
+											<div class="inner">
+												<h3>{{reservasCanceladas}}<sup style="font-size: 20px">%</sup></h3>
+
+												<p>Reservas canceladas</p>
+											</div>
+											<div class="icon">
+												<i class="ion ion-stats-bars"></i>
+											</div>
+										</div>
+									</div>    
+								</div>
+							</div>
 						</div>
              		</div>
              	</div>
             </div>
 
-            <div class="box box-default" v-if="publicacacionesProveedor.length > 0 && auth.user.profile.roles_id == role.USUARIO">
+            <div class="box box-default" v-if="publicacacionesProveedor.length > 0 && (!auth.user.authenticated || (auth.user.authenticated && auth.user.profile.roles_id != role.PROVEEDOR))">
             	<div class="box-header with-border">
             		<h3 class="box-title">Más publicaciones del proveedor</h3>
             	</div>
@@ -253,9 +361,11 @@
 					<div class="col-sm-3 col-md-3" v-for="(publi, index) in publicacacionesProveedor">
 						<router-link 
 							tag="a" 
-							:to="'/publicacion/+ publi+id'">
+							:to="'/publicacion/'+ publi.id">
 							<div class="thumbnail">
-								<img v-for="(foto, index) in publi.fotos" v-if="index == 0" :src="'/storage/proveedores/publicaciones/'+foto.nombre" alt="foto" style="max-height: 200px;" class="img-responsive">
+								<div style="min-height:200px;">
+									<img v-for="(foto, index) in publi.fotos" v-if="index == 0" :src="'/storage/proveedores/publicaciones/'+foto.nombre" alt="foto" style="max-height: 200px;" class="img-responsive">
+								</div>
 								<div class="caption">
 									<p>{{ formatMoney(publi.precio) }}</p>
 									<h3 style="text-align:center;">{{ publi.titulo }}</h3>
@@ -267,11 +377,11 @@
             	</div>
             </div>
 
-	        <div <div class="box box-default" v-if="publicacion.calificaciones.length > 0">
+	        <div <div class="box box-default">
 	        	<div class="box-header with-border">
-	        		<i class="fa fa-fw fa-star-o margin-r-5"></i><h3 class="box-title">Opiniones</h3>
+	        		<i class="fa fa-fw fa-star-o margin-r-5" style="color: rgb(247, 186, 42);"></i><h3 class="box-title">Opiniones</h3>
 	        	</div>
-	        	<div class="box-body">
+	        	<div class="box-body" v-if="publicacion.calificaciones.length > 0">
 	        		<div class="col-sm-3" style="text-align:center;">
 		        			<h2>{{publicacion.calificacion}}</h2>
 		        			<p>
@@ -311,6 +421,11 @@
 
 						</div>
 						<!-- /.post -->
+	        		</div>
+	        	</div>
+	        	<div class="box-body" v-else>
+	        		<div class="text-center">
+	        			Esta publicaci&oacute;n no tiene ninguna calificaci&oacute;n aun.
 	        		</div>
 	        	</div>
 		        <!-- /.box-body -->
@@ -370,7 +485,9 @@
 				auth: auth,
 				role: Role,
 				showPresupuesto: false,
-				publicacacionesProveedor: []
+				publicacacionesProveedor: [],
+				loadedData: false,
+				quantityCalificaciones: 9,
 			}
 		},
 		mounted(){
@@ -378,7 +495,6 @@
 		    this.$nextTick(function() {
 		      this.getPublicacion();
 		    })
-			
 		},
 		components: {
         	Carousel, Slide, NewPresupuesto
@@ -405,6 +521,7 @@
 								}
 							]
 						this.$events.fire('changePath', listPath, this.publicacion.titulo);
+						this.loadedData = true;
 	                }, response => {
 	                    if(response.status === 404){
 	                        router.push('/404');
@@ -547,6 +664,105 @@
                     ? ''
                     : moment(value, 'YYYY-MM-DD').fromNow();
             },
-		}
+			verMas: function(){
+                if((this.quantityCalificaciones + 10) > this.publicacion.calificaciones.length )
+                {
+                    this.quantityCalificaciones = this.quantityCalificaciones + 10;
+                } else {
+                    this.quantityCalificaciones = this.publicacion.calificaciones.length;
+                }
+            },
+			handleCommand(command) {
+	            this.$http.patch('api/calificacion/'+command.id+'/reportar' )
+	                .then(response => {
+	                    this.$toast.success({
+	                        title:'Acción realizada!',
+	                        message:'Se ha reportado esta calificacion'
+	                    });
+	                    command.reportado = true;
+	                }, response => {
+	                    this.$toast.error({
+	                        title:'¡Error!',
+	                        message:'No se han podido realizar la acción.'
+	                    });
+
+	                })
+			},
+			handleCommandDelete(command) {
+	            this.$http.delete('api/calificacion/'+command.id )
+	                .then(response => {
+	                    this.$toast.success({
+	                        title:'Acción realizada!',
+	                        message:'Se ha reportado esta calificacion'
+	                    });
+	                    for (var i = 0; i < this.publicacion.calificaciones.length; i++) 
+	                    {
+	                    	if(this.publicacion.calificaciones[i].id == command.id)
+	                    	{
+	                    		this.publicacion.calificaciones.splice(i,1);
+	                    		break;
+	                    	}
+	                    }
+	                    return;
+	                }, response => {
+	                    this.$toast.error({
+	                        title:'¡Error!',
+	                        message:'No se han podido realizar la acción.'
+	                    });
+
+	                })
+			}
+		},
+		computed: {
+			reservasCount(){
+				var count = 0;
+				for (var reserva of this.publicacion.reservas) {
+					if(reserva.estado == 'confirmado')
+						count++;
+				}
+				return count;
+			},
+			reservaAumento(){
+				var count = 0;
+				var countTomorrow = 0;
+				for (var reserva of this.publicacion.reservas) {
+					if(reserva.estado == 'confirmado'){
+						count++;
+						if(moment().subtract(1, 'months').isAfter(moment(reserva.fecha, 'YYYY-MM-DD'))){
+							countTomorrow++;
+						}
+					}
+				}
+				return (countTomorrow*100)/count;
+			},
+			reservasNuevas(){
+				var count = 0;
+				for (var reserva of this.publicacion.reservas) {
+					if(reserva.estado == 'reserva' && moment(reserva.fecha, 'YYYY-MM-DD').isAfter(moment()))
+						count++;
+				}
+				return count;
+			},
+			reservasCanceladas(){
+				var count = 0;
+				var countCancelados = 0;
+				for (var reserva of this.publicacion.reservas) {
+					if(reserva.estado == 'cancelado')
+						countCancelados++;
+					count++;
+				}
+				return (countCancelados*100)/count;
+			}
+		},
+		watch: {
+	        '$route.params.publicacionId' (){
+	            this.getPublicacion();
+	        }
+	    }
 	}
 </script>
+<style>
+  .el-dropdown-link {
+    cursor: pointer;
+  }
+</style>

@@ -29,7 +29,7 @@
                     <div class="box box-primary">
 
                         <div class="box-header">
-                            <filter-bar></filter-bar>
+                            <filter-bar-l></filter-bar-l>
                         </div>
 
                         <!-- /.box-header -->
@@ -139,7 +139,7 @@
     import route from '../../routes.js';
     import auth from '../../auth.js';
 
-    Vue.component('filter-bar', FilterBar);
+    Vue.component('filter-bar-l', FilterBar);
   
     export default {
 

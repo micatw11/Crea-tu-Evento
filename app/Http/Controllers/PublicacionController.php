@@ -43,11 +43,11 @@ class PublicacionController extends Controller
         {
             $user_id = $request->favorite;
             $ids = Favorito::where('user_id', Auth::id())->orderBy('created_at', 'ASC')->get()->pluck('publicacion_id');
-            
-        } else {
+        } 
+        else
+        {
             $query = Publicacion::where('publicaciones.estado', 1 )
-                ->join('proveedores', 'publicaciones.proveedor_id', '=', 'proveedores.id')
-                ->join('prestaciones', 'prestaciones.proveedor_id', '=', 'proveedores.id')
+                ->join('prestaciones', 'prestaciones.id', '=', 'publicaciones.prestacion_id')
                 ->join('domicilios', 'prestaciones.domicilio_id', '=', 'domicilios.id')
                 ->join('localidades', 'domicilios.localidad_id', '=', 'localidades.id')
                 ->join('subcategorias', 'publicaciones.subcategoria_id', '=', 'subcategorias.id')
@@ -55,13 +55,17 @@ class PublicacionController extends Controller
                 ->select('publicaciones.*')
                 ->where('publicaciones.estado', 1);
         
-
+            if($request->has('with_localidad') && $request->with_localidad != ''){
+                $id = $request->with_localidad;
+                $query->where(function($query) use ($id){
+                    $query->where('localidades.id', $id );
+                });
+            }
 
             if($request->has('filter') && $request->filter != ''){
                 $like = '%'.$request->filter.'%';
                 $query->where(function($query) use ($like){
-                    $query->where('publicaciones.titulo','like', $like )
-                        ->orWhere('publicaciones.descripcion', 'like', $like);
+                    $query->where('publicaciones.titulo','like', $like );
                     });
             }
             if($request->has('with_subcategory') && $request->with_subcategory != '')
@@ -81,32 +85,27 @@ class PublicacionController extends Controller
                     });
                 }
             }
-            if($request->has('with_localidad') && $request->with_localidad != ''){
-                $id = $request->with_localidad;
-                $query->where(function($query) use ($id){
-                    $query->where('localidades.id', $id );
-                });
-            }
+
             $ids = $query->distinct('publicaciones.id')->get()->pluck('id');
             
         }
 
         $query = Publicacion::whereIn('publicaciones.id', $ids)
-            ->with('calificaciones', 'prestacion.proveedor.domicilio.localidad.provincia', 'prestacion.domicilio.localidad.provincia',
-             'prestacion.rubros', 'subcategoria.categoria', 'fotos', 'caracteristicas', 'favoritos', 'horarios')
+            ->with(array('calificaciones' => function($query){$query->where('estado', '=', 1 );}, 'prestacion.proveedor.domicilio.localidad.provincia', 'prestacion.domicilio.localidad.provincia',
+             'prestacion.rubros', 'subcategoria.categoria', 'fotos', 'caracteristicas', 'favoritos', 'horarios'))
             ->groupBy('publicaciones.id')
 
 
-        ->select(
-            'publicaciones.*',
+            ->groupBy('publicaciones.id')
+            ->select('publicaciones.*',
                 DB::raw('(CASE WHEN publicaciones.oferta IS NULL THEN FALSE ELSE TRUE END) as tiene_oferta'),
-
                 DB::raw('(SELECT CASE WHEN COUNT(caracteristica_publicacion.id) = 0 THEN FALSE ELSE TRUE END FROM caracteristica_publicacion WHERE caracteristica_publicacion.publicacion_id = publicaciones.id ) as tiene_caracteristicas') );
 
-            $publicaciones = $query->orderBy('tiene_oferta', 'DESC')
-                ->orderBy('tiene_caracteristicas', 'DESC')
-                    ->paginate(10);
-            $this->setPromedio($publicaciones);
+        $publicaciones = $query->orderBy('tiene_oferta', 'DESC')
+            ->orderBy('tiene_caracteristicas', 'DESC')
+                ->paginate(10);
+
+        $this->setPromedio($publicaciones);
 
         return response()->json(['publicaciones' => $publicaciones, 'idses' => $ids], 200);
     }
@@ -130,7 +129,8 @@ class PublicacionController extends Controller
     public function show(Request $request, $id){
 
         $publicacion = Publicacion::join('calificaciones', 'calificaciones.publicacion_id', '=', 'publicaciones.id')
-            ->with('prestacion.rubros', 'prestacion.domicilio.localidad.provincia', 'proveedor.user.usuario','subcategoria.categoria','fotos', 'caracteristicas', 'favoritos', 'articulos','horarios', 'calificaciones.reserva.user.usuario')
+            ->where('calificaciones.estado', 1)
+            ->with(array('prestacion.rubros', 'prestacion.domicilio.localidad.provincia', 'proveedor.user.usuario','subcategoria.categoria','fotos', 'caracteristicas', 'favoritos', 'articulos','horarios', 'calificaciones' => function($query){$query->where('estado', '=', 1 );},'calificaciones.reserva.user.usuario', 'reservas'))
             ->select('publicaciones.*',
                 DB::raw('TRUNCATE(AVG(calificaciones.puntuacion_total), 1) as calificacion'))
                         ->where('publicaciones.id', $id)->firstOrFail();

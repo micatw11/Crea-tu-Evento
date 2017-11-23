@@ -28,7 +28,7 @@ class Publicacion extends Model
 
     public function reservas()
     {
-        return $this->belongsTo('App\Reserva');
+        return $this->hasMany('App\Reserva');
     }
 
     public function mensajes(){

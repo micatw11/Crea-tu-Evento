@@ -1,9 +1,11 @@
 <template>
     <div class="login-box layout-boxed" style="margin: 0% auto; height: 680px;">
         <br><br><br>
-        <div class="login-logo">
-            <a href="#"><b>Crea tu Evento</b></a>
-        </div>
+        <router-link to="/">
+            <div class="login-logo">
+                <a href="#"><b>Crea tu Evento</b></a>
+            </div>
+        </router-link>
         <!-- /.login-logo -->
         <div class="login-box-body">
             <div v-if="deactivated" class="callout callout-danger">

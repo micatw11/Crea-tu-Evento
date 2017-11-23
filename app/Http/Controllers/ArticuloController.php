@@ -19,12 +19,31 @@ class ArticuloController extends Controller
      */
     public function index(Request $request)
     {
+        $user_id = null;
         $user = Auth::user();
         $articulos = [];
-        if($user->roles_id == Rol::roleId('proveedor')){
-            $proveedor = Proveedor::where('user_id', $user->id)->firstOrFail();
+        if($user->roles_id == Rol::roleId('proveedor') || $user->roles_id == Rol::roleId('administrador')
+         || $user->roles_id == Rol::roleId('supervisor')){
+            if($request->has('user_id'))
+            {
+                $user_id = $request->user_id;
+            } 
+            else 
+            {
+                $user_id = $user->id;
+            }
+
+            $proveedor = Proveedor::where('user_id', $user_id)->firstOrFail();
             $query = Articulo::where('proveedor_id', $proveedor->id)->with('rubro')
-            ->orderBy('rubro_id', 'asc')->orderBy('nombre', 'asc');
+                ->orderBy('rubro_id', 'asc')->orderBy('nombre', 'asc');
+
+            if($request->has('filter') && $request->filter != ''){
+                $like = '%'.$request->filter.'%';
+                $query->where(function($query) use ($like){
+                        $query->where('nombre','like', $like );
+                    });
+            }
+
             if($request->has('page') || $request->has('per_page')){
                 $articulos = $query->paginate(10);
             }else{
@@ -106,14 +125,19 @@ class ArticuloController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validateArticulo($request);
+        $this->validate($request, 
+            [
+                'stock' => 'numeric|nullable', 
+                'nombre' => 'required|min:3|max:25',
+                'precio' => 'nullable'
+            ]);
         $user = Auth::user();
         if($user->roles_id == Rol::roleId('proveedor')){
             $proveedor = Proveedor::where('user_id', $user->id)->firstOrFail();
 
-            $articulo = Article::where('id', $id)->where('proveedor_id', $proveedor->id)->firstOrFail();
+            $articulo = Articulo::where('id', $id)->where('proveedor_id', $proveedor->id)->firstOrFail();
 
-            $articulo->update($request);
+            $articulo->update($request->all());
             
             if($articulo->save())
             {

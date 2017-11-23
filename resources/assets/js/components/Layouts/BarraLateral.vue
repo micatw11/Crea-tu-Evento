@@ -185,7 +185,7 @@
                 <template v-if="showFilter && categorias.length > 0 && showCategories">
                     <li class="treeview active">
                         <a href="#">
-                            <i class="fa fa-dashboard"></i>
+                            <i class="fa fa-bars"></i>
                             <span>Categorias</span>
                             <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>

@@ -2,18 +2,39 @@
     <div class="default-content">
         <section class="content">
             <div class="row">
-                <div class="col-sm-6 col-sm-offset-3">
+                <div class="col-md-9 col-md-offset-1 col-xs-12">
                     <form v-on:submit.prevent="searchPublicacion()" role="form" >
-                        <div class="input-group stylish-input-group">
-                            <input type="text" name="q" class="form-control" v-model="q" placeholder="Busqueda">
-                            <span class="input-group-addon">
-                                <button v-if="category_name != ''">
-                                    <input type="checkbox" v-model="with_category" name="with_category"> En {{ category_name }}
-                                </button>
-                                <button type="submit" name="search" id="search-btn">
-                                <i class="fa fa-search"></i>
-                                </button>
-                            </span>
+                        <div class="col-sm-4" style="padding-right: 0px; padding-left: 0px;">
+                            <el-select style="width: 100%;"
+                                v-model="localidad_id"
+                                filterable=""
+                                remote=""
+                                no-data-text="Elija una localidad"
+                                reserve-keyword
+                                clearable
+                                placeholder="Localidad"
+                                :remote-method="remoteMethod"
+                                :loading="loading">
+                                    <el-option
+                                    v-for="item in localidades"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                                    </el-option>
+                            </el-select>
+                        </div>
+                        <div class="col-sm-8" style="padding-left: 0px; padding-right: 0px;">
+                            <div class="input-group stylish-input-group">
+                                <input type="text" name="q" class="form-control" v-model="q" placeholder="Busqueda" style="height: 36px;">
+                                <span class="input-group-addon">
+                                    <button v-if="category_name != ''">
+                                        <input type="checkbox" v-model="with_category" name="with_category"> En {{ category_name }}
+                                    </button>
+                                    <button type="submit" name="search" id="search-btn">
+                                    <i class="fa fa-search"></i>
+                                    </button>
+                                </span>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -60,6 +81,7 @@
                     from:0,
                     to:0 
                 },
+                localidades: [],
                 titlePath: 'Inicio',
                 listaPath: [{route: '/', name: 'Inicio'}],
                 publicaciones : [],
@@ -109,7 +131,7 @@
                 if(this.rubro_id  != undefined && this.rubro_id  != '' && this.with_category) 
                     filtro = filtro + '&with_denomination='+this.rubro_id;
                 if(this.localidad_id !=  null)
-                    filtro = filtro + '&with_localidad='+this.localidad_id.value ;
+                    filtro = filtro + '&with_localidad='+this.localidad_id ;
                 if(this.favorite_user) 
                     filtro = filtro + '&favorite='+true;
                 filtro = filtro + '&page='+this.pageOne.current_page+'&per_page='+this.pageOne.per_page;
@@ -295,6 +317,18 @@
                     prev_page_url:null,
                     from:0,
                     to:0 
+                }
+            },
+            remoteMethod(query) {
+                if (query !== '') {
+                    this.loading = true;
+                    this.$http.get('api/localidades/?q='+ query)
+                        .then(response => {
+                            this.localidades = response.data.data
+                            this.loading = false;
+                        });
+                } else {
+                    this.localidades = [];
                 }
             }
         },

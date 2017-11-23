@@ -4,7 +4,11 @@
 			<div class="col-sm-6">
             	<div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('calidad')&&validarCalificacion}">
                 	<div class="col-sm-12">
-                    	<label  class="control-label">Calidad</label>
+                    	<label  class="control-label">Calidad <template v-if="isSalon">del Sal&oacute;n</template>
+                    		<template v-else-if="isServicio">del Servicio</template>
+                    		<template v-else="isProducto">de los Productos</template>
+                    	</label>
+
                     	<el-rate
 							v-model="calificacion.calidad"
 							:texts="['malo', 'decepcionado', 'normal', 'bueno', 'genial']"
@@ -23,7 +27,10 @@
 			<div class="col-sm-6">
             	<div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('calidad_precio')&&validarCalificacion}">
                 	<div class="col-sm-12">
-                    	<label  class="control-label">Relaci&oacute;n Precio-Calidad</label>
+                    	<label  class="control-label">Relaci&oacute;n Precio-Calidad <template v-if="isSalon">del Sal&oacute;n</template>
+                    		<template v-else-if="isServicio">del Servicio</template>
+                    		<template v-else="isProducto">de los Productos</template></label>
+                    	</label>
                     	<el-rate
 							v-model="calificacion.calidad_precio"
 							:texts="['malo', 'decepcionado', 'normal', 'bueno', 'genial']"
@@ -42,7 +49,10 @@
 			<div class="col-sm-6">
             	<div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('profesionalidad')&&validarCalificacion}">
                 	<div class="col-sm-12">
-                    	<label  class="control-label">Profesionalidad del Preveedor</label>
+                    	<label  class="control-label">Profesionalidad del Preveedor <template v-if="isSalon">del Sal&oacute;n</template>
+                    		<template v-else-if="isServicio">del Servicio</template>
+                    		<template v-else="isProducto">de los Productos</template></label>
+                    	</label>
                     	<el-rate
 							v-model="calificacion.profesionalidad"
 							:texts="['malo', 'decepcionado', 'normal', 'bueno', 'genial']"
@@ -125,7 +135,10 @@
             errorsApi: {
                 type: Object,
                 required: true
-            }
+            },
+           	rubros: {
+           		required: false
+           	}
 		},
 		data() {
 			return {
@@ -157,6 +170,32 @@
 				this.calificacion.puntuacion_total = 
 					((this.calificacion.calidad + this.calificacion.calidad_precio + this.calificacion.profesionalidad + this.calificacion.respuesta) / 4);
 			}
-		}
+		},
+	    computed: {
+	        isSalon(){
+	            for (let rubro of this.rubros) {
+	            	if(rubro.salon){
+	            		return true;
+	            	}
+	            }
+	            return false;
+	        }, 
+	        isServicio(){
+	            for (let rubro of this.rubros) {
+	            	if(rubro.servicio){
+	            		return true;
+	            	}
+	            }
+	            return false;
+	        },
+	        isProducto(){
+	            for (let rubro of this.rubros) {
+	            	if(rubro.producto){
+	            		return true;
+	            	}
+	            }
+	            return false;
+	        }
+	    }
 	}
 </script>

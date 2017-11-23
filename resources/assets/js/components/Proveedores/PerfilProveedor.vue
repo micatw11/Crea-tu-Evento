@@ -18,9 +18,11 @@
                                 <a href="#publicaciones" data-toggle="tab">Publicaciones</a>
                             </li>
                             <li>
-                                <a href="#rubro" data-toggle="tab">Rubro</a>
+                                <a href="#rubros" data-toggle="tab">Rubro</a>
                             </li>
-
+                            <li>
+                                <a href="#articulos" data-toggle="tab">Productos</a>
+                            </li>
                         </ul>
                     
                         <div class="tab-content">
@@ -50,17 +52,22 @@
                                         :total-items="pageOne.total"
                                         @page-changed="pageOneChanged">
                                     </pagination-box> 
-                                
                                 </div>
                             </div>
-                            <div class="tab-pane" id="rubro">
 
+                            <div class="tab-pane" id="rubros">
                                 <div v-if="perfil.user.proveedor">
                                     <index-rubros :perfil="perfil"></index-rubros>
                                 </div>
+                            </div>
 
+                            <div class="tab-pane" id="articulos">
+                                <div v-if="perfil.user.proveedor">
+                                    <index-articulos></index-articulos>
+                                </div>
                             </div>
                             <!-- /.tab-pane -->
+
                         </div>
                     </div>
                 <!-- /.tab-content -->
@@ -75,7 +82,7 @@
 
     import IndexRubros from './Prestaciones/Index.vue';
     import IndexPublicaciones from './Publicaciones/Index.vue';
-
+    import IndexArticulos from './Articulos/Index.vue';
     Vue.component('pagination-box', require('./../Plugins/pagination/pagination-v1.vue'));
 
     export default {
@@ -111,7 +118,7 @@
             this.getProductos();
         },
         components: {
-            IndexRubros, IndexPublicaciones
+            IndexRubros, IndexPublicaciones, IndexArticulos
         }, 
         methods:{
             getProductos: function(){
