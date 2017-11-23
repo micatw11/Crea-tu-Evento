@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Services\DomicilioService;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\EstadoProveedor;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
@@ -170,11 +172,14 @@ class ProveedorController extends Controller
 
 
         if($proveedor->user->save() && $proveedor->save()){
+                   Mail::to($proveedor->email)->queue(new EstadoProveedor($proveedor));
             return response(null, Response::HTTP_OK);
+
         } else {
             return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
 
     /**
      * Show the specified resource.
