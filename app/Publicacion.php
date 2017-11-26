@@ -90,4 +90,8 @@ class Publicacion extends Model
         return $this->hasMany('App\Calificacion');
     }
 
+    public function vistas()
+    {
+        return $this->hasMany('App\VistaPublicacion');
+    }
 }

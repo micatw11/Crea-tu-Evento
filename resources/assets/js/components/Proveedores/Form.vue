@@ -155,7 +155,7 @@
                     <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('calle')&&validarProveedor}">
                         <div class="col-sm-12">
                             <label for="inputCalle" class="control-label">Direccion </label><br>
-                            <input name="calle"  v-validate:domicilio.calle="'required|min:4'" type="text" class="form-control" v-model="proveedor.domicilio.calle" placeholder="calle">
+                            <input name="calle"  v-validate="'required|min:4'" type="text" class="form-control" v-model="proveedor.domicilio.calle" placeholder="calle">
                             <!-- validacion vee-validation -->
                             <span v-show="errors.has('calle')&&validarProveedor" class="help-block">{{ errors.first('calle') }}</span>
                             <!-- validacion api-->

@@ -75,6 +75,30 @@
 							       	<p>
 					                	<strong>Email:</strong> {{publicacion.proveedor.email}}
 						          	</p>
+						          	<p v-id="publicacion.prestacion.habilitacion != null">
+						          		Ha indicado que cuenta con habilitacion comercial.
+						          	</p>
+						          	<hr>
+						          	<template v-if="publicacion.prestacion.domicilio_id != null">
+							          	<p >
+							          		<i class="fa fa-map-marker" aria-hidden="true"></i> <strong>Ubicacion</strong>
+							          	</p>
+							          	<p>
+							          		{{ publicacion.prestacion.domicilio.localidad.nombre }} -
+							          		{{ publicacion.prestacion.domicilio.localidad.provincia.nombre }}
+							          	</p>
+							          	<p><strong>Calle </strong>{{ publicacion.prestacion.domicilio.calle}}</p>
+							        </template>
+						          	<template v-else>
+							          	<p >
+							          		<i class="fa fa-map-marker" aria-hidden="true"></i> <strong>Ubicacion</strong>
+							          	</p>
+							          	<p>
+							          		{{ publicacion.proveedor.domicilio.localidad.nombre }} -
+							          		{{ publicacion.proveedor.domicilio.localidad.provincia.nombre }}
+							          	</p>
+							          	<p><strong>Calle </strong>{{ publicacion.proveedor.domicilio.calle}}</p>
+						          	</template>
 						          	
 						          	<hr v-if="publicacion.calificacion != null">
 

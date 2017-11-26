@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<form role="form">
-			<template v-if="requiredDate">
+			<template>
 				<div class="col-sm-4">
 		            <div class="form-group has-feedback">
 		                <div class="col-sm-12">

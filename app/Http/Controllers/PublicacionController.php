@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use App\VistaPublicacion;
 use App\Publicacion;
 use App\Reserva;
 use App\Prestacion;
@@ -130,7 +131,7 @@ class PublicacionController extends Controller
 
         $publicacion = Publicacion::join('calificaciones', 'calificaciones.publicacion_id', '=', 'publicaciones.id')
             ->where('calificaciones.estado', 1)
-            ->with(array('prestacion.rubros', 'prestacion.domicilio.localidad.provincia', 'proveedor.user.usuario','subcategoria.categoria','fotos', 'caracteristicas', 'favoritos', 'articulos','horarios', 'calificaciones' => function($query){$query->where('estado', '=', 1 );},'calificaciones.reserva.user.usuario', 'reservas'))
+            ->with(array('prestacion.rubros', 'prestacion.domicilio.localidad.provincia', 'proveedor.user.usuario', 'proveedor.domicilio.localidad.provincia','subcategoria.categoria','fotos', 'caracteristicas', 'favoritos', 'articulos','horarios', 'calificaciones' => function($query){$query->where('estado', '=', 1 );},'calificaciones.reserva.user.usuario', 'reservas', 'vistas'))
             ->select('publicaciones.*',
                 DB::raw('TRUNCATE(AVG(calificaciones.puntuacion_total), 1) as calificacion'))
                         ->where('publicaciones.id', $id)->firstOrFail();
@@ -140,6 +141,10 @@ class PublicacionController extends Controller
             ->where('publicaciones.proveedor_id', $publicacion->proveedor_id)
             ->where('publicaciones.estado', 1)->limit(5)->get();
             $this->setPromedio($publicacionesProveedor);
+        if(!Auth::user())
+            VistaPublicacion::create(['publicacion_id' => $publicacion->id]);
+        else if(Auth::user() && Auth::user()->roles_id == Rol::roleId('Usuario')) 
+            VistaPublicacion::create(['publicacion_id' => $publicacion->id, 'user_id' => Auth::id()]);
 
         return response()->json(
             ['publicacion' => $publicacion, 'publicacionesProveedor' => $publicacionesProveedor], 200);

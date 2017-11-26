@@ -76,7 +76,7 @@
                     localidad_id: localidad_id,
                 }
                 this.$refs.button.disabled = true;
-                this.$refs.buttonAtras.disabled = false;
+                this.$refs.buttonAtras.disabled = true;
 	            this.$http.post(
 	                'api/publicacion/'+this.publicacion.id+'/presupuesto', data)
 	                .then(response => {

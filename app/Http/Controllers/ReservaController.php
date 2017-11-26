@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Services\DomicilioService;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Reserva as MailReserva;
+use App\Mail\ResponseProveedor;
 use App\Mail\ReservaConfirmacion;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -288,7 +289,8 @@ class ReservaController extends Controller
      */
     public function updatePresupuesto(Request $request, $id)
     {
-        $reserva = Reserva::where('id', $id)->where('estado', 'presupuesto')->firstOrFail();
+        $reserva = Reserva::where('id', $id)->where('estado', 'presupuesto')
+                ->with('user.usuario', 'publicacion.proveedor')->firstOrFail();
         $reserva->articulos()->detach();
         $reserva->articulos()->attach($request->articulos);
 
@@ -297,16 +299,35 @@ class ReservaController extends Controller
             $reserva->presupuestado = true;
             $reserva->precio_total = $request->precio_total;
         }
-        else if (Auth::user()->roles_id == Rol::roleId('Usuario')) {
-            $reserva->presupuestado = false;
-            if($request->has('horario_id') && $request->horario_id != null){
-                $reserva->horario_id = $request->horario_id;
+        else  {
+            $horario = null;
+            if($request->has('horario_id') && $request->horario_id != null)
+            {
+                $horario = Horario::where('id', $request->horario_id)->firstOrFail();;
             }
+
+            $reserva->presupuestado = false;
+            if($horario != null){
+                $reserva->horario_id = $horario->id;
+                $reserva->hora_inicio = $horario->hora_inicio;
+                $reserva->hora_finalizacion = $horario->hora_fin;
+            }
+            $reserva->update(['fecha' => $request->fecha]);
+            Mensaje::create([ 
+                'from_user_id' => Auth::id(), 
+                'to_user_id' => $reserva->publicacion->proveedor->user_id, 
+                'ancestro_id' => null, 'mensaje' => $request->comentario, 
+                'reserva_id' => $reserva->id
+            ]);
         }
        
         
         if( $reserva->save() )
         {
+            if(Auth::user()->roles_id == Rol::roleId('Proveedor'))
+            {
+                Mail::to($reserva->publicacion->proveedor->email)->queue(new ResponseProveedor($reserva));
+            }
             return response(null, Response::HTTP_OK);
         }
         else 
