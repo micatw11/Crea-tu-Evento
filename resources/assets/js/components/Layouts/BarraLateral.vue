@@ -107,8 +107,9 @@
                             </router-link>
                         </ul>
                     </li>
+
                     <li class="treeview" v-if="favourites > 0">
-                          <router-link :to="'/?favorite='+ true" tag="a" @click="goToFavourites()">
+                        <router-link :to="'/?favorite='+ true" tag="a" @click="goToFavourites()">
                             <i class="fa fa-dashboard"></i>
                             <span>Favoritos</span>
                             <span class="pull-right-container">
@@ -180,7 +181,14 @@
                             </span>
                         </router-link>
                     </li>
-                    
+
+                    <li class="treeview">
+                          <router-link to="/estadisticas" tag="a">
+                            <i class="fa fa-line-chart"></i>
+                            <span>Estadisticas</span>
+                        </router-link>
+                    </li>
+
                 </template>
                 <template v-if="showFilter && categorias.length > 0 && showCategories">
                     <li class="treeview active">
@@ -204,8 +212,8 @@
                             </router-link>
                         </ul>
                     </li>
-
                 </template>
+
             </ul>
         </section>
         <!-- /.sidebar -->
