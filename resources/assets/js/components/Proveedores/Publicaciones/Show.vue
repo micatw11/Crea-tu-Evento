@@ -75,6 +75,30 @@
 							       	<p>
 					                	<strong>Email:</strong> {{publicacion.proveedor.email}}
 						          	</p>
+						          	<p v-if="publicacion.prestacion.habilitacion != null">
+						          		Ha indicado que cuenta con habilitacion comercial.
+						          	</p>
+						          	<hr>
+						          	<template v-if="publicacion.prestacion.domicilio_id != null">
+							          	<p >
+							          		<i class="fa fa-map-marker" aria-hidden="true"></i> <strong>Ubicacion</strong>
+							          	</p>
+							          	<p>
+							          		{{ publicacion.prestacion.domicilio.localidad.nombre }} -
+							          		{{ publicacion.prestacion.domicilio.localidad.provincia.nombre }}
+							          	</p>
+							          	<p><strong>Calle </strong>{{ publicacion.prestacion.domicilio.calle}}</p>
+							        </template>
+						          	<template v-else>
+							          	<p >
+							          		<i class="fa fa-map-marker" aria-hidden="true"></i> <strong>Ubicacion</strong>
+							          	</p>
+							          	<p>
+							          		{{ publicacion.proveedor.domicilio.localidad.nombre }} -
+							          		{{ publicacion.proveedor.domicilio.localidad.provincia.nombre }}
+							          	</p>
+							          	<p><strong>Calle </strong>{{ publicacion.proveedor.domicilio.calle}}</p>
+						          	</template>
 						          	
 						          	<hr v-if="publicacion.calificacion != null">
 
@@ -345,7 +369,12 @@
 												<i class="ion ion-stats-bars"></i>
 											</div>
 										</div>
-									</div>    
+									</div>   
+									<div class="col-md-12">
+										<line-chart style="height: 200px;" 
+											:data="dataCharts" 
+											:options="{responsive: true, maintainAspectRatio: false}"></line-chart>	
+									</div> 
 								</div>
 							</div>
 						</div>
@@ -443,7 +472,7 @@
 	    </section>
 
 	    <!-- modal presupuesto -->
-	    <div v-if="auth.user.authenticated && showPresupuesto" id="modificar" class="modal" role="dialog" :style="{ display : showPresupuesto  ? 'block' : 'none' }">
+	    <div v-if="auth.user.authenticated && showPresupuesto" class="modal" role="dialog" :style="{ display : showPresupuesto  ? 'block' : 'none' }">
 	        <div class="modal-dialog modal-lg">
 	            <div class="modal-content">
 	                <div class="modal-header">
@@ -473,6 +502,7 @@
 	import moment from 'moment';
 	import NewPresupuesto from './../Presupuestos/New';
 	import accounting from 'accounting-js';
+	import LineChart from './LineChart.js';
 
 	Vue.component('index-reservas', require('./../Reservas/Index'));
 	export default {
@@ -497,7 +527,7 @@
 		    })
 		},
 		components: {
-        	Carousel, Slide, NewPresupuesto
+        	Carousel, Slide, NewPresupuesto, LineChart
     	},
 		methods: {
 			getPublicacion: function(){
@@ -752,6 +782,67 @@
 					count++;
 				}
 				return (countCancelados*100)/count;
+			},
+			dataCharts(){
+		
+				var labels = [];
+				var label = 'Visualizaciones de esta publicación';
+				var backgroundColor = '#3c8dbc';
+				var data = [];
+
+				var hoy = moment({});
+				var mesesCount = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
+
+				var meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+					'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+				for (var visualizacion of this.publicacion.vistas) {
+					if( moment(visualizacion.created_at, 'YYYY-MM-DD').year() == hoy.year()){
+						switch(moment(visualizacion.created_at, 'YYYY-MM-DD').month()) {
+						    case 1:
+						        mesesCount[0] = mesesCount[0] + 1;
+						        break;
+						    case 2:
+						        mesesCount[1] = mesesCount[1] + 1;
+						        break;
+						    case 3:
+						        mesesCount[2] = mesesCount[2] + 1;
+						        break;
+						    case 4:
+						        mesesCount[3] = mesesCount[3] + 1;
+						        break;
+						    case 5:
+						        mesesCount[4] = mesesCount[4] + 1;
+						        break;
+						    case 6:
+						        mesesCount[5] = mesesCount[5] + 1;
+						        break;
+						    case 7:
+						        mesesCount[6] = mesesCount[6] + 1;
+						        break;
+						    case 8:
+						        mesesCount[7] = mesesCount[7] + 1;
+						        break;
+						    case 9:
+						        mesesCount[8] = mesesCount[8] + 1;
+						        break;
+						    case 10:
+						        mesesCount[9] = mesesCount[9] + 1;
+						        break;
+						    case 11:
+						        mesesCount[10] = mesesCount[10] + 1;
+						        break;
+						    case 12:
+						        mesesCount[11] = mesesCount[11] + 1;
+						        break;
+						}
+					}
+				}
+				for (var i = 0; i <= hoy.month(); i++) {
+					labels.push(meses[i]);
+					data.push(mesesCount[i]);
+				}
+				return  { labels: labels, datasets: [{label:label, backgroundColor:backgroundColor, data:data}] }
 			}
 		},
 		watch: {

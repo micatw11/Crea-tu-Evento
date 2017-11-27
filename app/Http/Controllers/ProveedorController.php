@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Http\Services\DomicilioService;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NewProveedorToOperador;
+use App\Mail\NewProveedorToSupervisor;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EstadoProveedor;
@@ -17,6 +21,7 @@ use App\Domicilio;
 use App\Prestacion;
 use App\Rubro;
 use App\Log;
+use App\User;
 
 class ProveedorController extends Controller
 {
@@ -52,7 +57,10 @@ class ProveedorController extends Controller
                     ->orWhere('email', 'like', $like);
         }
 
-        $proveedores = $query->paginate(10);
+        if( $request->has('page') || $request->has('per_page') ) 
+            $proveedores = $query->paginate(10);
+        else
+            $proveedores = $query->get();
         return response()->json($proveedores, 200);
     }
 
@@ -71,6 +79,12 @@ class ProveedorController extends Controller
         $proveedor = $this->createProveedor($request,$domicilio);
         
         if ($proveedor && $domicilio ){
+            $proveedor = Proveedor::where('id', $proveedor->id)->with('user.usuario')->first();
+            $operador = User::where('id', Auth::id())->with('usuario')->first();
+            $supervisores = User::where('roles_id', Rol::roleId('Supervisor'))->activo()->get();
+            foreach ($supervisores as $supervisor) {
+                Mail::to($supervisor->email)->queue(new NewProveedorToOperador($operador, $proveedor));
+            }
             return response(null, Response::HTTP_OK);
         
         } else {
@@ -151,7 +165,7 @@ class ProveedorController extends Controller
      */
     public function cambiarEstado(Request $request, $id){
 
-        $proveedor = Proveedor::where('user_id', $id)->with('user')->firstOrFail();
+        $proveedor = Proveedor::where('user_id', $id)->with('user.usuario')->firstOrFail();
 
         if($request->action == 'Baja'){
             $proveedor->user->roles_id = Rol::roleId('Usuario');
@@ -161,6 +175,11 @@ class ProveedorController extends Controller
         } 
         else if ( $request->action == 'Aprobado' && $proveedor->user->roles_id == Rol::roleId('Usuario') ) 
         {
+            $supervisor = User::where('id', Auth::id())->with('usuario')->first();
+            $administradores = User::where('roles_id', Rol::roleId('Administrador'))->activo()->get();
+            foreach ($administradores as $administrador) {
+                Mail::to($administrador->email)->queue(new NewProveedorToSupervisor($supervisor, $proveedor));
+            }
             $proveedor->user->roles_id = Rol::roleId('Proveedor');
         }
         else {

@@ -41,6 +41,8 @@ var IndexLocalidad = require('./components/Localidades/Index');
 var IndexReserva = require('./components/Proveedores/Reservas/Index');
 var IndexCalificaciones = require('./components/Proveedores/Calificaciones/Index');
 
+var IndexEstadisticas = require('./components/Estadisticas/Index');
+
 var InternalServerError = require('./components/Errors/500');
 var PageNotFound = require('./components/Errors/404');
 
@@ -197,6 +199,14 @@ let routes = [
 			beforeEnter: guardRoute,
 			meta: { Role: [role.USUARIO], requiresAuth: true }	
 		},
+		{
+			path: '/estadisticas',
+			name: 'estadisticas',
+			component: IndexEstadisticas,
+			beforeEnter: guardRoute,
+			meta: { Role: [role.PROVEEDOR, role.ADMINISTRADOR, role.SUPERVISOR], requiresAuth: true }	
+		},
+
 		//errors
 		{
 			path: '/404',

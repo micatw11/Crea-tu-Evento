@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use App\VistaPublicacion;
 use App\Publicacion;
 use App\Reserva;
 use App\Prestacion;
@@ -101,16 +102,24 @@ class PublicacionController extends Controller
                 DB::raw('(CASE WHEN publicaciones.oferta IS NULL THEN FALSE ELSE TRUE END) as tiene_oferta'),
                 DB::raw('(SELECT CASE WHEN COUNT(caracteristica_publicacion.id) = 0 THEN FALSE ELSE TRUE END FROM caracteristica_publicacion WHERE caracteristica_publicacion.publicacion_id = publicaciones.id ) as tiene_caracteristicas') );
 
-        $publicaciones = $query->orderBy('tiene_oferta', 'DESC')
-            ->orderBy('tiene_caracteristicas', 'DESC')
-                ->paginate(10);
+        if( $request->has('page') || $request->has('per_page') ) 
+        {
+            $publicaciones = $query->orderBy('tiene_oferta', 'DESC')
+                ->orderBy('tiene_caracteristicas', 'DESC')
+                    ->paginate(10);
+        } else {
+            $publicaciones = $query->orderBy('tiene_oferta', 'DESC')
+                ->orderBy('tiene_caracteristicas', 'DESC')
+                    ->get();
+        }
 
         $this->setPromedio($publicaciones);
 
         return response()->json(['publicaciones' => $publicaciones, 'idses' => $ids], 200);
     }
 
-    private function setPromedio($publicaciones){
+    private function setPromedio($publicaciones)
+    {
         foreach ($publicaciones as $publicacion) {
             if(count($publicacion->calificaciones) > 0)
             {
@@ -126,11 +135,12 @@ class PublicacionController extends Controller
         }
     }
 
-    public function show(Request $request, $id){
+    public function show(Request $request, $id)
+    {
 
         $publicacion = Publicacion::join('calificaciones', 'calificaciones.publicacion_id', '=', 'publicaciones.id')
             ->where('calificaciones.estado', 1)
-            ->with(array('prestacion.rubros', 'prestacion.domicilio.localidad.provincia', 'proveedor.user.usuario','subcategoria.categoria','fotos', 'caracteristicas', 'favoritos', 'articulos','horarios', 'calificaciones' => function($query){$query->where('estado', '=', 1 );},'calificaciones.reserva.user.usuario', 'reservas'))
+            ->with(array('prestacion.rubros', 'prestacion.domicilio.localidad.provincia', 'proveedor.user.usuario', 'proveedor.domicilio.localidad.provincia','subcategoria.categoria','fotos', 'caracteristicas', 'favoritos', 'articulos','horarios', 'calificaciones' => function($query){$query->where('estado', '=', 1 );},'calificaciones.reserva.user.usuario', 'reservas', 'vistas'))
             ->select('publicaciones.*',
                 DB::raw('TRUNCATE(AVG(calificaciones.puntuacion_total), 1) as calificacion'))
                         ->where('publicaciones.id', $id)->firstOrFail();
@@ -140,12 +150,17 @@ class PublicacionController extends Controller
             ->where('publicaciones.proveedor_id', $publicacion->proveedor_id)
             ->where('publicaciones.estado', 1)->limit(5)->get();
             $this->setPromedio($publicacionesProveedor);
+        if(!Auth::user())
+            VistaPublicacion::create(['publicacion_id' => $publicacion->id]);
+        else if(Auth::user() && Auth::user()->roles_id == Rol::roleId('Usuario')) 
+            VistaPublicacion::create(['publicacion_id' => $publicacion->id, 'user_id' => Auth::id()]);
 
         return response()->json(
             ['publicacion' => $publicacion, 'publicacionesProveedor' => $publicacionesProveedor], 200);
     }
 
-    protected function createPublicacion($request, $proveedor, $prestacion){
+    protected function createPublicacion($request, $proveedor, $prestacion)
+    {
         return Publicacion::create([
                 'titulo' => $request->titulo,
                 'oferta' => $request->oferta,
@@ -158,7 +173,8 @@ class PublicacionController extends Controller
             ]);
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
     	$this->validatorPublicacion($request);
 
         $user = Auth::user();
@@ -207,10 +223,10 @@ class PublicacionController extends Controller
     	} else {
 			return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     	}
-
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $id)
+    {
         $this->validatorPublicacion($request);
         if($request->has('comercio')){
             $this->domicilioService->validateDomicilio($request);
@@ -323,11 +339,11 @@ class PublicacionController extends Controller
         Storage::put('public/proveedores/publicaciones/'.$filename, $file);
 
         return $filename;
-        
     }
 
   
-    public function publicacionesProveedor(Request $request, $idProveedor){
+    public function publicacionesProveedor(Request $request, $idProveedor)
+    {
 
         $query = Publicacion::with('proveedor', 'prestacion.rubros', 'subcategoria.categoria', 'fotos', 'prestacion.domicilio.localidad.provincia', 'caracteristicas', 'calificaciones')
             ->where('proveedor_id', $idProveedor);
