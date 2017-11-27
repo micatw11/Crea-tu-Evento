@@ -40,7 +40,9 @@ class ReservaController extends Controller
      */
     public function index()
     {
-        //
+        $reservas = Reserva::where('estado', '!=','reservado')->select('fecha', 'estado')->get();
+
+        return response()->json($reservas, Response::HTTP_OK);
     }
 
     public function reservasUser(Request $request, $user_id)

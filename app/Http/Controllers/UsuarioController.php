@@ -66,9 +66,10 @@ class UsuarioController extends Controller
 
             $queryUser = $queryUser->whereIn('id', $usuario);
         }
-
-        $users = $queryUser->with('usuario', 'rol')
-                        ->paginate(10);
+        if( $request->has('page') || $request->has('per_page') ) 
+            $users = $queryUser->with('usuario', 'rol')->paginate(10);
+        else
+            $users = $queryUser->with('usuario', 'rol')->get();
         return response()->json($users);
     }
 

@@ -55,7 +55,10 @@ class ProveedorController extends Controller
                     ->orWhere('email', 'like', $like);
         }
 
-        $proveedores = $query->paginate(10);
+        if( $request->has('page') || $request->has('per_page') ) 
+            $proveedores = $query->paginate(10);
+        else
+            $proveedores = $query->get();
         return response()->json($proveedores, 200);
     }
 
