@@ -9,10 +9,6 @@
                             @click="showNewCategoria = true">
                             Agregar Categoria
                             </button>
-                            <button class="btn btn-primary btn-sm"
-                            @click="showNewSubcategoria = true">
-                            Agregar Subcategoria
-                            </button>
                         </div>
                     </div>
                     <div v-if="showNewCategoria" class="modal" role="dialog" :style="{ display : showNewCategoria  ? 'block' : 'none' }">
@@ -27,19 +23,6 @@
                             </div>
                         </div>    
                     </div>
-                    <div v-if="showNewSubcategoria" class="modal" role="dialog" :style="{ display : showNewSubcategoria  ? 'block' : 'none' }">
-                        <div class="modal-dialog">
-                        <!-- Modal content-->
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" @click="closeModal()">&times;</button>
-                                    <h4 class="modal-title">Agregar Subcategoria</h4>
-                                </div>
-                                <new-subcategorias></new-subcategorias>
-                            </div>
-                        </div>    
-                    </div>
-
                 </div>
                 <div class="col-lg-5">
                     <div class="row">
@@ -163,7 +146,6 @@
                 idCategoria: null,
                 showModificarCategoria: false,
                 showNewCategoria: false,
-                showNewSubcategoria: false,
 
                 errorsApi: []
             }
@@ -181,7 +163,6 @@
         beforeDestroy() {
             this.$events.$off('reloadIndexCategoria');
             this.$events.$off('cerrar');
-            this.$events.$off('changePath');
             this.$events.$off('filter');
         },
         methods: {
@@ -210,13 +191,13 @@
             closeModal: function(){
                 this.showModificarCategoria = false;
                 this.showNewCategoria= false;
-                this.showNewSubcategoria= false;
+
                 this.idCategoria = null;
             },
             clearForm(){
                 this.showModificarCategoria= false;
                 this.showNewCategoria= false;
-                this.showNewSubcategoria= false;
+
             }
         },
 

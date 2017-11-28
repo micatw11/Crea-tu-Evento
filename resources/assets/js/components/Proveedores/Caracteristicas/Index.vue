@@ -158,7 +158,6 @@
         beforeDestroy() {
             this.$events.$off('reloadIndexCaracteristica');
             this.$events.$off('cerrar');
-            this.$events.$off('changePath');
             this.$events.$off('filter-setCaracteristica');
         },
         methods: {

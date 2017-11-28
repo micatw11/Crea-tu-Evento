@@ -19,8 +19,7 @@ use App\Log;
 use App\Proveedor;
 use App\Prestacion;
 use App\Rubro;
-
-
+use Activity;
 
 
 class UsuarioController extends Controller
@@ -329,4 +328,9 @@ class UsuarioController extends Controller
         return response()->json($usuarios);
     }
 
+    public function activityCount()
+    {
+        $numberOfGuests = Activity::usersBySeconds(30)->count(); 
+        return response()->json([$numberOfGuests], 200);
+    } 
 }

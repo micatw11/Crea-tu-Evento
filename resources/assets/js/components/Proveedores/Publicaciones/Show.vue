@@ -325,7 +325,7 @@
 													<div class="progress-bar" v-bind:style="'width: '+reservaAumento+'%'"></div>
 												</div>
 												<span class="progress-description">
-													{{reservaAumento}}% Incremento en los ultimos 30 dias.
+													{{reservaAumento}}% Incremento en el ultimo mes.
 												</span>
 											</div>
 											<!-- /.info-box-content -->
@@ -763,7 +763,7 @@
 						}
 					}
 				}
-				return (countTomorrow*100)/count;
+				return parseInt((countTomorrow*100)/count);
 			},
 			reservasNuevas(){
 				var count = 0;
@@ -781,7 +781,7 @@
 						countCancelados++;
 					count++;
 				}
-				return (countCancelados*100)/count;
+				return parseInt((countCancelados*100)/count);
 			},
 			dataCharts(){
 		
@@ -798,7 +798,7 @@
 
 				for (var visualizacion of this.publicacion.vistas) {
 					if( moment(visualizacion.created_at, 'YYYY-MM-DD').year() == hoy.year()){
-						switch(moment(visualizacion.created_at, 'YYYY-MM-DD').month()) {
+						switch(moment(visualizacion.created_at, 'YYYY-MM-DD').month()+1) {
 						    case 1:
 						        mesesCount[0] = mesesCount[0] + 1;
 						        break;

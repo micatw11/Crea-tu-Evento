@@ -37,6 +37,8 @@ Route::group(['prefix' => 'api'], function () {
         'except' => ['destroy', 'edit', 'create', 'store']
 	]);
 
+    Route::get('usuario/online', 'UsuarioController@activityCount');
+
     Route::post('user/{id}/perfil/avatar', 'UsuarioController@updateAvatar');
     Route::patch('user/{id}/password', 'UsuarioController@changePassword');
     Route::delete('user/{id}/account', 'UsuarioController@destroy');
