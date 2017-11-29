@@ -47,7 +47,7 @@ class ProveedorController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Proveedor::with('user.usuario', 'domicilio');
+        $query = Proveedor::with('user.usuario', 'domicilio.localidad.provincia');
 
         if($request->filter){
             $like = '%'.$request->filter.'%';

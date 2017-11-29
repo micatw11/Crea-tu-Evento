@@ -240,7 +240,6 @@
             onCellClicked (data, field, event) {
                 this.$refs.vuetable.toggleDetailRow(data.id)
             },
-
             //filtros de busqueda
             onFilterSet (filterText) {
                 this.moreParams.filter = filterText

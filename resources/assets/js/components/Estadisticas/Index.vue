@@ -20,7 +20,6 @@
 						<!-- /.info-box-content -->
 					</div>
 				</div>
-
 				<div class="col-lg-6 col-xs-12" v-if="loadedProveedores">
 					<!-- small box -->
 					<div class="info-box bg-red">
@@ -41,6 +40,18 @@
 
 				<div class="col-lg-3 col-xs-6">
 					<!-- small box -->
+					<div class="small-box bg-yellow">
+						<div class="inner">
+							<h3>44</h3>
+							<p>User Registrations</p>
+						</div>
+						<div class="icon">
+							<i class="ion ion-person-add"></i>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-xs-6">
+					<!-- small box -->
 					<div class="small-box bg-aqua">
 						<div class="inner">
 							<h3>{{publicacionesCantidad}}</h3>
@@ -55,6 +66,31 @@
 						</a>-->
 					</div>
 				</div>
+				<div class="col-lg-3 col-xs-6">
+					<!-- small box -->
+					<div class="small-box bg-green">
+						<div class="inner">
+							<h3>53<sup style="font-size: 20px">%</sup></h3>
+							<p>Bounce Rate</p>
+						</div>
+						<div class="icon">
+							<i class="ion ion-stats-bars"></i>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-xs-6">
+					<!-- small box -->
+					<div class="small-box bg-red">
+						<div class="inner">
+							<h3>{{usuariosOnline}} de {{ofUserOnline}}</h3>
+							<p>Usuarios activos</p>
+						</div>
+						<div class="icon">
+							<i class="ion ion-pie-graph"></i>
+						</div>
+					</div>
+				</div>
+
 			</div>
 			<div class="row">
 				<div class="col-md-12">
@@ -103,6 +139,7 @@
         		loadedReservas: false,
         		reservas: [],
         		usuariosOnline: 0,
+        		ofUserOnline: 0,
         		loadedProveedores: false,
         		loadedUsuarios: false,
         		usuarios: [],
@@ -121,8 +158,9 @@
         components: { LineChart, BarChart, PieChart },
         methods: {
         	getUsuariosActivos(){
-        		this.$http.get('/api/usuario/online').then(response =>{
-        			this.usuariosOnline = response.data;
+        		this.$http.get('api/usuario/active/count').then(response =>{
+        			this.usuariosOnline = response.data.numberOfGuests;
+        			this.ofUserOnline = response.data.ofUsers;
         		});
         	},
         	getUsuarios(){

@@ -31,13 +31,15 @@ Route::group(['prefix' => 'api'], function () {
     Route::post('password/email','Auth\PasswordController@sendResetLinkEmail');
     Route::post('password/reset', 'Auth\PasswordController@reset');
 
+    Route::get('supervisor/{id}/actividad/proveedores', 'UsuarioController@proveedoresBySupervisor');
+    Route::get('operador/{id}/actividad/proveedores', 'UsuarioController@proveedoresByOperador');
 
     Route::resource('usuario', 'UsuarioController', 
     [ 
         'except' => ['destroy', 'edit', 'create', 'store']
 	]);
 
-    Route::get('usuario/online', 'UsuarioController@activityCount');
+    Route::get('usuario/active/count', 'UsuarioController@activityCount');
 
     Route::post('user/{id}/perfil/avatar', 'UsuarioController@updateAvatar');
     Route::patch('user/{id}/password', 'UsuarioController@changePassword');

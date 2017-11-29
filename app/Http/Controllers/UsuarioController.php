@@ -278,8 +278,7 @@ class UsuarioController extends Controller
       return $this->validate($request, 
         [
             'oldPassword' => 'required|min:6',
-            'password' => 'required|min:6|confirmed'
-        ]);
+            'password' => 'required|min:6|confirmed']);
     }
 
 
@@ -331,6 +330,34 @@ class UsuarioController extends Controller
     public function activityCount()
     {
         $numberOfGuests = Activity::usersBySeconds(30)->count(); 
-        return response()->json([$numberOfGuests], 200);
+        $ofUsers = User::where('estado', 1)->count();
+        return response()->json(['numberOfGuests' => $numberOfGuests, 'ofUsers' => $ofUsers], Response::HTTP_OK);
+    } 
+
+    public function proveedoresBySupervisor(Request $request, $id)
+    {
+        $query = Proveedor::where('accepted_by_user_id', $id)
+            ->orWhere('rejected_by_user_id', $id)
+            ->orderBy('created_at', 'DESC')->with('user.usuario', 'domicilio.localidad.provincia');
+
+        if( $request->has('page') || $request->has('per_page') ) {
+            $proveedores = $query->paginate(10);
+        }
+        else{
+            $proveedores = $query->get();
+        }
+        return response()->json($proveedores, Response::HTTP_OK);
+    } 
+    public function proveedoresByOperador(Request $request, $id)
+    {
+        $query = Proveedor::where('register_by_user_id', $id)
+            ->orderBy('created_at', 'DESC')->with('user.usuario', 'domicilio.localidad.provincia');
+        if( $request->has('page') || $request->has('per_page') ) {
+            $proveedores = $query->paginate(10);
+        }
+        else{
+            $proveedores = $query->get();
+        }
+        return response()->json($proveedores, Response::HTTP_OK);
     } 
 }

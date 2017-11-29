@@ -38,9 +38,8 @@
                             <p v-if="perfil !== null" class="text-muted">{{ perfil.localidad.nombre}}, {{perfil.localidad.provincia.nombre}}</p>
 
                             <div 
-                                v-if="perfil !== null && (perfil.user.roles_id == role.ADMINISTRADOR ||
-                                perfil.user.roles_id == role.SUPERVISOR) && 
-                                perfil.user_id != auth.user.profile.id && auth.user.profile.roles_id == role.ADMINISTRADOR">
+                                v-if="perfil !== null && ((perfil.user.roles_id != role.ADMINISTRADOR) &&
+                                perfil.user_id != auth.user.profile.id && auth.user.profile.roles_id == role.ADMINISTRADOR)">
                                 <hr>
 
                                 <strong><i class="fa fa-users margin-r-5"></i> Rol </strong>
@@ -114,6 +113,7 @@
                         <!-- /.nav-tabs-custom -->
                     </div>
                 </template>
+
                 <template v-if="perfil !== null && perfil.user_id != auth.user.profile.id">
                     <div class="col-md-9">
                         <div class="nav-tabs-custom">
@@ -130,9 +130,9 @@
                         </div>
                     </div>
                 </template>
+
                 <div class="col-md-12" v-if="(perfil !== null) && (perfil.user.roles_id == role.USUARIO) &&
                         (perfil.user.id == auth.user.profile.id)">
-
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
                             <li class="active"><a href="#eventos" data-toggle="tab" aria-expanded="false">Eventos</a></li>
@@ -157,12 +157,17 @@
                         </div>
                         <!-- /.tab-content -->
                     </div>
-
                 </div>
                 <box-proveedor 
                     v-if="perfil !== null && auth.user.authenticated && ((perfil.user.roles_id == role.PROVEEDOR && perfil.user.id == auth.user.profile.id) || (auth.user.profile.roles_id == role.ADMINISTRADOR && perfil.user.roles_id == role.PROVEEDOR) || (auth.user.profile.roles_id == role.SUPERVISOR && perfil.user.roles_id == role.PROVEEDOR))" 
                     :perfil="perfil">    
                 </box-proveedor>
+                <box-operador 
+                    v-if="perfil != null && auth.user.authenticated && ((perfil.user.roles_id == role.OPERADOR && perfil.user.id == auth.user.profile.id) || (auth.user.profile.roles_id == role.ADMINISTRADOR && perfil.user.roles_id == role.OPERADOR) || (auth.user.profile.roles_id == role.SUPERVISOR && perfil.user.roles_id == role.OPERADOR))">
+                </box-operador>
+                <box-supervisor
+                    v-if="perfil != null && auth.user.authenticated && ((perfil.user.roles_id == role.SUPERVISOR && perfil.user.id == auth.user.profile.id) || (auth.user.profile.roles_id == role.ADMINISTRADOR && perfil.user.roles_id == role.SUPERVISOR) || (auth.user.profile.roles_id == role.SUPERVISOR && perfil.user.roles_id == role.SUPERVISOR))">
+                </box-supervisor>
             </div>
         </section>
     </div>
@@ -180,6 +185,8 @@ import router from '../../routes.js';
 import auth from '../../auth.js';
 import Role from '../../config.js';
 import BoxProveedor from '../Proveedores/PerfilProveedor.vue';
+import BoxOperador from './../Operadores/BoxOperador.vue';
+import BoxSupervisor from './../Supervisores/BoxSupervisor.vue';
 import IndexCalificacion from './../Proveedores/Calificaciones/Index';
 
 Vue.component('eventos-box', require('./../Proveedores/Reservas/Index'));
@@ -204,9 +211,8 @@ export default {
     },
     beforeMount: function() {
         this.getUserPerfil()
-
     },
-    mounted: function(){
+    mounted: function() {
         this.$events.$on('reloadComponentPerfil', () => this.getUserPerfil());
     },
     components: {
@@ -217,7 +223,9 @@ export default {
         TimeLine,
         Show,
         BoxProveedor,
-        IndexCalificacion
+        IndexCalificacion,
+        BoxOperador,
+        BoxSupervisor
     },
     methods:{
 
