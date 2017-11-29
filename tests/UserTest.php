@@ -3,7 +3,7 @@
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-
+//https://gist.github.com/JeffreyWay/5623836 ejemplos
 class UserTest extends TestCase
 {
     /**
@@ -17,8 +17,7 @@ class UserTest extends TestCase
 	    $this->assertEquals(200, $response->status());    
 	}
 	public function testPostRegisterWithErrors(){
-		$response = $this->call('POST', '/api/register', 
-			[	'name' => 'Taylor',
+		$user = [	'name' => 'Taylor',
 	            'email' => 'asasas',
 	            'password' => '123456',
 	            'password_confirmation' => '123457',
@@ -27,12 +26,12 @@ class UserTest extends TestCase
 	            'sexo' => '',
 	            'localidad_id' => 126,
 	            'fecha_nac' => '1980/05/05'
-            ]);
+            ];
+		$response = $this->call('POST', '/api/register', $user);
 		$this->assertEquals(422, $response->status()); 
 	}
 	public function testPostRegister(){
-		$response = $this->call('POST', '/api/register', 
-			[	'name' => 'Taylor',
+		$user = [	'name' => 'Taylor',
 	            'email' => 'asasas',
 	            'password' => '123456',
 	            'password_confirmation' => '12345',
@@ -41,7 +40,8 @@ class UserTest extends TestCase
 	            'sexo' => 'M',
 	            'localidad_id' => 126,
 	            'fecha_nac' => '1980/05/05'
-            ]);
+            ];
+		$response = $this->call('POST', '/api/register', $user);
 		$this->assertEquals(422, $response->status())->see(' '.$response->status()); 
 	}
 	public function testPostLoginWithError(){

@@ -11,9 +11,18 @@
             </span>
         </a>
         <ul class="dropdown-menu">
-
-            <li v-if="auth.user.profile.roles_id == role.PROVEEDOR" class="header"> {{mensajesPresupuesto == 0 ? 'Sin Notificaciones' : '1 Notificaci&oacute;n' }}</li>
-            <li v-if="auth.user.profile.roles_id == role.USUARIO" class="header"> {{pendientes == 0 ? 'Sin Notificaciones' : '1 Notificaci&oacute;n' }}</li>
+            <li v-if="auth.user.profile.roles_id == role.ADMINISTRADOR" class="header">
+                Sin Notificaciones
+            </li>
+            <li v-if="auth.user.profile.roles_id == role.SUPERVISOR" class="header">
+                Sin Notificaciones
+            </li>
+            <li v-if="auth.user.profile.roles_id == role.PROVEEDOR" class="header">
+                {{mensajesPresupuesto == 0 ? 'Sin Notificaciones' : '1 Notificaci&oacute;n' }}
+            </li>
+            <li v-if="auth.user.profile.roles_id == role.USUARIO" class="header">
+                {{pendientes == 0 ? 'Sin Notificaciones' : '1 Notificaci&oacute;n' }}
+            </li>
             <li>
                 <!-- inner menu: contains the actual data -->
                 <ul class="menu">
@@ -61,7 +70,6 @@
                 this.calificacionesPendientes();
             if(auth.user.profile.roles_id == role.PROVEEDOR)
                 this.getMensajes();
-
         },
         methods: {
             calificacionesPendientes(){

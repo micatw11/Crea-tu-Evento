@@ -218,40 +218,55 @@ class HorarioController extends Controller
         $dia = $this->toDayOfWeek($fecha);
         $horarios = Horario::where('publicacion_id', $publicacion_id)->where('dia', $dia)->get();
         $reserva_id = null;
-        $reservas = Reserva::where('publicacion_id', $publicacion_id)
-            ->where('estado', 'reservado')->orWhere('estado', 'confirmado')
-            ->whereDate('fecha', '=', Carbon::createFromFormat('Y-m-d', $fecha)->toDateString())->get();
-        
+        $auxHorarios = array();
+        $auxHorario = null;
+
         if($request->has('except_this_reserva'))
         {
             $reserva_id = $request->except_this_reserva;
         }
-        $auxHorarios = array();
-        $auxHorario = null;
-        foreach ($horarios as $horario) {
-            $esta = false;
-            foreach ($reservas as $reserva) {
-                if($reserva->horario_id == $horario->id)
-                {
-                    $auxHorario = $horario;
-                    if($reserva_id != null && $reserva_id == $reserva->id){
-                        $auxHorario->estado = 'disponible';
-                    }
-                    else
+        if($horarios->isNotEmpty()) {
+            $reservas = Reserva::where('publicacion_id', $publicacion_id)
+                ->where('estado', 'reservado')->orWhere('estado', 'confirmado')
+                ->whereDate('fecha', '=', Carbon::createFromFormat('Y-m-d', $fecha)->toDateString())->get();
+
+            foreach ($horarios as $horario) {
+                $esta = false;
+                foreach ($reservas as $reserva) {
+                    if($reserva->horario_id == $horario->id)
                     {
-                        $auxHorario->estado = 'reservado';
+                        $auxHorario = $horario;
+                        if($reserva_id != null && $reserva_id == $reserva->id){
+                            $auxHorario->estado = 'disponible';
+                        }
+                        else
+                        {
+                            $auxHorario->estado = 'reservado';
+                        }
+                        $auxHorarios[] = $auxHorario;
+                        $auxHorario = null;
+                        $esta = true;
+                        break;
                     }
+                }
+                if(!$esta){
+                    $auxHorario = $horario;
+                    $auxHorario->estado = 'disponible';
                     $auxHorarios[] = $auxHorario;
                     $auxHorario = null;
-                    $esta = true;
-                    break;
                 }
             }
-            if(!$esta){
-                $auxHorario = $horario;
-                $auxHorario->estado = 'disponible';
-                $auxHorarios[] = $auxHorario;
-                $auxHorario = null;
+        } else {
+            $reserva = Reserva::where('publicacion_id', $publicacion_id)
+                ->where('estado', 'reservado')->orWhere('estado', 'confirmado')
+                ->whereDate('fecha', '=', Carbon::createFromFormat('Y-m-d', $fecha)->toDateString())->first();
+            if(!$reserva){
+                return response()->json('disponible', 200);
+            } else {
+                if($reserva_id != null && $reserva_id == $reserva->id)
+                    return response()->json('disponible', 200);
+                else
+                    return response()->json('no disponible', 200);
             }
         }
         

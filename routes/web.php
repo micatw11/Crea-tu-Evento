@@ -56,8 +56,10 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('proveedor/{id}', 'ProveedorController@proveedor');
 
 
-    Route::post('proveedor/rubro/', 'PrestacionController@store')->middleware('role:administrador,supervisor,operador,proveedor');
-    Route::patch('proveedor/rubro/{id}', 'PrestacionController@update')->middleware('role:administrador,supervisor,operador,proveedor');
+    Route::post('proveedor/rubro/', 'PrestacionController@store')
+        ->middleware('role:administrador,supervisor,operador,proveedor');
+    Route::patch('proveedor/rubro/{id}', 'PrestacionController@update')
+        ->middleware('role:administrador,supervisor,operador,proveedor');
     Route::get('proveedor/rubro/{id}', 'PrestacionController@show');
     Route::get('proveedor/{id}/rubro', 'PrestacionController@getAll');
 

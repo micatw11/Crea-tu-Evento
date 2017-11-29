@@ -116,7 +116,8 @@ class ProveedorController extends Controller
                 'email' => $request->email,
                 'estado' => "Tramite",
                 'domicilio_id' => $domicilio->id,
-                'dni' => $filename
+                'dni' => $filename,
+                'register_by_user_id' => Auth::id
             ]);
     }
 
@@ -167,9 +168,8 @@ class ProveedorController extends Controller
 
         if($request->action == 'Baja'){
             $proveedor->user->roles_id = Rol::roleId('Usuario');
-            $publicaciones = Publicacion::where('proveedor_id', $proveedor->id)->update(['estado'=> 0]);
-
-            
+            $publicaciones = Publicacion::where('proveedor_id', $proveedor->id)
+                ->update(['estado'=> 0, 'rejected_by_user_id' => Auth::id(), 'accepted_by_user_id' => null]);   
         } 
         else if ( $request->action == 'Aprobado' && $proveedor->user->roles_id == Rol::roleId('Usuario') ) 
         {
@@ -179,6 +179,8 @@ class ProveedorController extends Controller
                 Mail::to($administrador->email)->queue(new NewProveedorToSupervisor($supervisor, $proveedor));
             }
             $proveedor->user->roles_id = Rol::roleId('Proveedor');
+            $proveedor->accepted_by_user_id = Auth::id();
+            $proveedor->rejected_by_user_id = null;
         }
         else {
             return response()->json(['error' =>  'Bad Request'], 400);

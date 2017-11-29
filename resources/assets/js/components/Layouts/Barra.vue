@@ -25,7 +25,7 @@
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
 
-                    <notificaciones v-if="auth.user.authenticated && (auth.user.profile.roles_id == role.PROVEEDOR || auth.user.profile.roles_id == role.USUARIO)"></notificaciones>
+                    <notificaciones v-if="auth.user.authenticated"></notificaciones>
 
                     <!-- Control Sidebar Toggle Button -->
                     
