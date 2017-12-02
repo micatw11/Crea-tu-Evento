@@ -52,6 +52,7 @@
 							}
 						}
 					}
+					this.$emit('update:articulos', this.articulos);
 				}, response => {
 					console.log('Error en articulos')
 				});
@@ -73,6 +74,7 @@
 				} else {
 					this.articulosSelect.splice(index, 1);
 				}
+				this.$emit('update:articulos', this.articulos);
 			},
 			/*
 			 * Setea los articulos seleccionados en el componente vue-select al crearse

@@ -20,9 +20,10 @@ class AlterTableProveedoresLogs extends Migration
             $table->foreign('register_by_user_id')->references('id')->on('users');
             $table->foreign('accepted_by_user_id')->references('id')->on('users');
             $table->foreign('rejected_by_user_id')->references('id')->on('users');
-        });
-        Schema::table('logs', function (Blueprint $table) {
-            $table->string('url')->nullable()->default(null);
+
+            $table->renameColumn('dni', 'adjunto');
+            $table->string('adjunto', 50)->nullable()->change();
+
         });
     }
 

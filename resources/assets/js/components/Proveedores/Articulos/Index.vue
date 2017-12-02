@@ -16,7 +16,7 @@
                 @vuetable:pagination-data="onPaginationData"
                 @vuetable:cell-clicked="onCellClicked">
 
-                    <template slot="actions" slot-scope="props" v-if="roleProveedor">
+                    <template slot="actions" slot-scope="props" v-if="auth.user.authenticated && roleProveedor">
                         <div class="custom-actions">
                             <!-- Modificar Articulo -->
                             <button class="btn-xs btn-default"

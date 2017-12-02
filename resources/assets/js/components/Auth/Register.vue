@@ -6,10 +6,10 @@
             <div class="help-block" v-if="error">
                 <p class="text-red">Error al registrar</p> 
             </div>
-            <form @submit.prevent="validateBeforeSubmit">
+            <form @submit.prevent="validateBeforeSubmit()">
 
                  <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('nombre')&&validar}">
-                    <input name="nombre" v-model="usuario.nombre" v-validate:nombre="'required|min:4|max:55'"type="text" class="form-control" placeholder="Ingresar nombre">
+                    <input name="nombre" v-model="usuario.nombre" v-validate="'required|min:4|max:55'" type="text" class="form-control" placeholder="Ingresar nombre">
                     <span class="glyphicon glyphicon-user form-control-feedback"></span>
                     <!-- validacion vee-validation -->
                     <span  v-show="errors.has('nombre')&&validar" class="help-block">{{ errors.first('nombre') }}</span>
@@ -22,7 +22,7 @@
                  </div>
 
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('apellido')&&validar}">
-                    <input name="apellido" v-model="usuario.apellido" v-validate:apelido="'required|min:4|max:55'"type="text" class="form-control" placeholder="Ingresar apellido">
+                    <input name="apellido" v-model="usuario.apellido" v-validate="'required|min:4|max:55'" type="text" class="form-control" placeholder="Ingresar apellido">
                     <span class="glyphicon glyphicon-user form-control-feedback"></span>
                     <!-- validacion vee-validation -->
                     <span   v-show="errors.has('apellido') && validar" class="help-block">{{ errors.first('apellido') }}</span>
@@ -36,7 +36,7 @@
   
 
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('email')&&validar}">
-                    <input name="email" v-model="email" v-validate:email="'required|email'" type="email" class="form-control" placeholder="Ingresar Email">
+                    <input name="email" v-model="email" v-validate="'required|email'" type="email" class="form-control" placeholder="Ingresar Email">
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                     <!-- validacion vee-validation -->
                     <span v-show="errors.has('email')&&validar" class="help-block">{{ errors.first('email') }}</span>
@@ -50,7 +50,7 @@
                 </div>
 
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('password')&&validar}">
-                    <input name="password" v-model="password" type="password" v-validate:password="'required|min:6'" class="form-control" placeholder="Ingresar Contraseña">
+                    <input name="password" v-model="password" type="password" v-validate="'required|min:6'" class="form-control" placeholder="Ingresar Contraseña">
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                     <!-- validacion vee-validation -->
                     <span v-show="errors.has('password')&&validar" class="help-block">{{ errors.first('password') }}</span>
@@ -64,7 +64,7 @@
                 </div>
 
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('confirmation')&&validar}">
-                    <input name="confirmation" v-model="password_confirmation" type="password" v-validate:confirmation="'required|confirmed:password'" class="form-control" placeholder="Confirmar contraseña">
+                    <input name="confirmation" v-model="password_confirmation" type="password" v-validate="'required|confirmed:password'" class="form-control" placeholder="Confirmar contraseña">
                     <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
                     <!-- validacion vee-validation -->
                     <span v-show="errors.has('confirmation')&&validar" class="help-block">{{ errors.first('confirmation') }}</span>
@@ -219,15 +219,19 @@ export default {
                     this.validar = false
             })
         },
-        validateBeforeSubmit: function(e) {
+        validateBeforeSubmit: function() {
             this.clearErrors();
             this.$validator.validateAll().then((result) => {
                 if (result) {
                     this.register();
-                    return;
+
+                } else
+                {
+                    this.validar = true;
                 }
+                return;
             }).catch(() => {
-                this.validar = true;
+
             });
 
         },

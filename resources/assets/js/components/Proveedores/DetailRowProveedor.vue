@@ -25,9 +25,9 @@
                 <span>{{rowData.ingresos_brutos}}</span>
             </p>
             <p class="inline-block">
-                <label>DNI: </label>
-                <a :href="'/storage/proveedores/'+ rowData.dni" target="_blank">
-                    {{rowData.dni}}
+                <label>Adjunto: </label>
+                <a :href="'/storage/proveedores/'+ rowData.adjunto" target="_blank">
+                    {{rowData.adjunto}}
                 </a>
             </p>
         </div>
@@ -44,6 +44,16 @@
             <p class="inline-block">
                 <label>Genero: </label>
                 <span>{{rowData.user.usuario.sexo == 'F' ? 'Femenino' : 'Masculino'}}</span>
+            </p>
+            <p class="inline-block">
+                <label>Ubicaci&oacute;n: </label>
+                <span>{{rowData.domicilio.localidad.nombre}}-{{rowData.domicilio.localidad.provincia.nombre}}</span>
+            </p>
+            <p class="inline-block">
+                <label>Registrado Por: </label>
+                <router-link :to="'/usuario/'+rowData.register_by_user.id+'/perfil'" tag="a">
+                    {{rowData.register_by_user.usuario.nombre}} {{rowData.register_by_user.usuario.apellido}}
+                </router-link>
             </p>
         </div>
     </div>

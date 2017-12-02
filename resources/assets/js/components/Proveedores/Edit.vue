@@ -65,7 +65,7 @@ export default {
                     cuit: this.proveedor.cuit,
                     ingresos_brutos: this.proveedor.ingresos_brutos,
                     email: this.proveedor.email,
-                    dni: this.proveedor.dni,
+                    adjunto: this.proveedor.adjunto,
                     calle: this.proveedor.domicilio.calle,
                     numero: this.proveedor.domicilio.numero,
                     piso: this.proveedor.domicilio.piso,

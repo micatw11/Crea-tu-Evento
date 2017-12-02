@@ -173,7 +173,7 @@
                             <i class="fa fa-calendar"></i> <span>Calendar</span>
                             <span class="pull-right-container" v-if="eventosProximaSemana > 0">
                                 <el-tooltip class="item" effect="dark" 
-                                    content="Nuevos mensajes." placement="top-start">
+                                    content="Proximos eventos." placement="top-start">
                                     <small class="label pull-right bg-blue">
                                         {{eventosProximaSemana}}
                                     </small>
@@ -182,7 +182,7 @@
                         </router-link>
                     </li>
 
-                    <li class="treeview">
+                    <li class="treeview" v-if="auth.user.profile.roles_id != role.USUARIO">
                           <router-link to="/estadisticas" tag="a">
                             <i class="fa fa-line-chart"></i>
                             <span>Estadisticas</span>

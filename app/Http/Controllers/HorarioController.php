@@ -227,7 +227,10 @@ class HorarioController extends Controller
         }
         if($horarios->isNotEmpty()) {
             $reservas = Reserva::where('publicacion_id', $publicacion_id)
-                ->where('estado', 'reservado')->orWhere('estado', 'confirmado')
+                ->where(function ($query) {
+                    $query->where('estado', 'reservado')
+                      ->orWhere('estado', 'confirmado');
+                })
                 ->whereDate('fecha', '=', Carbon::createFromFormat('Y-m-d', $fecha)->toDateString())->get();
 
             foreach ($horarios as $horario) {
@@ -257,10 +260,15 @@ class HorarioController extends Controller
                 }
             }
         } else {
+            $reserva = null;
             $reserva = Reserva::where('publicacion_id', $publicacion_id)
-                ->where('estado', 'reservado')->orWhere('estado', 'confirmado')
+                ->where(function ($query) {
+                    $query->where('estado', 'reservado')
+                      ->orWhere('estado', 'confirmado');
+                })
                 ->whereDate('fecha', '=', Carbon::createFromFormat('Y-m-d', $fecha)->toDateString())->first();
-            if(!$reserva){
+
+            if($reserva == null){
                 return response()->json('disponible', 200);
             } else {
                 if($reserva_id != null && $reserva_id == $reserva->id)

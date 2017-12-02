@@ -348,7 +348,7 @@
 										<!-- small box -->
 										<div class="small-box bg-red">
 											<div class="inner">
-												<h3>65</h3>
+												<h3>{{ vistas }}</h3>
 
 												<p>Vistas</p>
 											</div>
@@ -750,6 +750,8 @@
 					if(reserva.estado == 'confirmado')
 						count++;
 				}
+				if(count == 0)
+					return 0;
 				return count;
 			},
 			reservaAumento(){
@@ -763,6 +765,8 @@
 						}
 					}
 				}
+				if(count == 0)
+					return 0;
 				return parseInt((countTomorrow*100)/count);
 			},
 			reservasNuevas(){
@@ -781,6 +785,8 @@
 						countCancelados++;
 					count++;
 				}
+				if(count == 0)
+					return 0;
 				return parseInt((countCancelados*100)/count);
 			},
 			dataCharts(){
@@ -843,6 +849,9 @@
 					data.push(mesesCount[i]);
 				}
 				return  { labels: labels, datasets: [{label:label, backgroundColor:backgroundColor, data:data}] }
+			},
+			vistas(){
+				return this.publicacion.vistas.length;
 			}
 		},
 		watch: {

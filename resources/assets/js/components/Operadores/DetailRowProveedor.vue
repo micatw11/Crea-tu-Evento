@@ -25,9 +25,9 @@
                 <span>{{rowData.ingresos_brutos}}</span>
             </p>
             <p class="inline-block">
-                <label>DNI: </label>
-                <a :href="'/storage/proveedores/'+ rowData.dni" target="_blank">
-                    {{rowData.dni}}
+                <label>Adjunto: </label>
+                <a :href="'/storage/proveedores/'+ rowData.adjunto" target="_blank">
+                    {{rowData.adjunto}}
                 </a>
             </p>
         </div>

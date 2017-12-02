@@ -39,8 +39,7 @@
 			</div>
 		</div>
 		<index-horario 
-    		:publicacionId="publicacionId" :horariosId="horariosId"
-    		>
+    		:publicacionId="publicacionId" :horariosId="horariosId" @update:horario="retornar">
 		</index-horario>
 	</div>
 </template>
@@ -105,14 +104,11 @@
 						if ((response.data.idHorario)&&(this.nuevo)){
 							for (var i = 0; i < response.data.idHorario.length; i++) {
 								if (response.data.idHorario[i] != null){
-									console.log(response.data.idHorario[i])
 									this.$events.fire('agregarIdH',response.data.idHorario[i])
 								}
 							}
 						}
 
-						console.log(response.data)
-						console.log(response.data.horarioNo)
 						if (response.data.horarioNo != []){
 								//var dias= ''
 								/*for (var i = 0; i < response.data.horarioNo.length; i++) {
@@ -137,10 +133,12 @@
 				                    })
 							}
 					});
-				
 			},
 			closeModal(){
 				this.showNewHorario= false;
+			},
+			retornar(val){
+				this.$emit('update:horario', val)
 			}
 		}
 	}

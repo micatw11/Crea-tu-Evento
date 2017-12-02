@@ -20,6 +20,11 @@
                 if(action === 'unlock' && table === 'users') return 'fa fa-unlock bg-blue';
                 if(action === 'lock' && table === 'users') return 'fa fa-ban bg-red';
                 if(action === 'update' && table === 'usuarios') return 'fa fa-edit bg-blue';
+                if(action === 'create' && table === 'proveedores') return 'fa fa-user-plus';
+                if(action === 'baja' && table === 'proveedores') return 'fa fa-user-times';
+                if(action === 'rechazado' && table === 'proveedores') return 'fa fa-user-times';
+                if(action === 'aprobado' && table === 'proveedores') return 'fa fa-check';
+                if(action === 'reportado' && table === 'calificaciones') return 'fa fa-flag';
                     return 'fa fa-check-circle bg-blue';
             }
         }

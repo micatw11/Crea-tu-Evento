@@ -54,8 +54,8 @@
                     'api/logout'
                 ).then(response => {
                     auth.user.authenticated = false
-                    auth.user.profile = null
                     router.push('/login')
+                    auth.user.profile = null
                 })
 
             },

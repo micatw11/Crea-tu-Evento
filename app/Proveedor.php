@@ -15,14 +15,30 @@ class Proveedor extends Model
     						'email',
     						'domicilio_id',
     						'estado',
-                            'dni'
+                            'adjunto',
+                            'register_by_user_id',
+                            'accepted_by_user_id',
+                            'rejected_by_user_id'
     					  ];
 
     public function user()
     {     
         return $this->belongsTo('App\User');    
     }
+    public function register_by_user()
+    {     
+        return $this->belongsTo('App\User');    
+    }
 
+    public function accepted_by_user()
+    {     
+        return $this->belongsTo('App\User');    
+    }
+
+    public function rejected_by_user()
+    {     
+        return $this->belongsTo('App\User');    
+    }
     public function domicilio()
     {     
         return $this->belongsTo('App\Domicilio');    

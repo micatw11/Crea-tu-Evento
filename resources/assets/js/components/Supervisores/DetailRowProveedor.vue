@@ -25,9 +25,9 @@
                 <span>{{rowData.ingresos_brutos}}</span>
             </p>
             <p class="inline-block">
-                <label>DNI: </label>
-                <a :href="'/storage/proveedores/'+ rowData.dni" target="_blank">
-                    {{rowData.dni}}
+                <label>Adjunto: </label>
+                <a :href="'/storage/proveedores/'+ rowData.adjunto" target="_blank">
+                    {{rowData.adjunto}}
                 </a>
             </p>
         </div>
@@ -49,6 +49,10 @@
                 <label>Ubicaci&oacute;n: </label>
                 <span>{{rowData.domicilio.localidad.nombre}}-{{rowData.domicilio.localidad.provincia.nombre}}</span>
             </p>
+        </div>
+        <div class="col-sm-offset-3 col-sm-9" v-if="rowData.observaciones != null && rowData.observaciones != ''">
+            <label>Motivo: </label>
+            {{ rowData.observaciones}}
         </div>
     </div>
 </template>

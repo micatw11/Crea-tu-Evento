@@ -101,6 +101,7 @@
                             this.horario = response.data.horarios
                             this.loadH =true;
                             this.showFormH = true;
+                            this.$emit('update:horario', this.horario);
                         }, response => {
                             if(response.status === 404){
                                 this.$toast.error({
@@ -124,6 +125,7 @@
                                         this.showFormH = true;
                                         this.loadH =true;
                                     }
+                                    this.$emit('update:horario', this.horario);
                                 }, response => {
                                     if(response.status === 404){
                                         this.$toast.error({

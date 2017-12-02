@@ -10,6 +10,9 @@ use App\Calificacion;
 use App\Publicacion;
 use Carbon\Carbon;
 use App\Reserva;
+use App\Rol;
+use App\Log;
+use App\Notificacion;
 
 class CalificacionController extends Controller
 {
@@ -45,6 +48,7 @@ class CalificacionController extends Controller
         $reservasNoCalificadas = Reserva::whereNotIn('id', $calificaciones)
             ->where('estado', 'confirmado')
             ->where('fecha', '<',$now->toDateString())
+            ->where('reservas.user_id', $user_id)
             ->orderBy('reservas.fecha', 'ASC')
             ->with('publicacion.proveedor','rubros','articulos')->get();
 
@@ -144,6 +148,15 @@ class CalificacionController extends Controller
         $calificacion = Calificacion::where('id', $id)->firstOrFail();
         $calificacion->update(['reportado' => 1]);
         $calificacion->save();
+        $log = Log::logs($calificacion->id, 'calificaciones', 'reportado', null, 'Ha reportado una calificación.');
+        $for_role = Rol::roleId('Supervisor');
+        Notificacion::create(
+            [
+                'for_role_id' => $for_role, 
+                'log_id' => $log->id,
+                'by_user_id' => Auth::id(),
+                'descripcion' => "Se ha reportado una calificaci'on de un usuario."
+            ]);
         return response(null, Response::HTTP_OK);
     }
 

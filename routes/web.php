@@ -1,20 +1,8 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 Route::get('/', function () {
     return view('welcome');
 });
-
 
 Route::group(['prefix' => 'api'], function () {
 
@@ -34,6 +22,8 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('supervisor/{id}/actividad/proveedores', 'UsuarioController@proveedoresBySupervisor');
     Route::get('operador/{id}/actividad/proveedores', 'UsuarioController@proveedoresByOperador');
 
+    Route::get('usuario/{id}/notificaciones', 'NotificacionesController@indexOfUser');
+    Route::get('notificacion/{id}', 'NotificacionesController@vista');
     Route::resource('usuario', 'UsuarioController', 
     [ 
         'except' => ['destroy', 'edit', 'create', 'store']
@@ -146,4 +136,5 @@ Route::group(['prefix' => 'api'], function () {
     Route::post('calificacion', 'CalificacionController@store');
     Route::patch('calificacion/{id}/reportar', 'CalificacionController@reportar');
     Route::delete('calificacion/{id}', 'CalificacionController@destroy');
+    Route::get('calificacion/{id}', 'CalificacionController@show');
 });

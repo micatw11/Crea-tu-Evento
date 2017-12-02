@@ -42,9 +42,8 @@
                                      </a>
 
                                                             
-                                    <!-- Modal cambiar contraseña-->
-                                    <div 
-                                        v-if="userData !== null" 
+                                    <!-- Modal -->
+                                    <div v-if="userData !== null" 
                                         class="modal" role="dialog" 
                                         :style="{ display : showUserData  ? 'block' : 'none' }">
 
@@ -90,7 +89,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
 
                                 </template>

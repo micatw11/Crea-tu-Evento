@@ -3,9 +3,15 @@
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Session;
+use App\Localidad;
+use App\Provincia;
 //https://gist.github.com/JeffreyWay/5623836 ejemplos
+//Auth::loginUsingId(1);
 class UserTest extends TestCase
 {
+	use WithoutMiddleware;
+	use DatabaseMigrations;
     /**
      * A basic test example.
      *
@@ -16,41 +22,47 @@ class UserTest extends TestCase
 	    $response = $this->call('GET', '/');
 	    $this->assertEquals(200, $response->status());    
 	}
-	public function testPostRegisterWithErrors(){
-		$user = [	'name' => 'Taylor',
+
+	public function testRegisterWithErrors(){
+		$user = [	'name' => 'Tar',
 	            'email' => 'asasas',
 	            'password' => '123456',
-	            'password_confirmation' => '123457',
-	            'nombre' => 'Lucas',
-	            'apellido' => 'Gomez',
-	            'sexo' => '',
-	            'localidad_id' => 126,
 	            'fecha_nac' => '1980/05/05'
             ];
-		$response = $this->call('POST', '/api/register', $user);
-		$this->assertEquals(422, $response->status()); 
+		$this->json('POST', 'api/register', $user)->assertResponseStatus(422);
 	}
-	public function testPostRegister(){
-		$user = [	'name' => 'Taylor',
-	            'email' => 'asasas',
+
+	public function testRegister(){
+		$localidad = Localidad::first();
+
+		$user = [	
+				'name' => 'Taylor',
+	            'email' => 'asasas@gmail.com',
 	            'password' => '123456',
 	            'password_confirmation' => '12345',
-	            'nombre' => 'Lucas',
-	            'apellido' => 'Gomez',
+	            'nombre' => 'jose',
+	            'apellido' => 'lopez',
 	            'sexo' => 'M',
-	            'localidad_id' => 126,
-	            'fecha_nac' => '1980/05/05'
+	            'localidad_id' => $localidad->id,
+	            'fecha_nac' => '1966-06-22',
+	            'login' => false
             ];
-		$response = $this->call('POST', '/api/register', $user);
-		$this->assertEquals(422, $response->status())->see(' '.$response->status()); 
+		$this->json('POST', 'api/register', $user)->assertResponseStatus(200);
 	}
-	public function testPostLoginWithError(){
-		$response = $this->call('POST', '/api/register', 
+
+	public function testLogin(){
+		//$user = factory(App\User::class)->create();
+		$this->json('POST', 'api/login', 
 			[
-	            'email' => 'asdasd@gmail.com',
-	            'password' => '64556456',
-	            'remember' => false,
-            ]);
-		$this->assertEquals(401, $response->status()); 
+	            'email' => 'test@test.com',
+	            'password' => 'secret',
+	            'remember' => false
+            ])->assertResponseStatus(200);
+
 	}
+/*
+	1) UserTest::testRegister
+Expected status code 200, got 422.
+Failed asserting that 422 matches expected 200.
+*/
 }

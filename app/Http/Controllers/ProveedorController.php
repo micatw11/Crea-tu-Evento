@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use App\Notificacion;
 use App\Proveedor;
 use App\Publicacion;
 use App\Rol;
@@ -47,7 +48,10 @@ class ProveedorController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Proveedor::with('user.usuario', 'domicilio.localidad.provincia');
+        $query = Proveedor::with('user.usuario', 'domicilio.localidad.provincia',
+                            'register_by_user.usuario',
+                            'accepted_by_user.usuario',
+                            'rejected_by_user.usuario');
 
         if($request->filter){
             $like = '%'.$request->filter.'%';
@@ -56,9 +60,9 @@ class ProveedorController extends Controller
         }
 
         if( $request->has('page') || $request->has('per_page') ) 
-            $proveedores = $query->paginate(10);
+            $proveedores = $query->orderBy('created_at', 'DESC')->paginate(10);
         else
-            $proveedores = $query->get();
+            $proveedores = $query->orderBy('created_at', 'DESC')->get();
         return response()->json($proveedores, 200);
     }
 
@@ -79,6 +83,16 @@ class ProveedorController extends Controller
         if ($proveedor && $domicilio ){
             $proveedor = Proveedor::where('id', $proveedor->id)->with('user.usuario')->first();
             $operador = User::where('id', Auth::id())->with('usuario')->first();
+
+            $log = Log::logs($proveedor->id, 'proveedores', 'create', null, 'Ha registrado un nuevo proveedor.');
+            $for_role = Rol::roleId('Supervisor');
+            Notificacion::create(
+                [
+                    'for_role_id' => $for_role, 
+                    'log_id' => $log->id,
+                    'by_user_id' => Auth::id(),
+                    'descripcion' => "Se ha registrado un nuevo proveedor."
+                ]);
             $supervisores = User::where('roles_id', Rol::roleId('Supervisor'))->activo()->get();
             foreach ($supervisores as $supervisor) {
                 Mail::to($supervisor->email)->queue(new NewProveedorToOperador($operador, $proveedor));
@@ -98,15 +112,16 @@ class ProveedorController extends Controller
                 'nombre' => 'required|min:4|max:55',
                 'cuit' => 'required|min:9|max:12',
                 'ingresos_brutos' => 'required|min:5|max:10',
-                'email' => 'required|email',
-                'dni' => 'required'
+                'email' => 'required|email'
             ]);
     }
 
     public function createProveedor(Request $request, $domicilio)
     {
         
-        $filename= $this->storeImage($request);
+        $filename=null;
+        if($request->has('adjunto') && $request->adjunto != null)
+            $filename= $this->storeImage($request);
 
         return Proveedor::create([
                 'user_id' => $request->user_id,
@@ -116,8 +131,8 @@ class ProveedorController extends Controller
                 'email' => $request->email,
                 'estado' => "Tramite",
                 'domicilio_id' => $domicilio->id,
-                'dni' => $filename,
-                'register_by_user_id' => Auth::id
+                'adjunto' => $filename,
+                'register_by_user_id' => Auth::id()
             ]);
     }
 
@@ -133,7 +148,9 @@ class ProveedorController extends Controller
         
         $this->domicilioService->validateDomicilio($request);
         $this->validatorProveedor($request);
-        $filename= $this->storeImage($request);
+        $filename = null;
+        if($request->has('adjunto') && $request->adjunto != null)
+            $filename= $this->storeImage($request);
         $proveedor = Proveedor::where('id', $id)->firstOrFail();
         $domicilio= Domicilio::where('id', $proveedor->domicilio_id)->firstOrFail();
         //Log::logs($id, $table_name, $accion , $rubro, 'Ha actualizado informacion personal');
@@ -145,7 +162,7 @@ class ProveedorController extends Controller
                 'ingresos_brutos' => $request->ingresos_brutos,
                 'email' => $request->email,
                 'domicilio_id' => $domicilio->id,
-                'dni' => $filename
+                'adjunto' => $filename
             ]);
 
         if($proveedor->save() && $domicilio->save()){
@@ -166,11 +183,35 @@ class ProveedorController extends Controller
 
         $proveedor = Proveedor::where('user_id', $id)->with('user.usuario')->firstOrFail();
 
-        if($request->action == 'Baja'){
+        if($request->action == 'Baja' ){
             $proveedor->user->roles_id = Rol::roleId('Usuario');
             $publicaciones = Publicacion::where('proveedor_id', $proveedor->id)
-                ->update(['estado'=> 0, 'rejected_by_user_id' => Auth::id(), 'accepted_by_user_id' => null]);   
+                ->update(['estado'=> 0]);
+            $proveedor->rejected_by_user_id = Auth::id();
+            $proveedor->accepted_by_user_id = null;
+            $log = Log::logs($proveedor->id, 'proveedores', 'baja', null, 'Ha dado de baja un proveedor.'); 
+            $for_role = Rol::roleId('Administrador');
+            Notificacion::create(
+                [
+                    'for_role_id' => $for_role, 
+                    'log_id' => $log->id,
+                    'by_user_id' => Auth::id(),
+                    'descripcion' => "Se ha dado de baja un proveedor."
+                ]);
         } 
+        else if ( $request->action == 'Rechazado') {
+            $proveedor->rejected_by_user_id = Auth::id();
+            $proveedor->accepted_by_user_id = null;
+            $log = Log::logs($proveedor->id, 'proveedores', 'rechazado', null, 'Ha rechazado un proveedor.'); 
+            $for_role = Rol::roleId('Administrador');
+            Notificacion::create(
+                [
+                    'for_role_id' => $for_role, 
+                    'log_id' => $log->id,
+                    'by_user_id' => Auth::id(),
+                    'descripcion' => "Se ha rechazado un proveedor."
+                ]);
+        }
         else if ( $request->action == 'Aprobado' && $proveedor->user->roles_id == Rol::roleId('Usuario') ) 
         {
             $supervisor = User::where('id', Auth::id())->with('usuario')->first();
@@ -181,6 +222,15 @@ class ProveedorController extends Controller
             $proveedor->user->roles_id = Rol::roleId('Proveedor');
             $proveedor->accepted_by_user_id = Auth::id();
             $proveedor->rejected_by_user_id = null;
+            $log = Log::logs($proveedor->id, 'proveedores', 'aprobado', null, 'Ha acepatado un nuevo proveedor.');
+            $for_role = Rol::roleId('Administrador');
+            Notificacion::create(
+                [
+                    'for_role_id' => $for_role, 
+                    'log_id' => $log->id,
+                    'by_user_id' => Auth::id(),
+                    'descripcion' => "Se ha acepatado un nuevo proveedor."
+                ]);
         }
         else {
             return response()->json(['error' =>  'Bad Request'], 400);
@@ -217,7 +267,7 @@ class ProveedorController extends Controller
 
     protected function storeImage(Request $request)
     {
-        $img = $request->dni;
+        $img = $request->adjunto;
         $extension = null;
 
         if(strstr($img, 'data:image/jpeg;base64,'))

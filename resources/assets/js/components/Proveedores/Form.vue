@@ -73,31 +73,26 @@
                     </div>
                 </div>
 
-                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('dni')&&validarProveedor}">
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('adjunto')&&validarProveedor}">
                     <div class="col-sm-12">
-                        <label for="inputDni" class="control-label">DNI <i class="fa fa-file-image-o"></i></label>
+                        <label for="inputDni" class="control-label"><i class="fa fa-file-image-o"></i> Adjunto (opcional)</label>
                             
                         <br>
 
                         <input v-if="nuevo"
                             type="file" 
-                            v-validate.reject="'required|ext:jpg,png,jpeg,pdf'" 
+                            v-validate.reject="'ext:jpg,png,jpeg,pdf'" 
                             @change="onFileChange"
-                            name="dni">
+                            name="adjunto">
 
                         <input v-else
                             type="file" 
                             v-validate.reject="'ext:jpg,png,jpeg,pdf'" 
                             @change="onFileChange"
-                            name="dni">
+                            name="adjunto">
                         <!-- validacion vee-validation -->
-                        <span v-show="errors.has('dni')&&validarProveedor" class="help-block">{{ errors.first('dni') }}</span>
-                        <!-- validacion api-->
-                        <div class="text-red" v-if="errorsApi.dni">
-                            <div v-for="msj in errorsApi.dni">
-                                <p>{{ msj }}</p>
-                            </div>
-                        </div>
+                        <span v-show="errors.has('adjunto')&&validarProveedor" class="help-block">{{ errors.first('adjunto') }}</span>
+
                     </div>                    
                 </div>
             </div>
@@ -293,11 +288,11 @@ export default {
             this.createImage(files[0]);
         },
         createImage(file) {
-            var dni = new Image();
+            var adjunto = new Image();
             var reader = new FileReader();
 
             reader.onload = (e) => {
-                this.proveedor.dni = e.target.result;
+                this.proveedor.adjunto = e.target.result;
             };
             reader.readAsDataURL(file);
         }
