@@ -9,14 +9,12 @@ class Telefono extends Model
     protected $table = 'telefonos';
 
     protected $fillable = [ 'cod_area', 
-    						'numero',
-    						'usuario_id'
+    						'numero'
     					  ];
 
 
-    ///RELACIONES//
-    public function usuario()
+    public function proveedor()
     {
-        return $this->belongsTo('App\Usuario');
+        return $this->hasOne('App\Proveedor');
     }
 }

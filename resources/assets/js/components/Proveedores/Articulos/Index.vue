@@ -78,6 +78,7 @@
                 info: 'Mirando de {from} a {to} de {total} articulos',
                 noData:'No hay datos',
                 moreParams: {},
+                auth: auth,
                 tableColumns:  [
                     {
                         name: 'nombre',
@@ -117,7 +118,7 @@
         components: {
             VuetableArticulos, VuetablePaginationArticulos, VuetablePaginationInfoArticulos, EditArticulo
         },
-        beforeMount(){
+        created(){
 
             if(auth.user.profile.roles_id == role.ADMINISTRADOR || auth.user.profile.roles_id == role.SUPERVISOR)
                 this.moreParams = {'user_id' : this.$route.params.userId }

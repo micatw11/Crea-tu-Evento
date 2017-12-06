@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Notificacion;
+use App\Telefono;
 use App\Proveedor;
 use App\Publicacion;
 use App\Rol;
@@ -48,7 +49,7 @@ class ProveedorController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Proveedor::with('user.usuario', 'domicilio.localidad.provincia',
+        $query = Proveedor::with('user.usuario', 'domicilio.localidad.provincia', 'telefono',
                             'register_by_user.usuario',
                             'accepted_by_user.usuario',
                             'rejected_by_user.usuario');
@@ -78,7 +79,15 @@ class ProveedorController extends Controller
         $this->validatorProveedor($request);
 
         $domicilio = $this->domicilioService->createDomicilio($request, 'Real');
-        $proveedor = $this->createProveedor($request,$domicilio);
+
+        $pos = strpos($request->telefono, '-');
+        $longitud = (strlen($request->telefono))-1;
+        $cod_area = substr($request->telefono, 0,$pos);
+        $numero = substr($request->telefono, $pos+1,$longitud);
+
+        $telefono = Telefono::create(['cod_area' => $cod_area,'numero' => $numero]);
+        $proveedor = $this->createProveedor($request,$domicilio, $telefono);
+
         
         if ($proveedor && $domicilio ){
             $proveedor = Proveedor::where('id', $proveedor->id)->with('user.usuario')->first();
@@ -112,11 +121,12 @@ class ProveedorController extends Controller
                 'nombre' => 'required|min:4|max:55',
                 'cuit' => 'required|min:9|max:12',
                 'ingresos_brutos' => 'required|min:5|max:10',
-                'email' => 'required|email'
+                'email' => 'required|email',
+                'telefono' => 'required|regex:/[0-9]{3,4}-[0-9]{6,8}/i'
             ]);
     }
 
-    public function createProveedor(Request $request, $domicilio)
+    public function createProveedor(Request $request, $domicilio, $telefono)
     {
         
         $filename=null;
@@ -132,7 +142,8 @@ class ProveedorController extends Controller
                 'estado' => "Tramite",
                 'domicilio_id' => $domicilio->id,
                 'adjunto' => $filename,
-                'register_by_user_id' => Auth::id()
+                'register_by_user_id' => Auth::id(),
+                'telefono_id' => $telefono->id
             ]);
     }
 
@@ -153,19 +164,35 @@ class ProveedorController extends Controller
             $filename= $this->storeImage($request);
         $proveedor = Proveedor::where('id', $id)->firstOrFail();
         $domicilio= Domicilio::where('id', $proveedor->domicilio_id)->firstOrFail();
+        $telefono = Telefono::where('id', $proveedor->telefono->id)->firstOrFail();
         //Log::logs($id, $table_name, $accion , $rubro, 'Ha actualizado informacion personal');
         $this->domicilioService->updateDomicilio($request, $domicilio);
-        $proveedor->update([
-                'user_id' => $request->user_id,
+        if(Auth::id() == $proveedor->user_id){
+            $proveedor->update([
                 'nombre' => $request->nombre,
                 'cuit' => $request->cuit,
                 'ingresos_brutos' => $request->ingresos_brutos,
                 'email' => $request->email,
-                'domicilio_id' => $domicilio->id,
-                'adjunto' => $filename
+                'domicilio_id' => $domicilio->id
             ]);
+        } else {
+            $proveedor->update([
+                    'user_id' => $request->user_id,
+                    'nombre' => $request->nombre,
+                    'cuit' => $request->cuit,
+                    'ingresos_brutos' => $request->ingresos_brutos,
+                    'email' => $request->email,
+                    'domicilio_id' => $domicilio->id,
+                    'adjunto' => $filename
+                ]);
+        }
+        $pos = strpos($request->telefono, '-');
+        $longitud = (strlen($request->telefono))-1;
+        $cod_area = substr($request->telefono, 0,$pos);
+        $numero = substr($request->telefono, $pos+1,$longitud);
+        $telefono->update(['cod_area' => $cod_area,'numero' => $numero]);
 
-        if($proveedor->save() && $domicilio->save()){
+        if($proveedor->save() && $domicilio->save() &&  $telefono->save()){
             return response(null, Response::HTTP_OK);
         } else {
             return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -255,7 +282,7 @@ class ProveedorController extends Controller
      */
     public function proveedor($id){
         $proveedor = Proveedor::where('id', $id)
-            ->with('domicilio.localidad.provincia','user.usuario')->firstOrFail();
+            ->with('domicilio.localidad.provincia','user.usuario', 'telefono')->firstOrFail();
 
         return response()->json(['data' => $proveedor], 200);
     }

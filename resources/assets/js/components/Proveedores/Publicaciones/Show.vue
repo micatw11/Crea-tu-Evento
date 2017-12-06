@@ -62,7 +62,20 @@
 			                        </h3>
 
 			                        <p>
-							      		<strong>Categoria: </strong> {{publicacion.subcategoria.categoria.nombre}}
+							      			<strong>Categoria: </strong> {{publicacion.subcategoria.categoria.nombre}}
+
+
+							      		<div style="float: right;">
+											<el-popover 
+												ref="popover" 
+												placement="bottom" 
+												title="Telefono" 
+												width="200" 
+												trigger="click" 
+												:content="publicacion.proveedor.telefono.cod_area+'-'+publicacion.proveedor.telefono.numero">
+											</el-popover>
+											<el-button v-popover:popover><i class="fa fa-phone"></i></el-button>
+							      		</div>
 							      	</p>
 						      		<p>
 						      			<strong>Fecha de publicaci&oacute;n:</strong> {{formatData(publicacion.created_at)}}
@@ -84,20 +97,20 @@
 							          		<i class="fa fa-map-marker" aria-hidden="true"></i> <strong>Ubicacion</strong>
 							          	</p>
 							          	<p>
-							          		{{ publicacion.prestacion.domicilio.localidad.nombre }} -
+							          		<strong>Ciudad </strong>{{ publicacion.prestacion.domicilio.localidad.nombre }} -
 							          		{{ publicacion.prestacion.domicilio.localidad.provincia.nombre }}
-							          	</p>
-							          	<p><strong>Calle </strong>{{ publicacion.prestacion.domicilio.calle}}</p>
+											<strong>Calle </strong>{{ publicacion.prestacion.domicilio.calle}}
+										</p>
 							        </template>
 						          	<template v-else>
-							          	<p >
+							          	<p>
 							          		<i class="fa fa-map-marker" aria-hidden="true"></i> <strong>Ubicacion</strong>
 							          	</p>
 							          	<p>
-							          		{{ publicacion.proveedor.domicilio.localidad.nombre }} -
+							          		<strong>Ciudad </strong>{{ publicacion.proveedor.domicilio.localidad.nombre }} -
 							          		{{ publicacion.proveedor.domicilio.localidad.provincia.nombre }}
-							          	</p>
-							          	<p><strong>Calle </strong>{{ publicacion.proveedor.domicilio.calle}}</p>
+											<strong>Calle </strong>{{ publicacion.proveedor.domicilio.calle }}
+										</p>
 						          	</template>
 						          	
 						          	<hr v-if="publicacion.calificacion != null">

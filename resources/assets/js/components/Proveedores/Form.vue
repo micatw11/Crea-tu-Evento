@@ -3,7 +3,7 @@
         <form role="form">
         <div class="col-sm-12">
             <div class="col-sm-6">
-                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('usuarios')&&validarProveedor}">
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('usuarios')&&validarProveedor}" v-if="!editProveedor">
                     <div class="col-sm-12">
                         <label class="control-label">Usuario</label><br>
                         <v-select 
@@ -73,7 +73,7 @@
                     </div>
                 </div>
 
-                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('adjunto')&&validarProveedor}">
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('adjunto')&&validarProveedor}" v-if="!editProveedor">
                     <div class="col-sm-12">
                         <label for="inputDni" class="control-label"><i class="fa fa-file-image-o"></i> Adjunto (opcional)</label>
                             
@@ -98,6 +98,29 @@
             </div>
 
             <div class="col-sm-6">
+                <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('telefono')&&validarProveedor}">
+                    <div class="col-sm-12">
+                        <label for="inputTelefono" class="control-label">Telefono de contacto</label><br>
+                        <input 
+                            name="telefono" 
+                            v-validate="rulesTelefono"
+                            type="text-red" 
+                            v-model="proveedor.telefono" 
+                            class="form-control"
+                            placeholder="#####-########">
+
+                        <!-- validacion vee-validation -->
+                        <span v-show="errors.has('telefono')&&validarProveedor" class="help-block">
+                                {{ errors.first('telefono') }}
+                        </span>
+                        <!-- validacion api-->
+                        <div class="text-red" v-if="errorsApi.telefono">
+                            <div v-for="msj in errorsApi.telefono">
+                                <p>{{ msj }}</p>
+                            </div>
+                        </div>
+                    </div>                    
+                </div>
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('ingresos_brutos')&&validarProveedor}">
                     <div class="col-sm-12">
                         <label for="inputIngresosBrutos" class="control-label">N° Ingresos Brutos</label><br>
@@ -163,7 +186,7 @@
                     </div>
                     
                     <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has(('numero')||('piso'))&&validarProveedor}">
-                        <div class="col-sm-6">
+                        <div class="col-sm-12 col-md-6">
                                 <label for="inputNro" class="control-label">N° </label><br>
                                 <input 
                                     name="numero" 
@@ -182,7 +205,7 @@
                                 </div>
                         </div>
 
-                        <div class="col-sm-6">
+                        <div class="col-sm-12 col-md-6">
                             
                             <label for="inputPiso" class="control-label">Dpto. </label><br>
                             <input name="piso" v-validate="'required'" type="number" v-model="proveedor.domicilio.piso" value="piso" class="form-control">
@@ -213,25 +236,32 @@ import vSelect from "vue-select";
 
 export default {
     props: {
-            proveedor: {
-                type: Object,
-                required: true
-            },
-            nuevo: {
-                type: Boolean,
-                required: true
-            },
-            errorsApi: {
-                type: Object,
-                required: true
-            }
+        editProveedor: {
+            default: false
+        },
+        proveedor: {
+            type: Object,
+            required: true
+        },
+        nuevo: {
+            type: Boolean,
+            required: true
+        },
+        errorsApi: {
+            type: Object,
+            required: true
+        }
     },
     data() {
         return {
             usuarios:[],
             localidades: [],
             validar: false,
-            validarProveedor: false
+            validarProveedor: false,
+                rulesTelefono: {
+                  required: true,
+                  regex: /[0-9]{3,4}-[0-9]{6,8}/i
+                }
         }
     },
     components: {

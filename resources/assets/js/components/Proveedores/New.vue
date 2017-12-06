@@ -55,6 +55,7 @@ export default {
                 ingresos_brutos: null,
                 email: null,
                 dni: null,
+                telefono: '',
                 domicilio: {
                     calle: null,
                     numero: null,
@@ -89,6 +90,7 @@ export default {
                     calle: this.proveedor.domicilio.calle,
                     numero: this.proveedor.domicilio.numero,
                     piso: this.proveedor.domicilio.piso,
+                    telefono: this.proveedor.telefono,
                     localidad_id: this.proveedor.domicilio.localidad_id.value
 
                 })

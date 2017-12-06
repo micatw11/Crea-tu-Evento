@@ -1,27 +1,45 @@
 <template>
-    <div v-if="loadedProveedor">
-        <div class="modal-body">
-        	<form-proveedor 
-                :proveedor="proveedor" 
-                :validarProveedor="validarProveedor" 
-                :errorsApi="errorsApi"
-                @validadoEditProveedor="sendForm()" 
-                :nuevo= "nuevo">
-                
-            </form-proveedor>
+    <div>
+        <div class="col-sm-4">
+            <button type="button" class="btn-block" @click="showModificar = true">
+                Modificar Informaci&oacute;n de Proveedor
+            </button>
         </div>
-        <div class="modal-footer">
-            <div class="col-sm-12 box-footer clearfix" style="text-align:center;">
-                <button class="btn btn-default" @click="atras()">
-                    <i class="glyphicon glyphicon-chevron-left"></i>
-                    Atras
-                </button>
-                <button @click="validateBeforeSubmit()" type="button" class="btn btn-primary">
-                    Guargar
-                </button>
+        <!-- Modal Modificar-->
+        <div id="modificar" class="modal" role="dialog" :style="{ display : showModificar  ? 'block' : 'none' }">
+            <div class="modal-dialog modal-lg" v-if="loadedProveedor">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" @click="closeModal()">&times;</button>
+                        <h4 class="modal-title">Modificar datos de Proveedor</h4>
+                    </div>
+                    <div class="modal-body">
+                    	<form-proveedor 
+                            :proveedor="proveedor" 
+                            :validarProveedor="validarProveedor" 
+                            :errorsApi="errorsApi"
+                            @validadoEditProveedor="sendForm()" 
+                            :editProveedor="true"
+                            :nuevo="false">
+                            
+                        </form-proveedor>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="col-sm-12 clearfix" style="text-align:center;">
+                            <button class="btn btn-default" @click="closeModal()">
+                                <i class="glyphicon glyphicon-chevron-left"></i>
+                                Atras
+                            </button>
+                            <button @click="validateBeforeSubmit()" type="button" class="btn btn-primary">
+                                Guargar
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>   
+    </div>
 </template>
 
 <script>
@@ -30,21 +48,20 @@ import FormProveedor from './Form.vue';
 
 export default {
     props: {
-            idProveedor: {
-                type: Number,
-                required: true
-            },
+        idProveedor: {
+            type: Number,
+            required: true
+        }
     },
     data() {
         return {
-            Proveedores: { type: Object, default: null},//Peticion de datos
+            proveedores: { type: Object, default: null},//Peticion de datos
             proveedor: { type: Object, default: null},
             validarProveedor: false,
             errorsApi: {},
             error: false,
-            fecha: null,
-            nuevo: false,
-            loadedProveedor: false
+            loadedProveedor: false,
+            showModificar: false
         }
     },
     components: {
@@ -57,16 +74,14 @@ export default {
     methods: {
         //envio de formulario de modificación de informacion de usuario
         sendForm: function() {
-            this.$http.post(
+            this.$http.patch(
                 'api/proveedor/'+ this.proveedor.id+'/edit', 
                 {
-                    _method: 'PATCH',
-                    user_id: this.proveedor.user_id.value,
+                    user_id: this.proveedor.user.id,
                     nombre: this.proveedor.nombre,
                     cuit: this.proveedor.cuit,
                     ingresos_brutos: this.proveedor.ingresos_brutos,
                     email: this.proveedor.email,
-                    adjunto: this.proveedor.adjunto,
                     calle: this.proveedor.domicilio.calle,
                     numero: this.proveedor.domicilio.numero,
                     piso: this.proveedor.domicilio.piso,
@@ -80,7 +95,7 @@ export default {
                         message:'Se han realizado correctamente los cambios. :D'
                     });
                     this.$events.fire('reloadIndexProveedor');
-                    this.atras();
+                    this.closeModal();
                 }, response => {
                     this.validar= false;
                     this.validarProveedor= false;
@@ -94,12 +109,10 @@ export default {
                     }
                 })
         },
-
         //form validation
-        validateBeforeSubmit: function() {                 
-                    this.validarProveedor = true;
-                    this.$events.fire('validarFormProveedor')
-
+        validateBeforeSubmit: function() {
+            this.validarProveedor = true;
+            this.$events.fire('validarFormProveedor')
         },
         getProveedor: function(){
             this.$http.get('api/proveedor/'+ this.idProveedor )
@@ -126,8 +139,8 @@ export default {
             }
             this.loadedProveedor = true;
         },
-        atras: function(){
-            this.$events.fire('cerrar');
+        closeModal: function(){
+            this.showModificar = false;
         }
 
     }

@@ -103,6 +103,10 @@
                                             <div>
                                                 <account></account>
                                             </div>
+                                            <br><br>
+                                                <form-perfil-proveedor v-if="perfil !== null && auth.user.authenticated && (perfil.user_id == auth.user.profile.id && auth.user.profile.roles_id == role.PROVEEDOR)"
+                                                :idProveedor="perfil.user.proveedor.id">
+                                                </form-perfil-proveedor>
                                         </div>
                                         <!-- /.tab-pane -->
                                     </div>
@@ -163,10 +167,10 @@
                     :perfil="perfil">    
                 </box-proveedor>
                 <box-operador 
-                    v-if="perfil != null && auth.user.authenticated && ((perfil.user.roles_id == role.OPERADOR && perfil.user.id == auth.user.profile.id) || (auth.user.profile.roles_id == role.ADMINISTRADOR && perfil.user.roles_id == role.OPERADOR) || (auth.user.profile.roles_id == role.SUPERVISOR && perfil.user.roles_id == role.OPERADOR))">
+                    v-if="perfil != null && auth.user.authenticated && ((perfil.user.roles_id == role.OPERADOR && perfil.user.id == auth.user.profile.id) || (auth.user.profile.roles_id == role.ADMINISTRADOR || perfil.user.roles_id == role.OPERADOR) || (auth.user.profile.roles_id == role.SUPERVISOR && perfil.user.roles_id == role.OPERADOR))">
                 </box-operador>
                 <box-supervisor
-                    v-if="perfil != null && auth.user.authenticated && ((perfil.user.roles_id == role.SUPERVISOR && perfil.user.id == auth.user.profile.id) || (auth.user.profile.roles_id == role.ADMINISTRADOR && perfil.user.roles_id == role.SUPERVISOR) || (auth.user.profile.roles_id == role.SUPERVISOR && perfil.user.roles_id == role.SUPERVISOR))">
+                    v-if="perfil != null && auth.user.authenticated && ((perfil.user.roles_id == role.SUPERVISOR && perfil.user.id == auth.user.profile.id) || (auth.user.profile.roles_id == role.ADMINISTRADOR || perfil.user.roles_id == role.SUPERVISOR) || (auth.user.profile.roles_id == role.SUPERVISOR && perfil.user.roles_id == role.SUPERVISOR))">
                 </box-supervisor>
             </div>
         </section>
@@ -188,7 +192,7 @@ import BoxProveedor from '../Proveedores/PerfilProveedor.vue';
 import BoxOperador from './../Operadores/BoxOperador.vue';
 import BoxSupervisor from './../Supervisores/BoxSupervisor.vue';
 import IndexCalificacion from './../Proveedores/Calificaciones/Index';
-
+import FormPerfilProveedor from './../Proveedores/EditPerfilProveedor';
 Vue.component('eventos-box', require('./../Proveedores/Reservas/Index'));
 
 export default {
@@ -225,7 +229,8 @@ export default {
         BoxProveedor,
         IndexCalificacion,
         BoxOperador,
-        BoxSupervisor
+        BoxSupervisor,
+        FormPerfilProveedor
     },
     methods:{
 

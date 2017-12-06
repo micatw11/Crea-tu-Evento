@@ -18,13 +18,20 @@ class Proveedor extends Model
                             'adjunto',
                             'register_by_user_id',
                             'accepted_by_user_id',
-                            'rejected_by_user_id'
+                            'rejected_by_user_id',
+                            'telefono_id'
     					  ];
 
     public function user()
-    {     
+    {
         return $this->belongsTo('App\User');    
     }
+
+    public function telefono()
+    {     
+        return $this->belongsTo('App\Telefono');    
+    }
+
     public function register_by_user()
     {     
         return $this->belongsTo('App\User');    

@@ -112,6 +112,7 @@
         },
         methods: {
             getNotificaciones(){
+                this.notificaciones = [];
                 this.$http.get('api/usuario/me/notificaciones').then(response => {
                     for(var notificacion of response.data){
                         this.notificaciones.push(

@@ -140,7 +140,7 @@ class PublicacionController extends Controller
 
         $publicacion = Publicacion::join('calificaciones', 'calificaciones.publicacion_id', '=', 'publicaciones.id')
             ->where('calificaciones.estado', 1)
-            ->with(array('prestacion.rubros', 'prestacion.domicilio.localidad.provincia', 'proveedor.user.usuario', 'proveedor.domicilio.localidad.provincia','subcategoria.categoria','fotos', 'caracteristicas', 'favoritos', 'articulos','horarios', 'calificaciones' => function($query){$query->where('estado', '=', 1 );},'calificaciones.reserva.user.usuario', 'reservas', 'vistas'))
+            ->with(array('prestacion.rubros', 'prestacion.domicilio.localidad.provincia', 'proveedor.telefono', 'proveedor.user.usuario', 'proveedor.domicilio.localidad.provincia','subcategoria.categoria','fotos', 'caracteristicas', 'favoritos', 'articulos','horarios', 'calificaciones' => function($query){$query->where('estado', '=', 1 );},'calificaciones.reserva.user.usuario', 'reservas', 'vistas'))
             ->select('publicaciones.*',
                 DB::raw('TRUNCATE(AVG(calificaciones.puntuacion_total), 1) as calificacion'))
                         ->where('publicaciones.id', $id)->firstOrFail();
