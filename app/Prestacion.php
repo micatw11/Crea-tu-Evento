@@ -10,7 +10,6 @@ class Prestacion extends Model
 
     protected $fillable = [ 
     						'proveedor_id',
-    						'rubro_id',
     						'habilitacion',
                             'fecha_habilitacion',
     						'domicilio_id'

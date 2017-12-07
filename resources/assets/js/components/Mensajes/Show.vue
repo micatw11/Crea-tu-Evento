@@ -39,7 +39,11 @@
 								<div class="col-md-12">
 									<hr>
 									<small class="label bg-green">
-										Conste total: {{ formatMoney(presupuesto.precio_total) }}
+										Conste total: {{ formatMoney(presupuesto.precio_total) }} 
+										<template v-if="showAplicarDescuento">
+											<template v-if="presupuesto.aplicar_decuento">con descuento</template>
+											<template v-else>sin descuento</template>
+										</template>
 									</small>
 								</div>
 							</template> 
@@ -443,8 +447,10 @@
 						}
 					}
 				}
-			}
-
+			},
+	    	showAplicarDescuento(){
+                return this.presupuesto.aplicar_decuento;
+	    	}
 		}
 	}
 </script>

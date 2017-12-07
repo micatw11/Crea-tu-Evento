@@ -77,8 +77,8 @@
 
 	        	var data = {
                 	articulos: this.reserva.articulos,
-                	precio_total: this.reserva.precio_total
-
+                	precio_total: this.reserva.precio_total,
+                	aplicar_decuento: this.reserva.aplicar_decuento
                 }
 
 	            this.$http.patch(

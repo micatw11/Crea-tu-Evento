@@ -98,6 +98,12 @@
 	                    	 El campo precio es requerido.
                     	</span>             	
 	                </div>
+	                <div class="col-sm-8" style="padding-top: 30px;" v-if="showAplicarDescuento">
+						<template>
+						  <!-- `checked` should be true or false -->
+						  <el-checkbox v-model="reserva.aplicar_decuento" @change="aplicarDescuento">Aplicar Descuento</el-checkbox>
+						</template>
+	                </div>
 	            </div>
 	       	</div>
 		</form>
@@ -105,7 +111,7 @@
 </template>
 <script>
 	import auth from './../../../auth.js'
-
+	import moment from 'moment';
 	export default {
 		props: {
 			rubros: {
@@ -167,7 +173,6 @@
 			    }).catch(() => {
 		        	
 		      	});
-
 		    },
 	    	callbackSelectRubros: function(val) {
 	    		this.opcionesArticulos = [];
@@ -252,7 +257,16 @@
 	    		if(this.reserva.horario_id != null){
 	    			precie = precie + this.reserva.horario.precio;
 	    		}
-	    		this.reserva.precio_total = precie;
+	    		if(!this.reserva.aplicar_decuento){
+	    			this.reserva.precio_total = precie;
+	    		}
+	    		else {
+	    			console.log((this.reserva.publicacion.descuento * precie) / 100);
+	    			this.reserva.precio_total = precie - ((this.reserva.publicacion.descuento * precie) / 100);
+	    		}
+	    	},
+	    	aplicarDescuento(){
+	    		this.calularCoste();
 	    	}
 	    },
 	    computed:{
@@ -272,6 +286,18 @@
 	    				return true;
 	    		}
 	    		return false;
+	    	},
+	    	showAplicarDescuento(){
+                if(this.reserva.publicacion.descuento != null){
+                    if(this.reserva.publicacion.fecha_finalizacion != null){
+                        if(moment(this.reserva.publicacion.fecha_finalizacion, 'YYYY-MM-DD').isAfter(moment({}))){
+                            return true;
+                        }
+                    } else {
+                        return true;
+                    }
+                }
+                return false;
 	    	}
 	    }
 	}
