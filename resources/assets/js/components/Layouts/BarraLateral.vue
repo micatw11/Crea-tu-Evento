@@ -107,7 +107,43 @@
                             </router-link>
                         </ul>
                     </li>
+                    <li class="treeview" 
+                        v-if="auth.user.profile.roles_id == role.ADMINISTRADOR || 
+                            auth.user.profile.roles_id == role.SUPERVISOR ||
+                            auth.user.profile.roles_id == role.OPERADOR">
+                        
+                        <a href="#">
+                            <i class="fa fa-dashboard"></i>
+                            <span>Terminos y Condiciones</span>
+                            <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
 
+                            <router-link 
+                                v-if="auth.user.profile.roles_id == role.ADMINISTRADOR ||
+                                auth.user.profile.roles_id == role.SUPERVISOR"
+                                tag="li" 
+                                to="/terminos-condiciones/new">
+                                <a>
+                                    <i class="fa fa-th-list"></i> Nuevo
+                                </a>
+                            </router-link>
+
+                            <router-link
+                                v-if="auth.user.profile.roles_id == role.ADMINISTRADOR ||
+                                    auth.user.profile.roles_id == role.SUPERVISOR ||
+                                    auth.user.profile.roles_id == role.OPERADOR" 
+                                    tag="li"
+                                    to="/terminos-condiciones/edit">
+                                    <a>
+                                        <i class="fa fa-th-list"></i> Editar
+                                    </a>
+                            </router-link>
+
+                        </ul>
+                    </li>
                     <li class="treeview" v-if="favourites > 0">
                         <router-link :to="'/?favorite='+ true" tag="a" @click="goToFavourites()">
                             <i class="fa fa-dashboard"></i>

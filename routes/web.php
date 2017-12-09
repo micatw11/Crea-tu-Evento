@@ -7,6 +7,10 @@ Route::get('/', function () {
 Route::group(['prefix' => 'api'], function () {
 
     // Rutas del Login
+    Route::get('terminos-condiciones', 'TerminoCondicionController@show');
+    Route::post('terminos-condiciones', 'TerminoCondicionController@store');
+    Route::patch('terminos-condiciones', 'TerminoCondicionController@update');
+
     Route::post('login', 'Auth\AuthController@login');
     Route::post('logout', 'Auth\AuthController@logout');
     Route::get('user', 'Auth\AuthController@getAuth');
@@ -43,7 +47,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::patch('proveedor/{id}/estado', 'ProveedorController@cambiarEstado')->middleware('role:administrador,supervisor');
     Route::post('proveedor', 'ProveedorController@store')->middleware('role:administrador,supervisor,operador');
     Route::patch('proveedor/{id}/edit', 'ProveedorController@update')->middleware('role:administrador,supervisor,operador,proveedor');
-    Route::get('proveedor/{id}', 'ProveedorController@proveedor');
+    Route::get('proveedor/{id}', 'ProveedorController@show');
 
 
     Route::post('proveedor/rubro/', 'PrestacionController@store')

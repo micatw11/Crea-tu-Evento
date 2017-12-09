@@ -28,8 +28,6 @@ class HorarioController extends Controller
         } else {
             return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
-
     }
 
     /**
@@ -269,12 +267,12 @@ class HorarioController extends Controller
                 ->whereDate('fecha', '=', Carbon::createFromFormat('Y-m-d', $fecha)->toDateString())->first();
 
             if($reserva == null){
-                return response()->json('disponible', 200);
+                return response()->json(['estado' => 'disponible'], 200);
             } else {
                 if($reserva_id != null && $reserva_id == $reserva->id)
-                    return response()->json('disponible', 200);
+                    return response()->json(['estado' => 'disponible'], 200);
                 else
-                    return response()->json('no disponible', 200);
+                    return response()->json(['estado' => 'no disponible'], 200);
             }
         }
         

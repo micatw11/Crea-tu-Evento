@@ -202,7 +202,7 @@
 	                .then(response => {
 	                    this.$toast.success({
 	                        title:'¡Publiacion Creada!',
-	                        message:'Se creado correctamente su publicación. :D'
+	                        message:'Se creado correctamente su publicación.'
 	                    });
 	                    this.$events.fire('changePath', this.listPath, 'Ver Publicacion');
 	                    this.id = response.data.id;
@@ -211,7 +211,7 @@
 	                    this.validarPublicacion= false;
 	                    this.$toast.error({
 	                        title:'¡Error!',
-	                        message:'No se han podido crear su publicación. :('
+	                        message:'No se han podido crear su publicación.'
 	                    });
 	                    if(response.status === 422)
 	                    {

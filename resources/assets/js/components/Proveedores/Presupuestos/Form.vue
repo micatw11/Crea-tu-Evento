@@ -388,11 +388,10 @@
 		    		}
 		    		this.showEstadoReserva = true;
 		    	}
-		    	else if (horarios != 'disponible') 
+		    	else if (horarios.estado != 'disponible') 
 		    		this.showNoDisponible = true;
 		    	else
 		    		this.showNoDisponible = false;
-		    	
 	    	},
 	    	loadOpcions(){
 

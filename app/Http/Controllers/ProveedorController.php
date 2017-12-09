@@ -50,9 +50,7 @@ class ProveedorController extends Controller
     public function index(Request $request)
     {
         $query = Proveedor::with('user.usuario', 'domicilio.localidad.provincia', 'telefono',
-                            'register_by_user.usuario',
-                            'accepted_by_user.usuario',
-                            'rejected_by_user.usuario');
+                        'register_by_user.usuario', 'accepted_by_user.usuario', 'rejected_by_user.usuario');
 
         if($request->filter){
             $like = '%'.$request->filter.'%';
@@ -259,13 +257,13 @@ class ProveedorController extends Controller
                     'descripcion' => "Se ha acepatado un nuevo proveedor."
                 ]);
         }
-        else {
+        else
+        {
             return response()->json(['error' =>  'Bad Request'], 400);
         }
 
         $proveedor->estado = $request->input('action');
         $proveedor->observaciones = $request->input('observaciones');
-
 
         if($proveedor->user->save() && $proveedor->save()){
             return response(null, Response::HTTP_OK);
@@ -280,7 +278,7 @@ class ProveedorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function proveedor($id){
+    public function show($id){
         $proveedor = Proveedor::where('id', $id)
             ->with('domicilio.localidad.provincia','user.usuario', 'telefono')->firstOrFail();
 

@@ -65,4 +65,9 @@ class Proveedor extends Model
         return $this->hasMany('App\Articulo');
     }
 
+    public function scopeAprobado($query)
+    {
+        return $query->where('estado', 'Aprobado');
+    }
+
 }

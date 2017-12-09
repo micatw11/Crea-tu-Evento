@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateVistasPublicacionesTable extends Migration
+class CreateTerminosCondicionesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateVistasPublicacionesTable extends Migration
      */
     public function up()
     {
-        Schema::create('vistas_publicaciones', function (Blueprint $table) {
+        Schema::create('terminos_condiciones', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('publicacion_id')->unsigned(); 
-            $table->integer('user_id')->unsigned()->nullable();
+            $table->string('cuerpo', 35000);
+            $table->integer('user_id')->unsigned();
+            $table->boolean('estado')->default(1);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('publicacion_id')->references('id')->on('publicaciones');
         });
     }
 
@@ -31,6 +31,6 @@ class CreateVistasPublicacionesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vistas_publicaciones');
+        Schema::dropIfExists('terminos_condiciones');
     }
 }

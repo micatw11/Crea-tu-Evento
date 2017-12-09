@@ -37,19 +37,6 @@
 						</div>
 					</div>
 				</div>
-
-				<div class="col-lg-3 col-xs-6">
-					<!-- small box -->
-					<div class="small-box bg-yellow">
-						<div class="inner">
-							<h3>44</h3>
-							<p>User Registrations</p>
-						</div>
-						<div class="icon">
-							<i class="ion ion-person-add"></i>
-						</div>
-					</div>
-				</div>
 				<div class="col-lg-3 col-xs-6">
 					<!-- small box -->
 					<div class="small-box bg-aqua">
@@ -66,19 +53,19 @@
 						</a>-->
 					</div>
 				</div>
-				<div class="col-lg-3 col-xs-6">
+				<div class="col-lg-5 col-xs-6" v-if="loadedReservas">
 					<!-- small box -->
 					<div class="small-box bg-green">
 						<div class="inner">
-							<h3>53<sup style="font-size: 20px">%</sup></h3>
-							<p>Bounce Rate</p>
+							<h3>{{reservasAumento}}<sup style="font-size: 20px">%</sup></h3>
+							<p>Incremento ultimo mes de reservas</p>
 						</div>
 						<div class="icon">
 							<i class="ion ion-stats-bars"></i>
 						</div>
 					</div>
 				</div>
-				<div class="col-lg-3 col-xs-6">
+				<div class="col-lg-4 col-xs-6">
 					<!-- small box -->
 					<div class="small-box bg-red">
 						<div class="inner">
@@ -473,8 +460,19 @@
 			registroAumento(){
 				var count = 0;
 				var countUltimos = 0;
-				for ( var usuario of this.usuarios) {
-					if(moment(usuario.created_at, 'YYYY-MM-DD').month() == moment({}).month()){
+				for ( var usuaria of this.usuarios) {
+					if(moment(usuaria.created_at, 'YYYY-MM-DD').month() == moment({}).month()){
+						countUltimos++;
+					}
+					count++;
+				}
+				return parseInt((countUltimos*100)/count);
+			},
+			reservasAumento(){
+				var count = 0;
+				var countUltimos = 0;
+				for ( var reserva of this.reservas) {
+					if(moment(reserva.created_at, 'YYYY-MM-DD').month() == moment({}).month()){
 						countUltimos++;
 					}
 					count++;

@@ -131,7 +131,8 @@
                 </div>
                 <div class="form-group has-feedback text-center row">
                     <p>
-                        Al crear una cuenta acepta el <a href="#">Contrato de servicios de Eventos.</a>
+                        Al crear una cuenta acepta el 
+                            <router-link tag="a" to="/terminos-condiciones" target="_blank">Contrato de servicios de Eventos.</router-link>
                     </p>
                     <br>
                     <!-- /.col -->

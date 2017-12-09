@@ -13,9 +13,9 @@ class AlterTableReservas extends Migration
      */
     public function up()
     {
-        Schema::table('reservas', function (Blueprint $table) {
-            $table->boolean('aplicar_decuento')->default(false);
-        });
+        //Schema::table('reservas', function (Blueprint $table) {
+        //    $table->boolean('aplicar_decuento')->default(false);
+        //});
     }
 
     /**
