@@ -19,7 +19,8 @@ class Proveedor extends Model
                             'register_by_user_id',
                             'accepted_by_user_id',
                             'rejected_by_user_id',
-                            'telefono_id'
+                            'telefono_id',
+                            'observaciones'
     					  ];
 
     public function user()

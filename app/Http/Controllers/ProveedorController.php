@@ -7,6 +7,7 @@ use App\Http\Services\DomicilioService;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\NewProveedorToOperador;
 use App\Mail\NewProveedorToSupervisor;
+use App\Mail\CancelarReservasDeProveedor;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -14,11 +15,13 @@ use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Notificacion;
 use App\Telefono;
+use Carbon\Carbon;
 use App\Proveedor;
 use App\Publicacion;
 use App\Rol;
 use App\Domicilio;
 use App\Prestacion;
+use App\Reserva;
 use App\Rubro;
 use App\Log;
 use App\User;
@@ -210,8 +213,23 @@ class ProveedorController extends Controller
 
         if($request->action == 'Baja' ){
             $proveedor->user->roles_id = Rol::roleId('Usuario');
-            $publicaciones = Publicacion::where('proveedor_id', $proveedor->id)
+
+            Publicacion::where('proveedor_id', $proveedor->id)
                 ->update(['estado'=> 0]);
+            $publicacionesId = Publicacion::where('proveedor_id', $proveedor->id)->get()->pluck('id');
+
+            $reservas = Reserva::whereIn('publicacion_id', $publicacionesId)->where('estado', '!=', 'cancelado')
+                ->whereDate('fecha', '>', Carbon::now()->toDateString())->with('user', 'publicacion.proveedor')->get();
+                
+            Reserva::whereIn('publicacion_id', $publicacionesId)->where('estado', '!=', 'cancelado')
+                ->whereDate('fecha', '>', Carbon::now()->toDateString())
+                    ->update(['estado' => 'cancelado']);
+            
+
+            foreach ($reservas as $reserva) {
+                Mail::to($reserva->user->email)->queue(new CancelarReservasDeProveedor($reserva));
+            }
+
             $proveedor->rejected_by_user_id = Auth::id();
             $proveedor->accepted_by_user_id = null;
             $log = Log::logs($proveedor->id, 'proveedores', 'baja', null, 'Ha dado de baja un proveedor.'); 

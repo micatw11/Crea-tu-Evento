@@ -113,6 +113,16 @@
                             <div class="modal-body">
 
                                 <div class="box-body">
+                                    <div class="col-sm-12">
+                                        <div class="col-sm-12">
+                                            <div class="callout callout-success" v-if="action == 'Baja'">
+                                                <h4>¡Motivo de la acción!</h4>
+
+                                                <p>Se le notificará al proveedor y a los adquirientes de sus productos y servicios 
+                                                    el motivo por cual se le ha dado de baja.</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <form role="form">
                                         <div class="col-sm-12">
                                             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('observaciones')&&validar}">

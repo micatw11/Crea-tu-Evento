@@ -103,7 +103,7 @@ class UsuarioController extends Controller
     {
        
         $usuario = Usuario::where('user_id', $id)
-            ->with('localidad.provincia', 'user.rol', 'user.proveedor.prestaciones.domicilio', 'user.proveedor.domicilio','user.proveedor.publicaciones', 'user.proveedor.prestaciones')
+            ->with('localidad.provincia', 'user.rol', 'user.proveedor.prestaciones.domicilio', 'user.proveedor.domicilio.localidad.provincia','user.proveedor.publicaciones', 'user.proveedor.prestaciones', 'user.proveedor.telefono')
                 ->firstOrFail();
 
         if (Gate::allows('show-profile', $usuario)) {
