@@ -20,7 +20,7 @@
                          </thead>
                          <tbody v-if="loadH">
                         
-                           <tr v-for="hora in 49" v-html="handle(hora)" @click.stop ="editHorario($event)"  >
+                           <tr v-for="hora in 24" v-html="handle(hora)" @click.stop ="editHorario($event)"  >
                            </tr>
                          </tbody>
                        </table>
@@ -47,6 +47,7 @@
     import Style from './../../Layouts/Style-css.js';
     import EditHorario from './Edit';
     import moment from 'moment';
+    import auth from '../../../auth.js';
 
     export default	{
         props:{ 
@@ -59,17 +60,16 @@
         },
     	data(){
             return {
-                horariosSelect: [],
                 horario: [],
                 hora:0,
                 horarioId: 0,
                 loadH: false,
                 showFormH : false,
-                endHandle: false,
                 red: Math.floor(Math.random() * (200 - 50)),
                 green: Math.floor(Math.random() * (200 - 50)),
                 blue: Math.floor(Math.random() * (200 - 50)),
                 showModificarHorario: false,
+                auth: auth,
                 dias: [
                         {nombre:'domingo'},
                         {nombre:'lunes'},
@@ -84,6 +84,7 @@
              EditHorario
         },
         beforeMount: function(){
+
            this.getHorarios();
         },
         mounted() {
@@ -97,136 +98,110 @@
                 this.horario=[];
                 if (this.publicacionId != null){
                     this.$http.get('api/publicacion/'+this.publicacionId+'/horarios')
-                        .then(response =>{
-                            this.horario = response.data.horarios
-                            this.loadH =true;
-                            this.showFormH = true;
-                        }, response => {
-                            if(response.status === 404){
-                                this.$toast.error({
-                                    title:'¡Error!',
-                                    message:'No se han cargado sus horarios.'
-                                });
-                            }
-                        });
+                    .then(response =>{
+                        this.horario = response.data.horarios
+                        this.loadH =true;
+                        this.showFormH = true;
+                    }, response => {
+                        if(response.status === 404){
+                          this.$toast.error({
+                              title:'¡Error!',
+                              message:'No se han cargado sus horarios.'
+                          });
+                        }
+                    });
                 } else{
                     this.showFormH = false;
                     this.loadH = false;
                     var lengthIds = this.horariosId.length;
-                    if ( this.publicacionId == null && this.horariosId.length > 0 ){
-                        for (var i = 0; i < this.horariosId.length; i++) {
-                            this.$http.get('api/horarios/'+this.horariosId[i])
-                                .then(response =>{
-                                    this.horario.push(response.data)
-                                    lengthIds--;
-                                    if(lengthIds == 0)
-                                    {
-                                        this.showFormH = true;
-                                        this.loadH =true;
-                                    }
-                                }, response => {
-                                    if(response.status === 404){
-                                        this.$toast.error({
-                                            title:'¡Error!',
-                                            message:'No se han cargado sus horarios.'
-                                        });
-                                    }
-                                });
-                        }
+                    if ( this.publicacionId == null && this.horariosId.length > 0 )
+                    {
+                      this.$http.get('api/horarios/'+this.auth.user.profile.id )
+                          .then(response =>{
+                              this.horario = response.data
+                              if ( this.horario){
+                                  this.loadH =true;
+                                  this.showFormH = true;
+                                }
+                          }, response => {
+                              if(response.status === 404){
+                                  this.$toast.error({
+                                      title:'¡Error!',
+                                      message:'No se han cargado sus horarios.'
+                                  });
+                              }
+                          });
+                       
                     }
-
-
+                    
+                        
                 }
 
             },
-            handle(hora) {
+            /* Con los datos obtenidos de Horarios, crea una tabla con los valores correspondientes*/
+             handle(hora) {
                var mostrar = false
-                var media = false
-            if (hora>1){
-                this.diff= ''
-               if (hora%2 != 0){
-               media= true
-                  hora= parseInt(hora/2)
-               }else{
-                media=false
-                hora= hora/2
-                 this.diff= this.diff +'<td style="text-align: center;" rowspan="2">'+hora +':00hs</td>';
-              }
-               var masUnaHora = hora +1;
-               var diferencia_hora = 0;
-                for (var i = 0; i < this.dias.length; i++) 
-                { 
-                  mostrar = false
-                  for ( var j = 0;(j < this.horario.length); j++) 
-                  {
-                     if(this.horario[j].dia == this.dias[i].nombre)
+               var masUnaHora = hora + 1;
+                  this.lineHtml= '<td style="text-align: center;">'+hora +':00hs</td>';
+                  for (var i = 0; i < this.dias.length; i++) 
+                  { 
+                     mostrar= false
+                     for ( var j = 0;(j < this.horario.length); j++) 
                      {
-                        if ((
-                           moment(hora+':00', 'HH:mm').
-                           isSameOrAfter(moment(this.horario[j].hora_inicio, 'HH:mm')) 
-                           &&
-                           moment(masUnaHora+':00', 'HH:mm').
-                           isBefore(moment(this.horario[j].hora_fin, 'HH:mm'))
-                        ) || (
-                           moment(hora+':00', 'HH:mm').
-                           isAfter(moment(this.horario[j].hora_inicio, 'HH:mm')) 
-                           &&
-                           moment(hora+':00', 'HH:mm').
-                           isBefore(moment(this.horario[j].hora_fin, 'HH:mm')) 
-                        ) ||  ((moment(hora+':30', 'HH:mm').isSame(moment(this.horario[j].hora_inicio, 'HH:mm'))) && media) )
-                        { 
-                          
-                           console.log(this.dias[i].nombre +' diff '+this.horario[j].diff)
-                           if (this.horario[j].diff == null || this.horario[j].diff =='undefined' || this.horario[j].diff == 0)
-                           {
-                              var ms = moment(this.horario[j].hora_fin, 'HH:mm').diff(moment(this.horario[j].hora_inicio, 'HH:mm'))
-                              var d = moment.duration(ms);
-                              var s = moment(d, 'HH:mm');
-                              diferencia_hora = s._i._data.hours
-                              var hora_final= hora+diferencia_hora
-                              this.horario[j].diff= diferencia_hora*2;
-                              
-                              if (moment(hora+':30', 'HH:mm').isSame(moment(this.horario[j].hora_inicio, 'HH:mm')) && (moment(hora_final+':30', 'HH:mm').isSame(moment(this.horario[j].hora_fin, 'HH:mm')))){
-                                
-                              }else{
-                                  console.log(this.dias[i].nombre +' diff '+this.horario[j].diff+'  ' + hora+':30', 'HH:mm' + this.horario[j].hora_inicio, 'HH:mm' + hora_final+':30', 'HH:mm'+ this.horario[j].hora_fin, 'HH:mm' )
-                                  console.log (' ghfgdhhd'+ moment(hora+':30', 'HH:mm').isSame(moment(this.horario[j].hora_inicio, 'HH:mm')) && media)
-                                    if (moment(hora+':30', 'HH:mm').isSame(moment(this.horario[j].hora_inicio, 'HH:mm')) && media)
-                                    {
-                                      this.horario[j].diff=this.horario[j].diff+1
-                                      console.log(this.dias[i].nombre +' diff '+this.horario[j].diff)
-                                    }
-                                    if (moment(hora_final+':30', 'HH:mm').isSame(moment(this.horario[j].hora_fin, 'HH:mm')) && this.horario[j].diff != 0&& media )  {
-                                      this.horario[j].diff=this.horario[j].diff+1
-                                      hora_final = 0
-                                      console.log(this.dias[i].nombre +' diff '+this.horario[j].diff)
-                                    }
-                              }
-                              if (this.horario[j].diff != null){
-                                    this.diff= this.diff +'<td id="'+this.horario[j].id+'" style="text-align: center;vertical-align: middle;background-color:rgba('+this.red+','+ this.green+', '+this.blue+', 0.30);cursor: pointer; width: 120px; border-color: #FFFFFF; border-width:1px; border-style: solid" rowspan="'+this.horario[j].diff +'">Inicio '+this.horario[j].hora_inicio+'hs. - Fin  '+this.horario[j].hora_fin+'hs. Precio: $'+this.horario[j].precio+'</td>',
-                                    mostrar = true
-                                  }
-                          }else{
-                                 if ((this.horario[j].diff != null || this.horario[j].diff !='undefined')  &&  (this.horario[j].diff > 0))
+                        if(this.horario[j].dia == this.dias[i].nombre)
+                        {
+                           if ((
+                              moment(hora+':00', 'HH:mm').
+                              isSameOrAfter(moment(this.horario[j].hora_inicio, 'HH:mm')) 
+                              &&
+                              moment(masUnaHora+':00', 'HH:mm').
+                              isSameOrBefore(moment(this.horario[j].hora_fin, 'HH:mm'))
+                           ) || (
+                              moment(hora+':00', 'HH:mm').
+                              isAfter(moment(this.horario[j].hora_inicio, 'HH:mm')) 
+                              &&
+                              moment(hora+':00', 'HH:mm').
+                              isBefore(moment(this.horario[j].hora_fin, 'HH:mm')) 
+                           ) ||
+                              (moment(this.horario[j].hora_fin, 'HH:mm')
+                              .isBetween(moment(hora+':00', 'HH:mm'), moment(masUnaHora+':00', 'HH:mm'))
+                           ))
+                              {
+                              if (this.horario[j].difHs == null || this.horario[j].difHs =='undefined' || this.horario[j].difHs == 0)
+                              {
+                                 var ms = moment(this.horario[j].hora_fin, 'HH:mm').diff(moment(this.horario[j].hora_inicio, 'HH:mm'))
+                                 var d = moment.duration(ms);
+                                 var s = moment(d, 'HH:mm');
+                                 this.horario[j].difHs= s._i._data.hours;
+
+                                 if (this.horario[j].difHs > 0)
                                  {
-                                    this.horario[j].diff= (this.horario[j].diff - 1)
-                                    if (this.horario[j].diff == 0){
-                                       this.horario[j].diff= null
-                                    }else{
-                                      mostrar = true
-                                    }
+                                       this.lineHtml= this.lineHtml +'<td id="'+this.horario[j].id+'" style="text-align: center;vertical-align: middle;background-color:rgba('+this.red+','+ this.green+', '+this.blue+', 0.30);cursor: pointer; width: 120px; border-color: #FFFFFF; border-width:1px; border-style: solid" rowspan="'+this.horario[j].difHs +'">Inicio '+this.horario[j].hora_inicio+'hs. - Fin  '+this.horario[j].hora_fin+'hs. Precio: $'+this.horario[j].precio+'</td>'
+                                       mostrar = true
                                  }
-                          }
+                              }else
+                              {
+                                if ((this.horario[j].difHs != null || this.horario[j].difHs !='undefined')  &&  (this.horario[j].difHs > 0))
+                                {
+                                   this.horario[j].difHs= (this.horario[j].difHs - 1)
+                                   if (this.horario[j].difHs == 0)
+                                   {
+                                      this.horario[j].difHs= null
+                                   }
+                                  mostrar = true
+                                }
+                              }
+                              
+                           }
                         }
-                      }
-               
+                    }
+                    if (!mostrar)
+                    {
+                        this.lineHtml=  this.lineHtml+'<td id="'+0+'" style="text-align: center;"> </td>'
+                    }
                   }
-                  if (!mostrar){
-                     this.diff=  this.diff+'<td id="'+0+'" style="text-align: center;width: 120px;"> </td>'
-                   }
-              }  
-              return this.diff
-            }
+                  
+                  return this.lineHtml  
             },
             editHorario(event){
                if (event.path[0].id != 0){
@@ -235,16 +210,11 @@
                }
             },
             closeModal(){
+               this.getHorarios()
                this.showModificarHorario=false
-            }
+            },
 
         },
-         watch:
-            {
-                'this.horariosSelect'(){
-                    this.horario= this.horariosSelect
-                }
-            }
     }
 
 </script>

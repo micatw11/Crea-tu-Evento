@@ -168,7 +168,7 @@
 	        	var mesesCount = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
 					for (var publicacion of this.publicaciones) {
 						if( moment(publicacion.created_at, 'YYYY-MM-DD').year() == hoy.year()){
-							switch(moment(publicacion.created_at, 'YYYY-MM-DD').month()) {
+							switch(moment(publicacion.created_at, 'YYYY-MM-DD').month()+1) {
 							    case 1:
 							        mesesCount[0] = mesesCount[0] + 1;
 							        break;
@@ -227,7 +227,7 @@
 	        	}
 				for (var reserva of this.reservas) {
 					if( moment(reserva.fecha, 'YYYY-MM-DD').year() == hoy.year()){
-						switch(moment(reserva.fecha, 'YYYY-MM-DD').month()) {
+						switch(moment(reserva.fecha, 'YYYY-MM-DD').month()+1) {
 						    case 1:
 						    	if(reserva.estado == 'presupuesto')
 						        	mesesCount[0].presupuesto = mesesCount[0].presupuesto + 1;

@@ -124,7 +124,6 @@
 	        },
 			closeModal(){
 				this.$events.fire('close');
-
 			},
 			deleteH(){
 				
@@ -138,19 +137,17 @@
 	        		this.showDeleteH=false
 	        		
 	        		this.$events.fire('deleteId', this.horarioId);
-		        	this.$events.fire('reloadIndexHorario');
 	        		this.$events.fire('close');
 	        	}, response => {
-                    if(response.status === 404){
-                        router.go(-1)
+                  		console.log('')
+	                    
 	                    this.$toast.error({
 	                        title:'¡Error!',
-	                        message:'No se ha cargado su publicación. :('
+	                        message:'No se puede Eliminar el horario, ya que existe una reserva con este. :('
 	                    });
-                    }
+	               		 this.$events.fire('close');
 	        	});
 			}
-
 		}
 	}
 </script>

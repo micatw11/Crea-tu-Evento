@@ -21,17 +21,17 @@
 			<label>Hora Inicio</label><br>
 			<el-time-select placeholder="Desde" style="width: 100%;" v-model="horario.hora_inicio" :picker-options="{
 		      start: '01:00',
-		      step: '00:30',
-		      end: '24:30'
+		      step: '01:00',
+		      end: '23:00'
 		    }">
 		  </el-time-select>
 		  </div>
 		  <div class="col-sm-3">
 		  <label>Hora Fin</label><br>
 		  <el-time-select placeholder="Hasta"  style="width: 100%;" v-model="horario.hora_fin" :picker-options="{
-		      start: '01:30',
-		      step: '00:30',
-		      end: '24:30',
+		      start: '02:00',
+		      step: '01:00',
+		      end: '24:00',
 		      minTime: horario.hora_inicio
 		    }"></el-time-select>
 		</div>

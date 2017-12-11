@@ -44,7 +44,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::patch('user/{id}/rol', 'UsuarioController@cambiarRol')->middleware('role:administrador,supervisor');
 
     //proveedores
-    Route::get('proveedor', 'ProveedorController@index');
+    Route::get('proveedor', 'ProveedorController@index')->middleware('role:administrador,supervisor,operador');
 
     Route::patch('proveedor/{id}/estado', 'ProveedorController@cambiarEstado')->middleware('role:administrador,supervisor');
     Route::post('proveedor', 'ProveedorController@store')->middleware('role:administrador,supervisor,operador');
@@ -112,7 +112,6 @@ Route::group(['prefix' => 'api'], function () {
     Route::post('favoritos','FavoritoController@store');
     Route::get('favoritos/{user_id}', 'FavoritoController@show');
 
-    Route::get('reserva', 'ReservaController@index');
     Route::get('reserva/{id}', 'ReservaController@show');
     Route::get('user/{user_id}/reserva', 'ReservaController@reservasUser');
     Route::patch('reserva/{id}/estado', 'ReservaController@cambiarEstado');

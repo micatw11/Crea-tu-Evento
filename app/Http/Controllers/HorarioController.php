@@ -21,10 +21,15 @@ class HorarioController extends Controller
      */
     public function index($id)
     {
-        $horarios= Horario::where('id', $id)->get();
+        //$horarios= Horario::where('id', $id)->get();
 
-        if ($horarios) {
-            return response()->json( $horarios[0], 200);
+         $proveedor= Proveedor::where('user_id', $id)->firstOrFail();
+        $horario = Horario::where('publicacion_id', null)
+                 ->where('proveedor_id', $proveedor->id)->get();
+               
+
+        if ($horario) {
+            return response()->json( $horario, 200);
         } else {
             return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -90,12 +95,8 @@ class HorarioController extends Controller
                             ->where('proveedor_id', $proveedor->id)
                             ->where('dia', $diaUnico)
                             ->where(function ($q) use ($request){
-                                     //->whereBetween('hora_inicio', [$request->hora_inicio, $request->hora_fin])
-                                     $q->where('hora_inicio','<=',$request->hora_inicio)
-                                     ->where('hora_inicio','>=',$request->hora_fin)
-                                     ->OrWhere('hora_fin','<=',$request->hora_inicio)
-                                     ->where('hora_fin','>=',$request->hora_fin)->get();
-                                    //->orWhereBetween('hora_fin', [$request->hora_inicio, $request->hora_fin])->get();
+                                     $q->whereBetween('hora_inicio', [$request->hora_inicio, $request->hora_fin])
+                                    ->orWhereBetween('hora_fin', [$request->hora_inicio, $request->hora_fin])->get();
                             })->first();
         
                    if ($horarioRepetido) {

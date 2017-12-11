@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\NewProveedorToOperador;
 use App\Mail\NewProveedorToSupervisor;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Mail;
 use App\Mail\EstadoProveedor;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
