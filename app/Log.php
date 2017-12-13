@@ -31,6 +31,7 @@ class Log extends Model
             $log->registro_id = $id;
             $log->valor_antiguo = strval($data);
             $log->save();
+            return $log;
         }
 
 }

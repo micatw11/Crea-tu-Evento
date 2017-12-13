@@ -24,7 +24,6 @@
 					                	@validado="validoNextForm()"
 					                	@validadoEdit="validoNextForm()">	
 					                </form-rubro>
-
 					            </template>
 
 					        	<template v-if="showFormArticulo">
@@ -34,16 +33,14 @@
 										</form-articulo>
 									</div>
 									<div class="col-sm-12">
-										<add-articulo :rubros="prestacion.rubros_id" :articulosSelect="articulos">
+										<add-articulo :rubros="prestacion.rubros_id" :articulosSelect="articulos" @update:articulos="val => articulosArray = val">
 										</add-articulo>
 									</div>
 					        		<div class="col-sm-12">
 						        		<form-horario 
-						        			:publicacionId="null" :nuevo="true" :horariosId="horarios">
+						        			:publicacionId="null" :nuevo="true" :horariosId="horarios" @update:horario="val => horariosArray = val">
 						        		</form-horario>
 					        		</div>
-					        		
-						
 					        	</template>
 
 					            <template v-if="showFormPublicacion">
@@ -61,10 +58,7 @@
 				        </div>
 				        <div class="box-footer">
 				        	<div style="text-align:center;">
-					        	<!--<button @click="goBack()" class="btn btn-default">
-			                        <i class="glyphicon glyphicon-chevron-left"></i>
-			                        Atras
-			                    </button>-->
+
 			                    <button v-if="!showFormRubro && showFormArticulo && !showFormPublicacion" 
 			                    	class="btn btn-default" type="button" 
 			                    	@click.stop="showFormRubro = !showFormRubro; 
@@ -83,7 +77,7 @@
 			                    </button>
 			                    <button v-if="!showFormRubro && showFormArticulo && !showFormPublicacion"
 			                    	class="btn btn-default" type="button" 
-			                    	@click.stop="showFormArticulo = !showFormArticulo; showFormPublicacion = !showFormPublicacion; active++">
+			                    	@click.stop="siguientePublicacion()">
 			                    	Siguiente
 			                    </button>
 				        		<button v-if="showFormPublicacion" 
@@ -133,6 +127,8 @@
                 nuevoRubro: true,
                 articulos: [],
                 horarios: [],
+                horariosArray: [],
+                articulosArray: [],
                 domicilio: {
                     calle: null,
                     numero: null,
@@ -158,7 +154,7 @@
 			FormPublicacion, FormRubro, FormArticulo, AddArticulo, FormHorario
 		},
 		methods: {
-			validateBeforeSubmit: function() {                 
+			validateBeforeSubmit: function() {
 	            this.validarPublicacion = true;
 	            this.$events.fire('validarFormPublicacion');
 	        },
@@ -219,7 +215,7 @@
 	                    this.validarPublicacion= false;
 	                    this.$toast.error({
 	                        title:'¡Error!',
-	                        message:'No se han podido crear su publicación. :('
+	                        message:'No se han podido crear su publicación.'
 	                    });
 	                    if(response.status === 422)
 	                    {
@@ -229,6 +225,12 @@
 	        },
 	        agregarIdH(id){
 				this.horarios.push(id)
+			},
+			siguientePublicacion(){
+				this.calcularPrecio();
+				this.showFormArticulo = !this.showFormArticulo;
+				this.showFormPublicacion = !this.showFormPublicacion; 
+				this.active++;
 			},
 			deleteId(id){
 				for (var i = 0; i < this.horarios.length; i++) {
@@ -248,6 +250,24 @@
 	        },
 	        goBack: function(){
 	            route.go(-1)
+	        },
+	        calcularPrecio: function(){
+	        	this.publicacion.precio = 0;
+        		for(var id of this.articulos){
+    	        	for(var articulo of this.articulosArray){
+    	        		if(id == articulo.id){
+    	        			this.publicacion.precio = this.publicacion.precio + articulo.precio;
+    	        		}
+	        		}
+        		}
+        		if(this.horariosArray.length > 0){
+	        		var menorCosto = this.horariosArray[0].precio;
+	        		for (var i = 1; i < this.horariosArray.length; i++) {
+	        			if(this.horariosArray[i].precio < menorCosto)
+	        				menorCosto = this.horariosArray[i].precio;
+	        		}
+	        		this.publicacion.precio = this.publicacion.precio + menorCosto;
+	        	}
 	        }
 		}
 	}

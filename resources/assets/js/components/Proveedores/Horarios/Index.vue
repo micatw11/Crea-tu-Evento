@@ -1,45 +1,47 @@
 <template>
+  <div>
     <div v-if="horario.length>0 && showFormH" class="default-content">
-            <div class="row">
-                <div class="col-lg-12">
-    	            <div class="box box-primary">
-    	                <!-- /.box-header -->
-                       <h2>Horarios</h2>
-                       <table class="table" style="width='50%'">
-                         <thead>
-                           <tr>
-                             <th>#</th>
-                             <th>Domingo</th>
-                             <th>Lunes</th>
-                             <th>Martes</th>
-                             <th>Miercoles</th>
-                             <th>Jueves</th>
-                             <th>Viernes</th>
-                             <th>Sábado</th>
-                           </tr>
-                         </thead>
-                         <tbody v-if="loadH">
-                        
-                           <tr v-for="hora in 24" v-html="handle(hora)" @click.stop ="editHorario($event)"  >
-                           </tr>
-                         </tbody>
-                       </table>
-    	            </div>
-    	        </div>
-    	    </div>
-            <!-- Modal Modificar-->
-         <div v-if="showModificarHorario" id="modificar" class="modal" role="dialog" :style="{ display : showModificarHorario  ? 'block' : 'none' }">
-              <div class="modal-dialog">
-                
-                  <div class="modal-content">
-                      <div class="modal-header">
-                          <button type="button" class="close" @click="closeModal()">&times;</button>
-                          <h4 class="modal-title">Modificar Horario</h4>
-                      </div>
-                     <edit-horario :horarioId="horarioId" :publicacionId="publicacionId" :horariosId= "horariosId"> </edit-horario>
+          <div class="row">
+              <div class="col-lg-12">
+  	            <div class="box box-primary">
+  	                <!-- /.box-header -->
+                     <h2>Horarios</h2>
+                     <table class="table" style="width='50%'">
+                       <thead>
+                         <tr>
+                           <th>#</th>
+                           <th>Domingo</th>
+                           <th>Lunes</th>
+                           <th>Martes</th>
+                           <th>Miercoles</th>
+                           <th>Jueves</th>
+                           <th>Viernes</th>
+                           <th>Sábado</th>
+                         </tr>
+                       </thead>
+                       <tbody v-if="loadH">
+                      
+                         <tr v-for="hora in 24" v-html="handle(hora)" @click.stop ="editHorario($event)"  >
+                         </tr>
+                       </tbody>
+                     </table>
+  	            </div>
+  	        </div>
+  	    </div>
+    </div>
+        <!-- Modal Modificar-->
+     <div v-if="showModificarHorario" id="modificar" class="modal" role="dialog" :style="{ display : showModificarHorario  ? 'block' : 'none' }">
+          <div class="modal-dialog">
+            
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <button type="button" class="close" @click="closeModal()">&times;</button>
+                      <h4 class="modal-title">Modificar Horario</h4>
                   </div>
-               </div>
-         </div>
+                 <edit-horario :horarioId="horarioId" :publicacionId="publicacionId" :horariosId= "horariosId"> </edit-horario>
+              </div>
+           </div>
+     </div>
 	</div>
 </template>
 
@@ -84,12 +86,12 @@
              EditHorario
         },
         beforeMount: function(){
-
            this.getHorarios();
         },
         mounted() {
             this.$events.on('reloadIndexHorario', () => this.getHorarios());
             this.$events.on('close', () => this.closeModal());
+            this.$events.on('showFormHClose', () => this.showFormH = false);
             this.$events.on('showFormH', () => this.showFormH = true);
         },
         methods: {
@@ -98,18 +100,19 @@
                 this.horario=[];
                 if (this.publicacionId != null){
                     this.$http.get('api/publicacion/'+this.publicacionId+'/horarios')
-                    .then(response =>{
-                        this.horario = response.data.horarios
-                        this.loadH =true;
-                        this.showFormH = true;
-                    }, response => {
-                        if(response.status === 404){
-                          this.$toast.error({
-                              title:'¡Error!',
-                              message:'No se han cargado sus horarios.'
-                          });
-                        }
-                    });
+                        .then(response =>{
+                            this.horario = response.data.horarios
+                            this.loadH =true;
+                            this.showFormH = true;
+                            this.$emit('update:horario', this.horario);
+                        }, response => {
+                            if(response.status === 404){
+                                this.$toast.error({
+                                    title:'¡Error!',
+                                    message:'No se han cargado sus horarios.'
+                                });
+                            }
+                        });
                 } else{
                     this.showFormH = false;
                     this.loadH = false;
@@ -122,6 +125,7 @@
                               if ( this.horario){
                                   this.loadH =true;
                                   this.showFormH = true;
+                                  this.$emit('update:horario', this.horario);
                                 }
                           }, response => {
                               if(response.status === 404){
@@ -131,12 +135,8 @@
                                   });
                               }
                           });
-                       
-                    }
-                    
-                        
+                    }  
                 }
-
             },
             /* Con los datos obtenidos de Horarios, crea una tabla con los valores correspondientes*/
              handle(hora) {
@@ -212,6 +212,7 @@
             closeModal(){
                this.getHorarios()
                this.showModificarHorario=false
+               this.showFormH=true
             },
 
         },

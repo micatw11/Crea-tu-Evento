@@ -168,7 +168,6 @@
         beforeDestroy() {
             this.$events.$off('reloadIndexRubro');
             this.$events.$off('cerrar');
-            this.$events.$off('changePath');
             this.$events.$off('filter-setRubro');
         },
         methods: {

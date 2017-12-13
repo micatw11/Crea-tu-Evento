@@ -43,7 +43,8 @@
 					fecha: '',
 					horario_id: '',
 					estado: 'reservado',
-					precio_total: 0
+					precio_total: 0,
+					aplicar_decuento: false
 				},
 				domicilio: {
 	                calle: null,
@@ -73,6 +74,7 @@
                     numero: this.domicilio.numero,
                     piso: this.domicilio.piso,
                     localidad_id: this.domicilio.localidad_id,
+                    aplicar_decuento: reserva.aplicar_decuento
                 }
 
 	            this.$http.post(

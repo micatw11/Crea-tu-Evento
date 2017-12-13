@@ -31,12 +31,7 @@ class Usuario extends Model
         return $this->belongsTo('App\Localidad');
     }
 
-    public function telefono()
-    {
-        return $this->hasMany('App\Telefono');
-    }
-
-        public function __toString(){
-        return 'Imagen:'.$this->avatar.', nombre:'.$this->nombre.', '.$this->apellido.', fecha nacimiento:'.$this->fecha_nac.', sexo:'.$this->sexo.', localidad: '.$this->localidad_id;
+    public function __toString(){
+    	return 'Imagen:'.$this->avatar.', nombre:'.$this->nombre.', '.$this->apellido.', fecha nacimiento:'.$this->fecha_nac.', sexo:'.$this->sexo.', localidad: '.$this->localidad_id;
     }
 }

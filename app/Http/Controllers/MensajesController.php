@@ -89,7 +89,7 @@ class MensajesController extends Controller
     {
         $mensaje = Mensaje::where('id', $id)->firstOrFail();
         $reserva = Reserva::where('id', $mensaje->reserva_id)
-                        ->with('publicacion.proveedor.user.usuario','articulos', 'rubros', 'domicilio.localidad.provincia', 'user.usuario', 'horario')->first();
+                        ->with('publicacion.proveedor.user.usuario','articulos', 'rubros', 'domicilio.localidad.provincia', 'user.usuario.localidad.provincia', 'horario', 'publicacion.proveedor.domicilio.localidad.provincia', 'publicacion.proveedor.telefono')->first();
 
         Mensaje::where('reserva_id', $mensaje->reserva_id)->where('to_user_id', Auth::id())->update(['lectura' => true]);
 

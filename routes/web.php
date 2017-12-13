@@ -1,24 +1,16 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 Route::get('/', function () {
     return view('welcome');
 });
 
-
 Route::group(['prefix' => 'api'], function () {
 
     // Rutas del Login
+    Route::get('terminos-condiciones', 'TerminoCondicionController@show');
+    Route::post('terminos-condiciones', 'TerminoCondicionController@store');
+    Route::patch('terminos-condiciones', 'TerminoCondicionController@update');
+
     Route::post('login', 'Auth\AuthController@login');
     Route::post('logout', 'Auth\AuthController@logout');
     Route::get('user', 'Auth\AuthController@getAuth');
@@ -31,11 +23,17 @@ Route::group(['prefix' => 'api'], function () {
     Route::post('password/email','Auth\PasswordController@sendResetLinkEmail');
     Route::post('password/reset', 'Auth\PasswordController@reset');
 
+    Route::get('supervisor/{id}/actividad/proveedores', 'UsuarioController@proveedoresBySupervisor');
+    Route::get('operador/{id}/actividad/proveedores', 'UsuarioController@proveedoresByOperador');
 
+    Route::get('usuario/{id}/notificaciones', 'NotificacionesController@indexOfUser');
+    Route::get('notificacion/{id}', 'NotificacionesController@vista');
     Route::resource('usuario', 'UsuarioController', 
     [ 
         'except' => ['destroy', 'edit', 'create', 'store']
 	]);
+
+    Route::get('usuario/active/count', 'UsuarioController@activityCount');
 
     Route::post('user/{id}/perfil/avatar', 'UsuarioController@updateAvatar');
     Route::patch('user/{id}/password', 'UsuarioController@changePassword');
@@ -48,12 +46,14 @@ Route::group(['prefix' => 'api'], function () {
 
     Route::patch('proveedor/{id}/estado', 'ProveedorController@cambiarEstado')->middleware('role:administrador,supervisor');
     Route::post('proveedor', 'ProveedorController@store')->middleware('role:administrador,supervisor,operador');
-    Route::patch('proveedor/{id}/edit', 'ProveedorController@update')->middleware('role:administrador,supervisor,operador');
-    Route::get('proveedor/{id}', 'ProveedorController@proveedor');
+    Route::patch('proveedor/{id}/edit', 'ProveedorController@update')->middleware('role:administrador,supervisor,operador,proveedor');
+    Route::get('proveedor/{id}', 'ProveedorController@show');
 
 
-    Route::post('proveedor/rubro/', 'PrestacionController@store')->middleware('role:administrador,supervisor,operador,proveedor');
-    Route::patch('proveedor/rubro/{id}', 'PrestacionController@update')->middleware('role:administrador,supervisor,operador,proveedor');
+    Route::post('proveedor/rubro/', 'PrestacionController@store')
+        ->middleware('role:administrador,supervisor,operador,proveedor');
+    Route::patch('proveedor/rubro/{id}', 'PrestacionController@update')
+        ->middleware('role:administrador,supervisor,operador,proveedor');
     Route::get('proveedor/rubro/{id}', 'PrestacionController@show');
     Route::get('proveedor/{id}/rubro', 'PrestacionController@getAll');
 
@@ -139,4 +139,5 @@ Route::group(['prefix' => 'api'], function () {
     Route::post('calificacion', 'CalificacionController@store');
     Route::patch('calificacion/{id}/reportar', 'CalificacionController@reportar');
     Route::delete('calificacion/{id}', 'CalificacionController@destroy');
+    Route::get('calificacion/{id}', 'CalificacionController@show');
 });

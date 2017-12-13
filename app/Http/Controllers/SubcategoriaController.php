@@ -136,7 +136,7 @@ class SubcategoriaController extends Controller
                 ->orderBy('nombre', 'asc')->get();
 
 
-        return response()->json($subcategorias);
+        return response()->json($subcategorias, Response::HTTP_OK);
     }
 
 }

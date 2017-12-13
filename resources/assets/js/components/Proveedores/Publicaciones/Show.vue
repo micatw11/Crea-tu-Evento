@@ -62,7 +62,20 @@
 			                        </h3>
 
 			                        <p>
-							      		<strong>Categoria: </strong> {{publicacion.subcategoria.categoria.nombre}}
+							      			<strong>Categoria: </strong> {{publicacion.subcategoria.categoria.nombre}}
+
+
+							      		<div style="float: right;">
+											<el-popover 
+												ref="popover" 
+												placement="bottom" 
+												title="Telefono" 
+												width="200" 
+												trigger="click" 
+												:content="publicacion.proveedor.telefono.cod_area+'-'+publicacion.proveedor.telefono.numero">
+											</el-popover>
+											<el-button v-popover:popover><i class="fa fa-phone"></i></el-button>
+							      		</div>
 							      	</p>
 						      		<p>
 						      			<strong>Fecha de publicaci&oacute;n:</strong> {{formatData(publicacion.created_at)}}
@@ -84,20 +97,20 @@
 							          		<i class="fa fa-map-marker" aria-hidden="true"></i> <strong>Ubicacion</strong>
 							          	</p>
 							          	<p>
-							          		{{ publicacion.prestacion.domicilio.localidad.nombre }} -
+							          		<strong>Ciudad </strong>{{ publicacion.prestacion.domicilio.localidad.nombre }} -
 							          		{{ publicacion.prestacion.domicilio.localidad.provincia.nombre }}
-							          	</p>
-							          	<p><strong>Calle </strong>{{ publicacion.prestacion.domicilio.calle}}</p>
+											<strong>Calle </strong>{{ publicacion.prestacion.domicilio.calle}}
+										</p>
 							        </template>
 						          	<template v-else>
-							          	<p >
+							          	<p>
 							          		<i class="fa fa-map-marker" aria-hidden="true"></i> <strong>Ubicacion</strong>
 							          	</p>
 							          	<p>
-							          		{{ publicacion.proveedor.domicilio.localidad.nombre }} -
+							          		<strong>Ciudad </strong>{{ publicacion.proveedor.domicilio.localidad.nombre }} -
 							          		{{ publicacion.proveedor.domicilio.localidad.provincia.nombre }}
-							          	</p>
-							          	<p><strong>Calle </strong>{{ publicacion.proveedor.domicilio.calle}}</p>
+											<strong>Calle </strong>{{ publicacion.proveedor.domicilio.calle }}
+										</p>
 						          	</template>
 						          	
 						          	<hr v-if="publicacion.calificacion != null">
@@ -325,7 +338,7 @@
 													<div class="progress-bar" v-bind:style="'width: '+reservaAumento+'%'"></div>
 												</div>
 												<span class="progress-description">
-													{{reservaAumento}}% Incremento en los ultimos 30 dias.
+													{{reservaAumento}}% Incremento en el ultimo mes.
 												</span>
 											</div>
 											<!-- /.info-box-content -->
@@ -348,7 +361,7 @@
 										<!-- small box -->
 										<div class="small-box bg-red">
 											<div class="inner">
-												<h3>65</h3>
+												<h3>{{ vistas }}</h3>
 
 												<p>Vistas</p>
 											</div>
@@ -750,6 +763,8 @@
 					if(reserva.estado == 'confirmado')
 						count++;
 				}
+				if(count == 0)
+					return 0;
 				return count;
 			},
 			reservaAumento(){
@@ -763,7 +778,9 @@
 						}
 					}
 				}
-				return (countTomorrow*100)/count;
+				if(count == 0)
+					return 0;
+				return parseInt((countTomorrow*100)/count);
 			},
 			reservasNuevas(){
 				var count = 0;
@@ -781,7 +798,9 @@
 						countCancelados++;
 					count++;
 				}
-				return (countCancelados*100)/count;
+				if(count == 0)
+					return 0;
+				return parseInt((countCancelados*100)/count);
 			},
 			dataCharts(){
 		
@@ -798,7 +817,7 @@
 
 				for (var visualizacion of this.publicacion.vistas) {
 					if( moment(visualizacion.created_at, 'YYYY-MM-DD').year() == hoy.year()){
-						switch(moment(visualizacion.created_at, 'YYYY-MM-DD').month()) {
+						switch(moment(visualizacion.created_at, 'YYYY-MM-DD').month()+1) {
 						    case 1:
 						        mesesCount[0] = mesesCount[0] + 1;
 						        break;
@@ -843,6 +862,9 @@
 					data.push(mesesCount[i]);
 				}
 				return  { labels: labels, datasets: [{label:label, backgroundColor:backgroundColor, data:data}] }
+			},
+			vistas(){
+				return this.publicacion.vistas.length;
 			}
 		},
 		watch: {

@@ -2,7 +2,7 @@
 	<div>
 		<form role="form">
 			<input name="tomorrow" :value="fecha" type="hidden">
-			<template >
+			<template>
 				<div class="col-sm-4">
 		            <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('fecha')&&validarPresupuesto}">
 		                <div class="col-sm-12">
@@ -51,7 +51,16 @@
 				        </div>
 		        	</div>
 		        	<div v-else class="col-sm-8">
-		        		<div class="col-sm-12">
+		        		<div class="col-sm-12" style="padding-top: 13px;">
+		        			<div class="alert alert-warning alert-dismissible">
+		        				No se han encontrado horarios disponibles este d&iacute;a.
+		        			</div>
+		        		</div>	        		
+		        	</div>
+		        </template>
+		        <template v-if="showNoDisponible && requiredDate">
+		        	<div class="col-sm-8">
+		        		<div class="col-sm-12" style="padding-top: 13px;">
 		        			<div class="alert alert-warning alert-dismissible">
 		        				No se han encontrado horarios disponibles este d&iacute;a.
 		        			</div>
@@ -245,6 +254,7 @@
 				opcionesRubros: [],
 				opcionesArticulos: [],
 				noOpcionesArticulos: [],
+				showNoDisponible: false,
 				showEstadoReserva: false,
 				opcionesReservas: [],
 				fecha: moment({}).add(1, 'day').format('YYYY-MM-DD'),
@@ -273,8 +283,10 @@
 	    	validateBeforeSubmit: function() {
                 this.$validator.validateAll().then((result) => {
                     if (result) {
-	                    this.validarPresupuesto = false; 
-	                    this.$emit('validado');
+                    	if(this.showNoDisponible == false){
+		                    this.validarPresupuesto = false; 
+		                    this.$emit('validado');
+		                }
 	                } else {
 	                	this.validarPresupuesto = true;
 	                }
@@ -285,7 +297,10 @@
 		    },
 		    getHorarios(){
 		    	var fecha = moment(this.presupuesto.fecha, 'YYYY-MM-DD').format('YYYY-MM-DD');
-		    	this.$http.get('api/publicacion/'+this.publicacionId+'/horario/'+fecha+'?except_this_reserva='+this.presupuesto.id)
+		    	var urlApi = 'api/publicacion/'+this.publicacionId+'/horario/'+fecha;
+		    	if(this.isEdit)
+		    		urlApi = urlApi + '?except_this_reserva='+this.presupuesto.id;
+		    	this.$http.get(urlApi)
 		    		.then(response => {
 		    			this.showStatus(response.data);
 		    		}, response => {
@@ -359,18 +374,24 @@
 	    	showStatus(horarios){
 	    		this.opcionesReservas = [];
 	    		this.showEstadoReserva = false;
-	    		for(var horario of horarios)
-	    		{
-	    			if(horario.estado == 'disponible')
-			    		this.opcionesReservas.push(
-			    			{
-			    				id: horario.id,
-			    				hora_inicio: horario.hora_inicio,
-			    				hora_finalizacion: horario.hora_fin,
-			    				precio: horario.precio
-				    		});
-	    		}
-		    	this.showEstadoReserva = true;
+	    		if(Array.isArray(horarios)){ 
+		    		for(var horario of horarios)
+		    		{
+		    			if(horario.estado == 'disponible')
+				    		this.opcionesReservas.push(
+				    			{
+				    				id: horario.id,
+				    				hora_inicio: horario.hora_inicio,
+				    				hora_finalizacion: horario.hora_fin,
+				    				precio: horario.precio
+					    		});
+		    		}
+		    		this.showEstadoReserva = true;
+		    	}
+		    	else if (horarios.estado != 'disponible') 
+		    		this.showNoDisponible = true;
+		    	else
+		    		this.showNoDisponible = false;
 	    	},
 	    	loadOpcions(){
 

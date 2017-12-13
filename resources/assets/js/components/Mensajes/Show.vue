@@ -16,9 +16,16 @@
 						<div class="box-body">
 							<div class="col-md-12">
 								<h4 style="text-align:center">
-									<router-link :to="/publicacion/ + presupuesto.publicacion.id">
-										<u>{{ presupuesto.publicacion.titulo }}</u>
-									</router-link>
+									<template v-if="presupuesto.publicacion.estado">
+										<router-link :to="/publicacion/ + presupuesto.publicacion.id">
+											<u>{{ presupuesto.publicacion.titulo }}</u>
+										</router-link>
+									</template>
+									<template v-else>
+										<el-tooltip content="Esta publicación fue eliminada" placement="bottom" effect="light">
+											<u>{{ presupuesto.publicacion.titulo }}</u>
+										</el-tooltip>
+									</template>
 								</h4>
 							</div>
 							<div class="col-md-12" v-if="presupuesto.rubros.length > 0">
@@ -39,7 +46,11 @@
 								<div class="col-md-12">
 									<hr>
 									<small class="label bg-green">
-										Conste total: {{ formatMoney(presupuesto.precio_total) }}
+										Conste total: {{ formatMoney(presupuesto.precio_total) }} 
+										<template v-if="showAplicarDescuento">
+											<template v-if="presupuesto.aplicar_decuento">con descuento</template>
+											<template v-else>sin descuento</template>
+										</template>
 									</small>
 								</div>
 							</template> 
@@ -106,39 +117,38 @@
 									</div>
 								</template>
 							</div>
-
 						</div>
 						<div class="box-footer clearfix"  v-if="presupuesto.estado != 'cancelado' && presupuesto.estado != 'confirmado'">
 							<div style="text-align: center;">
 								<!-- boton de modificacion de proveedor-->
 			            		<button class="btn btn-sm btn-primary btn-flat" 
 			            			v-if="role.PROVEEDOR == auth.user.profile.roles_id && presupuesto.estado != 'reservado' && presupuesto.estado != 'cancelado' && presupuesto.estado != 'confirmado' && isAfterNow(presupuesto.fecha)"
-			            			@click.prevent="getPublicacion('presupuesto')">
+			            			@click.prevent="getPublicacion('presupuesto')" :disabled="!presupuesto.publicacion.estado">
 			            			Modificar Presupuesto
 			            		</button>
 
 								<!-- boton de modificacion de usuario-->
 			            		<button class="btn btn-sm btn-default btn-fla" 
 			            			v-if="role.USUARIO == auth.user.profile.roles_id &&presupuesto.estado == 'presupuesto'"
-			            			@click.prevent="getPublicacion('modificar')">
+			            			@click.prevent="getPublicacion('modificar')" :disabled="!presupuesto.publicacion.estado">
 			            			Modificar
 			            		</button>
 								<!-- boton de reserva de usuario-->
 			            		<button class="btn btn-sm btn-primary btn-fla" 
 			            			v-if="role.USUARIO == auth.user.profile.roles_id && presupuesto.estado == 'presupuesto' &&presupuesto.presupuestado && isAfterNow(presupuesto.fecha)"
-			            			@click.prevent="changeEstadoPresupuesto('reservado')">
+			            			@click.prevent="changeEstadoPresupuesto('reservado')" :disabled="!presupuesto.publicacion.estado">
 			            			Reservar
 			            		</button>
 								<!-- boton de confirmacion reserva de usuario-->
 			            		<button class="btn btn-sm btn-primary btn-fla" 
 			            			v-if="role.USUARIO == auth.user.profile.roles_id && presupuesto.estado == 'reservado' && isAfterNow(presupuesto.fecha)"
-			            			@click.prevent="changeEstadoPresupuesto('confirmado')">
+			            			@click.prevent="changeEstadoPresupuesto('confirmado')" :disabled="!presupuesto.publicacion.estado">
 			            			Confirmar Reserva
 			            		</button>
 								<!-- boton de cancelar reserva o presupuesto de usuario-->
 			            		<button class="btn btn-sm btn-danger btn-fla" 
 			            			v-if="role.USUARIO == auth.user.profile.roles_id  && presupuesto.estado == 'reservado'"
-			            			@click.prevent="changeEstadoPresupuesto('cancelado')">
+			            			@click.prevent="changeEstadoPresupuesto('cancelado')" :disabled="!presupuesto.publicacion.estado">
 			            			Cancelar
 			            		</button>
 			            	</div>
@@ -162,20 +172,32 @@
 							<template v-if="role.USUARIO == auth.user.profile.roles_id">
 								<img class="profile-user-img img-responsive" 
 								:src="'/storage/avatars/' + presupuesto.publicacion.proveedor.user.usuario.avatar" alt="avatar">
-								<div class="text-center" style="margin-top: 65px">
-									<label>Nombre: </label>{{ presupuesto.publicacion.proveedor.nombre}}<br>
-									<label>Email: </label>{{ presupuesto.publicacion.proveedor.email}}
+								<div class="col-sm-12" style="margin-top: 65px">
+									<label class="col-sm-12">Nombre </label><div class="col-sm-12">{{ presupuesto.publicacion.proveedor.nombre}}</div>
+									<label class="col-sm-12">Email </label><div class="col-sm-12">{{ presupuesto.publicacion.proveedor.email}}</div>
+									<label class="col-sm-12">Ubicaci&oacute;n </label>
+									<div class="col-sm-12">
+										{{ presupuesto.publicacion.proveedor.domicilio.localidad.nombre }} - {{presupuesto.publicacion.proveedor.domicilio.localidad.provincia.nombre}}
+									</div>
+									<label class="col-sm-6">Telefono </label>
+									<div class="col-sm-6">
+										{{ presupuesto.publicacion.proveedor.telefono.cod_area}}{{ presupuesto.publicacion.proveedor.telefono.numero}}
+									</div>
 								</div>
 							</template>
 							<template v-if="role.PROVEEDOR == auth.user.profile.roles_id">
 								<img class="profile-user-img img-responsive" 
 								:src="'/storage/avatars/' + presupuesto.user.usuario.avatar" alt="avatar">
-								<div class="text-center" style="margin-top: 60px">
-									<label>Nombre: </label>{{ presupuesto.user.usuario.nombre}} {{presupuesto.user.usuario.apellido}}<br>
-									<label>Email: </label>{{ presupuesto.user.email}}
+								<div class="text-center" style="margin-top: 50px">
+									<label class="col-sm-12">Nombre </label>
+									<div class="col-sm-12">{{ presupuesto.user.usuario.nombre}} {{presupuesto.user.usuario.apellido}}</div>
+									<label class="col-sm-12">Email </label><div class="col-sm-12">{{ presupuesto.user.email}}</div>
+									<label class="col-sm-12">Ubicaci&oacute;n </label>
+									<div class="col-sm-12">
+										{{ presupuesto.user.usuario.localidad.nombre }} - {{presupuesto.user.usuario.localidad.provincia.nombre}}
+									</div>
 								</div>
 							</template>
-
 						</div>
 						<!-- /.box-body -->
 					</div>
@@ -228,7 +250,7 @@
 							<div class="input-group">
 								<input type="text" name="message" v-model="newMensaje" v-validate="'required'" placeholder="Mensaje" class="form-control" :disabled="presupuesto.estado == 'cancelado' || (presupuesto.estado == 'confirmado' && !isAfterNow(presupuesto.fecha))">
 								<span class="input-group-btn">
-									<button @click.prevent="validateBeforeSend" :disabled="presupuesto.estado == 'cancelado' || (presupuesto.estado == 'confirmado' && !isAfterNow(presupuesto.fecha))" type="button" class="btn btn-success btn-flat">Enviar</button>
+									<button @click.prevent="validateBeforeSend" :disabled="presupuesto.estado == 'cancelado' || (presupuesto.estado == 'confirmado' && !isAfterNow(presupuesto.fecha)) || !presupuesto.publicacion.estado" type="button" class="btn btn-success btn-flat">Enviar</button>
 								</span>
 							</div>
 							</form>
@@ -239,7 +261,7 @@
 			</div>
 		</section>
 
-	    <!-- modal presupuesto -->
+	    <!-- modal presupuesto para proveedor-->
 	    <div v-if="showPresupuesto && role.PROVEEDOR == auth.user.profile.roles_id" id="presupuesto" class="modal" role="dialog" :style="{ display : showPresupuesto  ? 'block' : 'none' }">
 	        <div class="modal-dialog modal-lg">
 	            <div class="modal-content">
@@ -256,7 +278,7 @@
 	        </div>
 	    </div>
 
-	    <!-- modal modificar presupuesto -->
+	    <!-- modal modificar presupuesto para usuario-->
 	    <div v-if="showModificarPresupuesto && role.USUARIO == auth.user.profile.roles_id" id="modificar" class="modal" role="dialog" :style="{ display : showModificarPresupuesto  ? 'block' : 'none' }">
 	        <div class="modal-dialog modal-lg">
 	            <div class="modal-content">
@@ -443,8 +465,10 @@
 						}
 					}
 				}
-			}
-
+			},
+	    	showAplicarDescuento(){
+                return this.presupuesto.aplicar_decuento;
+	    	}
 		}
 	}
 </script>

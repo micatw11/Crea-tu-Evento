@@ -300,6 +300,7 @@ class ReservaController extends Controller
         {
             $reserva->presupuestado = true;
             $reserva->precio_total = $request->precio_total;
+            $reserva->aplicar_decuento = $request->aplicar_decuento;
         }
         else  {
             $horario = null;

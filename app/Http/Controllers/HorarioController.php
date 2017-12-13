@@ -33,8 +33,6 @@ class HorarioController extends Controller
         } else {
             return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
-
     }
 
     /**
@@ -95,8 +93,12 @@ class HorarioController extends Controller
                             ->where('proveedor_id', $proveedor->id)
                             ->where('dia', $diaUnico)
                             ->where(function ($q) use ($request){
-                                     $q->whereBetween('hora_inicio', [$request->hora_inicio, $request->hora_fin])
-                                    ->orWhereBetween('hora_fin', [$request->hora_inicio, $request->hora_fin])->get();
+                                    $q->where('hora_inicio', '>',$request->hora_inicio)
+                                    ->where('hora_inicio', '<', $request->hora_fin)
+                                    ->orWhere(function ($q) use ($request){
+                                            $q->where('hora_fin', '>',$request->hora_inicio)
+                                            ->where('hora_fin', '<', $request->hora_fin)->get();
+                                        })->get();
                             })->first();
         
                    if ($horarioRepetido) {
@@ -183,6 +185,7 @@ class HorarioController extends Controller
         
         $this->validateHorario($request);
         $user = Auth::user();
+        $horarioRepetido = null;
         if($user->roles_id == Rol::roleId('proveedor')){
             $proveedor = Proveedor::where('user_id', $user->id)->firstOrFail();
             $publicacion = null;
@@ -193,22 +196,37 @@ class HorarioController extends Controller
                 $request->publicacion_id = null;
             }
             if ($publicacion||$proveedor){
-            $horario->update([
-                'dia' => $request->dia,
-                'hora_inicio' => $request->hora_inicio,
-                'hora_fin' => $request->hora_fin,
-                'proveedor_id' => $proveedor->id,
-                'publicacion_id' => $request->publicacion_id,
-                'precio' => $request->precio
-            ]);
-            
-                if($horario->save())
+                //verificar horario si se encuentra repetido
+                $horarioRepetido = Horario::where('publicacion_id', $publicacion->id)
+                            ->where('proveedor_id', $proveedor->id)
+                            ->where('dia', $horario->dia)
+                            ->where('id','<>', $horario->id)
+                            ->where(function ($q) use ($request){
+                                    $q->where('hora_inicio', '>',$request->hora_inicio)
+                                    ->where('hora_inicio', '<', $request->hora_fin)
+                                    ->orWhere(function ($t) use ($request){
+                                            $t->where('hora_fin', '>',$request->hora_inicio)
+                                            ->where('hora_fin', '<', $request->hora_fin)->get();
+                                    })->get();
+                            })->first();
+
+                if ($horarioRepetido == null){
+                    $horario->update([
+                        'dia' => $request->dia,
+                        'hora_inicio' => $request->hora_inicio,
+                        'hora_fin' => $request->hora_fin,
+                        'proveedor_id' => $proveedor->id,
+                        'publicacion_id' => $request->publicacion_id,
+                        'precio' => $request->precio
+                    ]);
+                }
+                if($horario->save()&&($horarioRepetido == null))
                 {
                     return response()->json($horario, Response::HTTP_OK);
                 }
                 else
                 {
-                    return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+                    return response()->json(['horarioRepetido' => $horarioRepetido], Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
             }
         }
@@ -219,40 +237,63 @@ class HorarioController extends Controller
         $dia = $this->toDayOfWeek($fecha);
         $horarios = Horario::where('publicacion_id', $publicacion_id)->where('dia', $dia)->get();
         $reserva_id = null;
-        $reservas = Reserva::where('publicacion_id', $publicacion_id)
-            ->where('estado', 'reservado')->orWhere('estado', 'confirmado')
-            ->whereDate('fecha', '=', Carbon::createFromFormat('Y-m-d', $fecha)->toDateString())->get();
-        
+        $auxHorarios = array();
+        $auxHorario = null;
+
         if($request->has('except_this_reserva'))
         {
             $reserva_id = $request->except_this_reserva;
         }
-        $auxHorarios = array();
-        $auxHorario = null;
-        foreach ($horarios as $horario) {
-            $esta = false;
-            foreach ($reservas as $reserva) {
-                if($reserva->horario_id == $horario->id)
-                {
-                    $auxHorario = $horario;
-                    if($reserva_id != null && $reserva_id == $reserva->id){
-                        $auxHorario->estado = 'disponible';
-                    }
-                    else
+        if($horarios->isNotEmpty()) {
+            $reservas = Reserva::where('publicacion_id', $publicacion_id)
+                ->where(function ($query) {
+                    $query->where('estado', 'reservado')
+                      ->orWhere('estado', 'confirmado');
+                })
+                ->whereDate('fecha', '=', Carbon::createFromFormat('Y-m-d', $fecha)->toDateString())->get();
+
+            foreach ($horarios as $horario) {
+                $esta = false;
+                foreach ($reservas as $reserva) {
+                    if($reserva->horario_id == $horario->id)
                     {
-                        $auxHorario->estado = 'reservado';
+                        $auxHorario = $horario;
+                        if($reserva_id != null && $reserva_id == $reserva->id){
+                            $auxHorario->estado = 'disponible';
+                        }
+                        else
+                        {
+                            $auxHorario->estado = 'reservado';
+                        }
+                        $auxHorarios[] = $auxHorario;
+                        $auxHorario = null;
+                        $esta = true;
+                        break;
                     }
+                }
+                if(!$esta){
+                    $auxHorario = $horario;
+                    $auxHorario->estado = 'disponible';
                     $auxHorarios[] = $auxHorario;
                     $auxHorario = null;
-                    $esta = true;
-                    break;
                 }
             }
-            if(!$esta){
-                $auxHorario = $horario;
-                $auxHorario->estado = 'disponible';
-                $auxHorarios[] = $auxHorario;
-                $auxHorario = null;
+        } else {
+            $reserva = null;
+            $reserva = Reserva::where('publicacion_id', $publicacion_id)
+                ->where(function ($query) {
+                    $query->where('estado', 'reservado')
+                      ->orWhere('estado', 'confirmado');
+                })
+                ->whereDate('fecha', '=', Carbon::createFromFormat('Y-m-d', $fecha)->toDateString())->first();
+
+            if($reserva == null){
+                return response()->json(['estado' => 'disponible'], 200);
+            } else {
+                if($reserva_id != null && $reserva_id == $reserva->id)
+                    return response()->json(['estado' => 'disponible'], 200);
+                else
+                    return response()->json(['estado' => 'no disponible'], 200);
             }
         }
         

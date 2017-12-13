@@ -13,7 +13,7 @@ class Reserva extends Model
      *
      * @var array
      */
-    protected $fillable = ['publicacion_id', 'presupuestado', 'precio_horario', 'user_id', 'domicilio_id','fecha', 'hora_inicio', 'hora_finalizacion', 'estado', 'precio_total', 'horario_id'];
+    protected $fillable = ['publicacion_id', 'presupuestado', 'precio_horario', 'user_id', 'domicilio_id','fecha', 'hora_inicio', 'hora_finalizacion', 'estado', 'precio_total', 'horario_id', 'aplicar_decuento'];
 
     public function publicacion(){
     	return $this->belongsTo('App\Publicacion');

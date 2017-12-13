@@ -39,8 +39,7 @@
 			</div>
 		</div>
 		<index-horario 
-    		:publicacionId="publicacionId" :horariosId="horariosId"
-    		>
+    		:publicacionId="publicacionId" :horariosId="horariosId" @update:horario="retornar">
 		</index-horario>
 	</div>
 </template>
@@ -111,20 +110,22 @@
 						}
 						if (response.data.horarioNo){
 							this.horarioNo = response.data.horarioNo
-							this.showNewHorario= false 
 							for(var horario of this.horarioNo){
 								this.$toast.error({
 			                        title:'¡Error!',
 			                        message:'No se ha podido guardar el horario del "'+horario.dia+'" ya que existe un horario cargado en ese horario. :('
 			                    })
 							}
+						}else{
+							this.$toast.success({
+	                        title:'¡Cambios realizados!',
+	                        message:'Se han realizsado correctamente los cambios.'
+                   			 });
 						}
-						this.$events.fire('reloadIndexHorario');
-						this.showNewHorario= false; 
+						this.closeModal();
 					}, response => {
 						if (response.data.horarioNo){
 							this.horarioNo = response.data.horarioNo
-							this.showNewHorario= false 
 							for(var horario of this.horarioNo){
 								this.$toast.error({
 				                        title:'¡Error!',
@@ -133,17 +134,22 @@
 							}
 						}
 						if(response.status === 404){
-	                        this.showNewHorario= false; 
 							this.$toast.error({
 			                        title:'¡Error!',
 			                        message:'No se ha podido guardar el horario. :('
 			                    })
 						}
+						this.closeModal();
 					});
-				
+					this.closeModal();
 			},
 			closeModal(){
 				this.showNewHorario= false;
+				this.$events.fire('close');
+
+			},
+			retornar(val){
+				this.$emit('update:horario', val)
 			}
 		}
 	}

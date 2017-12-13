@@ -15,14 +15,38 @@ class Proveedor extends Model
     						'email',
     						'domicilio_id',
     						'estado',
-                            'dni'
+                            'adjunto',
+                            'register_by_user_id',
+                            'accepted_by_user_id',
+                            'rejected_by_user_id',
+                            'telefono_id',
+                            'observaciones'
     					  ];
 
     public function user()
+    {
+        return $this->belongsTo('App\User');    
+    }
+
+    public function telefono()
+    {     
+        return $this->belongsTo('App\Telefono');    
+    }
+
+    public function register_by_user()
     {     
         return $this->belongsTo('App\User');    
     }
 
+    public function accepted_by_user()
+    {     
+        return $this->belongsTo('App\User');    
+    }
+
+    public function rejected_by_user()
+    {     
+        return $this->belongsTo('App\User');    
+    }
     public function domicilio()
     {     
         return $this->belongsTo('App\Domicilio');    
@@ -40,6 +64,11 @@ class Proveedor extends Model
 
     public function articulos(){
         return $this->hasMany('App\Articulo');
+    }
+
+    public function scopeAprobado($query)
+    {
+        return $query->where('estado', 'Aprobado');
     }
 
 }

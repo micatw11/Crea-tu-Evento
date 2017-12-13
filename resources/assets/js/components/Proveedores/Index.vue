@@ -28,7 +28,7 @@
                                 @vuetable:cell-clicked="onCellClicked">
 
                                     <template slot="actions" slot-scope="props">
-                                        <div class="custom-actions">
+                                        <div class="custom-actions" v-if="auth.user.authenticated">
 
                                             <!-- Ver perfil -->
                                             <button class="btn-xs btn-default"
@@ -61,7 +61,7 @@
                                                     (role.ADMINISTRADOR == auth.user.profile.roles_id ||
                                                     role.SUPERVISOR == auth.user.profile.roles_id)" 
                                                 class="btn-xs btn-default"
-                                                @click="showModalObservation = true, action = 'Rechazado'">
+                                                @click="showModalObservation = true, action = 'Rechazado', dataUser = props.rowData">
                                                 <i class="fa fa-close"></i> Rechazar
                                             </button>
 
@@ -113,6 +113,16 @@
                             <div class="modal-body">
 
                                 <div class="box-body">
+                                    <div class="col-sm-12">
+                                        <div class="col-sm-12">
+                                            <div class="callout callout-success" v-if="action == 'Baja'">
+                                                <h4>¡Motivo de la acción!</h4>
+
+                                                <p>Se le notificará al proveedor y a los adquirientes de sus productos y servicios 
+                                                    el motivo por cual se le ha dado de baja.</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <form role="form">
                                         <div class="col-sm-12">
                                             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('observaciones')&&validar}">
@@ -186,7 +196,7 @@
     import EditProveedor from './Edit';
     import Role from '../../config.js';
     import auth from '../../auth.js';
-
+    import moment from 'moment';
     Vue.component('filter-bar-proveedor', FilterBar);
     Vue.component('detail-row-proveedor', DetailRowProveedor);
 
@@ -230,6 +240,12 @@
             this.$events.$off('reloadIndexProveedor')
         },
         methods: {
+            formatData: function(value){
+
+                return (value == null)
+                    ? ''
+                    : moment(value, 'YYYY-MM-DD').format('D MMM YYYY');
+            },
             onPaginationData (paginationData) {
                 this.$refs.pagination.setPaginationData(paginationData)
                 this.$refs.paginationInfo.setPaginationData(paginationData)
@@ -240,7 +256,6 @@
             onCellClicked (data, field, event) {
                 this.$refs.vuetable.toggleDetailRow(data.id)
             },
-
             //filtros de busqueda
             onFilterSet (filterText) {
                 this.moreParams.filter = filterText
@@ -266,10 +281,9 @@
             },
 
             onActionEstado(action, data){
-                this.$http.post(
+                this.$http.patch(
                     'api/proveedor/'+data.user_id+'/estado',
                     {
-                        _method: 'PATCH',
                         action: action,
                         observaciones: this.observaciones
                     }
@@ -300,11 +314,8 @@
                         this.validar = true;
                     }
                     return;
-                }).catch(() => {
-                    
                 });
             }
-        },
-
+        }
     }
 </script>

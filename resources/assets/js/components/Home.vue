@@ -10,9 +10,9 @@
                                 filterable=""
                                 remote=""
                                 no-data-text="Elija una localidad"
-                                reserve-keyword
+
                                 clearable
-                                placeholder="Localidad"
+                                placeholder="Ubicación"
                                 :remote-method="remoteMethod"
                                 :loading="loading">
                                     <el-option

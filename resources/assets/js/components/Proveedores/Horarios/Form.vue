@@ -19,21 +19,27 @@
 		</div>
 		<div class="col-sm-3 col-sm-offset-1">
 			<label>Hora Inicio</label><br>
-			<el-time-select placeholder="Desde" style="width: 100%;" v-model="horario.hora_inicio" :picker-options="{
-		      start: '01:00',
-		      step: '01:00',
-		      end: '23:00'
-		    }">
-		  </el-time-select>
-		  </div>
-		  <div class="col-sm-3">
-		  <label>Hora Fin</label><br>
-		  <el-time-select placeholder="Hasta"  style="width: 100%;" v-model="horario.hora_fin" :picker-options="{
-		      start: '02:00',
-		      step: '01:00',
-		      end: '24:00',
-		      minTime: horario.hora_inicio
-		    }"></el-time-select>
+			<div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('desde')&&validarHorario}">
+				<el-time-select placeholder="Desde" style="width: 100%;" v-model="horario.hora_inicio" v-validate="'required'":picker-options="{
+			      start: '01:00',
+			      step: '01:00',
+			      end: '23:00'
+			    }">
+		  		</el-time-select>
+		  		<span v-show="errors.has('desde')&&validarHorario" class="help-block">{{ errors.first('desde') }}</span>
+		  	</div>
+		</div>
+		<div class="col-sm-3">
+		<label>Hora Fin</label><br>
+			<div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('hasta')&&validarHorario}">
+			    <el-time-select placeholder="Hasta"  style="width: 100%;" v-model="horario.hora_fin" v-validate="'required'" :picker-options="{
+			      start: '02:00',
+			      step: '01:00',
+			      end: '24:00',
+			      minTime: horario.hora_inicio
+			    }"></el-time-select>
+			    <span v-show="errors.has('hasta')&&validarHorario" class="help-block">{{ errors.first('hasta') }}</span>
+			</div>
 		</div>
 		<div class="col-sm-4 col-xs-4">
 			<label>Precio</label><br>
@@ -83,7 +89,39 @@
 	                if (result) {
 	                    this.validarHorario = false; 
 	                    this.horario.dias = this.diasSelect
-	                    this.$emit('validoFormHorario'); 
+	                    if (this.horario.dias.length == 0&&this.nuevo){
+	                    	this.validarHorario = true; 
+		                    	this.$toast.error({
+		                        title:'¡Error!',
+		                        message:'No selecciono ningún día. :('
+	                    	});
+	                    }
+	                    if (this.horario.hora_fin < this.horario.hora_inicio){
+	                    	this.validarHorario = true; 
+	                    	this.$toast.error({
+		                        title:'¡Error!',
+		                        message:'El horario de finalizado es menor al de inicio. :('
+	                    	});
+	                    }else{
+	                    	if (this.horario.hora_fin == null||(this.horario.hora_inicio == null)){
+	                    	this.validarHorario = true; 
+	                    	this.$toast.error({
+		                        title:'¡Error!',
+		                        message:'Debe seleccionar un horario de inicio y de finalización. '
+		                    	});
+		                    }
+	                    	if (this.horario.hora_fin == this.horario.hora_inicio){
+	                    	this.validarHorario = true; 
+	                    	this.$toast.error({
+		                        title:'¡Error!',
+		                        message:'El horario de finalizado es igual al de inicio. :('
+		                    	});
+		                    }
+
+		                }
+	                    if (this.validarHorario == false) {
+	                    	this.$emit('validoFormHorario'); 
+	                    }
 	                } else {
 	                	this.validarHorario = true;
 	                }

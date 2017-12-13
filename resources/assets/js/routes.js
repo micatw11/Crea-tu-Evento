@@ -7,6 +7,9 @@ import role from './config.js';
 var Login = require('./components/Auth/Login');
 var Home = require('./components/Home');
 
+var NewTerminosCondiciones = require('./components/Administracion/TerminosCondiciones/New');
+var EditTerminosCondiciones = require('./components/Administracion/TerminosCondiciones/Edit');
+var ShowTerminosCondiciones = require('./components/Administracion/TerminosCondiciones/Show');
 
 var Calendar = require('./components/Calendario');
 var Registrar = require('./components/Auth/Register');
@@ -63,6 +66,24 @@ let routes = [
 			name: 'login',
 			component: Login,
 			beforeEnter: guardLogin
+		},
+		{
+			path: '/terminos-condiciones/new',
+			component: NewTerminosCondiciones,
+			beforeEnter: guardRoute,
+			meta: { Role: [role.ADMINISTRADOR], requiresAuth: true }		
+		},
+		{
+			path: '/terminos-condiciones/edit',
+			component: EditTerminosCondiciones,
+			beforeEnter: guardRoute,
+			meta: { Role: [role.ADMINISTRADOR], requiresAuth: true }		
+		},
+		{
+			path: '/terminos-condiciones',
+			component: ShowTerminosCondiciones,
+			beforeEnter: guardRoute,
+			meta: { requiresAuth: false }		
 		},
 		{
 			path: '/registrar',

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="loadedProveedor">
         <div class="modal-body">
         	<form-proveedor 
                 :proveedor="proveedor" 
@@ -43,7 +43,8 @@ export default {
             errorsApi: {},
             error: false,
             fecha: null,
-            nuevo: false
+            nuevo: false,
+            loadedProveedor: false
         }
     },
     components: {
@@ -65,10 +66,11 @@ export default {
                     cuit: this.proveedor.cuit,
                     ingresos_brutos: this.proveedor.ingresos_brutos,
                     email: this.proveedor.email,
-                    dni: this.proveedor.dni,
+                    adjunto: this.proveedor.adjunto,
                     calle: this.proveedor.domicilio.calle,
                     numero: this.proveedor.domicilio.numero,
                     piso: this.proveedor.domicilio.piso,
+                    telefono: this.proveedor.telefono,
                     localidad_id: this.proveedor.domicilio.localidad_id.value
                 })
                 .then(response => {
@@ -112,15 +114,17 @@ export default {
                 })
         },
         cargarProveedor:function(){
-            this.proveedor= this.proveedores,
+            this.proveedor = this.proveedores;
+            this.proveedor.telefono = this.proveedores.telefono.cod_area +'-'+ this.proveedores.telefono.numero;
             this.proveedor.user_id = {
                'value':this.proveedor.user_id,
-               'label':this.proveedor.user.usuario.apellido+', '+this.proveedor.user.usuario.nombre+' ('+this.proveedor.user.email+')'
+               'label':this.proveedores.user.usuario.apellido+', '+this.proveedores.user.usuario.nombre+' ('+this.proveedores.user.email+')'
             },
             this.proveedor.domicilio.localidad_id = {
-               'value':this.proveedor.domicilio.localidad.id,
-               'label':this.proveedor.domicilio.localidad.nombre+' ('+this.proveedor.domicilio.localidad.provincia.nombre+')'
+               'value':this.proveedores.domicilio.localidad.id,
+               'label':this.proveedores.domicilio.localidad.nombre+' ('+this.proveedores.domicilio.localidad.provincia.nombre+')'
             }
+            this.loadedProveedor = true;
         },
         atras: function(){
             this.$events.fire('cerrar');

@@ -31,6 +31,6 @@ class CreateVistasPublicacionesTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('vistas_publicaciones');
     }
 }

@@ -9,7 +9,7 @@
             </form-categoria>
         </div>
         <div class="modal-footer">
-            <div class="col-sm-12 box-footer clearfix" style="text-align:center;">
+            <div class="col-sm-12 clearfix" style="text-align:center;">
                 <button class="btn btn-default" @click="closeModal()">
                     <i class="glyphicon glyphicon-chevron-left"></i>
                     Atras

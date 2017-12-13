@@ -4,16 +4,16 @@
             <div  v-for="(item, index) in publicaciones" class="col-sm-12">
                 <div>
                     <hr v-if="index > 0">
-                    <div class="col-sm-3" 
+                    <div class="col-sm-3 col-xs-12" 
                         v-for="(img, index) in item.fotos" 
                         v-if="index==0" style= "text-align: center;">
                         <img 
                             :src="'/storage/proveedores/publicaciones/'+img.nombre" 
                             class="img-responsive" 
-                            style="width: 120px; height: 100px; cursor:pointer;" @click="ver(item.id)">
+                            style="width: 120px; height: 100px; cursor:pointer; text-align:center;" @click="ver(item.id)">
                     </div>
-                    <div class="col-sm-9">
-                        <div class="col-sm-11">
+                    <div class="col-sm-9 col-xs-12">
+                        <div class="col-sm-11 col-xs-10">
                             <div class="col-sm-9" @click="ver(item.id)">
                                 <strong style="color: rgb(139, 116, 178); cursor:pointer"><h4><p ref="descripcion" v-html="item.titulo" v-truncate="30"></p></h4></strong>
                             </div>
@@ -21,7 +21,7 @@
                                 <h6><p>{{formatData(item.created_at)}}</p></h6>
                             </div>
                         </div>
-                        <div class="col-sm-1">
+                        <div class="col-sm-1 col-xs-1">
                             <div v-if="!optionsProveedor">
                                 <div style="cursor: pointer" v-if="verificar_favorite(item.id)">
                                     <div @click="favorite(item.id)">
@@ -54,7 +54,10 @@
                                 <h6>{{item.subcategoria.categoria.nombre}} - {{item.subcategoria.nombre}} </h6>
                             </div>
                             <div class="col-sm-4">
-                                Desde: {{formatMoney(item.precio)}}
+                                Desde: {{formatMoney(item.precio)}} 
+                                    <div v-if="showDescuento(item)">
+                                        <span class="label label-primary">En oferta</span>
+                                    </div>
                             </div>
                         </div>
                     </div>
@@ -253,6 +256,19 @@
             styleButton: function(estado){
                 if(estado == 1) return ' btn-danger';
                 else return ' btn-success';
+            },
+            showDescuento(publicacion){
+                if(publicacion.descuento != null){
+                    if(publicacion.fecha_finalizacion != null){
+                        
+                        if(moment(publicacion.fecha_finalizacion, 'YYYY-MM-DD').isAfter(moment({}))){
+                            return true;
+                        }
+                    } else {
+                        return true;
+                    }
+                }
+                return false;
             }
         },
         directives: {

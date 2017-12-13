@@ -24,14 +24,15 @@
 							</form-articulo>
 						</div>
 						<div class="col-sm-12"> 
-							<add-articulo :rubros="prestacion.rubros_id" :articulosSelect="articulos">
+							<add-articulo :rubros="prestacion.rubros_id" :articulosSelect="articulos" @update:articulos="val => articulosArray = val">
 							</add-articulo>
 						</div>
 						<div class="col-sm-12">
 							<form-horario
 								:publicacionId="publicacion.id"
 								:nuevo="false"
-								:horariosId="null">
+								:horariosId="null"
+								@update:horario="val => horariosArray = val">
 							</form-horario>
 						</div>
 		        	</template>
@@ -74,7 +75,7 @@
 	                    </button>
 	                    <button v-if="!showFormPrestacion && showFormArticulo && !showFormPublicacion"
 	                    	class="btn btn-default" type="button" 
-	                    	@click.stop="showFormArticulo = !showFormArticulo; showFormPublicacion = !showFormPublicacion">
+	                    	@click.stop="siguientePublicacion()">
 	                    	Siguiente
 	                    </button>
 
@@ -113,7 +114,9 @@
 				showFormPrestacion: true,
 				showFormArticulo: false,
 				showFormPublicacion: false,
-				id: null
+				id: null,
+				horariosArray: [],
+				articulosArray: []
 			}
 		},
 		beforeMount: function(){
@@ -194,6 +197,11 @@
 	        	this.showFormPrestacion = false; 
 	        	this.showFormArticulo = true;
 	        },
+	        siguientePublicacion(){
+				this.calcularPrecio();
+				this.showFormArticulo = !this.showFormArticulo;
+				this.showFormPublicacion = !this.showFormPublicacion;
+			},
 	        getPublicacion: function(){
 	        	this.$http.get('api/publicacion/'+this.$route.params.publicacionId)
 	        	.then(response =>{
@@ -233,6 +241,24 @@
 	        },
 	        goBack: function(){
 	            router.go(-1)
+	        },
+	        calcularPrecio: function(){
+	        	this.publicacion.precio = 0;
+        		for(var id of this.articulos){
+    	        	for(var articulo of this.articulosArray){
+    	        		if(id == articulo.id){
+    	        			this.publicacion.precio = this.publicacion.precio + articulo.precio;
+    	        		}
+	        		}
+        		}
+        		if(this.horariosArray.length > 0){
+	        		var menorCosto = this.horariosArray[0].precio;
+	        		for (var i = 1; i < this.horariosArray.length; i++) {
+	        			if(this.horariosArray[i].precio < menorCosto)
+	        				menorCosto = this.horariosArray[i].precio;
+	        		}
+	        		this.publicacion.precio = this.publicacion.precio + menorCosto;
+	        	}
 	        }
 		}
 	}

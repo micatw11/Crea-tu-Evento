@@ -35,6 +35,13 @@
 												</el-tooltip>
 											</td>
 											<td v-else></td>
+											<td v-if="!mensaje.reserva.publicacion.estado">
+												<el-tooltip class="item" effect="dark" 
+													content="La publicación se ha eliminado." placement="top-start">
+													<i style="color:#dd4b39" class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+												</el-tooltip>
+											</td>
+											<td v-else></td>
 											<td class="mailbox-name">
 					 							De: <router-link  tag="a" v-bind:to="'/mensaje/'+ mensaje.id">
 													{{ getNameFromUser(mensaje) }}
@@ -46,11 +53,12 @@
 													<a v-truncate="30">{{mensaje.mensaje}}</a>
 												</router-link>
 											</td>
-											<td class="mailbox-attachment">
+											<td class="mailbox-attachment" v-if="mensaje.reserva.estado != 'cancelado'">
 												<small class="label pull-left bg-green">
 													{{mensaje.reserva.estado}}
 												</small>
 											</td>
+											<td v-else></td>
 											<template v-if="role.USUARIO == auth.user.profile.roles_id">
 												<td v-if="isAfterNow(mensaje.reserva.fecha) && mensaje.reserva.estado == 'reservado'">
 												<td v-if="isAfterNow(mensaje.reserva.fecha) && 
@@ -103,7 +111,7 @@
 												
 											</td>
 											<td v-else-if="mensaje.reserva.estado == 'cancelado'">
-												<small class="label pull-left bg-red">>Cancelado</small>
+												<small class="label pull-left bg-red">Cancelado</small>
 											</td>
 											<td class="mailbox-date">{{formatData(mensaje.created_at)}}</td>
 										</tr>

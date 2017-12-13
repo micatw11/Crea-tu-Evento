@@ -16,7 +16,7 @@
                 @vuetable:pagination-data="onPaginationData"
                 @vuetable:cell-clicked="onCellClicked">
 
-                    <template slot="actions" slot-scope="props" v-if="roleProveedor">
+                    <template slot="actions" slot-scope="props" v-if="auth.user.authenticated && roleProveedor">
                         <div class="custom-actions">
                             <!-- Modificar Articulo -->
                             <button class="btn-xs btn-default"
@@ -78,6 +78,7 @@
                 info: 'Mirando de {from} a {to} de {total} articulos',
                 noData:'No hay datos',
                 moreParams: {},
+                auth: auth,
                 tableColumns:  [
                     {
                         name: 'nombre',
@@ -117,7 +118,7 @@
         components: {
             VuetableArticulos, VuetablePaginationArticulos, VuetablePaginationInfoArticulos, EditArticulo
         },
-        beforeMount(){
+        created(){
 
             if(auth.user.profile.roles_id == role.ADMINISTRADOR || auth.user.profile.roles_id == role.SUPERVISOR)
                 this.moreParams = {'user_id' : this.$route.params.userId }

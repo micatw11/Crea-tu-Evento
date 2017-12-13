@@ -21,7 +21,7 @@ class AuthController extends Controller
             if ($user->estado!=2){
                 if(!$user->estado) $user->alta();
                 $user->usuario->localidad->provincia;
-                return response()->json(['data' =>  $user, 'csrfToken' => csrf_token()]);
+                return response()->json(['data' =>  $user, 'csrfToken' => csrf_token()], 200);
             } else {
                     Auth::logout();
                     return response()->json([

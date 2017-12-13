@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Categoria;
+use App\Subcategoria;
 use App\Log;
 
 class CategoriaController extends Controller
@@ -19,15 +20,16 @@ class CategoriaController extends Controller
     public function index(Request $request)
     {
         $categorias = [];
-        $query = Categoria::join('subcategorias', 'subcategorias.categoria_id', '=', 'categorias.id')
-        ->select('categorias.*', DB::raw('COUNT(subcategorias.categoria_id) as subcategorias_count'))
-        ->with('subcategorias.publicaciones')->orderBy('nombre', 'asc');
+        $query = Categoria:://join('subcategorias', 'subcategorias.categoria_id', '=', 'categorias.id');
+            //->select('categorias.*', DB::raw('COUNT(subcategorias.categoria_id) as subcategorias_count'))
+            with('subcategorias.publicaciones')->orderBy('nombre', 'asc');
 
         //filtro
         if ($request->filter) {
             $like = '%'.$request->filter.'%';
             $query = $query->where('categorias.nombre','like',$like);
         }
+
         if($request->has('with_tipo_proveedor') && $request->with_tipo_proveedor != '')
         {
             $like = '%'.$request->with_tipo_proveedor.'%';
@@ -39,8 +41,6 @@ class CategoriaController extends Controller
         }
         else
         {
-            $query = $query->groupBy('subcategorias.categoria_id')
-            ->having('subcategorias_count', '>', 0);
             $categorias = $query->get();
         }
         
@@ -68,10 +68,19 @@ class CategoriaController extends Controller
     public function store(Request $request)
     {
         //validacion de datos
-        $this->validatorCategoria($request);
-        //se crea el recurso categoria
-        $categoria = $this->create($request);
-        
+        if($request->has('categoria_id') && $request->categoria_id != '')
+        {
+            $categoria = Categoria::where('id', $request->categoria_id)->firstOrFail();
+            Subcategoria::create( [ 'nombre' => $request->subacategoriaNombre, 'categoria_id' => $request->categoria_id ]);
+        }
+        else 
+        {
+            $this->validatorCategoria($request);
+            //se crea el recurso categoria
+            $categoria = $this->create($request);
+            Subcategoria::create( [ 'nombre' => $request->subacategoriaNombre, 'categoria_id' => $categoria->id ]);
+        }
+
         if ($categoria){
             return response(null, Response::HTTP_OK);
         } else {
@@ -97,7 +106,7 @@ class CategoriaController extends Controller
      */
     public function show($id)
     {
-          $categoria= Categoria::where('id', $id)->with('subcategorias.publicaciones')->firstOrFail();
+        $categoria= Categoria::where('id', $id)->with('subcategorias.publicaciones')->firstOrFail();
 
         if ($categoria) {
             return response()->json(['data' => $categoria], 200);

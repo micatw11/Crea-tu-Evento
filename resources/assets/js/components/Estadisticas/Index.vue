@@ -2,6 +2,84 @@
 	<div class="default-content">
 		<section class="content">
 			<div class="row">
+				<div class="col-lg-6 col-xs-12" v-if="loadedUsuarios">
+					<div class="info-box bg-yellow">
+						<span class="info-box-icon"><i class="ion ion-person-add"></i></span>
+
+						<div class="info-box-content">
+							<span class="info-box-text">Usuarios registrados</span>
+							<span class="info-box-number">{{usuariosRegistados}}</span>
+
+							<div class="progress">
+								<div class="progress-bar" v-bind:style="'width: '+registroAumento+'%'"></div>
+							</div>
+							<span class="progress-description">
+								{{registroAumento}}% Incremento del ultimo mes.
+							</span>
+						</div>
+						<!-- /.info-box-content -->
+					</div>
+				</div>
+				<div class="col-lg-6 col-xs-12" v-if="loadedProveedores">
+					<!-- small box -->
+					<div class="info-box bg-red">
+						<span class="info-box-icon"><i class="ion ion-person-add"></i></span>
+
+						<div class="info-box-content">
+							<span class="info-box-text">Proveedores registrados</span>
+							<span class="info-box-number">{{proveedoresRegistrados}}</span>
+							<div class="progress">
+								<div class="progress-bar" v-bind:style="'width: '+proveedoresAumento+'%'"></div>
+							</div>
+							<span class="progress-description">
+								{{proveedoresAumento}}% Incremento del ultimo mes.
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-xs-6">
+					<!-- small box -->
+					<div class="small-box bg-aqua">
+						<div class="inner">
+							<h3>{{publicacionesCantidad}}</h3>
+
+							<p>Publicaciones</p>
+						</div>
+						<div class="icon">
+							<i class="fa fa-shopping-cart"></i>
+						</div>
+						<!--<a href="#" class="small-box-footer">
+							More info <i class="fa fa-arrow-circle-right"></i>
+						</a>-->
+					</div>
+				</div>
+				<div class="col-lg-5 col-xs-6" v-if="loadedReservas">
+					<!-- small box -->
+					<div class="small-box bg-green">
+						<div class="inner">
+							<h3>{{reservasAumento}}<sup style="font-size: 20px">%</sup></h3>
+							<p>Incremento ultimo mes de reservas</p>
+						</div>
+						<div class="icon">
+							<i class="ion ion-stats-bars"></i>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-xs-6">
+					<!-- small box -->
+					<div class="small-box bg-red">
+						<div class="inner">
+							<h3>{{usuariosOnline}} de {{ofUserOnline}}</h3>
+							<p>Usuarios activos</p>
+						</div>
+						<div class="icon">
+							<i class="ion ion-pie-graph"></i>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<div class="row">
 				<div class="col-md-12">
 					<div class="box box-primary">
 						<div class="box-header with-border">
@@ -10,68 +88,17 @@
 						</div>
 						<!-- /.box-header -->
 						<div class="box-body no-padding">
-							<div class="col-sm-12">
-								<br>
-								<div class="col-lg-3 col-xs-6">
-									<!-- small box -->
-									<div class="small-box bg-yellow">
-										<div class="inner">
-											<h3>{{usuariosRegistados}}</h3>
-											<p>Usuarios registrados</p>
-										</div>
-										<div class="icon">
-											<i class="ion ion-person-add"></i>
-										</div>
-									</div>
-								</div>
-
-								<div class="col-lg-3 col-xs-6" v-if="loadedProveedores">
-									<!-- small box -->
-									<div class="small-box bg-red">
-										<div class="inner">
-											<h3>{{proveedoresRegistrados}}</h3>
-											<p>Proveedores registrados</p>
-										</div>
-										<div class="icon">
-											<i class="ion ion-pie-graph"></i>
-										</div>
-									</div>
-								</div>
-
-								<div class="col-lg-3 col-xs-6">
-									<!-- small box -->
-									<div class="small-box bg-green">
-										<div class="inner">
-											<h3>3<sup style="font-size: 20px">%</sup></h3>
-											<p>Usuarios registrados Mensuales</p>
-										</div>
-										<div class="icon">
-											<i class="ion ion-stats-bars"></i>
-										</div>
-									</div>
-								</div>
-
-								<div class="col-lg-3 col-xs-6" v-if="loadedProveedores">
-									<!-- small box -->
-									<div class="small-box bg-green">
-										<div class="inner">
-											<h3>{{proveedoresIncrementoUltimoMes}}<sup style="font-size: 20px">%</sup></h3>
-											<p>Nuevos proveedores mensaules</p>
-										</div>
-										<div class="icon">
-											<i class="ion ion-stats-bars"></i>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-sm-12" v-if="loadedPublicaciones" style="min-height: 250px;">
-								<line-chart style="height: 200px;" :data="dataLineCharts"></line-chart>
-							</div>
 							<div class="col-sm-12" v-if="loadedReservas" style="min-height: 250px;">
 								<bar-chart style="height: 200px;" :data="dataBarCharts"></bar-chart>
 							</div>
 							<div class="col-sm-12" v-if="loadedPublicaciones" style="min-height: 250px;">
+								<line-chart style="height: 200px;" :data="dataLineCharts"></line-chart>
+							</div>
+							<div class="col-sm-6" v-if="loadedPublicaciones" style="min-height: 250px;">
 								<pie-chart style="height: 200px;" :data="dataPieCharts"></pie-chart>
+							</div>
+							<div class="col-sm-6" v-if="loadedPublicaciones" style="min-height: 250px;">
+								<pie-chart style="height: 200px;" :data="dataPieChartsRubros"></pie-chart>
 							</div>
 						</div>
 					</div>
@@ -98,22 +125,36 @@
         		loadedPublicaciones: false,
         		loadedReservas: false,
         		reservas: [],
-        		loadedProveedores: false
+        		usuariosOnline: 0,
+        		ofUserOnline: 0,
+        		loadedProveedores: false,
+        		loadedUsuarios: false,
+        		usuarios: [],
+        		publicacionesCantidad: 0
             }
         },
         beforeMount(){
         	this.$events.fire('changePath', [{route: '/', name: 'Inicio'},{route: '/estadisticas', name: 'Estadisticas'}],
         		 'Estadisticas' );
         	this.getUsuarios();
+        	this.getUsuariosActivos();
         	this.getProveedores();
         	this.getPublicaciones();
         	this.getReservas();
         },
         components: { LineChart, BarChart, PieChart },
         methods: {
+        	getUsuariosActivos(){
+        		this.$http.get('api/usuario/active/count').then(response =>{
+        			this.usuariosOnline = response.data.numberOfGuests;
+        			this.ofUserOnline = response.data.ofUsers;
+        		});
+        	},
         	getUsuarios(){
         		this.$http.get('/api/usuario').then(response =>{
         			this.usuariosRegistados = response.data.length;
+        			this.usuarios = response.data;
+        			this.loadedUsuarios = true;
         		});
         	},
         	getProveedores(){
@@ -126,6 +167,7 @@
         	getPublicaciones(){
         		this.$http.get('api/publicacion').then(response =>{
         			this.publicaciones = response.data.publicaciones;
+        			this.publicacionesCantidad =  response.data.publicaciones.length;
         			this.loadedPublicaciones = true;
         		});
         	},
@@ -153,12 +195,20 @@
         		if(isServicio)
         			return 'serivcio'
         		return 'producto'
+        	},
+        	estaRubro(data, rubroCopm){
+        		for (var i = 0; i < data.length; i++) {
+        			if(data[i].id == rubroCopm.id){
+        				return i;
+        			}
+        		}
+        		return null;
         	}
         },
         computed: {
 	        dataLineCharts(){
 	        	var label = 'Nuevas Publicaciones';
-	        	var backgroundColor = '#f39c12';
+	        	var backgroundColor = '#00a65a';
 	        	var hoy = moment({});
 				var labels = [];
 				var data = [];
@@ -380,16 +430,66 @@
 					}
 					return  { labels: labels, datasets: [{label:label, backgroundColor:backgroundColor, data:data}] }
 	        },
-	        proveedoresIncrementoUltimoMes(){
+	        dataPieChartsRubros(){
+	        	var label = 'Rubros de Publicaciones';
+	        	var backgroundColor = ['#f39c12', '#dd4b39', '#00a65a', '#001F3F', '#001F3F', '#001F3F', '#001F3F','#001F3F', '#001F3F', '#001F3F'];
+	        	var data = []
+	        	var labels = [];
+	        	var rubros = [];
+	        	for(var publicacion of this.publicaciones){
+	        		for(var rubro of publicacion.prestacion.rubros){
+	        			var i = this.estaRubro(rubros, rubro);
+						if(i != null){
+							rubros[i].count = rubros[i].count+1;
+						} else {
+							rubros.push({id: rubro.id, count: 1, nombre: rubro.nombre});
+						}
+	        		}
+	        	}
+	        	rubros.sort(function(a, b){return b.count-a.count});
+	        	var i = 1;
+	        	var acumulador = 0;
+	        	for(var rubro of rubros){
+	        		data.push(rubro.count);
+	        		labels.push(rubro.nombre);
+	        		i++;
+	        		if(i >= 10)break;
+	        	}
+	        	return  { labels: labels, datasets: [{label:label, backgroundColor:backgroundColor, data:data}] }
+	        },
+			registroAumento(){
 				var count = 0;
 				var countUltimos = 0;
-				for (var proveedor of this.proveedores) {
-					if(moment(proveedor.created_at, 'YYYY-MM-DD').month() == moment({}).month())
+				for ( var usuaria of this.usuarios) {
+					if(moment(usuaria.created_at, 'YYYY-MM-DD').month() == moment({}).month()){
 						countUltimos++;
+					}
 					count++;
 				}
-				return (countUltimos*100)/count;
-	        }
+				return parseInt((countUltimos*100)/count);
+			},
+			reservasAumento(){
+				var count = 0;
+				var countUltimos = 0;
+				for ( var reserva of this.reservas) {
+					if(moment(reserva.created_at, 'YYYY-MM-DD').month() == moment({}).month()){
+						countUltimos++;
+					}
+					count++;
+				}
+				return parseInt((countUltimos*100)/count);
+			},
+			proveedoresAumento(){
+				var count = 0;
+				var countUltimos = 0;
+				for ( var proveedor of this.proveedores) {
+					if(moment(proveedor.created_at, 'YYYY-MM-DD').month() == moment({}).month()){
+						countUltimos++;
+					}
+					count++;
+				}
+				return parseInt((countUltimos*100)/count);
+			}
 	    }
     }
 </script>
