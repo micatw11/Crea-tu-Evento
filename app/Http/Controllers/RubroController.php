@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Subcategoria;
 use App\Categoria;
 use App\Rubro;
+use App\Prestacion;
 
 class RubroController extends Controller
 {

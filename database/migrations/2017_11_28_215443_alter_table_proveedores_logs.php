@@ -21,10 +21,11 @@ class AlterTableProveedoresLogs extends Migration
             $table->foreign('accepted_by_user_id')->references('id')->on('users');
             $table->foreign('rejected_by_user_id')->references('id')->on('users');
 
-            $table->renameColumn('dni', 'adjunto');
-            $table->string('adjunto', 50)->nullable()->change();
-
+            //$table->renameColumn('dni', 'adjunto');
+            //$table->string('adjunto', 50)->nullable()->change();
+            \DB::statement('ALTER TABLE proveedores CHANGE dni adjunto VARCHAR(50) NULL');
         });
+
     }
 
     /**
@@ -34,6 +35,6 @@ class AlterTableProveedoresLogs extends Migration
      */
     public function down()
     {
-        //
+        DB::statement('ALTER TABLE proveedores CHANGE adjunto dni VARCHAR(50)');
     }
 }

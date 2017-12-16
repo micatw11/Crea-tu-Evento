@@ -15,7 +15,7 @@ class CreateTerminosCondicionesTable extends Migration
     {
         Schema::create('terminos_condiciones', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('cuerpo', 35000);
+            $table->text('cuerpo');
             $table->integer('user_id')->unsigned();
             $table->boolean('estado')->default(1);
             $table->timestamps();

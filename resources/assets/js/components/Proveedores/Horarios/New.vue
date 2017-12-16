@@ -70,6 +70,7 @@
 					precio: 0,
 					publicacion_id: ''
 				},
+				horarioNo: [],
 				showFormH: false,
 				showNewHorario: false
 			}
@@ -100,7 +101,6 @@
 							precio: 0,
 							publicacion_id: ''
 						}
-
 						if ((response.data.idHorario)&&(this.nuevo)){
 							for (var i = 0; i < response.data.idHorario.length; i++) {
 								if (response.data.idHorario[i] != null){
@@ -108,34 +108,45 @@
 								}
 							}
 						}
-
-						if (response.data.horarioNo != []){
-								//var dias= ''
-								/*for (var i = 0; i < response.data.horarioNo.length; i++) {
-									//if (response.data.horarioNo[i] != null)
-									//dias= dias +', '+ response.data.horarioNo[i].dia
-								}
+						if (response.data.horarioNo){
+							this.horarioNo = response.data.horarioNo
+							for(var horario of this.horarioNo){
 								this.$toast.error({
-		                        title:'¡Error!',
-		                        message:'No se ha podido guardar el horario, ya existe un horario en ese rango. :('
-		                    });*/
-							this.horarioNo 
-							this.showNewHorario= false; 
+			                        title:'¡Error!',
+			                        message:'No se ha podido guardar el horario del "'+horario.dia+'" ya que existe un horario cargado en ese horario. :('
+			                    })
+							}
+						}else{
+							this.$toast.success({
+	                        title:'¡Cambios realizados!',
+	                        message:'Se han realizsado correctamente los cambios.'
+                   			 });
 						}
-						this.$events.fire('reloadIndexHorario');
-						this.showNewHorario= false; 
+						this.closeModal();
 					}, response => {
-							if(response.status === 404){
-		                        this.showNewHorario= false; 
+						if (response.data.horarioNo){
+							this.horarioNo = response.data.horarioNo
+							for(var horario of this.horarioNo){
 								this.$toast.error({
 				                        title:'¡Error!',
-				                        message:'No se ha podido guardar el horario. :('
+				                        message:'No se ha podido guardar el  horario del "'+horario.dia+'" ya que existe un horario cargado en ese horario. :('
 				                    })
 							}
+						}
+						if(response.status === 404){
+							this.$toast.error({
+			                        title:'¡Error!',
+			                        message:'No se ha podido guardar el horario. :('
+			                    })
+						}
+						this.closeModal();
 					});
+					this.closeModal();
 			},
 			closeModal(){
 				this.showNewHorario= false;
+				this.$events.fire('close');
+
 			},
 			retornar(val){
 				this.$emit('update:horario', val)

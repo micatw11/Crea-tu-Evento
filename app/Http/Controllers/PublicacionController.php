@@ -204,9 +204,8 @@ class PublicacionController extends Controller
         }
 
         $prestacion = $this->prestacionService->createPrestacion($request, $proveedor, $domicilio);
-
-        $prestacion->rubros()->attach($request->rubros_id); 
         
+        $prestacion->rubros()->attach($request->rubros_id); 
 
     	$publicacion = $this->createPublicacion($request, $proveedor, $prestacion);
 

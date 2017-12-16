@@ -96,7 +96,7 @@
 							if(id == rubro.id && rubro.producto ){
 								this.$events.emit('showForm');
 							}
-							if(id == rubro.id && (rubro.salon || rubro.servicio)){
+							if(id == rubro.id && (rubro.salon||rubro.servicio)){
 								this.$events.emit('showFormH');
 							}
 						}

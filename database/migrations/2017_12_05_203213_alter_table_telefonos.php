@@ -18,7 +18,7 @@ class AlterTableTelefonos extends Migration
             $table->dropColumn('usuario_id');
         });
         Schema::table('proveedores', function (Blueprint $table) {
-            $table->integer('telefono_id')->unsigned();
+            $table->integer('telefono_id')->unsigned()->default(1);
             $table->foreign('telefono_id')->references('id')->on('telefonos');
         });
     }

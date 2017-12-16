@@ -97,14 +97,28 @@
 						precio: 0,
 						publicacion_id: ''
 					}
+					this.$toast.success({
+                        title:'¡Cambios realizados!',
+                        message:'Se han realizsado correctamente los cambios.'
+                    });
 					this.showModificarHorario= false;
-					this.$events.fire('reloadIndexHorario')
-	        		this.$events.fire('close'); 
+	        		this.closeModal(); 
 				}, response => {
-						this.$toast.error({
-	                        title:'¡Error!',
-	                        message:'No se ha guardado el horario. :('
-	                    });
+						if (response.data.horarioRepetido){
+							this.horarioRepetido = response.data.horarioRepetido
+							this.showNewHorario= false 
+								this.$toast.error({
+			                        title:'¡Error!',
+			                        message:'No se ha podido guardar el horario del "'+this.horarioRepetido.dia+'" ya que existe un horario ya cargado. :('
+			                    })
+						}
+						else{
+							this.$toast.error({
+		                        title:'¡Error!',
+		                        message:'No se ha guardado el horario. :('
+		                    });
+		                }
+		                this.closeModal(); 
 				});
 			},
 			getHorario: function(){
@@ -112,6 +126,7 @@
 	        	.then(response =>{
 	        		this.Horario = response.data
 	        		this.showModificarHorario=true
+	        		this.$events.fire('showFormHClose')
 	        	}, response => {
                     if(response.status === 404){
                         router.go(-1)
@@ -120,11 +135,11 @@
 	                        message:'No se ha cargado los horarios. :('
 	                    });
                     }
+                    this.$events.fire('showFormH')
 	        	});
 	        },
 			closeModal(){
 				this.$events.fire('close');
-
 			},
 			deleteH(){
 				
@@ -133,24 +148,23 @@
                     _method: 'DELETE'
                 })
 	        	.then(response =>{
-
+	        		this.$toast.success({
+                        title:'¡Cambios realizados!',
+                        message:'Se ha Eliminado correctamente horario.'
+                    });
 	        		this.showModificarHorario=false
 	        		this.showDeleteH=false
-	        		
 	        		this.$events.fire('deleteId', this.horarioId);
-		        	this.$events.fire('reloadIndexHorario');
-	        		this.$events.fire('close');
+	        		this.closeModal();
+
 	        	}, response => {
-                    if(response.status === 404){
-                        router.go(-1)
 	                    this.$toast.error({
 	                        title:'¡Error!',
-	                        message:'No se ha cargado su publicación. :('
+	                        message:'No se puede Eliminar el horario, ya que existe una reserva con este. :('
 	                    });
-                    }
+	               		 this.closeModal();
 	        	});
 			}
-
 		}
 	}
 </script>

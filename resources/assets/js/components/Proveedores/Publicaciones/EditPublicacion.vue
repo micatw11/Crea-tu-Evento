@@ -160,6 +160,8 @@
 	                    fecha_habilitacion: this.prestacion.fecha_habilitacion,
 	                    habilitacion: this.prestacion.habilitacion,
 	                    rubros_id: this.prestacion.rubros_id,
+	                    cant_horas: this.prestacion.cant_horas,
+	                    precio_servicio: this.prestacion.precio,
 
 	                    calle: this.domicilio.calle,
 						localidad_id: localidad_id,

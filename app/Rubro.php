@@ -19,7 +19,7 @@ class Rubro extends Model
 
     public function prestaciones()
     {
-        return $this->belongsToMany('App\Prestacion');
+        return $this->belongsToMany('App\Prestacion')->withPivot('cant_horas', 'precio');
     }
 
     public function caracteristicas()

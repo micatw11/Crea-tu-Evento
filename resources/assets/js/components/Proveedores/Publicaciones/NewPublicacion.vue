@@ -15,7 +15,7 @@
 										<el-step title="Paso 3" description="Publicacion"></el-step>
 									</el-steps>
 								</div>
-
+								<br>
 					            <template v-if="showFormRubro">
 					                <form-rubro :rubro="prestacion" 
 					                	:domicilio="domicilio" 
@@ -35,6 +35,8 @@
 									<div class="col-sm-12">
 										<add-articulo :rubros="prestacion.rubros_id" :articulosSelect="articulos" @update:articulos="val => articulosArray = val">
 										</add-articulo>
+									</div>
+					        		<div class="col-sm-12">
 						        		<form-horario 
 						        			:publicacionId="null" :nuevo="true" :horariosId="horarios" @update:horario="val => horariosArray = val">
 						        		</form-horario>
@@ -96,6 +98,7 @@
     import FormRubro from './../Prestaciones/FormRubro';
     import FormArticulo from './../Articulos/New';
     import FormHorario from './../Horarios/New';
+   
     import AddArticulo from './AddArticulo';
 
 	export default {
@@ -136,7 +139,7 @@
                     rubros_id: [],
                     comercio: false,
                     habilitacion: null,
-                    fecha_habilitacion: null
+                    fecha_habilitacion: null,
                 }
 			}
 		},
@@ -191,7 +194,8 @@
 	                    fecha_habilitacion: this.prestacion.fecha_habilitacion,
 	                    habilitacion: this.prestacion.habilitacion,
 	                    rubros_id: this.prestacion.rubros_id,
-
+	                    servicio: this.servicio,
+	                    
 	                    calle: this.domicilio.calle,
 						localidad_id: localidad_id,
 						numero: this.domicilio.numero,
@@ -201,8 +205,8 @@
 	                })
 	                .then(response => {
 	                    this.$toast.success({
-	                        title:'¡Publiacion Creada!',
-	                        message:'Se creado correctamente su publicación.'
+	                        title:'¡Publicación Creada!',
+	                        message:'Se creado correctamente su publicación. :D'
 	                    });
 	                    this.$events.fire('changePath', this.listPath, 'Ver Publicacion');
 	                    this.id = response.data.id;

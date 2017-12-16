@@ -27,7 +27,7 @@
 	</div>
 </template>
 <script>
-	import FormTerm from './form';
+	import FormTerm from './Form';
 	import route from './../../../routes.js';
 	export default {
 		data() {
