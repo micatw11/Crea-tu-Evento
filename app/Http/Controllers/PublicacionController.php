@@ -68,6 +68,10 @@ class PublicacionController extends Controller
                 $query->where(function($query) use ($like){
                     $query->where('publicaciones.titulo','like', $like );
                     });
+                $query->orWhere(function($query) use ($like){
+                    $query->where('subcategorias.nombre','like', $like )
+                        ->orWhere('categorias.nombre','like', $like );
+                    });
             }
             if($request->has('with_subcategory') && $request->with_subcategory != '')
             {
@@ -150,13 +154,24 @@ class PublicacionController extends Controller
             ->where('publicaciones.proveedor_id', $publicacion->proveedor_id)
             ->where('publicaciones.estado', 1)->limit(5)->get();
             $this->setPromedio($publicacionesProveedor);
+
+        $publicacacionesSugeridas = Publicacion::join('prestaciones', 'prestaciones.id', '=', 'publicaciones.prestacion_id')
+            ->join('domicilios', 'domicilios.id', '=', 'prestaciones.domicilio_id')
+            ->with('prestacion.rubros', 'prestacion.domicilio.localidad.provincia', 'proveedor.user.usuario','subcategoria.categoria','fotos', 'caracteristicas', 'favoritos', 'articulos','horarios', 'calificaciones.reserva.user.usuario')
+            ->where('publicaciones.estado', 1)
+            ->where('domicilios.id', $publicacion->prestacion->domicilio_id)
+            ->where('publicaciones.id', '!=' ,$id)
+            ->where('publicaciones.proveedor_id', '!=', $publicacion->proveedor_id)
+            ->where('publicaciones.subcategoria_id', $publicacion->subcategoria_id)
+            ->select('publicaciones.*')->limit(5)->get();
+
         if(!Auth::user())
             VistaPublicacion::create(['publicacion_id' => $publicacion->id]);
         else if(Auth::user() && Auth::user()->roles_id == Rol::roleId('Usuario')) 
             VistaPublicacion::create(['publicacion_id' => $publicacion->id, 'user_id' => Auth::id()]);
 
         return response()->json(
-            ['publicacion' => $publicacion, 'publicacionesProveedor' => $publicacionesProveedor], 200);
+            ['publicacion' => $publicacion, 'publicacionesProveedor' => $publicacionesProveedor, 'publicacacionesSugeridas' => $publicacacionesSugeridas], 200);
     }
 
     protected function createPublicacion($request, $proveedor, $prestacion)

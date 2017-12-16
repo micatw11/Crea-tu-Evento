@@ -237,6 +237,7 @@
         },
         beforeDestroy() {
             this.$events.$off('cerrar')
+            this.$events.$off('filter-set')
             this.$events.$off('reloadIndexProveedor')
         },
         methods: {

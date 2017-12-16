@@ -38,7 +38,7 @@
                             <p v-if="perfil !== null" class="text-muted">{{ perfil.localidad.nombre}}, {{perfil.localidad.provincia.nombre}}</p>
 
                             <div 
-                                v-if="perfil !== null && ((perfil.user.roles_id != role.ADMINISTRADOR) &&
+                                v-if="perfil !== null && ((perfil.user.roles_id != role.ADMINISTRADOR && perfil.user.roles_id != role.PROVEEDOR) &&
                                 perfil.user_id != auth.user.profile.id && auth.user.profile.roles_id == role.ADMINISTRADOR)">
                                 <hr>
 

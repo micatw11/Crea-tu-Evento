@@ -106,7 +106,6 @@
             return {
                 titlePath: 'Usuarios',
                 options: [
-                          { text: 'Administrador', value: '1' },
                           { text: 'Supervisor', value: '2' },
                           { text: 'Operador', value: '3' },
                           { text: 'Usuario', value: '5' }
@@ -127,6 +126,9 @@
         mounted() {
             this.$events.$on('filter-set', eventData => this.onFilterSet(eventData))
             this.$events.fire('changePath', this.listPath, this.titlePath);
+        },
+        beforeDestroy() {
+            this.$events.$off('filter-set')
         },
         methods: {
             genderLabel (value) {

@@ -218,10 +218,10 @@ class ProveedorController extends Controller
                 ->update(['estado'=> 0]);
             $publicacionesId = Publicacion::where('proveedor_id', $proveedor->id)->get()->pluck('id');
 
-            $reservas = Reserva::whereIn('publicacion_id', $publicacionesId)->where('estado', '!=', 'cancelado')
+            $reservas = Reserva::whereIn('publicacion_id', $publicacionesId)->where('estado', '!=', 'cancelado')->where('estado', '!=', 'confirmado')
                 ->whereDate('fecha', '>', Carbon::now()->toDateString())->with('user', 'publicacion.proveedor')->get();
                 
-            Reserva::whereIn('publicacion_id', $publicacionesId)->where('estado', '!=', 'cancelado')
+            Reserva::whereIn('publicacion_id', $publicacionesId)->where('estado', '!=', 'cancelado')->where('estado', '!=', 'confirmado')
                 ->whereDate('fecha', '>', Carbon::now()->toDateString())
                     ->update(['estado' => 'cancelado']);
             

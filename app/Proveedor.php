@@ -25,7 +25,7 @@ class Proveedor extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\User');    
+        return $this->belongsTo('App\User',  'user_id');    
     }
 
     public function telefono()
@@ -35,17 +35,17 @@ class Proveedor extends Model
 
     public function register_by_user()
     {     
-        return $this->belongsTo('App\User');    
+        return $this->belongsTo('App\User', 'register_by_user_id');    
     }
 
     public function accepted_by_user()
     {     
-        return $this->belongsTo('App\User');    
+        return $this->belongsTo('App\User', 'accepted_by_user_id');    
     }
 
     public function rejected_by_user()
     {     
-        return $this->belongsTo('App\User');    
+        return $this->belongsTo('App\User', 'rejected_by_user_id');    
     }
     public function domicilio()
     {     

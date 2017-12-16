@@ -18,8 +18,11 @@ use App\Rol;
 use App\Log;
 use App\Proveedor;
 use App\Prestacion;
+use App\Reserva;
 use App\Rubro;
 use Activity;
+use Carbon\Carbon;
+use App\Publicacion;
 
 
 class UsuarioController extends Controller
@@ -157,6 +160,19 @@ class UsuarioController extends Controller
         $accion = "destroy";
         $user = User::where('id', $id)->firstOrFail();
         Log::logs($id, $table_name, $accion , $user, 'Ha desactivado la cuenta');
+        $proveedor = Proveedor::where('user_id', $id)->first();
+        if($proveedor){
+            Publicacion::where('proveedor_id', $proveedor->id)
+                ->update(['estado'=> 0]);
+            $publicacionesId = Publicacion::where('proveedor_id', $proveedor->id)->get()->pluck('id');
+
+            $reservas = Reserva::whereIn('publicacion_id', $publicacionesId)->where('estado', '!=', 'cancelado')->where('estado', '!=', 'confirmado')
+                ->whereDate('fecha', '>', Carbon::now()->toDateString())->with('user', 'publicacion.proveedor')->get();
+                
+            Reserva::whereIn('publicacion_id', $publicacionesId)->where('estado', '!=', 'cancelado')->where('estado', '!=', 'confirmado')
+                ->whereDate('fecha', '>', Carbon::now()->toDateString())
+                    ->update(['estado' => 'cancelado']);
+        }
         if($user->baja()){
             if($request->logout){
                  Auth::logout();
@@ -348,6 +364,7 @@ class UsuarioController extends Controller
         }
         return response()->json($proveedores, Response::HTTP_OK);
     } 
+
     public function proveedoresByOperador(Request $request, $id)
     {
         $query = Proveedor::where('register_by_user_id', $id)

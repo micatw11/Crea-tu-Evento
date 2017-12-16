@@ -160,8 +160,8 @@
         },
         mounted(){
             if (auth.user.authenticated){
-                        this.favoriteIcon()
-                    }
+                this.favoriteIcon()
+            }
         },
         methods: {
             ver(id){

@@ -11,7 +11,6 @@ use App\Provincia;
 class UserTest extends TestCase
 {
 	use WithoutMiddleware;
-	use DatabaseMigrations;
     /**
      * A basic test example.
      *
@@ -22,7 +21,7 @@ class UserTest extends TestCase
 	    $response = $this->call('GET', '/');
 	    $this->assertEquals(200, $response->status());    
 	}
-/**
+
 	public function testRegisterWithErrors(){
 		$user = [	'name' => 'Tar',
 	            'email' => 'asasas',
@@ -39,7 +38,7 @@ class UserTest extends TestCase
 				'name' => 'Taylor',
 	            'email' => 'asasas@gmail.com',
 	            'password' => '123456',
-	            'password_confirmation' => '12345',
+	            'password_confirmation' => '123456',
 	            'nombre' => 'jose',
 	            'apellido' => 'lopez',
 	            'sexo' => 'M',
@@ -59,10 +58,6 @@ class UserTest extends TestCase
 	            'remember' => false
             ])->assertResponseStatus(200);
 
-	}*/
-/*
-	1) UserTest::testRegister
-Expected status code 200, got 422.
-Failed asserting that 422 matches expected 200.
-*/
+	}
+
 }
