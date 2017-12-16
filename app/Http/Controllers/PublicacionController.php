@@ -73,6 +73,13 @@ class PublicacionController extends Controller
                         ->orWhere('categorias.nombre','like', $like );
                     });
             }
+            if($request->has('precie_max') && $request->has('precie_min')){
+                $min = $request->precie_min;
+                $max =$request->precie_max;
+                $query->where(function($query) use ($max, $min){
+                    $query->whereBetween('publicaciones.precio',[$min,$max]);
+                });
+            }
             if($request->has('with_subcategory') && $request->with_subcategory != '')
             {
                 $id = $request->with_subcategory;
@@ -108,11 +115,23 @@ class PublicacionController extends Controller
 
         if( $request->has('page') || $request->has('per_page') ) 
         {
-            $publicaciones = $query->orderBy('tiene_oferta', 'DESC')
-                ->orderBy('tiene_caracteristicas', 'DESC')
-                    ->paginate(10);
+            if($request->has('order_precie') && ($request->order_precie == 'ASC' || $request->order_precie == 'DESC'))
+            {
+                $publicaciones = $query->orderBy('publicaciones.precio', $request->order_precie)
+                    ->orderBy('tiene_oferta', 'DESC')
+                    ->orderBy('tiene_caracteristicas', 'DESC')
+                        ->paginate(10);
+            }
+            else
+            {
+                $publicaciones = $query->orderBy('publicaciones.precio', 'ASC')
+                    ->orderBy('tiene_oferta', 'DESC')
+                    ->orderBy('tiene_caracteristicas', 'DESC')
+                        ->paginate(10);
+            }
         } else {
-            $publicaciones = $query->orderBy('tiene_oferta', 'DESC')
+            $publicaciones = $query->orderBy('publicaciones.precio', 'ASC')
+                ->orderBy('tiene_oferta', 'DESC')
                 ->orderBy('tiene_caracteristicas', 'DESC')
                     ->get();
         }
