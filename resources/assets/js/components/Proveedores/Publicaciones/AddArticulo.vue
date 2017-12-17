@@ -39,6 +39,9 @@
 		mounted(){
 			this.$events.listen('reloadIndexArticulo', () => this.getArticles());
 		},
+		beforeDestroy() {
+            this.$events.$off('reloadIndexArticulo')
+        },
 		methods:{
 			//obtiene los articulos de el proveedor
 			getArticles(){

@@ -258,6 +258,30 @@
 					    <!-- /.box-footer-->
 					</div>
 				</div>
+
+	            <div class="box box-default" v-if="publicacacionesSugeridas.length > 0 && (!auth.user.authenticated || (auth.user.authenticated && auth.user.profile.roles_id != role.PROVEEDOR))">
+	            	<div class="box-header with-border">
+	            		<h3 class="box-title">Publicaciones Sugeridas</h3>
+	            	</div>
+	            	<div class="box-body">
+						<div class="col-sm-3 col-md-3" v-for="(publi, index) in publicacacionesSugeridas">
+							<router-link 
+								tag="a" 
+								:to="'/publicacion/'+ publi.id">
+								<div class="thumbnail">
+									<div style="min-height:200px;">
+										<img v-for="(foto, index) in publi.fotos" v-if="index == 0" :src="'/storage/proveedores/publicaciones/'+foto.nombre" alt="foto" style="max-height: 200px;" class="img-responsive">
+									</div>
+									<div class="caption">
+										<p>{{ formatMoney(publi.precio) }}</p>
+										<h3 style="text-align:center;">{{ publi.titulo }}</h3>
+										
+									</div>
+								</div>
+							</router-link>
+						</div>
+	            	</div>
+	            </div>
 			</div>
 		</section>
 
@@ -308,6 +332,7 @@
 		data(){
 			return {
 				mensajes: [],
+				publicacacionesSugeridas: [],
 				presupuesto: null,
 				publicacion: {},
 				showPresupuesto: false,
@@ -340,7 +365,7 @@
 	                .then(response => {
 	                	this.presupuesto = response.data.presupuesto;
 	                	this.mensajes = response.data.mensajes;
-	                	
+	                	this.publicacacionesSugeridas = response.data.publicacacionesSugeridas;
 						this.listPath= [
 							{route: '/', name: 'Inicio'}, 
 							{route: '/mensajes', name: 'Mensajes'}];

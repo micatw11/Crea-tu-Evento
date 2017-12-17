@@ -46,4 +46,22 @@ class ReservaTest extends TestCase
     		]);
     }
 
+    public function testPresupuesto(){
+        $user = User::where('roles_id', 5)->firts();
+        Auth::loginUsingId($user->id);
+        $publicacion = Publicacion::where('id', 8)->first();
+        $data = [
+            'articulos' => [ {'articulo_id' => 7, 'cantidad' => 0}, {'articulo_id' => 8, 'cantidad' => 0} ],
+            'calle' => null,
+            'comentario' => "Necesito el salón para unas 50.",
+            'estado' => "presupuesto",
+            'fecha' => "2017-12-27T03:00:00.000Z",
+            'horario_id' => 3,
+            'numero' => null,
+            'piso' => null,
+            'rubros' => [1, 2, 3, 4]
+        ]
+        $this->json('POST', 'api/publicacion/'.$publicacion->id.'/presupuesto', $data)->assertResponseStatus(200);
+    }
+
 }
