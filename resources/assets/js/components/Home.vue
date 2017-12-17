@@ -41,6 +41,14 @@
                 <div class="col-xs-12">&nbsp;</div>
             </div>
             <div class="box">
+                <div class="box-header" style="height: 35px;">
+                    <div class="box-tools">
+                        <el-radio-group v-model="order" size="mini" @change="managerSearch('')">
+                              <el-radio-button label="ASC">Menores precios</el-radio-button>
+                              <el-radio-button label="DESC">Mayores precios</el-radio-button>
+                        </el-radio-group>
+                    </div>
+                </div>
                 <div class="box-body">
                     <search
                         :publicaciones="publicaciones" :loading="loading">
@@ -95,7 +103,8 @@
                 q: '',
                 with_category: false, 
                 category_name: '',
-                nombre: false
+                nombre: false,
+                order: 'ASC'
             }
         },
         beforeMount() {
@@ -134,7 +143,7 @@
                     filtro = filtro + '&with_localidad='+this.localidad_id ;
                 if(this.favorite_user) 
                     filtro = filtro + '&favorite='+true;
-                filtro = filtro + '&page='+this.pageOne.current_page+'&per_page='+this.pageOne.per_page;
+                filtro = filtro + '&page='+this.pageOne.current_page+'&per_page='+this.pageOne.per_page+'&order_precie='+this.order;
 
                 this.$http.get(filtro).then(response => {
                     this.publicaciones = response.data.publicaciones.data;
@@ -150,6 +159,7 @@
                         message:'No se han podido cargar las publicaciones. :('
                     });
                     this.loading = false;
+                    //if(response.status == '500')
                 })
                 
             },
@@ -177,7 +187,7 @@
                     this.$router.replace({ path : '/'})
                 }*/
                 if (this.nombre){
-                this.managerSearch(this.q)
+                    this.managerSearch(this.q)
                 }
             },
             /** 

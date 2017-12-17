@@ -68,6 +68,17 @@ class PublicacionController extends Controller
                 $query->where(function($query) use ($like){
                     $query->where('publicaciones.titulo','like', $like );
                     });
+                $query->orWhere(function($query) use ($like){
+                    $query->where('subcategorias.nombre','like', $like )
+                        ->orWhere('categorias.nombre','like', $like );
+                    });
+            }
+            if($request->has('precie_max') && $request->has('precie_min')){
+                $min = $request->precie_min;
+                $max =$request->precie_max;
+                $query->where(function($query) use ($max, $min){
+                    $query->whereBetween('publicaciones.precio',[$min,$max]);
+                });
             }
             if($request->has('with_subcategory') && $request->with_subcategory != '')
             {
@@ -104,11 +115,23 @@ class PublicacionController extends Controller
 
         if( $request->has('page') || $request->has('per_page') ) 
         {
-            $publicaciones = $query->orderBy('tiene_oferta', 'DESC')
-                ->orderBy('tiene_caracteristicas', 'DESC')
-                    ->paginate(10);
+            if($request->has('order_precie') && ($request->order_precie == 'ASC' || $request->order_precie == 'DESC'))
+            {
+                $publicaciones = $query->orderBy('publicaciones.precio', $request->order_precie)
+                    ->orderBy('tiene_oferta', 'DESC')
+                    ->orderBy('tiene_caracteristicas', 'DESC')
+                        ->paginate(10);
+            }
+            else
+            {
+                $publicaciones = $query->orderBy('publicaciones.precio', 'ASC')
+                    ->orderBy('tiene_oferta', 'DESC')
+                    ->orderBy('tiene_caracteristicas', 'DESC')
+                        ->paginate(10);
+            }
         } else {
-            $publicaciones = $query->orderBy('tiene_oferta', 'DESC')
+            $publicaciones = $query->orderBy('publicaciones.precio', 'ASC')
+                ->orderBy('tiene_oferta', 'DESC')
                 ->orderBy('tiene_caracteristicas', 'DESC')
                     ->get();
         }
@@ -150,13 +173,24 @@ class PublicacionController extends Controller
             ->where('publicaciones.proveedor_id', $publicacion->proveedor_id)
             ->where('publicaciones.estado', 1)->limit(5)->get();
             $this->setPromedio($publicacionesProveedor);
+
+        $publicacacionesSugeridas = Publicacion::join('prestaciones', 'prestaciones.id', '=', 'publicaciones.prestacion_id')
+            ->join('domicilios', 'domicilios.id', '=', 'prestaciones.domicilio_id')
+            ->with('prestacion.rubros', 'prestacion.domicilio.localidad.provincia', 'proveedor.user.usuario','subcategoria.categoria','fotos', 'caracteristicas', 'favoritos', 'articulos','horarios', 'calificaciones.reserva.user.usuario')
+            ->where('publicaciones.estado', 1)
+            ->where('domicilios.id', $publicacion->prestacion->domicilio_id)
+            ->where('publicaciones.id', '!=' ,$id)
+            ->where('publicaciones.proveedor_id', '!=', $publicacion->proveedor_id)
+            ->where('publicaciones.subcategoria_id', $publicacion->subcategoria_id)
+            ->select('publicaciones.*')->limit(5)->get();
+
         if(!Auth::user())
             VistaPublicacion::create(['publicacion_id' => $publicacion->id]);
         else if(Auth::user() && Auth::user()->roles_id == Rol::roleId('Usuario')) 
             VistaPublicacion::create(['publicacion_id' => $publicacion->id, 'user_id' => Auth::id()]);
 
         return response()->json(
-            ['publicacion' => $publicacion, 'publicacionesProveedor' => $publicacionesProveedor], 200);
+            ['publicacion' => $publicacion, 'publicacionesProveedor' => $publicacionesProveedor, 'publicacacionesSugeridas' => $publicacacionesSugeridas], 200);
     }
 
     protected function createPublicacion($request, $proveedor, $prestacion)

@@ -271,7 +271,7 @@ export default {
         this.$events.$on('validarFormProveedor', () =>this.validateBeforeSubmit());
     },
     beforeDestroy() {
-            this.$events.$off('validarFormProveedor')
+        this.$events.$off('validarFormProveedor')
     },
     methods: {
        

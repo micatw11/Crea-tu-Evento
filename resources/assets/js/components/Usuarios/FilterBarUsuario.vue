@@ -21,13 +21,9 @@
       }
     },
     methods: {
-    doFilter () {
-      this.$events.fire('filter-set', this.filterText)
-    }/*,
-    resetFilter () {
-      this.filterText = ''  // clear the text in text input
-      this.$events.fire('filter-reset')
-    }*/
+      doFilter () {
+        this.$events.fire('filter-set', this.filterText)
+      }
     }
   }
 </script>

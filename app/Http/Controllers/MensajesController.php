@@ -8,6 +8,7 @@ use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Reserva;
 use App\Mensaje;
+use App\Publicacion;
 
 class MensajesController extends Controller
 {
@@ -98,7 +99,16 @@ class MensajesController extends Controller
                         ->where('estado', 1)
                         ->with('fromUser.usuario', 'toUser.usuario')->get();
 
-        return response()->json(['mensajes' => $mensajes, 'presupuesto' => $reserva], Response::HTTP_OK);
+        $publicacacionesSugeridas = Publicacion::join('prestaciones', 'prestaciones.id', '=', 'publicaciones.prestacion_id')
+            ->join('domicilios', 'domicilios.id', '=', 'prestaciones.domicilio_id')
+            ->with('prestacion.rubros', 'prestacion.domicilio.localidad.provincia', 'proveedor.user.usuario','subcategoria.categoria','fotos', 'caracteristicas', 'favoritos', 'articulos','horarios', 'calificaciones.reserva.user.usuario')
+            ->where('publicaciones.estado', 1)
+            ->where('domicilios.id', $reserva->publicacion->prestacion->domicilio_id)
+            ->where('publicaciones.id', '!=' ,$reserva->publicacion->id)
+            ->where('publicaciones.subcategoria_id', $reserva->publicacion->subcategoria_id)
+            ->select('publicaciones.*')->limit(5)->get();
+
+        return response()->json(['mensajes' => $mensajes, 'presupuesto' => $reserva, 'publicacacionesSugeridas'=> $publicacacionesSugeridas], Response::HTTP_OK);
     }
 
     /**

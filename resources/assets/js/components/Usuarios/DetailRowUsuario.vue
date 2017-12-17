@@ -42,7 +42,7 @@
     },
     methods: {
       onClick (event) {
-        console.log('my-detail-row: on-click', event.target)
+        console.log('my-detail-row: on-click')
       }
     },
   }

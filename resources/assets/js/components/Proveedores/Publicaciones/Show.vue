@@ -418,7 +418,29 @@
 					</div>
             	</div>
             </div>
-
+            <div class="box box-default" v-if="publicacacionesSugeridas.length > 0 && (!auth.user.authenticated || (auth.user.authenticated && auth.user.profile.roles_id != role.PROVEEDOR))">
+            	<div class="box-header with-border">
+            		<h3 class="box-title">Publicaciones Sugeridas</h3>
+            	</div>
+            	<div class="box-body">
+					<div class="col-sm-3 col-md-3" v-for="(publi, index) in publicacacionesSugeridas">
+						<router-link 
+							tag="a" 
+							:to="'/publicacion/'+ publi.id">
+							<div class="thumbnail">
+								<div style="min-height:200px;">
+									<img v-for="(foto, index) in publi.fotos" v-if="index == 0" :src="'/storage/proveedores/publicaciones/'+foto.nombre" alt="foto" style="max-height: 200px;" class="img-responsive">
+								</div>
+								<div class="caption">
+									<p>{{ formatMoney(publi.precio) }}</p>
+									<h3 style="text-align:center;">{{ publi.titulo }}</h3>
+									
+								</div>
+							</div>
+						</router-link>
+					</div>
+            	</div>
+            </div>
 	        <div <div class="box box-default">
 	        	<div class="box-header with-border">
 	        		<i class="fa fa-fw fa-star-o margin-r-5" style="color: rgb(247, 186, 42);"></i><h3 class="box-title">Opiniones</h3>
@@ -529,6 +551,7 @@
 				role: Role,
 				showPresupuesto: false,
 				publicacacionesProveedor: [],
+				publicacacionesSugeridas: [],
 				loadedData: false,
 				quantityCalificaciones: 9,
 			}
@@ -548,6 +571,7 @@
 	                .then(response => {
 	                    this.publicacion = response.data.publicacion
 	                    this.publicacacionesProveedor = response.data.publicacionesProveedor
+	                    this.publicacacionesSugeridas = response.data.publicacacionesSugeridas
 						var listPath = [
 								{route: '/', name: 'Inicio'}, 
 								{
@@ -561,8 +585,7 @@
 								{
 									route: '/publicacion/'+this.$route.params.publicacionId, 
 									name: this.publicacion.titulo
-								}
-							]
+								}]
 						this.$events.fire('changePath', listPath, this.publicacion.titulo);
 						this.loadedData = true;
 	                }, response => {

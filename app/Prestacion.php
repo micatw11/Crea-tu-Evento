@@ -27,7 +27,7 @@ class Prestacion extends Model
 
     public function rubros()
     {
-        return $this->belongsToMany('App\Rubro')->withPivot('cant_horas', 'precio');
+        return $this->belongsToMany('App\Rubro');
     }
 
     public function publicaciones()

@@ -11,7 +11,6 @@ var NewTerminosCondiciones = require('./components/Administracion/TerminosCondic
 var EditTerminosCondiciones = require('./components/Administracion/TerminosCondiciones/Edit');
 var ShowTerminosCondiciones = require('./components/Administracion/TerminosCondiciones/Show');
 
-var Calendar = require('./components/Calendario');
 var Registrar = require('./components/Auth/Register');
 
 var FormPasswordReset = require('./components/Auth/Password/Email');
