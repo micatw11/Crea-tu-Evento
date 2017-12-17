@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\User;
+use Socialite;
+use App\SocialAccountService;
 
 class AuthController extends Controller
 {
@@ -20,7 +22,11 @@ class AuthController extends Controller
             $user = Auth::user();
             if ($user->estado!=2){
                 if(!$user->estado) $user->alta();
-                $user->usuario->localidad->provincia;
+                if ($user->usuario->localidad_id!= null){ 
+                    $user->usuario->localidad->provincia;
+                }else{
+                    $user->usuario;
+                }
                 return response()->json(['data' =>  $user, 'csrfToken' => csrf_token()], 200);
             } else {
                     Auth::logout();
@@ -56,11 +62,40 @@ class AuthController extends Controller
     public function getAuth(Request $request){
         if(!Auth::guest()){
             $user = Auth::user();
-            $user->usuario->localidad->provincia;
+            if ($user->usuario->localidad_id!= null){ 
+                    $user->usuario->localidad->provincia;
+                }else{
+                    $user->usuario;
+                }
             return response()->json(['data' =>  $user, 'csrfToken' => csrf_token()]);
         } else {
             return response(null, Response::HTTP_UNAUTHORIZED);
         }
+    }
+    /**
+     * Redirect the user to the google authentication page.
+     *
+     * @return Response
+     */
+    public function redirect()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    /**
+     * Obtain the user information from Google.
+     *
+     * @return Response
+     */
+
+    public function callback(SocialAccountService $service){
+
+      $user=$service->createOrGetUser(Socialite::driver('google')->user());
+      //return responsejson()
+      if ($user){
+        auth()->login($user);
+    }
+      return redirect()->to('/');
     }
 
 }

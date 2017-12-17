@@ -8,7 +8,9 @@
 
             <p>
                 <b>Localidad: </b>
-                {{usuario.localidad.nombre}} - {{usuario.localidad.provincia.nombre}}
+                <div v-if='usuario.localidad_id != null' >
+                    {{usuario.localidad.nombre}} - {{usuario.localidad.provincia.nombre}}
+                </div>
             </p>
         
             <p>

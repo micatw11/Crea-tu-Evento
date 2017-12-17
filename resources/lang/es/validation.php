@@ -17,6 +17,7 @@ return [
     'active_url'           => ':attribute no es una URL válida.',
     'after'                => ':attribute debe ser una fecha posterior a :date.',
     'alpha'                => ':attribute solo debe contener letras.',
+    'alpha_spaces'         => ':attribute solo debe contener letras y espacios.',
     'alpha_dash'           => ':attribute solo debe contener letras, números y guiones.',
     'alpha_num'            => ':attribute solo debe contener letras y números.',
     'array'                => ':attribute debe ser un conjunto.',

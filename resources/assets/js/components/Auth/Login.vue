@@ -66,11 +66,15 @@
                     <!-- /.col -->
                 </div>
             </form>
+            <div class="social-auth-links text-center" style="margin-top: 0px;">
+              <p>- OR -</p>
+              <a href="#" @click="redirection()" class="btn btn-block btn-social btn-google btn-flat"><i class="fa fa-google-plus"></i> Inicia sesion con
+                Google+</a>
+            </div>
             <router-link tag="a" to="/password-reset">¿Se olvido la contraseña?</router-link><br>
             <router-link tag="a" to="/registrar" class="text-center">
                     Registrar una nueva cuenta
             </router-link>
-
         </div>
         <!-- /.login-box-body -->
     </div>
@@ -80,6 +84,7 @@
 <script>
 import auth from '../../auth.js';
 import router from '../../routes.js';
+//import ImageInput from '../Usuarios/ImageInput.vue';
 
 export default {
 
@@ -99,6 +104,9 @@ export default {
     beforeMount() {
         this.deactivated = this.$route.query.deactivated
     },
+    //components: {
+    //    ImageInput
+    //},
     methods: {
         //clear errorsApi
         clearErrors: function(){
@@ -156,6 +164,9 @@ export default {
                 // failed
             });
 
+        },
+        redirection: function(){
+             window.location.href = "http://localhost:8000/redirect";
         }
     }
 

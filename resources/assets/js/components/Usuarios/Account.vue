@@ -1,6 +1,8 @@
 <style src="cxlt-vue2-toastr/dist/css/cxlt-vue2-toastr.css"></style>
 <template>
     <div>
+        <br>
+        <hr>
         <div  class="col-sm-4">
             <button type="button" class="btn-block" @click="showContrasenia = true">Cambiar contraseña</button>
         </div>
@@ -85,7 +87,8 @@
                 </div>
             </div>
         </div>
-        <br><hr>
+        <br>
+        <hr>
 
         <div class="col-sm-4">
             <button type="button" class="btn-block" data-toggle="modal" data-target="#desactivar">Desactivar</button>

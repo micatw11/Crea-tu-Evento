@@ -35,7 +35,7 @@
 
                             <strong><i class="fa fa-map-marker margin-r-5"></i> Locati&oacute;n</strong>
 
-                            <p v-if="perfil !== null" class="text-muted">{{ perfil.localidad.nombre}}, {{perfil.localidad.provincia.nombre}}</p>
+                            <p v-if="perfil !== null && (perfil.localidad_id != null)" class="text-muted">{{ perfil.localidad.nombre}}, {{perfil.localidad.provincia.nombre}}</p>
 
                             <div 
                                 v-if="perfil !== null && ((perfil.user.roles_id != role.ADMINISTRADOR) &&
@@ -99,7 +99,6 @@
                                             <div>
                                                 <form-perfil></form-perfil>
                                             </div>
-                                            <br><hr>
                                             <div>
                                                 <account></account>
                                             </div>

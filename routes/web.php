@@ -4,6 +4,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+//login socialite
+Route::get('/redirect','Auth\AuthController@redirect');
+Route::get('/callback','Auth\AuthController@callback');
+
 Route::group(['prefix' => 'api'], function () {
 
     // Rutas del Login

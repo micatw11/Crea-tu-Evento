@@ -197,7 +197,9 @@ export default {
         closeModal: function(){
             this.errorsApi = [];
             this.getUserPerfil();
-            this.setDefaultLocalidad();
+            if (auth.user.profile.usuario.localidad_id != null){
+                this.setDefaultLocalidad();
+            }
             this.validar = false;
             this.showModificar = false;
         },
