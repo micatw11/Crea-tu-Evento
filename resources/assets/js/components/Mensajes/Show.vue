@@ -193,7 +193,7 @@
 									<div class="col-sm-12">{{ presupuesto.user.usuario.nombre}} {{presupuesto.user.usuario.apellido}}</div>
 									<label class="col-sm-12">Email </label><div class="col-sm-12">{{ presupuesto.user.email}}</div>
 									<label class="col-sm-12">Ubicaci&oacute;n </label>
-									<div class="col-sm-12">
+									<div class="col-sm-12" v-if="presupuesto.user.usuario.localidad_id != null">
 										{{ presupuesto.user.usuario.localidad.nombre }} - {{presupuesto.user.usuario.localidad.provincia.nombre}}
 									</div>
 								</div>

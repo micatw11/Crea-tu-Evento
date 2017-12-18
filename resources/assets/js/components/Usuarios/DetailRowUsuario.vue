@@ -6,7 +6,7 @@
         <div class="col-sm-9">
             <p class="inline-block">
                 <label>Nombre: </label>
-                <span>{{rowData.usuario.apellido}}, {{rowData.usuario.nombre}}</span>
+                <span><template v-if="rowData.usuario.apellido != null && rowData.usuario.apellido != ''">{{rowData.usuario.apellido}}, </template><template v-if="rowData.usuario.nombre != null && rowData.usuario.nombre != ''">{{rowData.usuario.nombre}}</template></span>
             </p>
             <p class="inline-block">
                 <label>Email: </label>
@@ -16,7 +16,7 @@
                 <label>Nombre de Usuario: </label>
                 <span>{{rowData.name}}</span>
             </p>
-            <p class="inline-block">
+            <p class="inline-block" v-if="rowData.usuario.fecha_nac != null && rowData.usuario.fecha_nac != '0000-00-00'">
                 <label>Cumpleaños </label>
                 <span>{{rowData.usuario.fecha_nac}}</span>
             </p>

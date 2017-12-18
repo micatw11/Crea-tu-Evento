@@ -26,14 +26,15 @@
                     <!-- /.box -->
 
                     <!-- About Me Box --> 
-                    <div class="box box-primary">
+                    <div class="box box-primary" v-if="perfil !== null && (
+                    perfil.localidad_id != null || (auth.user.profile.roles_id == role.ADMINISTRADOR && perfil.user_id != auth.user.profile.id))">
                         <div class="box-header with-border">
                             <h3 class="box-title">Informaci&oacute;n</h3>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
 
-                            <strong><i class="fa fa-map-marker margin-r-5"></i> Locati&oacute;n</strong>
+                            <strong v-if="perfil !== null && (perfil.localidad_id != null)"><i class="fa fa-map-marker margin-r-5"></i> Localidad</strong>
 
                             <p v-if="perfil !== null && (perfil.localidad_id != null)" class="text-muted">{{ perfil.localidad.nombre}}, {{perfil.localidad.provincia.nombre}}</p>
 
@@ -121,10 +122,18 @@
                     <div class="col-md-9">
                         <div class="nav-tabs-custom">
                             <ul class="nav nav-tabs">
-                                <li class="active"><a href="#actividades" data-toggle="tab" aria-expanded="false">Actividades</a></li>
+                                <li class="active" v-if="perfil !== null">
+                                    <a href="#info" data-toggle="tab">Informaci&oacute;n</a>
+                                </li>
+                                <li class=""><a href="#actividades" data-toggle="tab" aria-expanded="false">Actividades</a></li>
+
                             </ul>
                             <div class="tab-content">
-                                <div class="active tab-pane" id="actividades">
+                                <div v-if="perfil !== null"
+                                    class="active tab-pane" id="info">
+                                    <show :usuario="perfil"></show>
+                                </div>
+                                <div class="tab-pane" id="actividades">
                                     <time-line></time-line>
                                 </div>
                                 <!-- /.tab-pane -->
@@ -166,10 +175,10 @@
                     :perfil="perfil">    
                 </box-proveedor>
                 <box-operador 
-                    v-if="perfil != null && auth.user.authenticated && ((perfil.user.roles_id == role.OPERADOR && perfil.user.id == auth.user.profile.id) || (auth.user.profile.roles_id == role.ADMINISTRADOR || perfil.user.roles_id == role.OPERADOR) || (auth.user.profile.roles_id == role.SUPERVISOR && perfil.user.roles_id == role.OPERADOR))">
+                    v-if="perfil != null && auth.user.authenticated && ((perfil.user.roles_id == role.OPERADOR && perfil.user.id == auth.user.profile.id) || (auth.user.profile.roles_id == role.ADMINISTRADOR && perfil.user.roles_id == role.OPERADOR) || (auth.user.profile.roles_id == role.SUPERVISOR && perfil.user.roles_id == role.OPERADOR))">
                 </box-operador>
                 <box-supervisor
-                    v-if="perfil != null && auth.user.authenticated && ((perfil.user.roles_id == role.SUPERVISOR && perfil.user.id == auth.user.profile.id) || (auth.user.profile.roles_id == role.ADMINISTRADOR || perfil.user.roles_id == role.SUPERVISOR) || (auth.user.profile.roles_id == role.SUPERVISOR && perfil.user.roles_id == role.SUPERVISOR))">
+                    v-if="perfil != null && auth.user.authenticated && ((perfil.user.roles_id == role.SUPERVISOR && perfil.user.id == auth.user.profile.id) || (auth.user.profile.roles_id == role.ADMINISTRADOR && perfil.user.roles_id == role.SUPERVISOR) || (auth.user.profile.roles_id == role.SUPERVISOR && perfil.user.roles_id == role.SUPERVISOR))">
                 </box-supervisor>
             </div>
         </section>

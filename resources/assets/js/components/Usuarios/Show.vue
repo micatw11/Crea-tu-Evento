@@ -3,14 +3,12 @@
         <div class="content" v-bind:style="styleContent">
             <p>
                 <b>Nombre: </b>
-                {{usuario.apellido}}, {{usuario.nombre}}
+                <template v-if="usuario.apellido != null && usuario.apellido != ''">{{usuario.apellido}}, </template><template v-if="usuario.nombre != null && usuario.nombre != ''">{{usuario.nombre}}</template>
             </p>
 
-            <p>
+            <p v-if='usuario.localidad_id != null'>
                 <b>Localidad: </b>
-                <div v-if='usuario.localidad_id != null' >
                     {{usuario.localidad.nombre}} - {{usuario.localidad.provincia.nombre}}
-                </div>
             </p>
         
             <p>
@@ -18,7 +16,7 @@
                {{usuario.sexo=='F'?'Femenino':'Masculino'}}
             </p>
         
-            <p>
+            <p v-if="usuario.fecha_nac != null && usuario.fecha_nac != '0000-00-00'">
                 <b>Fecha de Nacimiento: </b>
             
                 {{usuario.fecha_nac}}
