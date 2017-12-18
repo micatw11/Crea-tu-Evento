@@ -113,6 +113,7 @@
         methods: {
             getNotificaciones(){
                 this.notificaciones = [];
+                if(auth.user.profile.roles_id == role.ADMINISTRADOR || auth.user.profile.roles_id == role.SUPERVISOR)
                 this.$http.get('api/usuario/me/notificaciones').then(response => {
                     for(var notificacion of response.data){
                         this.notificaciones.push(

@@ -144,6 +144,8 @@
             </form>
             <div class="text-center" style="margin-top: 0px">
                 <p>- O -</p>
+                <a href="#" @click="redirection()" class="btn btn-block btn-social btn-google btn-flat"><i class="fa fa-google-plus"></i> Registrarse con
+                Google+</a>
             </div>
             ¿Ya tienes una cuenta?<router-link tag="a" to="/login" class="text-center"> Iniciar sesión</router-link>
       </div>
@@ -243,6 +245,9 @@ export default {
                     this.localidades = response.data.data
                     loading(false)
                 })
+        },
+        redirection: function(){
+             window.location.href = "http://localhost:8000/redirect";
         }
     }
 };
