@@ -5,7 +5,7 @@
             <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('nombre')&&validarCaracteristica}">
                 <div class="col-sm-12">
                     <label for="inputCaracteristica" class="control-label">Nombre</label><br>
-                       <input name="nombre" v-validate="'required|min:4|max:22'" type="text" v-model="caracteristica.nombre" 
+                       <input name="nombre" v-validate="'required|min:4|max:40'" type="text" v-model="caracteristica.nombre" 
                         class="form-control" placeholder="Nombre">
                             <!-- validacion vee-validation -->
                     <span v-show="errors.has('nombre')&&validarCaracteristica" class="help-block">{{ errors.first('nombre') }}</span>
@@ -84,7 +84,7 @@ export default {
                         this.$emit('validadoEditCaracteristica')
                     }
                 } else {
-                    this.validarcaracteristica = true;
+                    this.validarCaracteristica = true;
                 }
                 return;
             }).catch(() => {

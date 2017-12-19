@@ -131,7 +131,7 @@ export default {
         getCaracteristicas: function(){
             this.$http.get('api/caracteristica')
                 .then(response => {
-                    this.caracteristicas = response.data.data,
+                    this.caracteristicas = response.data,
                     this.noselected(this.caracteristicas,this.rubro.caracteristicas)
                 }, response => {
                     this.$toast.error({
@@ -169,7 +169,13 @@ export default {
                 }
                 this.caracteristicas_no = option;
                 this.caracteristicas = data2;
-            }            
+            }else{
+                for (var i = 0; i < data1.length; i++) {
+                        option.push(data1[i]);
+                }
+                this.caracteristicas_no = option;
+                this.caracteristicas = [];
+            }           
 
         },
         agregarOptions: function(){

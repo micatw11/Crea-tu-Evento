@@ -77,7 +77,7 @@ class CaracteristicaController extends Controller
     {
       return $this->validate($request, 
         [
-            'nombre'=>'required|min:4|max:55'
+            'nombre'=>'required|min:4|max:40'
         ]);
     }
 

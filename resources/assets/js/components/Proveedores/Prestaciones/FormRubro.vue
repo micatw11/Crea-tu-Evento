@@ -37,7 +37,12 @@
             <input type="checkbox" id="checkbox" v-model="rubro.comercio" @click="$forceUpdate()" style="text-align:center;">
             <label for="checkbox">{{ rubro.comercio == true ? "Si" : "No" }}</label>
         </div>
-        <div v-if="(rubro.comercio == true&&rubro.rubros_id.length > 0)||(salon == true)">
+        <div v-if="rubro.rubros_id.length > 0 && salon == true" class="col-sm-12">
+            <label class="control-label">La direccion es igual a la registrada en proveedor? </label> <br>  
+            <input type="checkbox" id="checkbox" v-model="rubro.comercio" @click="$forceUpdate()" style="text-align:center;">
+            <label for="checkbox">{{ rubro.comercio == true ? "No" : "Si" }}</label>
+        </div>
+        <div v-if="(rubro.comercio == true&&rubro.rubros_id.length > 0)">
             <div>
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('habilitacion')&&validarRubro}">
                     <div class="col-sm-6">

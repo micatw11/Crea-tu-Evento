@@ -22,7 +22,7 @@
                             </div>
                         </div>
                         <div class="col-sm-1 col-xs-1">
-                            <div v-if="!optionsProveedor">
+                            <div v-if="!optionsProveedor&&(auth.user.profile.id!=item.prestacion.proveedor.user_id)">
                                 <div style="cursor: pointer" v-if="verificar_favorite(item.id)">
                                     <div @click="favorite(item.id)">
                                         <i class="fa fa-fw fa-heart"></i>

@@ -93,11 +93,11 @@ class HorarioController extends Controller
                             ->where('proveedor_id', $proveedor->id)
                             ->where('dia', $diaUnico)
                             ->where(function ($q) use ($request){
-                                    $q->where('hora_inicio', '>',$request->hora_inicio)
-                                    ->where('hora_inicio', '<', $request->hora_fin)
+                                    $q->where('hora_inicio', '>=',$request->hora_inicio)
+                                    ->where('hora_inicio', '<=', $request->hora_fin)
                                     ->orWhere(function ($q) use ($request){
-                                            $q->where('hora_fin', '>',$request->hora_inicio)
-                                            ->where('hora_fin', '<', $request->hora_fin)->get();
+                                            $q->where('hora_fin', '>=',$request->hora_inicio)
+                                            ->where('hora_fin', '<=', $request->hora_fin)->get();
                                         })->get();
                             })->first();
         
