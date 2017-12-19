@@ -67,7 +67,7 @@
                 </div>
             </form>
             <div class="social-auth-links text-center" style="margin-top: 0px;">
-              <p>- OR -</p>
+              <p>- O -</p>
               <a href="#" @click="redirection()" class="btn btn-block btn-social btn-google btn-flat"><i class="fa fa-google-plus"></i> Inicia sesion con
                 Google+</a>
             </div>

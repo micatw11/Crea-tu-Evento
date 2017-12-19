@@ -135,12 +135,12 @@ export default {
         return {
             validar: false,
             showModificar: false,
-            usuario: { type: Object, default: null},
+            usuario: { nombre: '', apellido: '', sexo: '', fecha_nac: ''},
             error: false,
             fecha: null,
             disabled: { to: '1920-01-01', from: null },
             localidades: [],
-            localidadSelect: [],
+            localidadSelect: null,
             errorsApi: []
         }
     },
@@ -226,10 +226,11 @@ export default {
                 })
         },
         setDefaultLocalidad: function(){
-            this.localidadSelect = {
-               'value':auth.user.profile.usuario.localidad_id,
-               'label':auth.user.profile.usuario.localidad.nombre+' ('+auth.user.profile.usuario.localidad.provincia.nombre+')'
-            }
+            if(auth.user.profile.usuario.localidad_id != null)
+                this.localidadSelect = {
+                   'value':auth.user.profile.usuario.localidad_id,
+                   'label':auth.user.profile.usuario.localidad.nombre+' ('+auth.user.profile.usuario.localidad.provincia.nombre+')'
+                }
         },
         getUserPerfil: function(){
             this.$http.get('api/usuario/'+ this.$route.params.userId )

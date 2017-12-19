@@ -9,11 +9,9 @@ class SocialAccountService
 	public function createOrGetUser(ProviderUser $providerUser){
 
 		$account=SocialAccount::whereProvider('google')
-			->whereProviderUserId($providerUser->getId())
-->get()
-			->first();
+			->whereProviderUserId($providerUser->getId())->get()->first();
 
-\Session::set('avatar', $providerUser->getAvatar());
+		\Session::set('avatar', $providerUser->getAvatar());
 
 		if($account){
 			return $account->user;
