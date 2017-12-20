@@ -1,6 +1,9 @@
 <template>
-	<div v-if="showForm" class="pull-right">
-		<button class="btn btn-primary" @click="showModal = !showModal">Agregar Articulo</button>
+	<div v-if="showForm">
+		<div class="box-header">
+		<button class="btn btn-primary btn-sm pull-right" @click="showModal = !showModal">Agregar Articulo</button>
+		</div>
+
         <div v-if="showModal" class="modal" role="dialog" :style="{ display : showModal  ? 'block' : 'none' }">
             <div class="modal-dialog">
             <!-- Modal content-->

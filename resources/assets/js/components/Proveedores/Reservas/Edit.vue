@@ -11,15 +11,15 @@
 	                @validado="sendForm()">
 	            </form-reserva>
 	        </div>
-	    </div>
-	    <div class="modal-footer" style="text-align:center;">
-	        <button class="btn btn-default" @click="closeModal()">
-	            <i class="glyphicon glyphicon-chevron-left"></i>
-	            Atras
-	        </button>
-	        <button @click="validateBeforeSubmit()" type="button" class="btn btn-primary">
-	            Enviar Presupuesto
-	        </button>
+		    <div class="box-footer" style="text-align:center;">
+		        <button class="btn btn-default" @click="closeModal()">
+		            <i class="glyphicon glyphicon-chevron-left"></i>
+		            Atras
+		        </button>
+		        <button @click="validateBeforeSubmit()" type="button" class="btn btn-primary">
+		            Enviar Presupuesto
+		        </button>
+		    </div>
 	    </div>
 	</div>
 </template>

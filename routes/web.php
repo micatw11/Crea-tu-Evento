@@ -117,6 +117,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('favoritos/{user_id}', 'FavoritoController@show');
 
     Route::get('reserva/{id}', 'ReservaController@show');
+    Route::get('reserva', 'ReservaController@index');
     Route::get('user/{user_id}/reserva', 'ReservaController@reservasUser');
     Route::patch('reserva/{id}/estado', 'ReservaController@cambiarEstado');
     Route::post('publicacion/{publicacion_id}/reserva', 'ReservaController@store');

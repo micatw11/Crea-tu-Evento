@@ -66,12 +66,11 @@ class PublicacionController extends Controller
             if($request->has('filter') && $request->filter != ''){
                 $like = '%'.$request->filter.'%';
                 $query->where(function($query) use ($like){
-                    $query->where('publicaciones.titulo','like', $like );
+                    $query->where('publicaciones.titulo','like', $like )
+                        ->orWhere('subcategorias.nombre','like', $like )
+                        ->orWhere('categorias.nombre','like', $like );;
                     });
-                $query->orWhere(function($query) use ($like){
-                    $query->where('subcategorias.nombre','like', $like )
-                        ->orWhere('categorias.nombre','like', $like );
-                    });
+
             }
             if($request->has('precie_max') && $request->has('precie_min')){
                 $min = $request->precie_min;

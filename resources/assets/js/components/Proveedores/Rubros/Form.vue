@@ -45,15 +45,15 @@
         <div class="col-sm-12">
             <div class="col-sm-12">
                 <label for="inputCaracteristica" class="control-label">Caracteristicas: </label><br>
-                <div class="direct-chat-messages" style="height: 130px;">
+                <div class="direct-chat-messages" style="height: 180px;">
                     <div class="direct-chat-msg">
                         <div v-for="caracteristica in caracteristicas">
-                            <div class="col-sm-3">
+                            <div class="col-sm-6">
                               <input type="checkbox" @click="selected(caracteristica, $event)" checked> {{caracteristica.nombre}}
                             </div>
                         </div>
                         <div v-for="caracteristica in caracteristicas_no">
-                            <div class="col-sm-3">
+                            <div class="col-sm-6">
                               <input type="checkbox" @click="selected(caracteristica, $event)"> {{caracteristica.nombre}}
                             </div>
                         </div>

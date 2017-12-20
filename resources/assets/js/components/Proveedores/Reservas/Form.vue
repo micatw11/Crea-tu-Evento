@@ -32,7 +32,7 @@
 			<div class="col-sm-12">
 				<hr>
 	            <div class="form-group has-feedback">
-	                <div class="col-sm-12">
+	                <div class="direct-chat-messages col-sm-12" style="height: 180px;">
 	                    <label for="rubros" class="control-label">{{ nameRubro }}</label><br>
 						<el-select v-model="reserva.rubros" multiple placeholder="Seleccione" name="rubros" style="width:100%;" disabled @change="callbackSelectRubros">
 							<el-option

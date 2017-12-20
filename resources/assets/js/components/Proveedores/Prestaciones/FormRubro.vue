@@ -34,10 +34,10 @@
         <!--Datos de Habilitación y dirección del comercio-->
         <div v-if="rubro.rubros_id.length > 0 && salon == false" class="col-sm-12">
             <label class="control-label">Cuenta con Comercio de atención. </label> <br>  
-            <input type="checkbox" id="checkbox" v-model="rubro.comercio" @click="$forceUpdate()" style="text-align:center;">
-            <label for="checkbox">{{ rubro.comercio == true ? "Si" : "No" }}</label>
+            <input type="checkbox" id="checkbox" v-model="comercio" @click="$forceUpdate()" style="text-align:center;">
+            <label for="checkbox">{{ comercio == true ? "Si" : "No" }}</label>
         </div>
-        <div v-if="(((rubro.comercio== true)||salon == true)&&rubro.rubros_id.length > 0)">
+        <div v-if="(((comercio== true)||salon == true)&&rubro.rubros_id.length > 0)">
             <div>
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('habilitacion')&&validarRubro}">
                     <div class="col-sm-6">
@@ -84,12 +84,12 @@
                 </div>
             </div>
         </div>
-        <div v-if="rubro.rubros_id.length > 0 &&(rubro.comercio == true || salon == true )&&nuevo" class="col-sm-12">
+        <div v-if="rubro.rubros_id.length > 0 &&(comercio == true || salon == true )&&nuevo" class="col-sm-12">
             <label class="control-label">El domicilio es igual al registrado como proveedor? </label> <br>  
-            <input type="checkbox" id="checkbox" v-model="domicilioProveedor" @click="$forceUpdate()" style="text-align:center;">
-            <label for="checkbox">{{ domicilioProveedor == false ? "No" : "Si" }}</label>
+            <input type="checkbox" id="checkbox" v-model="rubro.comercio" @click="$forceUpdate()" style="text-align:center;">
+            <label for="checkbox">{{ rubro.comercio  == true ? "No" : "Si" }}</label>
         </div>
-        <div v-if="(((rubro.comercio == true &&domicilioProveedor == false)||(salon == true&&domicilioProveedor == true))&&rubro.rubros_id.length > 0)">
+        <div v-if="(((comercio == true &&rubro.comercio  == true)||(salon == true&&rubro.comercio  == true))&&rubro.rubros_id.length > 0)">
             <div>
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('localidad')&&validarRubro}">
                     <div class="col-sm-12">
@@ -205,7 +205,7 @@ export default {
             estaCargado: true,
             salon: false,
             ShowAdvertenciaSalon: false,
-            domicilioProveedor:true
+            comercio: true,
         }
     },
     components: {

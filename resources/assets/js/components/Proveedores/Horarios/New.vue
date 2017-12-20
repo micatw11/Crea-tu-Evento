@@ -1,12 +1,10 @@
 <template>
 	<div v-if="showFormH">
 	    <div class="box-header">
-	        <div class="col-sm-12">
-	            <button class="btn btn-primary btn-sm"
+	            <button class="btn btn-primary pull-right btn-sm"
 	            @click="showNewHorario = true">
 	            Agregar Horario
 	            </button>
-	        </div>
 	    </div>
 		<div v-if="showNewHorario" class="modal" role="dialog" :style="{ display : showNewHorario  ? 'block' : 'none' }">
 	        <div class="modal-dialog">
