@@ -46,7 +46,7 @@
 							<div class="col-sm-5">
 								<div class="col-sm-12">
 									<h3 class="text-uppercase">{{publicacion.titulo}}
-				                        <div class="pull-right">
+				                        <div v-if="publicacion.proveedor.user_id != auth.user.profile.id" class="pull-right">
 	                                       <div style="cursor: pointer" v-if="verificar_favorite()">
 		                                        <div @click="favorite_icon(publicacion.id)">
 		                                            <i class="fa fa-fw fa-heart"></i>
@@ -99,7 +99,9 @@
 							          	<p>
 							          		<strong>Ciudad </strong>{{ publicacion.prestacion.domicilio.localidad.nombre }} -
 							          		{{ publicacion.prestacion.domicilio.localidad.provincia.nombre }}
-											<strong>Calle </strong>{{ publicacion.prestacion.domicilio.calle}}
+							          	</p>
+							          	<p>
+											<strong>Calle </strong>{{ publicacion.prestacion.domicilio.calle}}<strong> Nro </strong>{{ publicacion.prestacion.domicilio.numero}}
 										</p>
 							        </template>
 						          	<template v-else>
@@ -109,7 +111,9 @@
 							          	<p>
 							          		<strong>Ciudad </strong>{{ publicacion.proveedor.domicilio.localidad.nombre }} -
 							          		{{ publicacion.proveedor.domicilio.localidad.provincia.nombre }}
-											<strong>Calle </strong>{{ publicacion.proveedor.domicilio.calle }}
+							          	</p>
+							          	<p>
+											<strong>Calle </strong>{{ publicacion.proveedor.domicilio.calle }}<strong> Nro </strong>{{ publicacion.proveedor.domicilio.numero}}
 										</p>
 						          	</template>
 						          	

@@ -92,14 +92,15 @@ export default {
             } else {
                 this.params= {
                         rubro_id: this.rubro.rubro_id,
-                        comercio: this.rubro.comercio
+                        comercio: this.rubro.comercio,
+                        habilitacion: this.rubro.habilitacion,
+                        fecha_habilitacion: this.rubro.fecha_habilitacion
                 }
             }
             this.$http.post(
                 'api/proveedor/rubro/', this.params
                 )
                 .then(response => {
-                    console.log("respuesta ok");
                     this.$toast.success({
                          title:'¡Detalle de Rubro Creada!',
                          message:'Se creado correctamente el Detalle de Rubro. :D'
@@ -108,7 +109,6 @@ export default {
                     this.resetForm();
                     this.errorsApi= [];
                 }, response => {
-                    console.log("resp. fallo");
                     this.validar= false;
                     this.validarRubro= false;
                     this.$toast.error({

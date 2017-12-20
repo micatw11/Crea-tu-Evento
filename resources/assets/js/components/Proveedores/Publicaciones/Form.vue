@@ -119,17 +119,16 @@
                 </div>                    
             </div>
 
-            <div v-if="publicacion.prestaciones_id&&(caracteristicas.length>0||caracteristicas_no.length>0)">
-                <div class="col-sm-12">
-                    <label for="caracteristicas" class="control-label">Caracteristicas</label>
-                    <div class="direct-chat-messages col-sm-12" style="height: 100px;">
-                        <div class="direct-chat-msg">
-                            <div v-for="caracteristica in caracteristicas">
-
-                                <div class="col-sm-6">
+            <div v-if="rubros_id&&(caracteristicas.length>0||caracteristicas_no.length>0)">
+                <div class="col-sm-8">
+                    <label for="caracteristicas" class="control-label">Caracteristicas</label><br>
+                    <div class="direct-chat-messages col-sm-12" style="height: 180px;">
+                        <div v-for="caracteristica in caracteristicas">
+                            <div class="col-sm-12">
+                                <div class="col-sm-5">
                                     <input type="checkbox" id="checkbox1" @click="selected(caracteristica, $event)" checked> {{caracteristica.nombre}}
                                 </div>
-                                <div v-if="caracteristica.adicional==true" class="col-sm-6">
+                                <div v-if="caracteristica.adicional==true" class="col-sm-7">
                                     <input 
                                         name="inf_adicional"
                                         type="text" class="form-control"
@@ -139,11 +138,11 @@
                             </div>
                         </div>
                         <div v-for="caracteristica in caracteristicas_no">
-                            <div class="col-sm-6">
-                                <div class="col-sm-6">
+                            <div class="col-sm-12">
+                                <div class="col-sm-5">
                                     <input type="checkbox" id="checkbox" @click="selected(caracteristica, $event)"> {{caracteristica.nombre}}
                                 </div>
-                                <div v-if="caracteristica.adicional==true" class="col-sm-6">
+                                <div v-if="caracteristica.adicional==true" class="col-sm-7">
                                     <input 
                                         name="inf_adicional"
                                         type="text" class="form-control"
@@ -311,8 +310,7 @@
                 options_caracteristicas: [],
                 caracteristicas: [],
                 caracteristicas_no: [],
-                rubro_caracteristicas:{type: Object},
-                edit: false
+                rubro_caracteristicas:{type: Object}
 			}        
 		},
         beforeMount(){
@@ -339,15 +337,7 @@
                             }
                             
                         }
-                        if(this.nuevo){
-
-                            this.caracteristicas_no = this.caracteristicas;
-                            this.caracteristicas = [];
-                        }
-                        else
-                        {
-
-                        }
+                        this.noselected(this.caracteristicas, this.publicacion.caracteristicas)
                     })
 
             },
@@ -474,36 +464,7 @@
                 this.publicacion.descripcion = this.publicacion.descripcion.split('class=\"ql-align-justify\"')
                     .join('style="text-align:justify"')
             },
-            changeCaracteristicas: function(rubro_id){
-                 this.options_caracteristicas = [] 
-                 this.caracteristicas = [] 
-                 this.caracteristicas_no = []
-                
-                for (var i = 0; i < this.rubro_caracteristicas.rubros.length; i++){
-                    if (this.rubro_caracteristicas.rubros[i].id == rubro_id){
-                        this.caracteristicas = this.rubro_caracteristicas.rubros[i].rubro.caracteristicas
-                        break;
-                    }
-                }
-                if (this.edit) {
-                    this.caracteristicas_no = this.noselected(this.caracteristicas, this.publicacion.caracteristicas)
-                    this.caracteristicas= this.publicacion.caracteristicas
-                    this.edit=false
-                    this.agregarOptions();
-                }
-                else{
-                    this.caracteristicas_no = this.caracteristicas
-                    this.caracteristicas = []
-                    for (var i = 0; i <  this.caracteristicas_no.length; i++) {
-                        if (this.$el.elements.checkbox != undefined){ 
-                            this.$el.elements.checkbox[i].checked= false
-                        }
-                    }
-                }
-                this.$forceUpdate()
-            },
             selected(caracteristica,e){
-
                 if (e.toElement.checked){
                         this.options_caracteristicas.push({caracteristica_id: caracteristica.id, informacion: null})
 
@@ -528,17 +489,28 @@
             },
             noselected: function(data1, data2){
                 var option = [];
-                for (var i = 0; i < data1.length; i++) {
-                    var igual=false;
-                     for (var j = 0; j < data2.length & !igual; j++) {
-                         if(data1[i]['id'] == data2[j]['id'] && 
-                            data1[i]['nombre'] == data2[j]['nombre']) 
-                                 igual=true;
-                     }
-                    if(!igual)
-                        option.push(data1[i]);
+                if (!this.nuevo){
+                    for (var i = 0; i < data1.length; i++) {
+                        var igual=false;
+                         for (var j = 0; j < data2.length & !igual; j++) {
+                             if(data1[i]['id'] == data2[j]['id'] && 
+                                data1[i]['nombre'] == data2[j]['nombre']) 
+                                     igual=true;
+                         }
+                        if(!igual)
+                            option.push(data1[i]);
+                    }
+                    
+                     this.caracteristicas_no = option;
+                    this.caracteristicas = data2;
+                }else{
+                    for (var i = 0; i < data1.length; i++) {
+                            option.push(data1[i]);
+                    }
+                    this.caracteristicas_no = option;
+                    this.caracteristicas = [];
                 }
-                return option
+                this.agregarOptions();
             },
             agregarOptions: function(){
                 if (this.publicacion.caracteristicas){ 

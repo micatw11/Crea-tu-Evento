@@ -208,7 +208,7 @@
                         <div class="col-sm-12 col-md-6">
                             
                             <label for="inputPiso" class="control-label">Dpto. </label><br>
-                            <input name="piso" v-validate="'required'" type="number" v-model="proveedor.domicilio.piso" value="piso" class="form-control">
+                            <input name="piso" type="number" v-model="proveedor.domicilio.piso" value="piso" class="form-control">
 
                             <!-- validacion vee-validation -->
                             <span v-show="errors.has('piso')&&validarProveedor" class="help-block">{{ errors.first('piso') }}</span>

@@ -37,17 +37,12 @@
             <input type="checkbox" id="checkbox" v-model="rubro.comercio" @click="$forceUpdate()" style="text-align:center;">
             <label for="checkbox">{{ rubro.comercio == true ? "Si" : "No" }}</label>
         </div>
-        <div v-if="rubro.rubros_id.length > 0 && salon == true" class="col-sm-12">
-            <label class="control-label">La direccion es igual a la registrada en proveedor? </label> <br>  
-            <input type="checkbox" id="checkbox" v-model="rubro.comercio" @click="$forceUpdate()" style="text-align:center;">
-            <label for="checkbox">{{ rubro.comercio == true ? "No" : "Si" }}</label>
-        </div>
-        <div v-if="(rubro.comercio == true&&rubro.rubros_id.length > 0)">
+        <div v-if="(((rubro.comercio== true)||salon == true)&&rubro.rubros_id.length > 0)">
             <div>
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('habilitacion')&&validarRubro}">
                     <div class="col-sm-6">
                         <label for="inputHabilitacion" class="control-label">Habilitación</label><br>
-                         <input name="habilitacion" v-validate="'numeric'" type="text" v-model="rubro.habilitacion" value="habilitacion" class="form-control" placeholder="Numero de habilitacion">
+                         <input name="habilitacion" v-validate="'numeric|required'" type="text" v-model="rubro.habilitacion" value="habilitacion" class="form-control" placeholder="Numero de habilitacion">
                         <!-- validacion vee-validation -->
                         <span v-show="errors.has('habilitacion')&&validarRubro" class="help-block">{{ errors.first('habilitacion') }}</span>
                         <!-- validacion api-->
@@ -88,6 +83,13 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div v-if="rubro.rubros_id.length > 0 &&(rubro.comercio == true || salon == true )&&nuevo" class="col-sm-12">
+            <label class="control-label">El domicilio es igual al registrado como proveedor? </label> <br>  
+            <input type="checkbox" id="checkbox" v-model="domicilioProveedor" @click="$forceUpdate()" style="text-align:center;">
+            <label for="checkbox">{{ domicilioProveedor == false ? "No" : "Si" }}</label>
+        </div>
+        <div v-if="(((rubro.comercio == true &&domicilioProveedor == false)||(salon == true&&domicilioProveedor == true))&&rubro.rubros_id.length > 0)">
             <div>
                 <div :class="{'form-group has-feedback': true, 'form-group has-error': errors.has('localidad')&&validarRubro}">
                     <div class="col-sm-12">
@@ -202,7 +204,8 @@ export default {
             rubrosSelect: [],
             estaCargado: true,
             salon: false,
-            ShowAdvertenciaSalon: false
+            ShowAdvertenciaSalon: false,
+            domicilioProveedor:true
         }
     },
     components: {
@@ -288,9 +291,6 @@ export default {
                 }else{
                     this.rubro.rubros_id.push(val[i].value)
                 }
-                    
-
-                
             }
         }
     }

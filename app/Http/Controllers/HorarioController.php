@@ -72,8 +72,8 @@ class HorarioController extends Controller
         $this->validateHorario($request);
         $dias = $request->dia;
         $j = 0;
-        $horarioNo[$j]= null;
-        $idHorarios [0] = null;
+        $horarioNo = [];
+        $idHorarios = [];
         $save=false;
         $user = Auth::user();
         $horarioRepetido= null;
@@ -94,9 +94,9 @@ class HorarioController extends Controller
                             ->where('dia', $diaUnico)
                             ->where(function ($q) use ($request){
                                     $q->where('hora_inicio', '>=',$request->hora_inicio)
-                                    ->where('hora_inicio', '<=', $request->hora_fin)
+                                    ->where('hora_inicio', '<', $request->hora_fin)
                                     ->orWhere(function ($q) use ($request){
-                                            $q->where('hora_fin', '>=',$request->hora_inicio)
+                                            $q->where('hora_fin', '>',$request->hora_inicio)
                                             ->where('hora_fin', '<=', $request->hora_fin)->get();
                                         })->get();
                             })->first();
@@ -188,16 +188,16 @@ class HorarioController extends Controller
         $horarioRepetido = null;
         if($user->roles_id == Rol::roleId('proveedor')){
             $proveedor = Proveedor::where('user_id', $user->id)->firstOrFail();
-            $publicacion = null;
+            $publicacionId = null;
             $horario = Horario::where('id', $id)->firstOrFail();
             if ($request->publicacion_id != null){
-                $publicacion= Publicacion::where('id', $horario->publicacion_id)->where('proveedor_id', $proveedor->id)->firstOrFail();
+                $publicacionId= Publicacion::where('id', $horario->publicacion_id)->where('proveedor_id', $proveedor->id)->firstOrFail()->puck('id');
             }else{
-                $request->publicacion_id = null;
+                $publicacionId = null;
             }
-            if ($publicacion||$proveedor){
+            if ($publicacionId||$proveedor){
                 //verificar horario si se encuentra repetido
-                $horarioRepetido = Horario::where('publicacion_id', $publicacion->id)
+                $horarioRepetido = Horario::where('publicacion_id', $publicacionId)
                             ->where('proveedor_id', $proveedor->id)
                             ->where('dia', $horario->dia)
                             ->where('id','<>', $horario->id)
